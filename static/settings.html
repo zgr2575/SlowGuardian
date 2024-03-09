@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+    <title id="tab-title">Home</title>
+    <link rel="stylesheet" href="/assets/styles/main.css?v=3" />
+    <link rel="stylesheet" href="/assets/styles/settings.css" />
+    <link rel="stylesheet" href="/assets/styles/themes/default.css?v=3" />
+    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="fixed-nav-bar">
+      <a class="icon" href="/./"><img alt="nav" id="INImg" src="/assets/media/favicon/main.png" /></a>
+      <div class="fixed-nav-bar-right">
+        <a class="navbar-link" href="/./-"><i class="fa-solid fa-gamepad navbar-icon"></i>Games</a>
+        <a class="navbar-link" href="/./~"><i class="fa-solid fa-phone navbar-icon"></i>Apps</a>
+        <a class="navbar-link" href="/./0"><i class="fa-solid fa-laptop navbar-icon"></i>Tabs</a>
+        <a class="navbar-link" href="/./!"><i class="fa-solid fa-gear navbar-icon settings-icon"></i>Settings</a>
+      </div>
+    </div>
+    <div class="main">
+      <div class="settings-container">
+        <div class="settings-card">
+          <h3>About:Blank</h3>
+          <p>Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)</p>
+          <button onclick="AB()" class="key-button">Open Popup</button>
+          <button class="key-button" onclick="toggleAB()">Toggle automatic about:blank</button>
+        </div>
+        <div class="settings-card">
+          <h3>Set Panic Key</h3>
+          <p>
+            Quickly open a educational site, when the teacher comes. The panic link is also used to redirect you when
+            about:blank windows are opened.
+          </p>
+          <input type="text" id="eventKeyInput" placeholder="Panic Key" class="key-form" />
+          <input class="key-form" placeholder="Panic Link" type="text" id="linkInput" value />
+          <button class="key-button" value="Save" onclick="saveEventKey()">Save</button>
+        </div>
+        <div class="settings-card">
+          <h3>Set Background Image</h3>
+          <p>Change the site's background image.</p>
+          <input type="text" id="background-input" placeholder="Enter image URL" />
+          <button class="key-button" id="save-button">Save</button>
+          <button class="key-button" id="reset-button">Reset</button>
+        </div>
+        <div class="settings-card">
+          <h3>Tab Cloaker</h3>
+          <p>Makes the site look educational.</p>
+          <select id="dropdown" onchange="handleDropdownChange(this)">
+            <option value="Classroom">Default</option>
+            <option value="Clever">Clever</option>
+            <option value="Canvas">Canvas</option>
+            <option value="Edpuzzle">Edpuzzle</option>
+            <option value="Google">Google</option>
+            <option value="Classroom">Google Classroom</option>
+            <option value="Drive">Google Drive</option>
+            <option value="Gmail">Gmail</option>
+            <option value="Khan">Khan Academy</option>
+            <option value="Campus">Infinite Campus</option>
+            <option value="IXL">IXL</option>
+            <option value="LinkIt">LinkIt!</option>
+            <option value="Schoology">Schoology</option>
+          </select>
+          <input class="key-form" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
+          <input class="key-form" type="text" id="name" name="name" placeholder="Change Tab Name" />
+          <button class="key-button" value="Save" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
+            Save
+          </button>
+        </div>
+        <div class="settings-card">
+          <h3>Choose your <b>Pr</b>oxy</h3>
+          <p>
+            Ultra<bn>vio</bn>let is the main <bn>pro</bn>xy, but Dynamic has support for more sites and also works on
+            iOS! (Dynamic is still in beta, so it has some bugs.)
+          </p>
+          <select id="pChange">
+            <option value="uv">Ultraviolet (Default)</option>
+            <option value="dy">Dynamic</option>
+          </select>
+        </div>
+        <div class="settings-card">
+          <h3>Advertisement</h3>
+          <p>
+            Advertisements are cruical in order to keep the site running. Please donate or host your own links to go
+            ad-free.
+          </p>
+          <select id="adType" onchange="adChange(this)">
+            <option value="default">Default</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+        <div class="settings-card">
+          <h3>Particles</h3>
+          <p>Add the particles from the previous version to the new site.</p>
+          <label class="switch">
+            <input type="checkbox" class="slider-checkbox" id="2" />
+            <span class="slider-round"></span>
+          </label>
+        </div>
+        <div class="settings-card">
+          <h3>Themes!</h3>
+          <p>Choose through a selection of themes!</p>
+          <select placeholder="Solid Color Themes" id="dropdown" class="td" onchange="themeChange(this)">
+            <option disabled selected>Solid Color Themes</option>
+            <option value="d">Default</option>
+            <option disabled selected>Catppuccin Themes</option>
+            <option value="catppuccinMocha">Mocha</option>
+            <option value="catppuccinMacchiato">Macchiato</option>
+            <option value="catppuccinFrappe">Frappe</option>
+            <option value="catppuccinLatte">Latte</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script src="/assets/scripts/main.js?v=6"></script>
+    <script src="/assets/scripts/settings.js?v=5"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'G-WKJQ5QHQTJ')
+    </script>
+    <div id="adv"></div>
+  </body>
+</html>

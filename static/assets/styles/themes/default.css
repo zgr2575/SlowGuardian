@@ -1,0 +1,23 @@
+:root {
+  --page: url('full2.png');
+  --background: rgba(255, 255, 255, 0.02);
+  --background-filter: blur(10px) brightness(80%);
+  --background-secondary: #3c9f8b9e;
+  --background-dark: #385e75;
+  --background-other: #151629;
+
+  --title: #2c37d8;
+  --block: #0e1520;
+  --block-buttons: #13274e;
+  --input: #444;
+  --column: #285857;
+  --accent-color: #322a41;
+  --main: #212845;
+
+  --text-primary: #fff;
+  --text-secondary: #b0b0b0;
+  --text-placeholder: #aaa;
+  --text-dark: #555;
+
+  --transparent: rgb(0, 0, 0, 0);
+}
