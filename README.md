@@ -9,6 +9,7 @@ The Proxy is a refined version of Interstellar. I will be making changes to that
 Go to https://replit.com and create an account, or log in.
 Create a new project and click Import From GitHub
 ![image](https://github.com/zgr2575/SlowGuardian/assets/62474113/430b29e4-3be9-4600-9efb-9a6ec9eda1ca)
+
 Paste the .git link into the search and click import, then you are able to run!
 Congrats.
 Better instructions soon. 
