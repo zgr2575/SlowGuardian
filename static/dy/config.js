@@ -5,7 +5,7 @@ self.__dynamic$config = {
   logLevel: 0, 
   bare: {
     version: 3, 
-    path: '/v/',
+    path: '/o/',
   },
   tab: {
     title: null,

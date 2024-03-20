@@ -76,6 +76,9 @@ document.onkeydown = function (evt) {
 let splashtext = [
   'I hate gogaudian!',
   'Slowest Proxy!',
+  'Skid Alert',
+  'Slowwwwwwwwww',
+  'SlowGuardian',
 ]
 
 document.getElementById('splash').innerText = splashtext[Math.floor(Math.random() * splashtext.length)]

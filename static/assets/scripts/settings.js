@@ -255,7 +255,7 @@ function AB() {
   if (!inFrame && !navigator.userAgent.includes('Firefox')) {
     const popup = open('about:blank', '_blank')
     if (!popup || popup.closed) {
-      alert('Please allow popups and redirects.')
+      alert('Please allow popups and redirects. If you dont and you get the site blocked your getting IP banned')
     } else {
       const doc = popup.document
       const iframe = doc.createElement('iframe')
