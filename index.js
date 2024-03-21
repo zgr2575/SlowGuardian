@@ -13,13 +13,28 @@ const PORT = process.env.PORT || 8080
 if (config.challenge) {
   console.log('Password protection is enabled')
   console.log('Please set the passwords in the config.js file')
-
+if (config.envusers){
+  app.use(basicAuth({
+    users: {
+      [process.env.username]: process.env.password,
+    },
+    challenge: true,
+    realm: 'Secure Area',
+    unauthorizedResponse: (req) => {
+      req.session.failed = true
+      return req.auth
+        ? 'Access denied'
+        : 'No credentials provided'
+    },
+  }))
+} else{
   app.use(
     basicAuth({
       users: config.users,
       challenge: true,
     })
   )
+}
 }
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

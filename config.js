@@ -6,5 +6,6 @@ const config = {
   },
   routes: true, // Change this to false if you just want to host a bare server.
   local: true, // Change this to false to disable local assets.
+  envusers:false, // Allows you to use replit .env to store usernames and passwords. (Not working rn so dont use))
 }
 export default config
