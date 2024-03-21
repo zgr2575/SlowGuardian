@@ -79,6 +79,28 @@ let splashtext = [
   'Skid Alert',
   'Slowwwwwwwwww',
   'SlowGuardian',
+  'Donald why you getting NS blocked?',
+  'Karter is gay',
+  'Wyatt is a skid',
+  'YouSNAPPPPPPP',
+  'You are a skid',
+  'Guardian',
+  'SlowGuardian is the best',
+  'Abortion is wrong!!',
+  'Adolf Hitler needs to be stopped',
+  'All lives matter',
+  'Racism is bad!',
+  'The Pharaoh is gonna get you',
+  'The Pharaoh told me to',
+  'The Pharaoh MADE ME do it',
+  'The Pharaoh is gonna eat you',
+  'Ermmmm. Allow Popups',
+  'About:Black',
+  'Jayden is gay',
+  'Naked Mole Rat',
+  'Medium Pace',
+  'Spit on your hand',
+  
 ]
 
 document.getElementById('splash').innerText = splashtext[Math.floor(Math.random() * splashtext.length)]
