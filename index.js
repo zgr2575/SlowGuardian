@@ -11,8 +11,7 @@ const app = express(server)
 const bareServer = createBareServer('/o/')
 import fetch from 'node-fetch';
 const PORT = process.env.PORT || 8080
-var v = 4;
-      fetch('https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version')
+var v = 4;  fetch('https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt')
       .then(response => response.text())
       .then(data => {
           console.log("New version: "+data); // Log the content of the text file (version number)
