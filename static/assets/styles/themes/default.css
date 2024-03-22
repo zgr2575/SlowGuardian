@@ -1,5 +1,5 @@
 :root {
-  --page: url('wrizz.png');
+  --page: url("wrizz.png");
   --background: rgba(255, 255, 255, 0.07);
   --background-filter: blur(10px) brightness(80%);
   --background-secondary: #3c9f8b9e;

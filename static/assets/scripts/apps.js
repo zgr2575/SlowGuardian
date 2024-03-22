@@ -1,177 +1,180 @@
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('/assets/json/apps.min.json')
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("/assets/json/apps.min.json")
     .then((response) => response.json())
     .then((appsList) => {
-      appsList.sort((a, b) => a.name.localeCompare(b.name))
+      appsList.sort((a, b) => a.name.localeCompare(b.name));
 
-      const nonPinnedApps = document.querySelector('.container-apps')
-      const pinnedApps = document.querySelector('.pinned-apps')
+      const nonPinnedApps = document.querySelector(".container-apps");
+      const pinnedApps = document.querySelector(".pinned-apps");
 
-      var pinList = localStorage.getItem('pinnedGames')
+      var pinList = localStorage.getItem("pinnedGames");
       try {
-        pinList = pinList.split(',').map(Number)
+        pinList = pinList.split(",").map(Number);
       } catch {}
 
-      var appInd = 0
+      var appInd = 0;
       appsList.forEach((app) => {
-        let pinNum = appInd
+        let pinNum = appInd;
 
-        const columnDiv = document.createElement('div')
-        columnDiv.classList.add('column')
-        columnDiv.setAttribute('data-category', app.categories.join(' '))
+        const columnDiv = document.createElement("div");
+        columnDiv.classList.add("column");
+        columnDiv.setAttribute("data-category", app.categories.join(" "));
 
-        const pinIcon = document.createElement('i')
-        pinIcon.classList.add('fa', 'fa-map-pin')
-        pinIcon.ariaHidden = true
+        const pinIcon = document.createElement("i");
+        pinIcon.classList.add("fa", "fa-map-pin");
+        pinIcon.ariaHidden = true;
 
-        const btn = document.createElement('button')
-        btn.appendChild(pinIcon)
-        btn.style.float = 'right'
-        btn.style.backgroundColor = 'rgb(45,45,45)'
-        btn.style.borderRadius = '50%'
-        btn.style.borderColor = 'transparent'
-        btn.style.color = 'white'
-        btn.style.top = '-200px'
-        btn.style.position = 'relative'
+        const btn = document.createElement("button");
+        btn.appendChild(pinIcon);
+        btn.style.float = "right";
+        btn.style.backgroundColor = "rgb(45,45,45)";
+        btn.style.borderRadius = "50%";
+        btn.style.borderColor = "transparent";
+        btn.style.color = "white";
+        btn.style.top = "-200px";
+        btn.style.position = "relative";
         btn.onclick = function () {
-          setPin(pinNum)
-        }
-        btn.title = 'Pin'
+          setPin(pinNum);
+        };
+        btn.title = "Pin";
 
-        const link = document.createElement('a')
+        const link = document.createElement("a");
 
         function saveToLocal(path) {
-          sessionStorage.setItem('GoUrl', path)
+          sessionStorage.setItem("GoUrl", path);
         }
 
         function handleClick(app) {
-          if (typeof app.say !== 'undefined') {
-            alert(app.say)
+          if (typeof app.say !== "undefined") {
+            alert(app.say);
           }
 
           if (app.local) {
-            saveToLocal(app.link)
-            window.location.href = '&'
+            saveToLocal(app.link);
+            window.location.href = "&";
           } else if (app.local2) {
-            saveToLocal(app.link)
-            window.location.href = app.link
+            saveToLocal(app.link);
+            window.location.href = app.link;
           } else if (app.blank) {
-            blank(app.link)
+            blank(app.link);
           } else {
-            go(app.link)
+            go(app.link);
           }
 
-          return false
+          return false;
         }
 
         link.onclick = function () {
-          handleClick(app)
-        }
+          handleClick(app);
+        };
 
-        const image = document.createElement('img')
-        image.width = 145
-        image.height = 145
-        image.src = app.image
-        image.loading = 'lazy'
+        const image = document.createElement("img");
+        image.width = 145;
+        image.height = 145;
+        image.src = app.image;
+        image.loading = "lazy";
 
-        const paragraph = document.createElement('p')
-        paragraph.textContent = app.name
+        const paragraph = document.createElement("p");
+        paragraph.textContent = app.name;
         if (app.error) {
-          paragraph.style.color = 'red'
+          paragraph.style.color = "red";
         }
 
-        link.appendChild(image)
-        link.appendChild(paragraph)
-        columnDiv.appendChild(link)
+        link.appendChild(image);
+        link.appendChild(paragraph);
+        columnDiv.appendChild(link);
 
         if (appInd != 0) {
-          columnDiv.appendChild(btn)
+          columnDiv.appendChild(btn);
         }
 
         if (pinList != null && appInd != 0) {
           if (pinContains(appInd, pinList)) {
-            pinnedApps.appendChild(columnDiv)
+            pinnedApps.appendChild(columnDiv);
           } else {
-            nonPinnedApps.appendChild(columnDiv)
+            nonPinnedApps.appendChild(columnDiv);
           }
         } else {
-          nonPinnedApps.appendChild(columnDiv)
+          nonPinnedApps.appendChild(columnDiv);
         }
-        appInd++
-      })
+        appInd++;
+      });
 
-      const appsContainer = document.getElementById('apps-container')
-      appsContainer.appendChild(pinnedApps)
-      appsContainer.appendChild(nonPinnedApps)
+      const appsContainer = document.getElementById("apps-container");
+      appsContainer.appendChild(pinnedApps);
+      appsContainer.appendChild(nonPinnedApps);
     })
     .catch((error) => {
-      console.error('Error fetching JSON data:', error)
-    })
-})
+      console.error("Error fetching JSON data:", error);
+    });
+});
 
 function setPin(index) {
-  let pins = localStorage.getItem('pinnedGames')
+  let pins = localStorage.getItem("pinnedGames");
   if (pins == null) {
-    pins = []
+    pins = [];
   }
-  if (pins == '') {
-    pins = []
+  if (pins == "") {
+    pins = [];
   } else {
-    pins = pins.split(',').map(Number)
+    pins = pins.split(",").map(Number);
   }
   if (pinContains(index, pins)) {
-    let remove = pins.indexOf(index)
-    pins.splice(remove, 1)
+    let remove = pins.indexOf(index);
+    pins.splice(remove, 1);
   } else {
-    pins.push(index)
+    pins.push(index);
   }
-  localStorage.setItem('pinnedGames', pins)
-  location.reload()
+  localStorage.setItem("pinnedGames", pins);
+  location.reload();
 }
 
 function pinContains(i, p) {
-  if (p == '') {
-    return false
+  if (p == "") {
+    return false;
   }
   for (var x = 0; x < p.length; x++) {
     if (p[x] === i) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 
 function show_category() {
-  var selectedCategories = Array.from(document.querySelectorAll('#category option:checked')).map(
-    (option) => option.value
-  )
-  var games = document.getElementsByClassName('column')
+  var selectedCategories = Array.from(
+    document.querySelectorAll("#category option:checked"),
+  ).map((option) => option.value);
+  var games = document.getElementsByClassName("column");
 
   for (var i = 0; i < games.length; i++) {
-    var game = games[i]
-    var categories = game.getAttribute('data-category').split(' ')
+    var game = games[i];
+    var categories = game.getAttribute("data-category").split(" ");
 
-    if (selectedCategories.length === 0 || selectedCategories.some((category) => categories.includes(category))) {
-      game.style.display = 'block'
+    if (
+      selectedCategories.length === 0 ||
+      selectedCategories.some((category) => categories.includes(category))
+    ) {
+      game.style.display = "block";
     } else {
-      game.style.display = 'none'
+      game.style.display = "none";
     }
   }
 }
 
 function search_bar() {
-  var input = document.getElementById('searchbarbottom')
-  var filter = input.value.toLowerCase()
-  var games = document.getElementsByClassName('column')
+  var input = document.getElementById("searchbarbottom");
+  var filter = input.value.toLowerCase();
+  var games = document.getElementsByClassName("column");
 
   for (var i = 0; i < games.length; i++) {
-    var game = games[i]
-    var name = game.getElementsByTagName('p')[0].textContent.toLowerCase()
+    var game = games[i];
+    var name = game.getElementsByTagName("p")[0].textContent.toLowerCase();
 
     if (name.includes(filter)) {
-      game.style.display = 'block'
+      game.style.display = "block";
     } else {
-      game.style.display = 'none'
+      game.style.display = "none";
     }
   }
 }

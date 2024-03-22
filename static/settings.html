@@ -11,40 +11,76 @@
     <link rel="stylesheet" href="/assets/styles/main.css?v=3" />
     <link rel="stylesheet" href="/assets/styles/settings.css" />
     <link rel="stylesheet" href="/assets/styles/themes/default.css?v=3" />
-    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/1237c86ba0.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="fixed-nav-bar">
-      <a class="icon" href="/./"><img alt="nav" id="INImg" src="/assets/media/favicon/main.png" /></a>
+      <a class="icon" href="/./"
+        ><img alt="nav" id="INImg" src="/assets/media/favicon/main.png"
+      /></a>
       <div class="fixed-nav-bar-right">
-        <a class="navbar-link" href="/./-"><i class="fa-solid fa-gamepad navbar-icon"></i>Games</a>
-        <a class="navbar-link" href="/./~"><i class="fa-solid fa-phone navbar-icon"></i>Apps</a>
-        <a class="navbar-link" href="/./0"><i class="fa-solid fa-laptop navbar-icon"></i>Tabs</a>
-        <a class="navbar-link" href="/./!"><i class="fa-solid fa-gear navbar-icon settings-icon"></i>Settings</a>
+        <a class="navbar-link" href="/./-"
+          ><i class="fa-solid fa-gamepad navbar-icon"></i>Games</a
+        >
+        <a class="navbar-link" href="/./~"
+          ><i class="fa-solid fa-phone navbar-icon"></i>Apps</a
+        >
+        <a class="navbar-link" href="/./0"
+          ><i class="fa-solid fa-laptop navbar-icon"></i>Tabs</a
+        >
+        <a class="navbar-link" href="/./!"
+          ><i class="fa-solid fa-gear navbar-icon settings-icon"></i>Settings</a
+        >
       </div>
     </div>
     <div class="main">
       <div class="settings-container">
         <div class="settings-card">
           <h3>About:Blank</h3>
-          <p>Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)</p>
+          <p>
+            Cloak the site in an about:blank page and toggle about:blank on
+            startup (enabled by default)
+          </p>
           <button onclick="AB()" class="key-button">Open Popup</button>
-          <button class="key-button" onclick="toggleAB()">Toggle automatic about:blank</button>
+          <button class="key-button" onclick="toggleAB()">
+            Toggle automatic about:blank
+          </button>
         </div>
         <div class="settings-card">
           <h3>Set Panic Key</h3>
           <p>
-            Quickly open a educational site, when the teacher comes. The panic link is also used to redirect you when
-            about:blank windows are opened.
+            Quickly open a educational site, when the teacher comes. The panic
+            link is also used to redirect you when about:blank windows are
+            opened.
           </p>
-          <input type="text" id="eventKeyInput" placeholder="Panic Key" class="key-form" />
-          <input class="key-form" placeholder="Panic Link" type="text" id="linkInput" value />
-          <button class="key-button" value="Save" onclick="saveEventKey()">Save</button>
+          <input
+            type="text"
+            id="eventKeyInput"
+            placeholder="Panic Key"
+            class="key-form"
+          />
+          <input
+            class="key-form"
+            placeholder="Panic Link"
+            type="text"
+            id="linkInput"
+            value
+          />
+          <button class="key-button" value="Save" onclick="saveEventKey()">
+            Save
+          </button>
         </div>
         <div class="settings-card">
           <h3>Set Background Image</h3>
           <p>Change the site's background image.</p>
-          <input type="text" id="background-input" placeholder="Enter image URL" />
+          <input
+            type="text"
+            id="background-input"
+            placeholder="Enter image URL"
+          />
           <button class="key-button" id="save-button">Save</button>
           <button class="key-button" id="reset-button">Reset</button>
         </div>
@@ -66,17 +102,34 @@
             <option value="LinkIt">LinkIt!</option>
             <option value="Schoology">Schoology</option>
           </select>
-          <input class="key-form" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
-          <input class="key-form" type="text" id="name" name="name" placeholder="Change Tab Name" />
-          <button class="key-button" value="Save" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
+          <input
+            class="key-form"
+            type="text"
+            id="icon"
+            placeholder="Change Tab Icon"
+            name="icon"
+          />
+          <input
+            class="key-form"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Change Tab Name"
+          />
+          <button
+            class="key-button"
+            value="Save"
+            onclick="CustomIcon(); CustomName(); redirectToMainDomain();"
+          >
             Save
           </button>
         </div>
         <div class="settings-card">
           <h3>Choose your <b>Pr</b>oxy</h3>
           <p>
-            Ultra<bn>vio</bn>let is the main <bn>pro</bn>xy, but Dynamic has support for more sites and also works on
-            iOS! (Dynamic is still in beta, so it has some bugs.)
+            Ultra<bn>vio</bn>let is the main <bn>pro</bn>xy, but Dynamic has
+            support for more sites and also works on iOS! (Dynamic is still in
+            beta, so it has some bugs.)
           </p>
           <select id="pChange">
             <option value="uv">Ultraviolet (Default)</option>
@@ -86,8 +139,8 @@
         <div class="settings-card">
           <h3>Advertisement</h3>
           <p>
-            Advertisements are cruical in order to keep the site running. Please donate or host your own links to go
-            ad-free.
+            Advertisements are cruical in order to keep the site running. Please
+            donate or host your own links to go ad-free.
           </p>
           <select id="adType" onchange="adChange(this)">
             <option value="default">Default</option>
@@ -105,7 +158,12 @@
         <div class="settings-card">
           <h3>Themes!</h3>
           <p>Choose through a selection of themes!</p>
-          <select placeholder="Solid Color Themes" id="dropdown" class="td" onchange="themeChange(this)">
+          <select
+            placeholder="Solid Color Themes"
+            id="dropdown"
+            class="td"
+            onchange="themeChange(this)"
+          >
             <option disabled selected>Solid Color Themes</option>
             <option value="d">Default</option>
             <option disabled selected>Catppuccin Themes</option>
@@ -119,15 +177,18 @@
     </div>
     <script src="/assets/scripts/main.js?v=6"></script>
     <script src="/assets/scripts/settings.js?v=5"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"
+    ></script>
     <script>
-      window.dataLayer = window.dataLayer || []
+      window.dataLayer = window.dataLayer || [];
       function gtag() {
-        dataLayer.push(arguments)
+        dataLayer.push(arguments);
       }
-      gtag('js', new Date())
+      gtag("js", new Date());
 
-      gtag('config', 'G-WKJQ5QHQTJ')
+      gtag("config", "G-WKJQ5QHQTJ");
     </script>
     <div id="adv"></div>
   </body>

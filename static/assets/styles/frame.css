@@ -86,7 +86,7 @@ iframe {
   text-transform: uppercase;
   cursor: pointer;
   font-weight: 800;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-size: 3vw;
   transform: translateX(-20%);
@@ -96,7 +96,7 @@ iframe {
   text-transform: uppercase;
   cursor: pointer;
   font-weight: 800;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-size: 3vh;
   transform: translateX(-20%);
