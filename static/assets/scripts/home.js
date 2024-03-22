@@ -100,7 +100,10 @@ let splashtext = [
   'Naked Mole Rat',
   'Medium Pace',
   'Spit on your hand',
-  
+  'SlowGuardian is free',
+  'Im on my gooning streak',
+  'Ronald H. Johnson',
+  'KARTER YOU LOVE ZANE - Ron',
 ]
 
 document.getElementById('splash').innerText = splashtext[Math.floor(Math.random() * splashtext.length)]

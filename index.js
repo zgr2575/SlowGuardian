@@ -9,7 +9,27 @@ const __dirname = process.cwd()
 const server = http.createServer()
 const app = express(server)
 const bareServer = createBareServer('/o/')
+import fetch from 'node-fetch';
 const PORT = process.env.PORT || 8080
+var v = 3;
+      fetch('https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version')
+      .then(response => response.text())
+      .then(data => {
+          console.log("New version: "+data); // Log the content of the text file (version number)
+          if (v == parseInt(data)) {
+              console.log("The current version is up to date");
+          } else {
+              console.log("The current version is out of date, please update to prevent the site from being blocked");
+        
+              throw new Error('Site is out of date, update required.');
+          
+          }
+      })
+      .catch(error => {
+          console.error(error.message);
+          process.exit(1);
+      });
+console.log("Current Version: "+v);
 if (config.challenge) {
   console.log('Password protection is enabled')
   console.log('Please set the passwords in the config.js file')
