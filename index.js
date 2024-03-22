@@ -11,7 +11,7 @@ const app = express(server)
 const bareServer = createBareServer('/o/')
 import fetch from 'node-fetch';
 const PORT = process.env.PORT || 8080
-var v = 3;
+var v = 3.1;
       fetch('https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version')
       .then(response => response.text())
       .then(data => {

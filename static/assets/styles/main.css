@@ -11,7 +11,11 @@ body {
   background-size: cover;
   background-attachment: fixed;
 }
-
+.logo-text-small {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+}
 .bn {
   font-weight: normal;
 }
