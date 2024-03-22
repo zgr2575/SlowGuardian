@@ -18,3 +18,6 @@ Want all sites unblocked for up to a week? Use the Jammer! The jammer will do as
 
 ## Multiprofile (Coming Soon)
 Trick your Chrome into thinking that you are on a different chrome profile, and it will sync with the newly connected home email address. 
+
+# ZeroProxy V1
+Ever wanted a proxy, that after you luanch it became completely undetectable? Introducing ZeroProxy V1, this proxy only is luanchable in about:blank mode. It will close all processes related to logging the URL, and then connect back to the ZeroProxy Server and display one of the two provided web addresses.
