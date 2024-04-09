@@ -51,5 +51,8 @@ Ever wanted a proxy, that after you luanch it became completely undetectable? In
 
 # UPDATE INSTRUCTIONS
 
-Paste this: `git pull --force --allow-unrelated-histories`
-in the shell tab of the ReplIT
+Run
+``npm run upd```
+and it will then update the website
+
+Make sure to be in the **Shell** tab of the Repl while pasting this.
