@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "upd": "git pull --force --allow-unrelated-histories"
   },
   "author": "zgr2575",
   "license": "GPL-3.0-or-later",
