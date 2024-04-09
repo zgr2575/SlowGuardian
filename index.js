@@ -11,7 +11,7 @@ const app = express(server);
 const bareServer = createBareServer("/o/");
 import fetch from "node-fetch";
 const PORT = process.env.PORT || 8080;
-var v = 5;
+var v = 6;
 fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
   .then((response) => response.text())
   .then((data) => {
@@ -20,7 +20,7 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
       console.log("The current version is up to date");
     } else {
       console.log(
-        "The current version is out of date, please update to prevent the site from being blocked",
+        "The current version is out of date, please update to prevent the site from being blocked. To update please go to the GitHub Page and follow instructions",
       );
 
       throw new Error("Site is out of date, update required.");

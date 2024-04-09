@@ -45,3 +45,8 @@ Trick your Chrome into thinking that you are on a different chrome profile, and 
 # ZeroProxy V1
 
 Ever wanted a proxy, that after you luanch it became completely undetectable? Introducing ZeroProxy V1, this proxy only is luanchable in about:blank mode. It will close all processes related to logging the URL, and then connect back to the ZeroProxy Server and display one of the two provided web addresses.
+
+# UPDATE INSTRUCTIONS
+
+Paste this: `git pull --force --allow-unrelated-histories`
+in the shell tab of the ReplIT
