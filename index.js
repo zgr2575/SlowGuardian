@@ -11,7 +11,8 @@ const app = express(server);
 const bareServer = createBareServer("/o/");
 import fetch from "node-fetch";
 const PORT = process.env.PORT || 8080;
-var v = 6;
+var v = 5;
+import readline from "readline";
 fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
   .then((response) => response.text())
   .then((data) => {
@@ -19,11 +20,30 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
     if (v == parseInt(data)) {
       console.log("The current version is up to date");
     } else {
-      console.log(
-        "The current version is out of date, please update to prevent the site from being blocked. To update please go to the GitHub Page and follow instructions",
-      );
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
 
-      throw new Error("Site is out of date, update required.");
+      rl.question(
+        "The current version is out of date. Do you want to update? (yes/no)",
+        (answer) => {
+          if (answer.toLowerCase() === "yes") {
+            const { exec } = require("child_process");
+            exec("npm run upd", (error, stdout, stderr) => {
+              if (error) {
+                console.error(`Error updating: ${error}`);
+                return;
+              }
+              console.log(`Update: ${stdout}`);
+            });
+          } else {
+            conosle.log("Okay, exiting...");
+            process.exit(0);
+          }
+          rl.close();
+        },
+      );
     }
   })
   .catch((error) => {
