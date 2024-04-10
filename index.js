@@ -1,6 +1,6 @@
   import express from "express";
   import basicAuth from "express-basic-auth";
-  import http from "node:HTTP";
+  import http from "node:http";
   import { exec } from "child_process"
   import { createBareServer } from "@tomphttp/bare-server-node";
   import path from "node:path";
@@ -12,7 +12,8 @@
   const bareServer = createBareServer("/o/");
   import fetch from "node-fetch";
   const PORT = process.env.PORT || 8080;
-  var v = 5;
+  var v = 7;
+var upd = false;
   import readline from "readline";
   fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
     .then((response) => response.text())
@@ -20,6 +21,7 @@
       console.log("New version: " + data); // Log the content of the text file (version number)
       if (v == parseInt(data)) {
         console.log("The current version is up to date");
+        upd = true;
       } else {
         const rl = readline.createInterface({
           input: process.stdin,
@@ -142,7 +144,7 @@
       socket.end();
     }
   });
-
+if(upd===true){
   server.on("listening", () => {
     console.log(`Running at http://localhost:${PORT}`);
   });
@@ -150,3 +152,4 @@
   server.listen({
     port: PORT,
   });
+}
