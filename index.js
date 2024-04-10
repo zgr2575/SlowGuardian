@@ -1,6 +1,7 @@
 import express from "express";
 import basicAuth from "express-basic-auth";
-import http from "node:http";
+import http from "node:HTTP";
+import { exec } from "child_process"
 import { createBareServer } from "@tomphttp/bare-server-node";
 import path from "node:path";
 import cors from "cors";
@@ -29,7 +30,7 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
         "The current version is out of date. Do you want to update? (yes/no)",
         (answer) => {
           if (answer.toLowerCase() === "yes") {
-            const { exec } = require("child_process");
+           
             exec("npm run upd", (error, stdout, stderr) => {
               if (error) {
                 console.error(`Error updating: ${error}`);
