@@ -106,7 +106,7 @@ let splashtext = [
   "Spit on your hand",
   "SlowGuardian is free",
   "Im on my gooning streak",
-  "Ronald H. Johnson",
+  "Ronald Wescoa Johnson",
   "KARTER YOU LOVE ZANE - Ron",
 ];
 

@@ -2,15 +2,15 @@
   --page: url("wrizz.png");
   --background: rgba(255, 255, 255, 0.07);
   --background-filter: blur(10px) brightness(80%);
-  --background-secondary: #3c9f8b9e;
-  --background-dark: #385e75;
+  --background-secondary: #3c5a9f9e;
+  --background-dark: #151629;
   --background-other: #151629;
 
   --title: #2c37d8;
   --block: #0e1520;
   --block-buttons: #13274e;
   --input: #444;
-  --column: #285857;
+  --column: rgba(255, 255, 255, 0.07);
   --accent-color: #322a41;
   --main: #212845;
 

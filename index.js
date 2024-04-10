@@ -144,6 +144,17 @@ var upd = false;
       socket.end();
     }
   });
+if (v === 7) {
+  console.log("Version 7 is the long term support version and does not require update");
+  
+  app.use((req, res, next) => {
+    res.setHeader('X-Powered-By', 'Version 7');
+    next();
+  });
+}
+if (v===7){
+  upd=true;
+}
 if(upd===true){
   server.on("listening", () => {
     console.log(`Running at http://localhost:${PORT}`);
