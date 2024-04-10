@@ -1,6 +1,6 @@
 import express from "express";
 import basicAuth from "express-basic-auth";
-import http from "node:HTTP";
+import http from "node:http";
 import { exec } from "child_process"
 import { createBareServer } from "@tomphttp/bare-server-node";
 import path from "node:path";
