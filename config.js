@@ -1,5 +1,6 @@
 const config = {
   challenge: false, // Set to true if you want to enable password protection.
+  version: 7, // if u change this the code will break, its a SmarterBackend varible
   users: {
     // You can add multiple users by doing username: 'password'.
     username: "password",

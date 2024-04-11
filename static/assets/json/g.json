@@ -151,12 +151,7 @@
     "image": "/assets/media/icons/3slices.webp",
     "categories": ["all"]
   },
-  {
-    "name": "Buckshot Roulette",
-    "link": "https://buckshotroulette.online/game/v11/",
-    "image": "/assets/media/icons/buckshotroulette.webp",
-    "categories": ["all"]
-  },
+
   {
     "name": "Starblast",
     "link": "https://starblast.io",
@@ -658,12 +653,6 @@
     "categories": ["all,", "2P"]
   },
   {
-    "name": "2D Rocket League",
-    "link": "https://v6p9d9t4.ssl.hwcdn.net/html/3325334/index.html",
-    "image": "/assets/media/icons/2D-Rocket-League.webp",
-    "categories": ["all"]
-  },
-  {
     "name": "3D Dino Game",
     "link": "https://lagged.com/api/play2/t-rex-3d2/",
     "image": "/assets/media/icons/trex-run-3D.webp",
@@ -747,12 +736,7 @@
     "image": "/assets/media/icons/basketball-legends.webp",
     "categories": ["all"]
   },
-  {
-    "name": "Biggie Cheese Fight",
-    "link": "https://scratch.mit.edu/projects/163771748/fullscreen",
-    "image": "/assets/media/icons/biggiecheese.webp",
-    "categories": ["all"]
-  },
+
   {
     "name": "Bitlife",
     "link": "https://xlegends.github.io/bitlife/",

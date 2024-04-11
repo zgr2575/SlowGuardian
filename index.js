@@ -12,7 +12,7 @@
   const bareServer = createBareServer("/o/");
   import fetch from "node-fetch";
   const PORT = process.env.PORT || 8080;
-  var v = 7;
+var v=config.version;
 var upd = false;
   import readline from "readline";
   fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
@@ -22,6 +22,7 @@ var upd = false;
       if (v == parseInt(data)) {
         console.log("The current version is up to date");
         upd = true;
+        
       } else {
         const rl = readline.createInterface({
           input: process.stdin,
@@ -163,4 +164,6 @@ if(upd===true){
   server.listen({
     port: PORT,
   });
+} else{
+  console.log("The static server was stopped");
 }
