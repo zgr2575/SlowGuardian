@@ -1,17 +1,16 @@
-  import express from "express";
-  import basicAuth from "express-basic-auth";
-  import http from "node:http";
-  import { exec } from "child_process"
-  import { createBareServer } from "@tomphttp/bare-server-node";
-  import path from "node:path";
-  import cors from "cors";
-  import config from "./config.js";
-  const __dirname = process.cwd();
-  const server = http.createServer();
-  const app = express(server);
-  const bareServer = createBareServer("/o/");
-  import fetch from "node-fetch";
-  const PORT = process.env.PORT || 8080;
+import express from 'express'
+import basicAuth from 'express-basic-auth'
+import http from 'node:http'
+import { createBareServer } from '@tomphttp/bare-server-node'
+import path from 'node:path'
+import cors from 'cors'
+import config from './config.js'
+
+const __dirname = process.cwd()
+const server = http.createServer()
+const app = express(server)
+const bareServer = createBareServer('/o/')
+const PORT = process.env.PORT || 8080
 var v=config.version;
 var upd = false;
   import readline from "readline";
@@ -76,55 +75,74 @@ var upd = false;
 
     ];
 
-    routes.forEach((route) => {
-      app.get(route.path, (req, res) => {
-        res.sendFile(path.join(__dirname, "static", route.file));
-      });
-    });
+routes.forEach((route) => {
+  app.get(route.path, (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', route.file))
+  })
+})
+}
+
+if (config.local !== false) {
+app.get('/e/*', (req, res, next) => {
+  const baseUrls = [
+    'https://raw.githubusercontent.com/v-5x/x/fixy',
+    'https://raw.githubusercontent.com/ypxa/y/main',
+    'https://raw.githubusercontent.com/ypxa/w/master',
+  ]
+  fetchData(req, res, next, baseUrls)
+})
+}
+
+const fetchData = async (req, res, next, baseUrls) => {
+try {
+  const reqTarget = baseUrls.map((baseUrl) => `${baseUrl}/${req.params[0]}`)
+  let data
+  let asset
+
+  for (const target of reqTarget) {
+    asset = await fetch(target)
+    if (asset.ok) {
+      data = await asset.arrayBuffer()
+      break
+    }
   }
-  if (config.local !== false) {
-    app.get("/y/*", (req, res, next) => {
-      const baseUrl = "https://raw.githubusercontent.com/ypxa/y/main";
-      fetchData(req, res, next, baseUrl);
-    });
 
-    app.get("/f/*", (req, res, next) => {
-      const baseUrl = "https://raw.githubusercontent.com/4x-a/x/fixy";
-      fetchData(req, res, next, baseUrl);
-    });
+  if (data) {
+    res.end(Buffer.from(data))
+  } else {
+    res.status(404).send()
   }
+} catch (error) {
+  console.error(`Error fetching ${req.url}:`, error)
+  res.status(500).send()
+}
+}
 
-  const fetchData = async (req, res, next, baseUrl) => {
-    try {
-      const reqTarget = `${baseUrl}/${req.params[0]}`;
-      const asset = await fetch(reqTarget);
+app.get('*', (req, res) => {
+res.status(404).send();
+});
 
-      if (asset.ok) {
-        const data = await asset.arrayBuffer();
-        res.end(Buffer.from(data));
-      } else {
-        next();
-      }
-    } catch (error) {
-      console.error("Error fetching:", error);
-      next(error);
-    }
-  };
-  server.on("request", (req, res) => {
-    if (bareServer.shouldRoute(req)) {
-      bareServer.routeRequest(req, res);
-    } else {
-      app(req, res);
-    }
-  });
+app.use((err, req, res, next) => {
+console.error(err.stack);
+res.status(500).send();
+});
 
-  server.on("upgrade", (req, socket, head) => {
-    if (bareServer.shouldRoute(req)) {
-      bareServer.routeUpgrade(req, socket, head);
-    } else {
-      socket.end();
-    }
-  });
+server.on('request', (req, res) => {
+if (bareServer.shouldRoute(req)) {
+  bareServer.routeRequest(req, res)
+} else {
+  app(req, res)
+}
+})
+
+server.on('upgrade', (req, socket, head) => {
+if (bareServer.shouldRoute(req)) {
+  bareServer.routeUpgrade(req, socket, head)
+} else {
+  socket.end()
+}
+})
+
 if (v === 7) {
   console.log("Version 7 is the long term support version and does not require update");
   

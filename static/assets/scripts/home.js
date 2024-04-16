@@ -84,7 +84,6 @@ let splashtext = [
   "Slowwwwwwwwww",
   "SlowGuardian",
   "Donald why you getting NS blocked?",
-  "Karter is gay",
   "Wyatt is a skid",
   "YouSNAPPPPPPP",
   "You are a skid",
@@ -107,7 +106,6 @@ let splashtext = [
   "SlowGuardian is free",
   "Im on my gooning streak",
   "Ronald Wescoa Johnson",
-  "KARTER YOU LOVE ZANE - Ron",
 ];
 
 document.getElementById("splash").innerText =
