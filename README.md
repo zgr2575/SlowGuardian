@@ -4,7 +4,21 @@ A powerful frontend powerd by Ultraviolet and Smarter Backend
 ## GoGo Bypass Proxy:
 
 The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes. 
+> [!IMPORTANT]
+> If you fork this project, consider giving it a star in the original repository!
 
+#### Features:
+- About:Blank Cloaking 
+- Tab Cloaking 
+- Wide collection of apps & games 
+- Clean, Easy to use UI 
+- Inspect Element 
+- Various Themes 
+- Password Protection (Optional) 
+- Built in Tab System 
+- Now.gg Support 
+- Fast Speeds 
+- Geforce NOW Support 
 ### Install Instructions
 
 1. Go to https://replit.com and create an account, or log in.
