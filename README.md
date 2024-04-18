@@ -1,10 +1,9 @@
 # SlowGuardian
 
-A Fast Proxy to bypass GoGuardian, as well as even jamming the Goguardian license key
-
+A powerful frontend powerd by Ultraviolet and Smarter Backend
 ## GoGo Bypass Proxy:
 
-The Proxy is a refined version of Interstellar. I will be making changes to that soon.
+The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes. 
 
 ### Install Instructions
 
@@ -36,28 +35,12 @@ Paste `https://github.com/zgr2575/SlowGuardian` in the URL bar
 **Congrats, you have SG**
 Just click run to start it
 
---- V -- Old Instructions ----
-
-Paste the .git link into the search and click import, then you are able to run!
-Congrats.
-Better instructions soon.
-
-## GoGo Jammer (Soon)
-
-Want all sites unblocked for up to a week? Use the Jammer! The jammer will do as the name states and jam GoGuardian, it will delete data from the license extension. This can get you suspended, please be sure to use it with caution.
-
-## Multiprofile (Coming Soon)
-
-Trick your Chrome into thinking that you are on a different chrome profile, and it will sync with the newly connected home email address.
-
-# ZeroProxy V1
-
-Ever wanted a proxy, that after you luanch it became completely undetectable? Introducing ZeroProxy V1, this proxy only is luanchable in about:blank mode. It will close all processes related to logging the URL, and then connect back to the ZeroProxy Server and display one of the two provided web addresses.
+# Introducing Developer Info!
+You are now able to view your websites data! Go to the baseurl/d/data to view info. 
+This information will be useful for preformance if anyone decides to make plugins. (Version 8)
 
 # UPDATE INSTRUCTIONS
 
 Run
 `npm run upd`
-and it will then update the website
-
-Make sure to be in the **Shell** tab of the Repl while pasting this.
+in the **Shell** tab of your Repl. 

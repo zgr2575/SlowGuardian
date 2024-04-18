@@ -5,7 +5,7 @@ import { createBareServer } from '@tomphttp/bare-server-node'
 import path from 'node:path'
 import cors from 'cors'
 import config from './config.js'
-
+import Database from "@replit/database"
 const __dirname = process.cwd()
 const server = http.createServer()
 const app = express(server)
@@ -14,7 +14,16 @@ const PORT = process.env.PORT || 8080
 var v=config.version;
 var upd = false;
   import readline from "readline";
-  fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
+const db = new Database()
+const users = {
+  [process.env.USERNAME1]: process.env.PASSWORD1,
+  [process.env.USERNAME2]: process.env.PASSWORD2,
+  // Add more users as needed
+  // Example: [username+ any number]: password
+  // make sure to set it in secrets and here.\
+  // This is only usable with the ENVUSERS feature
+};
+fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
     .then((response) => response.text())
     .then((data) => {
       console.log("New version: " + data); // Log the content of the text file (version number)
@@ -57,6 +66,30 @@ var upd = false;
   if (config.challenge) {
     console.log("Password protection is enabled");
     console.log("Please set the passwords in the config.js file");
+   if (config.envusers){
+     app.use((req, res, next) => {
+       const authHeader = req.headers.authorization;
+       if (!authHeader || !authHeader.startsWith('Basic ')) {
+         res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+         return res.status(401).send('Authorization Required');
+       }
+       const credentials = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
+       const [username, password] = credentials.split(':');
+       if (users[username] && users[username] === password) {
+         return next();
+       } else {
+         res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+         return res.status(401).send('Authorization Required');
+       }
+     });
+   }else{
+    app.use(
+      basicAuth({
+        users: config.users,
+        challenge: true,
+      })
+    )
+   }
   }
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -81,7 +114,14 @@ routes.forEach((route) => {
   })
 })
 }
-
+db.set("serverinfodata", "server: Smarter Back End v4" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
+app.get('/d/data', (req, res, next) => {  
+  db.set("serverinfodata", "server: Smarter Back End v4" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
+  db.get("serverinfodata").then(value => {
+    res.send(value);
+    console.log("Server data has been reqested and sent")
+  })
+})
 if (config.local !== false) {
 app.get('/e/*', (req, res, next) => {
   const baseUrls = [
@@ -92,7 +132,12 @@ app.get('/e/*', (req, res, next) => {
   fetchData(req, res, next, baseUrls)
 })
 }
-
+fetch("https://0146ffeb-79d3-40bc-93c8-e4607c4938c0-00-pfqi1187e2z7.kirk.replit.dev/d/data")
+.then((response) => response.text())
+.then((data) => {
+console.log("Main server data: " + data);
+})
+      
 const fetchData = async (req, res, next, baseUrls) => {
 try {
   const reqTarget = baseUrls.map((baseUrl) => `${baseUrl}/${req.params[0]}`)
