@@ -1,6 +1,6 @@
 # SlowGuardian
 
-A powerful frontend powerd by Ultraviolet and Smarter Backend
+A powerful frontend powerd by Ultraviolet and Smarter Backend using replit
 ## GoGo Bypass Proxy:
 
 The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes. 
