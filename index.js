@@ -23,74 +23,7 @@ const users = {
   // make sure to set it in secrets and here.\
   // This is only usable with the ENVUSERS feature
 };
-fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
-    .then((response) => response.text())
-    .then((data) => {
-      console.log("New version: " + data); // Log the content of the text file (version number)
-      if (v == parseInt(data)) {
-        console.log("The current version is up to date");
-        upd = true;
-        
-      } else {
-        const rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout,
-        });
 
-        rl.question(
-          "The current version is out of date. Do you want to update? (yes/no)",
-          (answer) => {
-            if (answer.toLowerCase() === "yes") {
-
-              exec("npm run upd", (error, stdout, stderr) => {
-                if (error) {
-                  console.error(`Error updating: ${error}`);
-                  return;
-                }
-                console.log(`Update: ${stdout}`);
-              });
-            } else {
-              conosle.log("Okay, exiting...");
-              process.exit(0);
-            }
-            rl.close();
-          },
-        );
-      }
-    })
-    .catch((error) => {
-      console.error(error.message);
-      process.exit(1);
-    });
-  console.log("Current Version: " + v);
-  if (config.challenge) {
-    console.log("Password protection is enabled");
-    console.log("Please set the passwords in the config.js file");
-   if (config.envusers){
-     app.use((req, res, next) => {
-       const authHeader = req.headers.authorization;
-       if (!authHeader || !authHeader.startsWith('Basic ')) {
-         res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
-         return res.status(401).send('Authorization Required');
-       }
-       const credentials = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
-       const [username, password] = credentials.split(':');
-       if (users[username] && users[username] === password) {
-         return next();
-       } else {
-         res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
-         return res.status(401).send('Authorization Required');
-       }
-     });
-   }else{
-    app.use(
-      basicAuth({
-        users: config.users,
-        challenge: true,
-      })
-    )
-   }
-  }
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
@@ -114,9 +47,9 @@ routes.forEach((route) => {
   })
 })
 }
-db.set("serverinfodata", "server: Smarter Back End v4" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
+db.set("serverinfodata", "server: Smarter Back End v5" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
 app.get('/d/data', (req, res, next) => {  
-  db.set("serverinfodata", "server: Smarter Back End v4" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
+  db.set("serverinfodata", "server: Smarter Back End v5" + " | version: " + v + " | update avalible: " + upd + "| server uptime:" + process.uptime() + " | server memory: " + process.memoryUsage().heapUsed / 1024 / 1024);
   db.get("serverinfodata").then(value => {
     res.send(value);
     console.log("Server data has been reqested and sent")
@@ -188,17 +121,80 @@ if (bareServer.shouldRoute(req)) {
 }
 })
 
-if (v === 7) {
-  console.log("Version 7 is the long term support version and does not require update");
-  
-  app.use((req, res, next) => {
-    res.setHeader('X-Powered-By', 'Version 7');
-    next();
-  });
+
+// Update Sw
+fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
+.then((response) => response.text())
+.then((data) => {
+  console.log("New version: " + data); // Log the content of the text file (version number)
+  if (v == parseInt(data)) {
+    console.log("The current version is up to date");
+    upd = true;
+
+  } else {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    rl.question(
+      "The current version is out of date. Do you want to update? (yes/no)",
+      (answer) => {
+        if (answer.toLowerCase() === "yes") {
+
+          exec("npm run upd", (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error updating: ${error}`);
+              return;
+            }
+            console.log(`Update: ${stdout}`);
+          });
+        } else {
+          conosle.log("Okay, exiting...");
+          process.exit(0);
+        }
+        rl.close();
+      },
+    );
+  }
+})
+.catch((error) => {
+  console.error(error.message);
+  process.exit(1);
+});
+// -------------------------
+// Auth
+if (config.challenge) {
+  console.log("Password protection is enabled");
+  console.log("Please set the passwords in the config.js file");
+ if (config.envusers){
+   app.use((req, res, next) => {
+     const authHeader = req.headers.authorization;
+     if (!authHeader || !authHeader.startsWith('Basic ')) {
+       res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+       return res.status(401).send('Authorization Required');
+     }
+     const credentials = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
+     const [username, password] = credentials.split(':');
+     if (users[username] && users[username] === password) {
+       return next();
+     } else {
+       res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+       return res.status(401).send('Authorization Required');
+     }
+   });
+ }else{
+  app.use(
+    basicAuth({
+      users: config.users,
+      challenge: true,
+    })
+  )
+ }
 }
-if (v===7){
-  upd=true;
-}
+// -------------------------
+
+
 if(upd===true){
   server.on("listening", () => {
     console.log(`Running at http://localhost:${PORT}`);
@@ -207,6 +203,7 @@ if(upd===true){
   server.listen({
     port: PORT,
   });
+   console.log("Current Version: " + v);
 } else{
   console.log("The static server was stopped");
 }
