@@ -2,9 +2,6 @@
 name: Security Issue
 about: Report a security issue within SlowGuardian
 title: "[SECURITY]"
-labels: ''
+labels: ""
 assignees: zgr2575
-
 ---
-
-

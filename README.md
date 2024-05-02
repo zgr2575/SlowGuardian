@@ -1,24 +1,28 @@
 # SlowGuardian
 
 A powerful frontend powerd by Ultraviolet and Smarter Backend using replit
+
 ## GoGo Bypass Proxy:
 
-The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes. 
+The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes.
+
 > [!IMPORTANT]
 > If you fork this project, consider giving it a star in the original repository!
 
 #### Features:
-- About:Blank Cloaking 
-- Tab Cloaking 
-- Wide collection of apps & games 
-- Clean, Easy to use UI 
-- Inspect Element 
-- Various Themes 
-- Password Protection (Optional) 
-- Built in Tab System 
-- Now.gg Support 
-- Fast Speeds 
-- Geforce NOW Support 
+
+- About:Blank Cloaking
+- Tab Cloaking
+- Wide collection of apps & games
+- Clean, Easy to use UI
+- Inspect Element
+- Various Themes
+- Password Protection (Optional)
+- Built in Tab System
+- Now.gg Support
+- Fast Speeds
+- Geforce NOW Support
+
 ### Install Instructions
 
 1. Go to https://replit.com and create an account, or log in.
@@ -50,11 +54,12 @@ Paste `https://github.com/zgr2575/SlowGuardian` in the URL bar
 Just click run to start it
 
 # Introducing Developer Info!
-You are now able to view your websites data! Go to the baseurl/d/data to view info. 
+
+You are now able to view your websites data! Go to the baseurl/d/data to view info.
 This information will be useful for preformance if anyone decides to make plugins. (Version 8)
 
 # UPDATE INSTRUCTIONS
 
 Run
 `npm run upd`
-in the **Shell** tab of your Repl. 
+in the **Shell** tab of your Repl.

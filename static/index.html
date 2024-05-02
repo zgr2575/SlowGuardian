@@ -13,61 +13,70 @@
   <body class="center" onload="splashtext()">
     <div class="fixed-nav-bar"></div>
     <div id="particles-js">
-      <script rel="preload" src="https://cdn.jsdelivr.net/particles.js/2.0.0/"></script>
+      <script
+        rel="preload"
+        src="https://cdn.jsdelivr.net/particles.js/2.0.0/"
+      ></script>
       <div class="main">
         <h1 class="title"><xn>Slow</xn>Guardian</h1>
-        
-        <p id="splash">Unknown</p>
-         <div id="countdown"></div>
-        <div class="search-container">
+        <br>
+        <p style="color:white;" id="splash">Unknown</p>
+        <div style="color:white;"id="countdown"></div>
+        <br>
+      
+        <div style="color:white;" class="search-container">
           <form id="fs" method="POST">
-            <input id="is" class="main-search" placeholder="Search with Google or enter address" type="text" />
+            <input
+              id="is"
+              class="main-search"
+              placeholder="Search with Google or enter address"
+              type="text"
+            />
           </form>
         </div>
-        <!--- <div class="sug">
-          <div class="sugelement" onclick="blank('https://google.com/')">Google</div></a><div class="sugelement" onclick="blank('https://youtube.com/')">Youtube</div></a> <div class="sugelement" onclick="blank('https://play.geforcenow.com')">GeForce</div></a> <div onclick="blank('https://now.gg/play/roblox-corporation/5349/roblox')" class="sugelement">Roblox</div>
-        </div> --->
       </div>
     </div>
     <script src="/assets/scripts/h.js?v=16"></script>
     <script src="assets/scripts/index.js?v=14"></script>
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
-    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/1237c86ba0.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="/assets/scripts/main.js?v=31"></script>
     <script>
-    var end = new Date('05/28/2024 2:35 AM');
+      var end = new Date("05/28/2024 2:35 AM");
 
-        var _second = 1000;
-        var _minute = _second * 60;
-        var _hour = _minute * 60;
-        var _day = _hour * 24;
-        var timer;
+      var _second = 1000;
+      var _minute = _second * 60;
+      var _hour = _minute * 60;
+      var _day = _hour * 24;
+      var timer;
 
-        function showRemaining() {
-            var now = new Date();
-            var distance = end - now;
-            if (distance < 0) {
+      function showRemaining() {
+        var now = new Date();
+        var distance = end - now;
+        if (distance < 0) {
+          clearInterval(timer);
+          document.getElementById("countdown").innerHTML = "EXPIRED!";
 
-                clearInterval(timer);
-                document.getElementById('countdown').innerHTML = 'EXPIRED!';
-
-                return;
-            }
-            var days = Math.floor(distance / _day);
-            var hours = Math.floor((distance % _day) / _hour);
-            var minutes = Math.floor((distance % _hour) / _minute);
-            var seconds = Math.floor((distance % _minute) / _second);
-
-            document.getElementById('countdown').innerHTML = days + 'days ';
-            document.getElementById('countdown').innerHTML += hours + 'hrs ';
-            document.getElementById('countdown').innerHTML += minutes + 'mins ';
-            document.getElementById('countdown').innerHTML += seconds + 'secs';
+          return;
         }
+        var days = Math.floor(distance / _day);
+        var hours = Math.floor((distance % _day) / _hour);
+        var minutes = Math.floor((distance % _hour) / _minute);
+        var seconds = Math.floor((distance % _minute) / _second);
 
-        timer = setInterval(showRemaining, 1000);
+        document.getElementById("countdown").innerHTML = days + "days ";
+        document.getElementById("countdown").innerHTML += hours + "hrs ";
+        document.getElementById("countdown").innerHTML += minutes + "mins ";
+        document.getElementById("countdown").innerHTML += seconds + "secs";
+      }
+
+      timer = setInterval(showRemaining, 1000);
     </script>
- 
+
     <div id="adv"></div>
   </body>
 </html>

@@ -1,23 +1,23 @@
 :root {
-  --page: url("wrizz.png");
+  --page: url("sgwallpaper.jpg");
   --background: rgba(255, 255, 255, 0.07);
   --background-filter: blur(10px) brightness(80%);
   --background-secondary: #3c5a9f9e;
   --background-dark: #151629;
   --background-other: #151629;
 
-  --title: #2c37d8;
+  --title: #626bef;
   --block: #0e1520;
   --block-buttons: #13274e;
-  --input: #444;
+  --input: #ffffff;
   --column: rgb(0, 0, 0, 0.5);
   --accent-color: #322a41;
   --main: #212845;
 
   --text-primary: #fff;
   --text-secondary: #b0b0b0;
-  --text-placeholder: #aaa;
-  --text-dark: #555;
+  --text-placeholder: #fff5f5;
+  --text-dark: #8c9197;
 
   --transparent: rgb(0, 0, 0, 0);
 }
