@@ -5,7 +5,6 @@ import { createBareServer } from "@tomphttp/bare-server-node";
 import path from "node:path";
 import cors from "cors";
 import config from "./config.js";
-import Database from "@replit/database";
 const __dirname = process.cwd();
 const server = http.createServer();
 const app = express(server);
@@ -14,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 var v = config.version;
 var upd = false;
 import readline from "readline";
-const db = new Database();
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,11 +39,8 @@ if (config.routes !== false) {
 }
 console.log("Sign up vanity is: " + suurl.toString());
 var serverid = Math.floor(Math.random() * 101);
-db.list().then(keys => {
-  console.log(keys);
-});
-db.set(
-  "serverinfodata",
+
+var db=
   "server: Smarter Back End v5" +
     " | version: " +
     v +
@@ -57,11 +53,9 @@ db.set(
     "serverid: " +
     serverid +
     "server identity: " +
-    "could not get",
-);
+    "could not get";
 app.get("/d/data", (req, res, next) => {
-  db.set(
-    "serverinfodata",
+  db =
     "server: Smarter Back End v5" +
       " | version: " +
       v +
@@ -74,12 +68,12 @@ app.get("/d/data", (req, res, next) => {
       " serverid: " +
       serverid +
       " server identity: " +
-      "SG SERVER",
-  );
-  db.get("serverinfodata").then((value) => {
-    res.send(value);
+      "SG SERVER"
+  ;
+
+    res.send(db);
     console.log("Server data has been reqested and sent");
-  });
+
 });
 if (config.local !== false) {
   app.get("/e/*", (req, res, next) => {
@@ -91,39 +85,6 @@ if (config.local !== false) {
     fetchData(req, res, next, baseUrls);
   });
 }
-fetch(
-  "https://0146ffeb-79d3-40bc-93c8-e4607c4938c0-00-pfqi1187e2z7.kirk.replit.dev/d/data",
-)
-  .then((response) => response.text())
-  .then((data) => {
-    console.log("Main server data: " + data);
-  });
-
-const fetchData = async (req, res, next, baseUrls) => {
-  try {
-    const reqTarget = baseUrls.map((baseUrl) => `${baseUrl}/${req.params[0]}`);
-    let data;
-    let asset;
-
-    for (const target of reqTarget) {
-      asset = await fetch(target);
-      if (asset.ok) {
-        data = await asset.arrayBuffer();
-        break;
-      }
-    }
-
-    if (data) {
-      res.end(Buffer.from(data));
-    } else {
-      res.status(404).send();
-    }
-  } catch (error) {
-    console.error(`Error fetching ${req.url}:`, error);
-    res.status(500).send();
-  }
-};
-
 app.get("*", (req, res) => {
   res.status(404).send();
 });
@@ -206,124 +167,7 @@ app.get("/", (req, res) => {
 });
 // -------------------------
 // Auth
-app.get("/logout", (req, res) => {
-  res.cookie("loggedIn", "false");
-  res.clearCookie("username");
-  res.redirect("/");
-  console.log("successfully logged out")
-});
-app.post("/loginsubmit", (req, res) => {
-  var username = req.body.username;
-  var password = req.body.password;
-  db.list().then(keys => {
-      if (Array.isArray(keys) && keys.includes(username)) {
-      db.get(username).then(value => {
-        if(password == value){
-          res.cookie("loggedIn", "true");
-          res.cookie("username", username);
-          console.log("logged in successfully")
-          alert("Log-in successful");
-          res.redirect("/");
-        } else{
-          res.send("Wrong password.");
-        }
-      });
-    } else{
-      res.send("Account not found.");
-    }
-  });
-});
 
-app.post("/createaccount", (req, res) => {
-  var newusername = req.body.newusername;
-  var newpassword = req.body.newpassword;
- var letters = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-  ];
-  var cap_letters = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
-  var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  var allchars = letters + cap_letters + numbers + ["_"];
- var goodusername = true;
-  for (let i of newusername) {
-    if (!allchars.includes(i)) {
-      goodusername = false;
-    }
-  }
-  if (goodusername) {
-    db.list().then((keys) => {
-      if (Array.isArray(keys) && keys.includes(newusername)) {
-        res.send("Username taken.");
-      } else if (newusername == "") {
-        res.send("Please enter a username.");
-      } else if (newpassword == "") {
-        res.send("Please enter a password.");
-      } else {
-        db.set(newusername, newpassword).then(() =>
-          console.log("new account created"),
-        );
-        res.cookie("loggedIn", "true");
-        res.cookie("username", newusername);
-        res.redirect("/");
-      }
-    });
-  } else {
-    res.send(
-      "Username can only contain alphanumeric characters and underscores.",
-    );
-  }
-});
 if (config.challenge) {
   console.log("Password protection is enabled");
   console.log("Please set the passwords in the config.js file");

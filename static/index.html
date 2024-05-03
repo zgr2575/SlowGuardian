@@ -46,7 +46,7 @@
     ></script>
     <script src="/assets/scripts/main.js?v=31"></script>
     <script>
-      var end = new Date("05/28/2024 2:35 AM");
+      var end = new Date("05/24/2024 2:35 PM");
 
       var _second = 1000;
       var _minute = _second * 60;
@@ -68,10 +68,10 @@
         var minutes = Math.floor((distance % _hour) / _minute);
         var seconds = Math.floor((distance % _minute) / _second);
 
-        document.getElementById("countdown").innerHTML = days + "days ";
-        document.getElementById("countdown").innerHTML += hours + "hrs ";
-        document.getElementById("countdown").innerHTML += minutes + "mins ";
-        document.getElementById("countdown").innerHTML += seconds + "secs";
+        document.getElementById("countdown").innerHTML = days + " days ";
+        document.getElementById("countdown").innerHTML += hours + " hours ";
+        document.getElementById("countdown").innerHTML += minutes + " minutes and ";
+        document.getElementById("countdown").innerHTML += seconds + " seconds left until summer";
       }
 
       timer = setInterval(showRemaining, 1000);
