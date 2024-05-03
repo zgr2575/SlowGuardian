@@ -13,22 +13,19 @@ const PORT = process.env.PORT || 8080;
 var v = config.version;
 var upd = false;
 import readline from "readline";
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "static")));
-var suurl = Math.floor(Math.random() * 10001);
 if (config.routes !== false) {
   const routes = [
+    { path: "/", file: "index.html" },
     { path: "/ap", file: "apps.html" },
     { path: "/g", file: "games.html" },
     { path: "/s", file: "settings.html" },
     { path: "/p", file: "go.html" },
     { path: "/li", file: "login.html" },
-    { path: "/tos", file: "tos.html" },
-    { path: "/" + suurl.toString(), file: "signup.html" },
+    { path: "/tos", file: "tos.html" }
   ];
 
   routes.forEach((route) => {
@@ -37,7 +34,6 @@ if (config.routes !== false) {
     });
   });
 }
-console.log("Sign up vanity is: " + suurl.toString());
 var serverid = Math.floor(Math.random() * 101);
 
 var db=
@@ -55,6 +51,7 @@ var db=
     "server identity: " +
     "could not get";
 app.get("/d/data", (req, res, next) => {
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
   db =
     "server: Smarter Back End v5" +
       " | version: " +
@@ -70,9 +67,9 @@ app.get("/d/data", (req, res, next) => {
       " server identity: " +
       "SG SERVER"
   ;
-
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
     res.send(db);
-    console.log("Server data has been reqested and sent");
+    console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
 
 });
 if (config.local !== false) {
@@ -114,9 +111,9 @@ server.on("upgrade", (req, socket, head) => {
 fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
   .then((response) => response.text())
   .then((data) => {
-    console.log("New version: " + data); 
+    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data); 
     if (v == parseInt(data)) {
-      console.log("The current version is up to date");
+      console.log("[SLOWGUARDIAN]: UP TO DATE");
       upd = true;
     } else {
       const rl = readline.createInterface({
@@ -148,23 +145,7 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
     console.error(error.message);
     process.exit(1);
   });
-app.get("/", (req, res) => {
-  const loggedIn = req.cookies.loggedIn;
-  const username = req.cookies.username;
 
-  if (loggedIn === "true") {
-    db.list().then(keys => {
-      if (keys.includes(username)) {
-        res.render("index.html", { username: username }); 
-        
-      } else {
-        res.redirect("/si");
-      }
-    });
-  } else {
-    res.render("si.html");
-  }
-});
 // -------------------------
 // Auth
 
@@ -201,13 +182,12 @@ if (config.challenge) {
 }
 // -------------------------
 
-if (upd === true) {
   server.on("listening", () => {
-    console.log(`Running at http://localhost:${PORT}`);
+    console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
   });
-}
+
 
 server.listen({
   port: PORT,
 });
-console.log("Current Version: " + v);
+console.log("[SLOWGUARDIAN]: LOCAL VERSION: " + v);
