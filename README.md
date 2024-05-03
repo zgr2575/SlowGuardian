@@ -25,8 +25,11 @@ The Proxy is a modern version of Interstellar, but since release everything has 
 
 ### Install Instructions
 ```git clone https://github.com/zgr2575/SlowGuardian```
+<br>
 ```cd SlowGuardian```
+<br>
 ```npm install```
+<br>
 ```npm start```
 
 Updating
