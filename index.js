@@ -37,7 +37,7 @@ if (config.routes !== false) {
 var serverid = Math.floor(Math.random() * 101);
 
 var db=
-  "server: Smarter Back End v5" +
+  "server: Smarter Back End OPTIMUS v1 " +
     " | version: " +
     v +
     " | update avalible: " +
@@ -49,11 +49,11 @@ var db=
     "serverid: " +
     serverid +
     "server identity: " +
-    "could not get";
+    "Rasphberry Pi Optimized";
 app.get("/d/data", (req, res, next) => {
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
+  console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
   db =
-    "server: Smarter Back End v5" +
+    "server: Smarter Back End OPTIMUS v1" +
       " | version: " +
       v +
       " | update avalible: " +
@@ -65,25 +65,15 @@ app.get("/d/data", (req, res, next) => {
       " serverid: " +
       serverid +
       " server identity: " +
-      "SG SERVER"
+      "OPTIMAL PI SG SERVER"
   ;
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
+  console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
     res.send(db);
-    console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
+    console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
 
 });
-if (config.local !== false) {
-  app.get("/e/*", (req, res, next) => {
-    const baseUrls = [
-      "https://raw.githubusercontent.com/v-5x/x/fixy",
-      "https://raw.githubusercontent.com/ypxa/y/main",
-      "https://raw.githubusercontent.com/ypxa/w/master",
-    ];
-    fetchData(req, res, next, baseUrls);
-  });
-}
 app.get("*", (req, res) => {
-  res.status(404).send();
+  res.status(404).send("404 - Page Not Found");
 });
 
 app.use((err, req, res, next) => {
@@ -108,12 +98,12 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 // Update Sw
-fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
+fetch("https://github.com/zgr2575/SlowGuardian/raw/raspherry-pi-support/version.txt")
   .then((response) => response.text())
   .then((data) => {
-    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data); 
+    console.log("[SLOWGUARDIAN-Pi]: CURRENT VERSION: " + data); 
     if (v == parseInt(data)) {
-      console.log("[SLOWGUARDIAN]: UP TO DATE");
+      console.log("[SLOWGUARDIAN-Pi]: UP TO DATE");
       upd = true;
     } else {
       const rl = readline.createInterface({
@@ -133,8 +123,8 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
               console.log(`Update: ${stdout}`);
             });
           } else {
-            conosle.log("Okay, exiting...");
-            process.exit(0);
+            console.log("Okay, exiting boostrape...");
+        // We will not exit with Pi Version
           }
           rl.close();
         },
@@ -190,4 +180,4 @@ if (config.challenge) {
 server.listen({
   port: PORT,
 });
-console.log("[SLOWGUARDIAN]: LOCAL VERSION: " + v);
+console.log("[SLOWGUARDIAN-Pi]: LOCAL VERSION: " + v);
