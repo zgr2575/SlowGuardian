@@ -1,10 +1,8 @@
-# SlowGuardian
+# SlowGuardian: Pi
 
-A powerful frontend powerd by Ultraviolet and Smarter Backend.
+A powerful frontend powerd by Ultraviolet and Smarter Backend. Optimized for the Raspberry Pi.
 
 ## GoGo Bypass Proxy:
-
-The Proxy is a modern version of Interstellar, but since release everything has changed. There is new UI, request handling, and themes.
 
 > [!IMPORTANT]
 > If you fork this project, consider giving it a star in the original repository!
@@ -19,7 +17,7 @@ The Proxy is a modern version of Interstellar, but since release everything has 
 - Various Themes
 - Password Protection (Optional)
 - Built in Tab System
-- Now.gg Support
+- Now.gg Support 
 - Fast Speeds
 - Geforce NOW Support
 
@@ -38,16 +36,17 @@ Updating
 
 
 ---
-TO UPDATE OR DO ANYTHING ON REPLIT, PLEASE REFFER TO OLD INSTRUCTON ON THE V7
-LONG TERM SUPPORT BRANCH, WE NOW SUPPORT EVERYTHING. REPLIT DEVELOPMENT DISCONTINUED
 
-# Introducing Developer Info!
 
-You are now able to view your websites data! Go to the baseurl/d/data to view info.
-This information will be useful for preformance if anyone decides to make plugins. (Version 8)
+# Developer Info!
 
+View your websites data! Go to the baseurl/d/data to view info.
+This information will be useful for preformance if anyone decides to make plugins. (Version 8 ON MAIN)
+
+# Plugin Support! [COMING SOON]
+This is coming soon. 
 # UPDATE INSTRUCTIONS
 
 Run
 `npm run upd`
-in the **Shell** tab of your Repl.
+in **Shell**.
