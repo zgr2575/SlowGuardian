@@ -17,26 +17,25 @@ A powerful frontend powerd by Ultraviolet and Smarter Backend. Optimized for the
 - Various Themes
 - Password Protection (Optional)
 - Built in Tab System
-- Now.gg Support 
+- Now.gg Support
 - Fast Speeds
 - Geforce NOW Support
 
 ### Install Instructions
-```git clone https://github.com/zgr2575/SlowGuardian```
+
+`git clone https://github.com/zgr2575/SlowGuardian`
 <br>
-```cd SlowGuardian```
+`cd SlowGuardian`
 <br>
-```npm install```
+`npm install`
 <br>
-```npm start```
+`npm start`
 
 Updating
-```cd SlowGuardian```
-```git pull --force --allow-unrelated-histories```
-
+`cd SlowGuardian`
+`git pull --force --allow-unrelated-histories`
 
 ---
-
 
 # Developer Info!
 
@@ -44,7 +43,9 @@ View your websites data! Go to the baseurl/d/data to view info.
 This information will be useful for preformance if anyone decides to make plugins. (Version 8 ON MAIN)
 
 # Plugin Support! [COMING SOON]
-This is coming soon. 
+
+This is coming soon.
+
 # UPDATE INSTRUCTIONS
 
 Run

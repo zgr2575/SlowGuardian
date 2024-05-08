@@ -17,27 +17,44 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "static")));
-if (config.routes !== false) {
-  const routes = [
-    { path: "/", file: "index.html" },
-    { path: "/ap", file: "apps.html" },
-    { path: "/g", file: "games.html" },
-    { path: "/s", file: "settings.html" },
-    { path: "/p", file: "go.html" },
-    { path: "/li", file: "login.html" },
-    { path: "/tos", file: "tos.html" }
-  ];
 
-  routes.forEach((route) => {
-    app.get(route.path, (req, res) => {
-      res.sendFile(path.join(__dirname, "static", route.file));
-    });
+const routes = [
+  { path: "/", file: "index.html" },
+  { path: "/ap", file: "apps.html" },
+  { path: "/g", file: "games.html" },
+  { path: "/s", file: "settings.html" },
+  { path: "/p", file: "go.html" },
+  { path: "/li", file: "login.html" },
+  { path: "/tos", file: "tos.html" },
+];
+
+routes.forEach((route) => {
+  app.get(route.path, (req, res) => {
+    res.sendFile(path.join(__dirname, "static", route.file));
   });
-}
+});
 var serverid = Math.floor(Math.random() * 101);
 
-var db=
+var db =
   "server: Smarter Back End OPTIMUS v1 " +
+  " | version: " +
+  v +
+  " | update avalible: " +
+  upd +
+  "| server uptime:" +
+  process.uptime() +
+  " | server memory: " +
+  process.memoryUsage().heapUsed / 1024 / 1024 +
+  "serverid: " +
+  serverid +
+  "server identity: " +
+  "Rasphberry Pi Optimized";
+app.get("/d/data", (req, res, next) => {
+  console.log(
+    "[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING",
+  );
+  db =
+    "server: Smarter Back End OPTIMUS v1" +
     " | version: " +
     v +
     " | update avalible: " +
@@ -46,31 +63,17 @@ var db=
     process.uptime() +
     " | server memory: " +
     process.memoryUsage().heapUsed / 1024 / 1024 +
-    "serverid: " +
+    " serverid: " +
     serverid +
-    "server identity: " +
-    "Rasphberry Pi Optimized";
-app.get("/d/data", (req, res, next) => {
-  console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
-  db =
-    "server: Smarter Back End OPTIMUS v1" +
-      " | version: " +
-      v +
-      " | update avalible: " +
-      upd +
-      "| server uptime:" +
-      process.uptime() +
-      " | server memory: " +
-      process.memoryUsage().heapUsed / 1024 / 1024 +
-      " serverid: " +
-      serverid +
-      " server identity: " +
-      "OPTIMAL PI SG SERVER"
-  ;
-  console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
-    res.send(db);
-    console.log("[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
-
+    " server identity: " +
+    "OPTIMAL PI SG SERVER";
+  console.log(
+    "[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING",
+  );
+  res.send(db);
+  console.log(
+    "[SMARTERBACKEND-OPTIMUS]: SERVER DATA HAS BEEN SENT | STATUS: SENT",
+  );
 });
 app.get("*", (req, res) => {
   res.status(404).send("404 - Page Not Found");
@@ -98,10 +101,12 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 // Update Sw
-fetch("https://github.com/zgr2575/SlowGuardian/raw/raspherry-pi-support/version.txt")
+fetch(
+  "https://github.com/zgr2575/SlowGuardian/raw/raspherry-pi-support/version.txt",
+)
   .then((response) => response.text())
   .then((data) => {
-    console.log("[SLOWGUARDIAN-Pi]: CURRENT VERSION: " + data); 
+    console.log("[SLOWGUARDIAN-Pi]: CURRENT VERSION: " + data);
     if (v == parseInt(data)) {
       console.log("[SLOWGUARDIAN-Pi]: UP TO DATE");
       upd = true;
@@ -124,7 +129,7 @@ fetch("https://github.com/zgr2575/SlowGuardian/raw/raspherry-pi-support/version.
             });
           } else {
             console.log("Okay, exiting boostrape...");
-        // We will not exit with Pi Version
+            // We will not exit with Pi Version
           }
           rl.close();
         },
@@ -137,45 +142,9 @@ fetch("https://github.com/zgr2575/SlowGuardian/raw/raspherry-pi-support/version.
   });
 
 // -------------------------
-// Auth
-
-if (config.challenge) {
-  console.log("Password protection is enabled");
-  console.log("Please set the passwords in the config.js file");
-  if (config.envusers) {
-    app.use((req, res, next) => {
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Basic ")) {
-        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
-        return res.status(401).send("Authorization Required");
-      }
-      const credentials = Buffer.from(
-        authHeader.split(" ")[1],
-        "base64",
-      ).toString();
-      const [username, password] = credentials.split(":");
-      if (users[username] && users[username] === password) {
-        return next();
-      } else {
-        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
-        return res.status(401).send("Authorization Required");
-      }
-    });
-  } else {
-    app.use(
-      basicAuth({
-        users: config.users,
-        challenge: true,
-      }),
-    );
-  }
-}
-// -------------------------
-
-  server.on("listening", () => {
-    console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
-  });
-
+server.on("listening", () => {
+  console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
+});
 
 server.listen({
   port: PORT,
