@@ -193,12 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const btn = document.createElement("button");
         btn.appendChild(pinIcon);
-        btn.style.float = "right";
-        btn.style.backgroundColor = "rgb(45,45,45)";
-        btn.style.borderRadius = "50%";
+        btn.style.float = "left";
+        btn.style.backgroundColor = "#626bef";
+        btn.style.borderRadius = "5px";
         btn.style.borderColor = "transparent";
         btn.style.color = "white";
-        btn.style.top = "-200px";
+        btn.style.top = "-10px";
         btn.style.position = "relative";
         btn.onclick = function () {
           setPin(pinNum);
