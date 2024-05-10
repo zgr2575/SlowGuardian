@@ -132,7 +132,8 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
               }
               console.log(`Update: ${stdout}`);
             });
-          } else {
+          }
+          else {
             conosle.log("Okay, exiting...");
             process.exit(0);
           }
