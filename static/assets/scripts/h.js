@@ -164,34 +164,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
 })
 // Splash
 let SplashT = [
-  "I hate gogaudian!",
-  "Slowest Proxy!",
-  "Skid Alert",
-  "Slowwwwwwwwww",
-  "SlowGuardian",
-  "Donald why you getting NS blocked?",
-  "Wyatt is a skid",
-  "YouSNAPPPPPPP",
-  "You are a skid",
-  "Guardian",
-  "SlowGuardian is the best",
-  "Abortion is wrong!!",
-  "Adolf Hitler needs to be stopped",
-  "All lives matter",
-  "Racism is bad!",
-  "The Pharaoh is gonna get you",
-  "The Pharaoh told me to",
-  "The Pharaoh MADE ME do it",
-  "The Pharaoh is gonna eat you",
-  "Ermmmm. Allow Popups",
-  "About:Black",
-  "Jayden is gay",
-  "Naked Mole Rat",
-  "Medium Pace",
-  "Spit on your hand",
-  "SlowGuardian is free",
-  "Im on my gooning streak",
-  "Ronald Wescoa Johnson",
+  "SlowGuardian will be back next year!",
+
 ];
 
 let SplashI = Math.floor(Math.random() * SplashT.length)
