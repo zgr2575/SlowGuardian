@@ -1,6 +1,9 @@
 # SlowGuardian
 
+SlowGuardian will continue development on September 1st, 2024
+
 A powerful frontend powerd by Ultraviolet and Smarter Backend.
+
 ![image](https://github.com/zgr2575/SlowGuardian/assets/62474113/4b9ddea2-45b3-459c-b43f-64755f81547c)
 
 ## GoGo Bypass Proxy:
