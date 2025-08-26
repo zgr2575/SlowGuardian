@@ -59,7 +59,7 @@ async function createSlowGuardianServer() {
           fontSrc: ["'self'", "https:", "data:"],
           objectSrc: ["'none'"],
           mediaSrc: ["'self'", "https:", "blob:"],
-          frameSrc: ["'self'", "https:"],
+          frameSrc: ["'self'", "https:", "blob:"],
         },
       },
       crossOriginEmbedderPolicy: false,
