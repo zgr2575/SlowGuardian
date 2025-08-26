@@ -100,6 +100,9 @@ class SlowGuardianApp {
     // Initialize proxy features
     setupProxyFeatures();
 
+    // Setup motivational quotes
+    this.setupMotivationalQuotes();
+
     // Setup tab management
     this.setupTabManagement();
 
@@ -629,6 +632,78 @@ class SlowGuardianApp {
         hasTouch: device.hasTouch(),
       },
     };
+  }
+
+  setupMotivationalQuotes() {
+    const quotes = [
+      {
+        text: "The way to get started is to quit talking and begin doing.",
+        author: "Walt Disney"
+      },
+      {
+        text: "Don't be afraid to give up the good to go for the great.",
+        author: "John D. Rockefeller"
+      },
+      {
+        text: "Innovation distinguishes between a leader and a follower.",
+        author: "Steve Jobs"
+      },
+      {
+        text: "The future belongs to those who believe in the beauty of their dreams.",
+        author: "Eleanor Roosevelt"
+      },
+      {
+        text: "Your limitation—it's only your imagination.",
+        author: "Unknown"
+      },
+      {
+        text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        author: "Winston Churchill"
+      },
+      {
+        text: "The only way to do great work is to love what you do.",
+        author: "Steve Jobs"
+      },
+      {
+        text: "Life is what happens to you while you're busy making other plans.",
+        author: "John Lennon"
+      },
+      {
+        text: "Believe you can and you're halfway there.",
+        author: "Theodore Roosevelt"
+      },
+      {
+        text: "The best time to plant a tree was 20 years ago. The second best time is now.",
+        author: "Chinese Proverb"
+      }
+    ];
+
+    const quoteElement = document.querySelector('.quote-text');
+    const authorElement = document.querySelector('.quote-author');
+    
+    if (quoteElement && authorElement) {
+      // Get random quote
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      
+      // Set the quote
+      quoteElement.textContent = `"${randomQuote.text}"`;
+      authorElement.textContent = `- ${randomQuote.author}`;
+      
+      // Save the selected quote for the day
+      const today = new Date().toDateString();
+      const savedQuote = this.getPreference('dailyQuote');
+      
+      if (!savedQuote || savedQuote.date !== today) {
+        this.savePreference('dailyQuote', {
+          date: today,
+          quote: randomQuote
+        });
+      } else {
+        // Use saved quote for today
+        quoteElement.textContent = `"${savedQuote.quote.text}"`;
+        authorElement.textContent = `- ${savedQuote.quote.author}`;
+      }
+    }
   }
 }
 

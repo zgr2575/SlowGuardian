@@ -2,43 +2,205 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <script src="./m/bundle.js?v=5"></script>
-    <script src="./m/config.js?v=5"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
-    <script src="/assets/scripts/main.js?v=32"></script>
-    <script src="/assets/scripts/index.js?v=14"></script>
-    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
-    <script src="assets/scripts/a.js?v=40"></script>
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Apps</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
-    <div class="fixed-nav-bar"></div>
-    <div class="input-container">
-      <input type="text" id="searchbarbottom" onkeyup="search_bar()" placeholder="Search" />
-      <select id="category" name="category" onchange="show_category()">
-        <option value="all">All</option>
-        <option value="android">Android Emulator</option>
-        <option value="social">Social</option>
-        <option value="stream">Streaming</option>
-        <option value="message">Messaging</option>
-        <option value="game">Game Sites</option>
-        <option value="cloud">Cloud Gaming</option>
-        <option value="tool">Tools</option>
-        <option value="media">Media</option>
-        <option value="AI">AI</option>
-        <option value="emu">Emulator</option>
-        <option value="mail">Mail</option>
-      </select>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
     </div>
-    <div class="pinned-apps"></div>
-    <div class="container-apps"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link active" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-apps">
+        <div class="page-header">
+          <h2 class="page-title">Applications</h2>
+          <p class="page-subtitle">Access your favorite web applications</p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="content-controls">
+          <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input
+              type="text"
+              class="search-input"
+              id="searchbarbottom"
+              placeholder="Search applications..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          
+          <select id="category" name="category" class="filter-select" onchange="show_category()">
+            <option value="all">All Categories</option>
+            <option value="android">Android Emulator</option>
+            <option value="social">Social</option>
+            <option value="stream">Streaming</option>
+            <option value="message">Messaging</option>
+            <option value="game">Game Sites</option>
+            <option value="cloud">Cloud Gaming</option>
+            <option value="tool">Tools</option>
+            <option value="media">Media</option>
+            <option value="AI">AI</option>
+            <option value="emu">Emulator</option>
+            <option value="mail">Mail</option>
+          </select>
+        </div>
+
+        <!-- Pinned Apps -->
+        <div class="pinned-apps" id="pinned-apps"></div>
+
+        <!-- Apps Grid -->
+        <div class="content-grid" id="apps-grid">
+          <div class="container-apps"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Proxy Bundle -->
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+
+    <!-- App Scripts -->
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/v9/router.js" type="module"></script>
+    <script src="assets/scripts/v9/proxy.js" type="module"></script>
+    <script src="assets/scripts/v9/ui.js" type="module"></script>
+    <script src="assets/scripts/v9/app.js" type="module"></script>
+    
+    <!-- Legacy Apps Script -->
+    <script src="assets/scripts/a.js?v=40"></script>
     <script src="assets/scripts/main.js?v=32"></script>
+    <script>
+      // Update search function to work with new styling
+      function search_bar() {
+        const searchInput = document.getElementById('searchbarbottom');
+        const searchTerm = searchInput.value.toLowerCase();
+        const apps = document.querySelectorAll('.container-apps .app-item, .container-apps > div');
+        
+        apps.forEach(app => {
+          const appName = app.textContent.toLowerCase();
+          if (appName.includes(searchTerm)) {
+            app.style.display = '';
+          } else {
+            app.style.display = 'none';
+          }
+        });
+      }
+      
+      // Add event listener for search
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchbarbottom');
+        if (searchInput) {
+          searchInput.addEventListener('input', search_bar);
+        }
+      });
+    </script>
 
     <div id="adv"></div>
   </body>

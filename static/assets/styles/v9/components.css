@@ -555,3 +555,185 @@
 .tab-content.active {
   display: block;
 }
+
+/* Motivational Quote */
+.hero-quote {
+  margin: var(--space-6) 0;
+  text-align: center;
+}
+
+.motivational-quote {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-6);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.motivational-quote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(139, 69, 255, 0.1), rgba(29, 78, 216, 0.1));
+  border-radius: var(--radius-xl);
+  z-index: -1;
+}
+
+.quote-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+  font-style: italic;
+}
+
+.quote-author {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+@media (max-width: 768px) {
+  .motivational-quote {
+    padding: var(--space-4);
+    margin: var(--space-4);
+  }
+  
+  .quote-text {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Content Controls */
+.content-controls {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  min-width: 180px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.filter-select:hover {
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(139, 69, 255, 0.2);
+}
+
+/* Settings Specific Styles */
+.settings-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.settings-grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: 1fr;
+}
+
+.settings-card {
+  padding: var(--space-6);
+}
+
+.settings-card .card-header {
+  margin-bottom: var(--space-4);
+}
+
+.settings-card .card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.settings-card .card-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-1);
+}
+
+.settings-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.form-input,
+.form-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+  width: 100%;
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(139, 69, 255, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.button-group {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .content-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-select {
+    min-width: auto;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .settings-card {
+    padding: var(--space-4);
+  }
+}

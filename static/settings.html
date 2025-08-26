@@ -2,181 +2,355 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Settings</title>
+
+    <!-- Favicon -->
     <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <link rel="stylesheet" href="/assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="/assets/styles/settings.css?v=5" />
-    <link rel="stylesheet" href="/assets/styles/themes/default.css?v=5" />
-    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
-    <div class="fixed-nav-bar"></div>
-    <div class="main">
-      <div class="settings-container">
-        <div class="settings-card">
-          <h3>About:Blank</h3>
-          <p>Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)</p>
-          <div id="ab-settings">
-            <div id="ab-settings-container">
-              <label class="switch">
-                <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" onchange="toggleAB()" />
-                <span class="slider-round"></span>
-              </label>
-            </div>
-            <button onclick="AB()" class="key-button">Open Popup</button>
-          </div>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
         </div>
 
-        <div class="settings-card">
-          <h3>Set Panic Key</h3>
-          <p>
-            Quickly open an educational site when the teacher comes. The panic link is also used to redirect you when
-            about:blank windows are opened. For multiple key strokes separate them with a comma. (e.g. "a, b, c")
-          </p>
-          <input type="text" id="eventKeyInput" placeholder="Panic Keys (comma separated)" class="key-form" />
-          <input class="key-form" placeholder="Panic Link" type="text" id="linkInput" value />
-          <button class="key-button" value="Save" onclick="saveEventKey()">Save</button>
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/settings" class="nav-link active" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
         </div>
-        <div class="settings-card">
-          <h3>Tab Cloaker</h3>
-          <p>Change the title and icon of the page.</p>
-          <select id="dropdown" onchange="handleDropdownChange(this)">
-            <option value="Classroom">Default</option>
-            <option value="Clever">Clever</option>
-            <option value="Canvas">Canvas</option>
-            <option value="Edpuzzle">Edpuzzle</option>
-            <option value="Google">Google</option>
-            <option value="Google Meet">Google Meet</option>
-            <option value="Classroom">Google Classroom</option>
-            <option value="Drive">Google Drive</option>
-            <option value="Google Docs">Google Docs</option>
-            <option value="Google Slides">Google Slides</option>
-            <option value="Gmail">Gmail</option>
-            <option value="Khan">Khan Academy</option>
-            <option value="Campus">Infinite Campus</option>
-            <option value="IXL">IXL</option>
-            <option value="LinkIt">LinkIt!</option>
-            <option value="Schoology">Schoology</option>
-            <option value="i-Ready Math">i-Ready Math</option>
-            <option value="i-Ready Reading">i-Ready Reading</option>
-            <option value="ClassLink Login">ClassLink Login</option>
-            <option value="Wikipedia">Wikipedia</option>
-            <option value="Britannica">Britannica</option>
-            <option value="Ducksters">Ducksters</option>
-            <option value="Minga">Minga</option>
-            <option value="i-Ready Learning Games">i-Ready Learning Games</option>
-            <option value="NoRedInk Home">NoRedInk Home</option>
-            <option value="Newsela Binder">Newsela Binder</option>
-            <option value="Newsela Assignments">Newsela Assignments</option>
-            <option value="Newsela Home">Newsela Home</option>
-            <option value="PowerSchool Sign In">PowerSchool Sign In</option>
-            <option value="PowerSchool Grades and Attendance">PowerSchool Grades and Attendance</option>
-            <option value="PowerSchool Teacher Comments">PowerSchool Teacher Comments</option>
-            <option value="PowerSchool Standards Grades">PowerSchool Standards Grades</option>
-            <option value="PowerSchool Attendance">PowerSchool Attendance</option>
-            <option value="Nearpod">Nearpod</option>
-            <option value="StudentVUE">StudentVUE</option>
-            <option value="Quizlet Home">Quizlet Home</option>
-            <option value="Google Forms Locked Mode">Google Forms - Locked Mode</option>
-            <option value="DeltaMath">DeltaMath</option>
-            <option value="Kami">Kami</option>
-            <option value="GoGuardian Admin Restricted">GoGuardian Admin Block</option>
-            <option value="GoGuardian Teacher Block">GoGuardian Teacher Block</option>
-            <option value="World History Encyclopedia">World History Encyclopedia</option>
-            <option value="Big Ideas Math">Big Ideas Math</option>
-            <option value="Big Ideas Math Assignment Player">Big Ideas Math Assignment Player</option>
-          </select>
-          <input class="key-form" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
-          <input class="key-form" type="text" id="name" name="name" placeholder="Change Tab Name" />
-          <button class="key-button" value="Save" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
-            Save
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
           </button>
-          <button class="key-button" value="Reset" onclick="ResetCustomCloak(); redirectToMainDomain();">
-            Reset Cloak
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
           </button>
-        </div>
-        <div class="settings-card">
-          <h3>Search Engine</h3>
-          <p>Change the search engine when searching.</p>
-          <select title="engine" id="engine" onchange="EngineChange(this)">
-            <option value="Google">Google (Default)</option>
-            <option value="Bing">Bing</option>
-            <option value="DuckDuckGo">DuckDuckGo</option>
-            <option value="Qwant">Qwant</option>
-            <option value="Startpage">Startpage</option>
-            <option value="SearchEncrypt">SearchEncrypt</option>
-            <option value="Ecosia">Ecosia</option>
-          </select>
-          <input class="key-form" type="text" id="engine-form" placeholder="Change Search Engine" name="engine" />
-          <button class="key-button" value="Save" onclick="SaveEngine();">Save</button>
-        </div>
-        <div class="settings-card">
-          <h3>Choose your <b>Pr</b>oxy</h3>
-          <p>
-            Ultra<xn>vio</xn>let is the main <xn>pro</xn>xy, but Dynamic is faster and supports more sites! (Dynamic is
-            still in beta, so it has some bugs.)
-          </p>
-          <select id="pChange">
-            <option value="uv">Ultraviolet (Default)</option>
-            <option value="dy">Dynamic</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Set Background Image</h3>
-          <p>Change the site's background image.</p>
-          <input type="text" id="background-input" placeholder="Enter image URL" />
-          <button class="key-button" id="save-button">Save</button>
-          <button class="key-button" id="reset-button">Reset</button>
-        </div>
-        <div class="settings-card">
-          <h3>Advertisement</h3>
-          <p>
-            Advertisements are crucial in order to keep the site running. Please consider donating or hosting your own
-            links to go ad-free. If not, you can still disable them below.
-          </p>
-          <select id="adType" onchange="adChange(this)">
-            <option value="default">Default</option>
-            <option value="off">Off</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Particles</h3>
-          <p>Add the particles that are from the previous version to the new site.</p>
-          <label class="switch">
-            <input type="checkbox" class="slider-checkbox" id="2" />
-            <span class="slider-round"></span>
-          </label>
-        </div>
-        <div class="settings-card">
-          <h3>Themes!</h3>
-          <p>Pick from a variety of themes!</p>
-          <select placeholder="Solid Color Themes" id="dropdown" class="td" onchange="themeChange(this)">
-            <option disabled selected>Solid Color Themes</option>
-            <option value="d">Default</option>
-            <option disabled selected>Catppuccin Themes</option>
-            <option value="catppuccinMocha">GoGaurdian Theme</option>
-            <option value="catppuccinMacchiato">VS Studio Dark</option>
-            <option value="catppuccinFrappe">SG Dark</option>
-            <option value="catppuccinLatte">Light Mode</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Site Info</h3>
-          <p>Version: 8</p>
-          <p id="last-updated">Last Updated: May 3rd, 2024</p>
-          <p></p>
-          <a style="color: white" href="/tos"
-            >By using SlowGuardian, you agree you understand and acknowledge our Terms of Service and Privacy Policy.</a
-          >
         </div>
       </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-settings">
+        <div class="page-header">
+          <h2 class="page-title">Settings</h2>
+          <p class="page-subtitle">Customize your experience</p>
+        </div>
+
+        <div class="settings-container">
+          <div class="settings-grid">
+            <!-- About:Blank -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">About:Blank</h3>
+                <p class="card-description">Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)</p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" onchange="toggleAB()" />
+                  <span class="switch-slider"></span>
+                </label>
+                <button onclick="AB()" class="btn btn-secondary">Open Popup</button>
+              </div>
+            </div>
+
+            <!-- Panic Key -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Set Panic Key</h3>
+                <p class="card-description">
+                  Quickly open an educational site when the teacher comes. The panic link is also used to redirect you when
+                  about:blank windows are opened. For multiple key strokes separate them with a comma. (e.g. "a, b, c")
+                </p>
+              </div>
+              <div class="settings-controls">
+                <input type="text" id="eventKeyInput" placeholder="Panic Keys (comma separated)" class="form-input" />
+                <input class="form-input" placeholder="Panic Link" type="text" id="linkInput" />
+                <button class="btn btn-primary" onclick="saveEventKey()">Save</button>
+              </div>
+            </div>
+
+            <!-- Tab Cloaker -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Tab Cloaker</h3>
+                <p class="card-description">Change the title and icon of the page.</p>
+              </div>
+              <div class="settings-controls">
+                <select id="dropdown" class="form-select" onchange="handleDropdownChange(this)">
+                  <option value="Classroom">Default</option>
+                  <option value="Clever">Clever</option>
+                  <option value="Canvas">Canvas</option>
+                  <option value="Edpuzzle">Edpuzzle</option>
+                  <option value="Google">Google</option>
+                  <option value="Google Meet">Google Meet</option>
+                  <option value="Classroom">Google Classroom</option>
+                  <option value="Drive">Google Drive</option>
+                  <option value="Google Docs">Google Docs</option>
+                  <option value="Google Slides">Google Slides</option>
+                  <option value="Gmail">Gmail</option>
+                  <option value="Khan">Khan Academy</option>
+                  <option value="Campus">Infinite Campus</option>
+                  <option value="IXL">IXL</option>
+                  <option value="LinkIt">LinkIt!</option>
+                  <option value="Schoology">Schoology</option>
+                  <option value="i-Ready Math">i-Ready Math</option>
+                  <option value="i-Ready Reading">i-Ready Reading</option>
+                  <option value="ClassLink Login">ClassLink Login</option>
+                  <option value="Wikipedia">Wikipedia</option>
+                  <option value="Britannica">Britannica</option>
+                  <option value="Ducksters">Ducksters</option>
+                  <option value="Minga">Minga</option>
+                  <option value="i-Ready Learning Games">i-Ready Learning Games</option>
+                  <option value="NoRedInk Home">NoRedInk Home</option>
+                  <option value="Newsela Binder">Newsela Binder</option>
+                  <option value="Newsela Assignments">Newsela Assignments</option>
+                  <option value="Newsela Home">Newsela Home</option>
+                  <option value="PowerSchool Sign In">PowerSchool Sign In</option>
+                  <option value="PowerSchool Grades and Attendance">PowerSchool Grades and Attendance</option>
+                  <option value="PowerSchool Teacher Comments">PowerSchool Teacher Comments</option>
+                  <option value="PowerSchool Standards Grades">PowerSchool Standards Grades</option>
+                  <option value="PowerSchool Attendance">PowerSchool Attendance</option>
+                  <option value="Nearpod">Nearpod</option>
+                  <option value="StudentVUE">StudentVUE</option>
+                  <option value="Quizlet Home">Quizlet Home</option>
+                  <option value="Google Forms Locked Mode">Google Forms - Locked Mode</option>
+                  <option value="DeltaMath">DeltaMath</option>
+                  <option value="Kami">Kami</option>
+                  <option value="GoGuardian Admin Restricted">GoGuardian Admin Block</option>
+                  <option value="GoGuardian Teacher Block">GoGuardian Teacher Block</option>
+                  <option value="World History Encyclopedia">World History Encyclopedia</option>
+                  <option value="Big Ideas Math">Big Ideas Math</option>
+                  <option value="Big Ideas Math Assignment Player">Big Ideas Math Assignment Player</option>
+                </select>
+                <input class="form-input" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
+                <input class="form-input" type="text" id="name" name="name" placeholder="Change Tab Name" />
+                <div class="button-group">
+                  <button class="btn btn-primary" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
+                    Save
+                  </button>
+                  <button class="btn btn-secondary" onclick="ResetCustomCloak(); redirectToMainDomain();">
+                    Reset Cloak
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Search Engine -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Search Engine</h3>
+                <p class="card-description">Change the search engine when searching.</p>
+              </div>
+              <div class="settings-controls">
+                <select title="engine" id="engine" class="form-select" onchange="EngineChange(this)">
+                  <option value="Google">Google (Default)</option>
+                  <option value="Bing">Bing</option>
+                  <option value="DuckDuckGo">DuckDuckGo</option>
+                  <option value="Qwant">Qwant</option>
+                  <option value="Startpage">Startpage</option>
+                  <option value="SearchEncrypt">SearchEncrypt</option>
+                  <option value="Ecosia">Ecosia</option>
+                </select>
+                <input class="form-input" type="text" id="engine-form" placeholder="Change Search Engine" name="engine" />
+                <button class="btn btn-primary" onclick="SaveEngine();">Save</button>
+              </div>
+            </div>
+
+            <!-- Proxy Choice -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Choose your <b>Pr</b>oxy</h3>
+                <p class="card-description">
+                  Ultra<xn>vio</xn>let is the main <xn>pro</xn>xy, but Dynamic is faster and supports more sites! (Dynamic is
+                  still in beta, so it has some bugs.)
+                </p>
+              </div>
+              <div class="settings-controls">
+                <select id="pChange" class="form-select">
+                  <option value="uv">Ultraviolet (Default)</option>
+                  <option value="dy">Dynamic</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Background Image -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Set Background Image</h3>
+                <p class="card-description">Change the site's background image.</p>
+              </div>
+              <div class="settings-controls">
+                <input type="text" id="background-input" class="form-input" placeholder="Enter image URL" />
+                <div class="button-group">
+                  <button class="btn btn-primary" id="save-button">Save</button>
+                  <button class="btn btn-secondary" id="reset-button">Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advertisement -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Advertisement</h3>
+                <p class="card-description">
+                  Advertisements are crucial in order to keep the site running. Please consider donating or hosting your own
+                  links to go ad-free. If not, you can still disable them below.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <select id="adType" class="form-select" onchange="adChange(this)">
+                  <option value="default">Default</option>
+                  <option value="off">Off</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Particles -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Particles</h3>
+                <p class="card-description">Add the particles that are from the previous version to the new site.</p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" class="slider-checkbox" id="2" />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Themes -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Themes!</h3>
+                <p class="card-description">Pick from a variety of themes!</p>
+              </div>
+              <div class="settings-controls">
+                <select placeholder="Solid Color Themes" id="theme-dropdown" class="form-select" onchange="themeChange(this)">
+                  <option disabled selected>Solid Color Themes</option>
+                  <option value="d">Default</option>
+                  <option disabled selected>Catppuccin Themes</option>
+                  <option value="catppuccinMocha">GoGaurdian Theme</option>
+                  <option value="catppuccinMacchiato">VS Studio Dark</option>
+                  <option value="catppuccinFrappe">SG Dark</option>
+                  <option value="catppuccinLatte">Light Mode</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Site Info -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Site Info</h3>
+                <p class="card-description">Version: 9</p>
+                <p class="card-description" id="last-updated">Last Updated: December 2024</p>
+                <a href="/tos" class="card-description" style="color: var(--accent-primary)">
+                  By using SlowGuardian, you agree you understand and acknowledge our Terms of Service and Privacy Policy.
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
     </div>
-    <script src="/assets/scripts/main.js?v=31"></script>
-    <script src="/assets/scripts/settings.js?v=21"></script>
+
+    <!-- App Scripts -->
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/v9/router.js" type="module"></script>
+    <script src="assets/scripts/v9/proxy.js" type="module"></script>
+    <script src="assets/scripts/v9/ui.js" type="module"></script>
+    <script src="assets/scripts/v9/app.js" type="module"></script>
+    
+    <!-- Legacy Settings Script -->
+    <script src="assets/scripts/settings.js?v=21"></script>
+    <script src="assets/scripts/main.js?v=31"></script>
+
     <div id="adv"></div>
   </body>
 </html>
