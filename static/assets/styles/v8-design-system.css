@@ -1,0 +1,316 @@
+/* SlowGuardian v8 Modern Design System */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* Typography Scale */
+  --font-family-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+  --font-size-6xl: 3.75rem;   /* 60px */
+  
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Spacing Scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-base: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;    /* 12px */
+  --radius-lg: 1rem;       /* 16px */
+  --radius-xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-bounce: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Z-index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal: 1040;
+  --z-popover: 1050;
+  --z-tooltip: 1060;
+}
+
+/* SlowGuardian v8 Color Palette */
+:root {
+  /* Primary brand colors */
+  --sg-primary-50: #f0f4ff;
+  --sg-primary-100: #e0e7ff;
+  --sg-primary-200: #c7d2fe;
+  --sg-primary-300: #a5b4fc;
+  --sg-primary-400: #818cf8;
+  --sg-primary-500: #6366f1;
+  --sg-primary-600: #4f46e5;
+  --sg-primary-700: #4338ca;
+  --sg-primary-800: #3730a3;
+  --sg-primary-900: #312e81;
+  
+  /* Neutral colors */
+  --sg-neutral-50: #fafafa;
+  --sg-neutral-100: #f5f5f5;
+  --sg-neutral-200: #e5e5e5;
+  --sg-neutral-300: #d4d4d4;
+  --sg-neutral-400: #a3a3a3;
+  --sg-neutral-500: #737373;
+  --sg-neutral-600: #525252;
+  --sg-neutral-700: #404040;
+  --sg-neutral-800: #262626;
+  --sg-neutral-900: #171717;
+  
+  /* Dark theme colors */
+  --sg-dark-50: #1e1e2e;
+  --sg-dark-100: #181825;
+  --sg-dark-200: #11111b;
+  --sg-dark-300: #45475a;
+  --sg-dark-400: #585b70;
+  --sg-dark-500: #6c7086;
+  --sg-dark-600: #7f849c;
+  --sg-dark-700: #9399b2;
+  --sg-dark-800: #a6adc8;
+  --sg-dark-900: #cdd6f4;
+  
+  /* Accent colors */
+  --sg-accent-purple: #b4befe;
+  --sg-accent-pink: #f5c2e7;
+  --sg-accent-red: #f38ba8;
+  --sg-accent-orange: #fab387;
+  --sg-accent-yellow: #f9e2af;
+  --sg-accent-green: #a6e3a1;
+  --sg-accent-blue: #89b4fa;
+  --sg-accent-teal: #94e2d5;
+}
+
+/* Modern Component Base Styles */
+.sg-v8-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.sg-v8-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sg-v8-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  border: none;
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.sg-v8-button-primary {
+  background: linear-gradient(135deg, var(--sg-primary-600), var(--sg-primary-700));
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.sg-v8-button-primary:hover {
+  background: linear-gradient(135deg, var(--sg-primary-500), var(--sg-primary-600));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.sg-v8-button-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sg-v8-button-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sg-v8-input {
+  width: 100%;
+  padding: var(--space-4);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-base);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+}
+
+.sg-v8-input:focus {
+  outline: none;
+  border-color: var(--sg-primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sg-v8-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Modern Grid System */
+.sg-v8-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.sg-v8-grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.sg-v8-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.sg-v8-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.sg-v8-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Modern Typography */
+.sg-v8-title {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-6xl);
+  line-height: var(--line-height-tight);
+  background: linear-gradient(135deg, var(--sg-accent-blue), var(--sg-accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.sg-v8-subtitle {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xl);
+  color: rgba(255, 255, 255, 0.8);
+  margin: var(--space-2) 0;
+}
+
+.sg-v8-text {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sg-v8-text-muted {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Modern Animations */
+@keyframes sg-v8-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sg-v8-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sg-v8-animate-fade-in {
+  animation: sg-v8-fade-in 0.6s ease-out;
+}
+
+.sg-v8-animate-slide-in {
+  animation: sg-v8-slide-in 0.5s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sg-v8-title {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .sg-v8-container {
+    padding: 0 var(--space-4);
+  }
+  
+  .sg-v8-grid {
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .sg-v8-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .sg-v8-container {
+    padding: 0 var(--space-3);
+  }
+}

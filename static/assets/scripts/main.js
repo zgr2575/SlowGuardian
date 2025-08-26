@@ -53,6 +53,9 @@ if (themeid == "catppuccinFrappe") {
 if (themeid == "catppuccinLatte") {
   themeEle.href = "/assets/styles/themes/catppuccin/latte.css?v=1";
 }
+if (themeid == "v8Modern") {
+  themeEle.href = "/assets/styles/themes/v8-modern.css?v=1";
+}
 document.body.appendChild(themeEle);
 // Tab Cloaker
 document.addEventListener("DOMContentLoaded", function (event) {
