@@ -120,31 +120,17 @@ sortedOptions.forEach(function (option) {
   dropdown.appendChild(option);
 });
 
-function saveIcon() {
-  const iconElement = document.getElementById("icon");
-  const iconValue = iconElement.value;
-  console.log("saveIcon function called with icon value:", iconValue);
-  localStorage.setItem("icon", iconValue);
-}
-
-function saveName() {
-  const nameElement = document.getElementById("name");
-  const nameValue = nameElement.value;
-  console.log("saveName function called with name value:", nameValue);
-  localStorage.setItem("name", nameValue);
-}
-
 function CustomIcon() {
   const iconElement = document.getElementById("icon");
   const iconValue = iconElement.value;
-  console.log("saveIcon function called with icon value:", iconValue);
+  console.log("CustomIcon function called with icon value:", iconValue);
   localStorage.setItem("CustomIcon", iconValue);
 }
 
 function CustomName() {
   const nameElement = document.getElementById("name");
   const nameValue = nameElement.value;
-  console.log("saveName function called with name value:", nameValue);
+  console.log("CustomName function called with name value:", nameValue);
   localStorage.setItem("CustomName", nameValue);
 }
 function ResetCustomCloak() {
@@ -248,9 +234,9 @@ if (themeId == "") {
 
 document.getElementsByClassName("td")[0].value = themeId;
 
-const themeDropdown = document.getElementsByClassName("td");
-dropdown.addEventListener("change", function () {
-  const selectedValue = dropdown.value;
+const themeDropdown = document.getElementsByClassName("td")[0];
+themeDropdown.addEventListener("change", function () {
+  const selectedValue = themeDropdown.value;
 
   localStorage.setItem("theme", selectedValue);
 

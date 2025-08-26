@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 8080;
 var v = config.version;
 var upd = false;
 import readline from "readline";
+import { exec } from "node:child_process";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -40,15 +41,15 @@ var db =
   "server: Smarter Back End v5" +
   " | version: " +
   v +
-  " | update avalible: " +
+  " | update available: " +
   upd +
   "| server uptime:" +
   process.uptime() +
   " | server memory: " +
   process.memoryUsage().heapUsed / 1024 / 1024 +
-  "serverid: " +
+  " | serverid: " +
   serverid +
-  "server identity: " +
+  " | server identity: " +
   "could not get";
 app.get("/d/data", (req, res, next) => {
   console.log(
@@ -58,13 +59,13 @@ app.get("/d/data", (req, res, next) => {
     "server: Smarter Back End v5" +
     " | version: " +
     v +
-    " | update avalible: " +
+    " | update available: " +
     upd +
-    "| server uptime:" +
+    "| server uptime: " +
     process.uptime() +
     " | server memory: " +
     process.memoryUsage().heapUsed / 1024 / 1024 +
-    " serverid: " +
+    " | serverid: " +
     serverid +
     " server identity: " +
     "SG SERVER";
@@ -135,7 +136,7 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
               console.log(`Update: ${stdout}`);
             });
           } else {
-            conosle.log("Okay, exiting...");
+            console.log("Okay, exiting...");
             process.exit(0);
           }
           rl.close();
