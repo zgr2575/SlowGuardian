@@ -1,12 +1,30 @@
 const config = {
-  challenge: false, // Set to true if you want to enable password protection.
-  version: 8, // if u change this the code will break, its a SmarterBackend varible
+  // Server Configuration
+  version: 9, // SlowGuardian v9
+  port: process.env.PORT || 8080,
+  
+  // Security Settings
+  challenge: false, // Set to true to enable password protection
   users: {
-    // You can add multiple users by doing username: 'password'.
+    // Add users in format username: 'password'
     username: "password",
   },
-  routes: true, // Change this to false if you just want to host a bare server.
-  local: true, // Change this to false to disable local assets.
-  envusers: false, // Allows you to use .env to store usernames and passwords. (No longer supported!)
+  envusers: false, // Environment-based user management (deprecated)
+  
+  // Feature Flags
+  routes: true, // Enable frontend routes (set false for bare server only)
+  local: true, // Enable local asset serving
+  plugins: true, // Enable plugin system
+  
+  // Proxy Configuration
+  bare: {
+    path: "/o/",
+    version: 3,
+  },
+  
+  // Development Settings
+  debug: process.env.NODE_ENV !== "production",
+  logLevel: process.env.LOG_LEVEL || "info",
 };
+
 export default config;
