@@ -11,7 +11,7 @@ window.onload = function () {
   let GoUrl = sessionStorage.getItem("GoUrl");
   let dyValue = localStorage.getItem("dy");
 
-  if (!GoUrl.startsWith("/e/")) {
+  if (GoUrl && !GoUrl.startsWith("/e/")) {
     if (dyValue === "true" || dyValue === "auto") {
       GoUrl = "/a/q/" + GoUrl;
     } else {
@@ -19,7 +19,7 @@ window.onload = function () {
     }
   }
   console.log(GoUrl);
-  if (iframe) {
+  if (iframe && GoUrl) {
     iframe.src = GoUrl;
   }
 };
@@ -130,9 +130,11 @@ fullscreenButton.addEventListener("click", function () {
 });
 // Home
 const homeButton = document.getElementById("home-page");
-homeButton.addEventListener("click", function () {
-  window.location.href = "./";
-});
+if (homeButton) {
+  homeButton.addEventListener("click", function () {
+    window.location.href = "./";
+  });
+}
 // Back
 function goBack() {
   if (iframe) {

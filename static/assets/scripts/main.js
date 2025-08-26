@@ -39,7 +39,7 @@ if (nav) {
 
 // Themes
 var themeid = localStorage.getItem("theme");
-themeEle = document.createElement("link");
+var themeEle = document.createElement("link");
 themeEle.rel = "stylesheet";
 if (themeid == "catppuccinMocha") {
   themeEle.href = "/assets/styles/themes/catppuccin/mocha.css?v=1";

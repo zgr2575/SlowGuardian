@@ -1,75 +1,428 @@
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
     <meta name="referrer" content="no-referrer" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Browser</title>
+
+    <!-- Favicon -->
     <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <link rel="stylesheet" href="assets/styles/frame.css?v=8" />
-    <link rel="stylesheet" href="/assets/styles/themes/default.css?v=5" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+
+    <!-- Browser specific styles -->
+    <style>
+      /* Browser specific overrides */
+      .browser-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: relative;
+        z-index: 1;
+      }
+
+      .browser-toolbar {
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border-primary);
+        padding: var(--space-3);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        position: sticky;
+        top: 64px;
+        z-index: var(--z-modal);
+      }
+
+      .browser-nav-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .browser-address-bar {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+
+      .browser-address-input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        transition: all var(--transition-base);
+      }
+
+      .browser-address-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .browser-address-input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .browser-utility-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .browser-iframe {
+        flex: 1;
+        border: none;
+        width: 100%;
+        background: var(--bg-primary);
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: var(--z-modal);
+        text-align: center;
+      }
+
+      .overlay h1 {
+        color: var(--text-primary);
+        margin-bottom: var(--space-4);
+      }
+
+      .overlay p {
+        color: var(--text-secondary);
+        max-width: 400px;
+      }
+
+      .overlay a {
+        color: var(--accent-primary);
+        text-decoration: underline;
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .browser-toolbar {
+          padding: var(--space-2);
+          gap: var(--space-2);
+        }
+
+        .browser-nav-controls {
+          order: 2;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .browser-address-bar {
+          order: 1;
+          width: 100%;
+        }
+
+        .browser-utility-controls {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .nav-container {
+          padding: 0 var(--space-3);
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-mobile-toggle {
+          display: block;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .browser-nav-controls {
+          gap: var(--space-1);
+        }
+
+        .btn-icon {
+          padding: var(--space-1);
+          font-size: var(--font-size-sm);
+        }
+
+        .browser-address-input {
+          padding: var(--space-2) var(--space-3);
+          font-size: var(--font-size-xs);
+        }
+      }
+
+      /* Fullscreen mode */
+      .fullscreen .navbar,
+      .fullscreen .browser-toolbar {
+        display: none;
+      }
+
+      .fullscreen .browser-iframe {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: var(--z-modal);
+      }
+    </style>
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
-    <div class="nav-bar">
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
       <div class="nav-container">
-        <div class="nav-left">
-          <button title="Home Page" id="home-page" class="nav-button" onclick="reload()">
-            <i class="fa-solid fa-house"></i>
-          </button>
-          <button title="Back Arrow" id="nav-button" class="nav-button" onclick="goBack()">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <button title="Forward Arrow" id="nav-button" class="nav-button" onclick="goForward()">
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
-          <button title="Reload" onclick="reload()" class="nav-button">
-            <i class="fa-solid fa-rotate-right"></i>
-          </button>
-          <form id="fs" class="navpost" method="POST">
-            <input id="is" class="navsearch" placeholder="Search or enter a new URL" type="text" />
-          </form>
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
         </div>
-        <div class="nav-right">
-          <button title="Fullscreen" id="fullscreen-button" class="nav-button nav-btn-right">
-            <i class="fa-solid fa-expand"></i>
-          </button>
-          <button title="Window Popout" id="popout-button" class="nav-button nav-btn-right" onclick="popout()">
-            <i class="fa-solid fa-solid fa-window-restore"></i>
-          </button>
-          <button title="Inspect" id="eruda-button" class="nav-button nav-btn-right" onclick="erudaToggle()">
-            <i class="fa-solid fa-code"></i>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon nav-mobile-toggle" style="display: none;">
+            <i class="icon">☰</i>
           </button>
         </div>
       </div>
+    </nav>
+
+    <!-- Browser Container -->
+    <div class="browser-container">
+      <!-- Browser Toolbar -->
+      <div class="browser-toolbar">
+        <!-- Navigation Controls -->
+        <div class="browser-nav-controls">
+          <button title="Home Page" id="home-page" class="btn-icon">
+            <i class="icon">🏠</i>
+          </button>
+          <button title="Back" id="back-button" class="btn-icon" onclick="goBack()">
+            <i class="icon">←</i>
+          </button>
+          <button title="Forward" id="forward-button" class="btn-icon" onclick="goForward()">
+            <i class="icon">→</i>
+          </button>
+          <button title="Reload" id="reload-button" class="btn-icon" onclick="reload()">
+            <i class="icon">🔄</i>
+          </button>
+        </div>
+
+        <!-- Address Bar -->
+        <div class="browser-address-bar">
+          <form id="fs" method="POST">
+            <input
+              id="is"
+              class="browser-address-input"
+              placeholder="Search or enter a new URL..."
+              type="text"
+              autocomplete="url"
+              spellcheck="false"
+            />
+          </form>
+        </div>
+
+        <!-- Utility Controls -->
+        <div class="browser-utility-controls">
+          <button title="Inspect Element" id="eruda-button" class="btn-icon" onclick="erudaToggle()">
+            <i class="icon">🔍</i>
+          </button>
+          <button title="Open in New Window" id="popout-button" class="btn-icon" onclick="popout()">
+            <i class="icon">🗗</i>
+          </button>
+          <button title="Fullscreen" id="fullscreen-button" class="btn-icon">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Overlay -->
+      <div class="overlay">
+        <h1>Now.gg fix is being applied, please wait.</h1>
+        <p>
+          It should only take 1-2 minutes, if it takes longer
+          <a href="https://support.google.com/accounts/answer/32050">clear your cache</a>
+        </p>
+      </div>
+
+      <!-- Browser Iframe -->
+      <iframe
+        src=""
+        id="ifra"
+        onload="iframeLoad()"
+        class="browser-iframe"
+        name="Browser Frame"
+        title="Web Browser"
+        allowfullscreen
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+      ></iframe>
     </div>
-    <div class="overlay">
-      <br />
-      <h1>Now.gg fix is being applied, please wait.</h1>
-      <p>
-        It should only take 1-2 minutes, if it takes longer
-        <a href="https://support.google.com/accounts/answer/32050">clear your cache</a>
-      </p>
-    </div>
-    <iframe
-      src=""
-      id="ifra"
-      onload="iframeLoad()"
-      style="border: 0px #ffffff none"
-      name="Iframe"
-      title="Iframe"
-      scrolling="yes"
-      frameborder="0"
-      marginheight="0px"
-      marginwidth="0px"
-      height="100%"
-      width="100%"
-      allowfullscreen
-    ></iframe>
-    <script src="assets/scripts/index.js?v=14"></script>
-    <script src="/assets/scripts/main.js?v=31"></script>
+    <!-- Scripts -->
+    <script src="assets/scripts/index.js?v=14" type="module"></script>
+    <script src="/assets/scripts/main.js?v=31" type="module"></script>
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
     <script src="assets/scripts/frame.js?v=36"></script>
-    <script src="https://kit.fontawesome.com/1237c86ba0.js" crossorigin="anonymous"></script>
+    
+    <!-- Enhanced Browser Functionality -->
+    <script>
+      // Enhanced home function for the browser
+      function goHome() {
+        window.location.href = "./";
+      }
+
+      // Mobile navigation toggle
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.querySelector('.nav-mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (mobileToggle && navLinks) {
+          mobileToggle.addEventListener('click', function() {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+          });
+        }
+
+        // Auto-hide mobile menu on window resize
+        window.addEventListener('resize', function() {
+          if (window.innerWidth > 768 && navLinks) {
+            navLinks.style.display = '';
+          }
+        });
+
+        // Enhanced keyboard navigation
+        const addressInput = document.getElementById('is');
+        if (addressInput) {
+          // Focus address bar with Ctrl+L or Cmd+L
+          document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+              e.preventDefault();
+              addressInput.focus();
+              addressInput.select();
+            }
+          });
+
+          // Enhanced address bar behavior
+          addressInput.addEventListener('focus', function() {
+            this.select();
+          });
+        }
+
+        // Responsive iframe handling
+        function updateIframeHeight() {
+          const iframe = document.getElementById('ifra');
+          const toolbar = document.querySelector('.browser-toolbar');
+          const navbar = document.querySelector('.navbar');
+          
+          if (iframe && toolbar && navbar) {
+            const toolbarHeight = toolbar.offsetHeight;
+            const navbarHeight = navbar.offsetHeight;
+            const availableHeight = window.innerHeight - toolbarHeight - navbarHeight;
+            iframe.style.height = availableHeight + 'px';
+          }
+        }
+
+        // Update iframe height on load and resize
+        updateIframeHeight();
+        window.addEventListener('resize', updateIframeHeight);
+      });
+
+      // Enhanced error handling
+      window.addEventListener('error', function(e) {
+        console.error('Browser error:', e.error);
+      });
+
+      // Particles background (matching other v9 pages)
+      function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        if (!particlesContainer) return;
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.style.cssText = `
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(79, 70, 229, 0.6);
+            border-radius: 50%;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+          `;
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Add particle animation CSS
+      const particleStyles = document.createElement('style');
+      particleStyles.textContent = `
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); opacity: 0.6; }
+          50% { transform: translateY(-20px); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(particleStyles);
+
+      // Initialize particles
+      createParticles();
+    </script>
   </body>
 </html>
