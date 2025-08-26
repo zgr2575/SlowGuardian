@@ -3,11 +3,7 @@
   "builds": [
     {
       "src": "index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["static/**", "src/**", "plugins/**", "config.js"],
-        "maxLambdaSize": "50mb"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -15,13 +11,5 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ],
-  "functions": {
-    "index.js": {
-      "runtime": "nodejs18.x",
-      "memory": 512
-    }
-  },
-  "buildCommand": "npm ci --prefer-offline --no-audit && npm run build",
-  "installCommand": "npm ci --prefer-offline --no-audit"
+  ]
 }
