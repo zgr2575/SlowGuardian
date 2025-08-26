@@ -52,15 +52,15 @@
             <i class="icon">🏠</i>
             <span>Home</span>
           </a>
-          <a href="/apps" class="nav-link" data-page="apps">
+          <a href="apps.html" class="nav-link" data-page="apps">
             <i class="icon">📱</i>
             <span>Apps</span>
           </a>
-          <a href="/games" class="nav-link" data-page="games">
+          <a href="games.html" class="nav-link" data-page="games">
             <i class="icon">🎮</i>
             <span>Games</span>
           </a>
-          <a href="/settings" class="nav-link" data-page="settings">
+          <a href="settings.html" class="nav-link" data-page="settings">
             <i class="icon">⚙️</i>
             <span>Settings</span>
           </a>
@@ -100,11 +100,11 @@
 
           <!-- Search Section -->
           <div class="search-section">
-            <form class="search-form" id="proxy-form">
+            <form class="search-form" id="proxy-form" onsubmit="return handleProxySubmit(event)">
               <div class="search-container">
                 <div class="search-icon">🔍</div>
                 <input
-                  type="url"
+                  type="text"
                   class="search-input"
                   id="url-input"
                   placeholder="Enter website URL or search term..."
@@ -124,15 +124,15 @@
             <div class="quick-access">
               <div class="quick-title">Quick Access</div>
               <div class="quick-grid">
-                <a href="#" class="quick-item" data-url="https://google.com">
+                <a href="#" class="quick-item" onclick="handleQuickAccess('https://google.com'); return false;">
                   <div class="quick-icon">🔍</div>
                   <div class="quick-label">Google</div>
                 </a>
-                <a href="#" class="quick-item" data-url="https://youtube.com">
+                <a href="#" class="quick-item" onclick="handleQuickAccess('https://youtube.com'); return false;">
                   <div class="quick-icon">📺</div>
                   <div class="quick-label">YouTube</div>
                 </a>
-                <a href="#" class="quick-item" data-url="https://github.com">
+                <a href="#" class="quick-item" onclick="handleQuickAccess('https://github.com'); return false;">
                   <div class="quick-icon">🐙</div>
                   <div class="quick-label">GitHub</div>
                 </a>
@@ -215,9 +215,12 @@
       <div class="loading-text">Loading...</div>
     </div>
 
-    <!-- Proxy Bundle -->
+    <!-- Proxy Bundle (must load before other scripts) -->
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
+
+    <!-- Legacy compatibility scripts -->
+    <script src="assets/scripts/main.js?v=31"></script>
 
     <!-- App Scripts -->
     <script src="assets/scripts/v9/utils.js" type="module"></script>
@@ -226,5 +229,166 @@
     <script src="assets/scripts/v9/proxy.js" type="module"></script>
     <script src="assets/scripts/v9/ui.js" type="module"></script>
     <script src="assets/scripts/v9/app.js" type="module"></script>
+
+    <!-- Legacy proxy handler functions -->
+    <script>
+      // Make showNotification available globally
+      window.showNotification = function(message, type = "info", duration = 5000) {
+        // Simple notification implementation
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === "error" ? "#ef4444" : type === "success" ? "#10b981" : "#3b82f6"};
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = message;
+        
+        // Add animation keyframes
+        if (!document.getElementById('notification-styles')) {
+          const style = document.createElement('style');
+          style.id = 'notification-styles';
+          style.textContent = `
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+              from { transform: translateX(0); opacity: 1; }
+              to { transform: translateX(100%); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease-in forwards';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, duration);
+      };
+
+      // Global proxy handler for form submission
+      function handleProxySubmit(event) {
+        event.preventDefault();
+        const input = document.getElementById('url-input');
+        const value = input.value.trim();
+        
+        if (!value) {
+          showNotification("Please enter a URL or search term", "error");
+          return false;
+        }
+
+        // Use the legacy go function for compatibility
+        if (typeof go === 'function') {
+          go(value);
+        } else {
+          // Fallback to modern proxy manager
+          if (window.SlowGuardian && window.SlowGuardian.proxyManager) {
+            window.SlowGuardian.proxyManager.handleRequest(value);
+          } else {
+            // Last resort - direct navigation
+            window.location.href = '/p?url=' + encodeURIComponent(value);
+          }
+        }
+        
+        return false;
+      }
+
+      // Quick access handler
+      function handleQuickAccess(url) {
+        if (typeof go === 'function') {
+          go(url);
+        } else {
+          document.getElementById('url-input').value = url;
+          handleProxySubmit({ preventDefault: () => {} });
+        }
+      }
+
+      // Enhanced legacy proxy functions for better compatibility
+      window.processUrl = function(value, path) {
+        let url = value.trim();
+        const engine = localStorage.getItem("engine") || "https://www.google.com/search?q=";
+
+        if (!isUrl(url)) {
+          url = engine + encodeURIComponent(url);
+        } else if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+          url = "https://" + url;
+        }
+
+        if (typeof __uv$config !== "undefined") {
+          sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+          const dy = localStorage.getItem("dy");
+
+          if (path) {
+            location.href = path;
+          } else if (dy === "true") {
+            window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+          } else {
+            window.location.href = "/a/" + __uv$config.encodeUrl(url);
+          }
+        } else {
+          // Fallback if UV not ready
+          sessionStorage.setItem("GoUrl", url);
+          window.location.href = path || "/p";
+        }
+      };
+
+      window.go = function(value) {
+        processUrl(value, "/p");
+      };
+
+      window.blank = function(value) {
+        processUrl(value);
+      };
+
+      window.dy = function(value) {
+        if (typeof __uv$config !== "undefined") {
+          processUrl(value, "/a/q/" + __uv$config.encodeUrl(value));
+        }
+      };
+
+      window.now = function(value) {
+        processUrl(value);
+      };
+
+      window.isUrl = function(val = "") {
+        if (
+          /^http(s?):\/\//.test(val) ||
+          (val.includes(".") && val.substr(0, 1) !== " ")
+        )
+          return true;
+        return false;
+      };
+
+      // Initialize proxy system when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set up form handler
+        const form = document.getElementById('proxy-form');
+        if (form) {
+          form.addEventListener('submit', handleProxySubmit);
+        }
+
+        // Wait a bit for modules to load, then set up additional handlers
+        setTimeout(function() {
+          // Connect v9 proxy manager to global scope for compatibility
+          if (window.SlowGuardian && window.SlowGuardian.proxyManager) {
+            window.proxyManager = window.SlowGuardian.proxyManager;
+          }
+        }, 1000);
+      });
+    </script>
   </body>
 </html>

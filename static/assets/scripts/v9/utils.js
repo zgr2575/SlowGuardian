@@ -260,28 +260,100 @@ export const formatTime = (seconds) => {
   }
 };
 
-// Theme utilities
+// Theme utilities with legacy compatibility
 export const theme = {
-  current: () => document.documentElement.getAttribute("data-theme") || "dark",
+  current: () => {
+    const legacyTheme = localStorage.getItem("theme");
+    if (legacyTheme && legacyTheme !== "d") {
+      return legacyTheme;
+    }
+    return document.documentElement.getAttribute("data-theme") || "dark";
+  },
 
   set: (themeName) => {
-    document.documentElement.setAttribute("data-theme", themeName);
-    storage.set("theme", themeName);
+    // Handle both v9 themes and legacy themes
+    if (["dark", "light", "high-contrast"].includes(themeName)) {
+      // V9 theme
+      document.documentElement.setAttribute("data-theme", themeName);
+      storage.set("theme", themeName);
+      // Clear legacy theme
+      localStorage.removeItem("theme");
+    } else {
+      // Legacy catppuccin theme
+      localStorage.setItem("theme", themeName);
+      // Clear v9 theme
+      document.documentElement.removeAttribute("data-theme");
+      storage.remove("theme");
+      
+      // Apply legacy theme CSS
+      theme.applyLegacyTheme(themeName);
+    }
+  },
+
+  applyLegacyTheme: (themeName) => {
+    // Remove existing legacy theme links
+    const existingThemeLinks = document.querySelectorAll('link[href*="/assets/styles/themes/"]');
+    existingThemeLinks.forEach(link => link.remove());
+
+    if (themeName && themeName !== "d") {
+      const themeElement = document.createElement("link");
+      themeElement.rel = "stylesheet";
+      
+      switch(themeName) {
+        case "catppuccinMocha":
+          themeElement.href = "/assets/styles/themes/catppuccin/mocha.css?v=1";
+          break;
+        case "catppuccinMacchiato":
+          themeElement.href = "/assets/styles/themes/catppuccin/macchiato.css?v=1";
+          break;
+        case "catppuccinFrappe":
+          themeElement.href = "/assets/styles/themes/catppuccin/frappe.css?v=1";
+          break;
+        case "catppuccinLatte":
+          themeElement.href = "/assets/styles/themes/catppuccin/latte.css?v=1";
+          break;
+      }
+      
+      if (themeElement.href) {
+        document.head.appendChild(themeElement);
+      }
+    }
   },
 
   toggle: () => {
     const current = theme.current();
-    const next = current === "dark" ? "light" : "dark";
+    let next;
+    
+    // Cycle through themes: dark -> light -> catppuccinMocha -> dark
+    if (current === "dark") {
+      next = "light";
+    } else if (current === "light") {
+      next = "catppuccinMocha";
+    } else {
+      next = "dark";
+    }
+    
     theme.set(next);
     return next;
   },
 
   init: () => {
-    const saved = storage.get("theme");
-    const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-    theme.set(saved || preferred);
+    const legacyTheme = localStorage.getItem("theme");
+    const savedV9Theme = storage.get("theme");
+    
+    if (legacyTheme && legacyTheme !== "d") {
+      // Apply legacy theme
+      theme.applyLegacyTheme(legacyTheme);
+    } else if (savedV9Theme) {
+      // Apply v9 theme
+      theme.set(savedV9Theme);
+    } else {
+      // Default theme
+      const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+      theme.set(preferred);
+    }
   },
 };
 

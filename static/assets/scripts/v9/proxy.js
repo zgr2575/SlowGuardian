@@ -42,24 +42,61 @@ class ProxyManager {
   async handleUrl(url) {
     showNotification("Loading...", "info", 2000);
 
-    // Use the existing legacy system for compatibility
-    if (typeof __uv$config !== "undefined") {
-      // Store the encoded URL in sessionStorage for the browser page
-      sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
-      
-      // Check if dynamic proxy should be used
-      const dy = localStorage.getItem("dy");
-      
-      if (dy === "true") {
-        window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
-      } else {
-        // Navigate to the browser page which will load the URL
-        window.location.href = "/p";
-      }
-    } else {
-      // Fallback without Ultraviolet
-      window.location.href = `/p?url=${encodeURIComponent(url)}`;
+    // Ensure URL has protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "https://" + url;
     }
+
+    try {
+      // Wait for UV config to be loaded if it's not ready
+      await this.waitForUVConfig();
+
+      if (typeof __uv$config !== "undefined") {
+        // Store the encoded URL in sessionStorage for the browser page
+        const encodedUrl = __uv$config.encodeUrl(url);
+        sessionStorage.setItem("GoUrl", encodedUrl);
+        
+        // Check if dynamic proxy should be used
+        const dy = localStorage.getItem("dy");
+        
+        if (dy === "true") {
+          window.location.href = "/a/q/" + encodedUrl;
+        } else {
+          // Navigate to the browser page which will load the URL
+          window.location.href = "/p";
+        }
+      } else {
+        // Fallback without Ultraviolet
+        sessionStorage.setItem("GoUrl", url);
+        window.location.href = `/p?url=${encodeURIComponent(url)}`;
+      }
+    } catch (error) {
+      console.error("Failed to handle URL:", error);
+      showNotification("Failed to load the requested page", "error");
+    }
+  }
+
+  async waitForUVConfig(maxWait = 5000) {
+    return new Promise((resolve, reject) => {
+      if (typeof __uv$config !== "undefined") {
+        resolve();
+        return;
+      }
+
+      const startTime = Date.now();
+      const checkConfig = () => {
+        if (typeof __uv$config !== "undefined") {
+          resolve();
+        } else if (Date.now() - startTime > maxWait) {
+          console.warn("UV config not loaded within timeout, proceeding anyway");
+          resolve();
+        } else {
+          setTimeout(checkConfig, 100);
+        }
+      };
+
+      checkConfig();
+    });
   }
 
   async getProxyUrl(url) {

@@ -31,16 +31,36 @@ class UIManager {
       const currentTheme = theme.current();
       const icon = themeToggle.querySelector(".icon");
       if (icon) {
-        icon.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+        // Update icon based on theme
+        if (currentTheme === "light" || currentTheme === "catppuccinLatte") {
+          icon.textContent = "🌙";
+          themeToggle.title = "Switch to dark theme";
+        } else {
+          icon.textContent = "☀️";
+          themeToggle.title = "Switch theme";
+        }
       }
-      themeToggle.title = `Switch to ${currentTheme === "dark" ? "light" : "dark"} theme`;
     };
 
     updateThemeIcon();
 
     on(themeToggle, "click", () => {
-      theme.toggle();
+      const newTheme = theme.toggle();
       updateThemeIcon();
+      
+      // Show notification about theme change
+      const themeNames = {
+        "dark": "Dark",
+        "light": "Light", 
+        "catppuccinMocha": "Catppuccin Mocha",
+        "catppuccinMacchiato": "Catppuccin Macchiato",
+        "catppuccinFrappe": "Catppuccin Frappe",
+        "catppuccinLatte": "Catppuccin Latte"
+      };
+      
+      if (window.showNotification) {
+        window.showNotification(`Switched to ${themeNames[newTheme] || newTheme} theme`, "success", 2000);
+      }
     });
   }
 
