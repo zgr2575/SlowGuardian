@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  fetch("/assets/json/a.min.json")
+  fetch("assets/json/a.min.json")
     .then((response) => {
       return response.json();
     })
