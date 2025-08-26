@@ -106,7 +106,7 @@ function setupFrontendRoutes(app) {
   const staticDir = join(__dirname, "../../static");
   
   const routes = [
-    { path: "/", file: "index.html" },
+    { path: "/", file: "index-v9.html" }, // Use new v9 UI
     { path: "/ap", file: "apps.html" },
     { path: "/apps", file: "apps.html" }, // Alternative route
     { path: "/g", file: "games.html" },
@@ -119,6 +119,8 @@ function setupFrontendRoutes(app) {
     { path: "/login", file: "login.html" }, // Alternative route
     { path: "/tos", file: "tos.html" },
     { path: "/terms", file: "tos.html" }, // Alternative route
+    // Legacy routes for backward compatibility
+    { path: "/v8", file: "index.html" }, // Original v8 UI
   ];
 
   routes.forEach((route) => {
