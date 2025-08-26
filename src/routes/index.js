@@ -3,6 +3,7 @@
  * Configures all application routes
  */
 
+import express from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { Logger } from "../utils/logger.js";
@@ -29,6 +30,9 @@ export function setupRoutes(app, config) {
 
   // API endpoints
   setupApiRoutes(app, config);
+
+  // Custom apps and settings endpoints
+  setupCustomEndpoints(app, config);
 
   // Frontend routes
   if (config.routes) {
@@ -106,7 +110,7 @@ function setupFrontendRoutes(app) {
   const staticDir = join(__dirname, "../../static");
 
   const routes = [
-    { path: "/", file: "index-v9.html" }, // Use new v9 UI
+    { path: "/", file: "index.html" }, // v9 UI in index.html
     { path: "/ap", file: "apps.html" },
     { path: "/apps", file: "apps.html" }, // Alternative route
     { path: "/g", file: "games.html" },
@@ -115,20 +119,36 @@ function setupFrontendRoutes(app) {
     { path: "/settings", file: "settings.html" }, // Alternative route
     { path: "/p", file: "go.html" },
     { path: "/proxy", file: "go.html" }, // Alternative route
+    { path: "/go", file: "go.html" }, // Additional browser route
+    { path: "/browser", file: "go.html" }, // Alternative browser route
     { path: "/li", file: "login.html" },
     { path: "/login", file: "login.html" }, // Alternative route
     { path: "/tos", file: "tos.html" },
     { path: "/terms", file: "tos.html" }, // Alternative route
     // Legacy routes for backward compatibility
-    { path: "/v8", file: "index.html" }, // Original v8 UI
+    { path: "/v8", file: "index-v8.html" }, // Original v8 UI if it exists
   ];
 
   routes.forEach((route) => {
     app.get(route.path, (req, res) => {
-      res.sendFile(join(staticDir, route.file), (err) => {
+      const filePath = join(staticDir, route.file);
+      
+      res.sendFile(filePath, (err) => {
         if (err) {
-          logger.error(`Error serving ${route.file}:`, err);
-          res.status(404).send("Page not found");
+          logger.error(`Error serving ${route.file} for ${route.path}:`, err);
+          
+          // Try fallback to index.html for main routes
+          if (route.path === "/" && route.file !== "index.html") {
+            const fallbackPath = join(staticDir, "index.html");
+            res.sendFile(fallbackPath, (fallbackErr) => {
+              if (fallbackErr) {
+                logger.error(`Fallback also failed for ${route.path}:`, fallbackErr);
+                res.status(404).send("Page not found");
+              }
+            });
+          } else {
+            res.status(404).send("Page not found");
+          }
         }
       });
     });
@@ -136,8 +156,98 @@ function setupFrontendRoutes(app) {
 }
 
 /**
- * Fetch external content with fallback URLs
+ * Setup custom endpoints for enhanced functionality
  */
+function setupCustomEndpoints(app, config) {
+  // URL verification endpoint
+  app.get("/api/check-url", async (req, res) => {
+    const { url } = req.query;
+    
+    if (!url) {
+      return res.status(400).json({ error: "URL parameter is required" });
+    }
+
+    try {
+      const { default: fetch } = await import("node-fetch");
+      
+      // Basic URL validation
+      new URL(url);
+      
+      // Try to fetch the URL with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(url, {
+        method: "HEAD",
+        signal: controller.signal,
+        headers: {
+          "User-Agent": "SlowGuardian/9.0.0",
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      
+      res.json({
+        accessible: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+      });
+    } catch (error) {
+      res.json({
+        accessible: false,
+        error: error.message,
+      });
+    }
+  });
+
+  // Proxy status endpoint
+  app.get("/api/proxy-status", (req, res) => {
+    res.json({
+      status: "operational",
+      bare: {
+        path: config.bare.path,
+        version: config.bare.version,
+      },
+      ultraviolet: {
+        prefix: "/a/",
+        config: "/m/config.js",
+      },
+      dynamic: {
+        prefix: "/a/q/",
+        config: "/dy/config.js",
+      },
+    });
+  });
+
+  // User preferences endpoint
+  app.post("/api/preferences", express.json(), (req, res) => {
+    try {
+      // This would typically save to a database
+      // For now, we'll just acknowledge the request
+      res.json({ success: true, message: "Preferences saved" });
+    } catch (error) {
+      logger.error("Failed to save preferences:", error);
+      res.status(500).json({ error: "Failed to save preferences" });
+    }
+  });
+
+  app.get("/api/preferences", (req, res) => {
+    try {
+      // This would typically load from a database
+      // For now, return default preferences
+      res.json({
+        theme: "dark",
+        searchEngine: "https://www.google.com/search?q=",
+        tabCloaking: false,
+        aboutBlankCloaking: false,
+        particles: true,
+      });
+    } catch (error) {
+      logger.error("Failed to load preferences:", error);
+      res.status(500).json({ error: "Failed to load preferences" });
+    }
+  });
+}
 async function fetchExternalContent(req, res, baseUrls, path) {
   const { default: fetch } = await import("node-fetch");
 

@@ -42,19 +42,29 @@ class ProxyManager {
   async handleUrl(url) {
     showNotification("Loading...", "info", 2000);
 
-    // Use Ultraviolet proxy
-    const proxyUrl = await this.getProxyUrl(url);
-
-    // Navigate to proxy page with the encoded URL
-    window.location.href = `/p#${encodeURIComponent(proxyUrl)}`;
+    // Use the existing legacy system for compatibility
+    if (typeof __uv$config !== "undefined") {
+      // Store the encoded URL in sessionStorage for the browser page
+      sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+      
+      // Check if dynamic proxy should be used
+      const dy = localStorage.getItem("dy");
+      
+      if (dy === "true") {
+        window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+      } else {
+        // Navigate to the browser page which will load the URL
+        window.location.href = "/p";
+      }
+    } else {
+      // Fallback without Ultraviolet
+      window.location.href = `/p?url=${encodeURIComponent(url)}`;
+    }
   }
 
   async getProxyUrl(url) {
-    // This would integrate with the Ultraviolet proxy system
-    // For now, return a placeholder that works with the existing system
-
+    // Integrate with the Ultraviolet proxy system
     if (typeof __uv$config !== "undefined") {
-      // Use Ultraviolet if available
       const uvConfig = __uv$config;
       return uvConfig.prefix + uvConfig.encodeUrl(url);
     }
@@ -434,6 +444,60 @@ export const setupProxyFeatures = () => {
       proxyManager.clearHistory();
     }
   });
+};
+
+// Legacy compatibility functions for apps and games
+window.processUrl = function(value, path) {
+  let url = value.trim();
+  const engine = localStorage.getItem("engine");
+  const searchUrl = engine ? engine : "https://www.google.com/search?q=";
+
+  if (!isUrl(url)) {
+    url = searchUrl + url;
+  } else if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+    url = "https://" + url;
+  }
+
+  if (typeof __uv$config !== "undefined") {
+    sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+    const dy = localStorage.getItem("dy");
+
+    if (path) {
+      location.href = path;
+    } else if (dy === "true") {
+      window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+    } else {
+      window.location.href = "/a/" + __uv$config.encodeUrl(url);
+    }
+  }
+};
+
+window.go = function(value) {
+  processUrl(value, "/p");
+};
+
+window.blank = function(value) {
+  processUrl(value);
+};
+
+window.dy = function(value) {
+  if (typeof __uv$config !== "undefined") {
+    processUrl(value, "/a/q/" + __uv$config.encodeUrl(value));
+  }
+};
+
+window.now = function(value) {
+  // Handle now.gg links
+  processUrl(value);
+};
+
+window.isUrl = function(val = "") {
+  if (
+    /^http(s?):\/\//.test(val) ||
+    (val.includes(".") && val.substr(0, 1) !== " ")
+  )
+    return true;
+  return false;
 };
 
 export { proxyManager, suggestionSystem };
