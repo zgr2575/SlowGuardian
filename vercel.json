@@ -18,9 +18,10 @@
   ],
   "functions": {
     "index.js": {
-      "runtime": "nodejs20.x",
+      "runtime": "nodejs18.x",
       "memory": 512
     }
   },
-  "installCommand": "npm ci"
+  "buildCommand": "npm ci --prefer-offline --no-audit && npm run build",
+  "installCommand": "npm ci --prefer-offline --no-audit"
 }
