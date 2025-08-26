@@ -96,6 +96,7 @@ export default {
    ```
 
 3. **Create plugin entry point**
+
    ```javascript
    // plugins/my-plugin/index.js
    export default {

@@ -5,7 +5,8 @@
       "src": "index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["static/**"]
+        "includeFiles": ["static/**", "src/**", "plugins/**", "config.js"],
+        "maxLambdaSize": "50mb"
       }
     }
   ],
@@ -17,7 +18,9 @@
   ],
   "functions": {
     "index.js": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x",
+      "memory": 512
     }
-  }
+  },
+  "installCommand": "npm ci"
 }
