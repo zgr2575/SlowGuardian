@@ -10,9 +10,10 @@ const server = http.createServer();
 const app = express(server);
 const bareServer = createBareServer("/o/");
 const PORT = process.env.PORT || 8080;
-var v = config.version;
-var upd = false;
+const v = config.version;
+let upd = false;
 import readline from "readline";
+import { exec } from "node:child_process";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -25,7 +26,7 @@ if (config.routes !== false) {
     { path: "/s", file: "settings.html" },
     { path: "/p", file: "go.html" },
     { path: "/li", file: "login.html" },
-    { path: "/tos", file: "tos.html" }
+    { path: "/tos", file: "tos.html" },
   ];
 
   routes.forEach((route) => {
@@ -34,43 +35,45 @@ if (config.routes !== false) {
     });
   });
 }
-var serverid = Math.floor(Math.random() * 101);
+const serverid = Math.floor(Math.random() * 101);
 
-var db=
+let db =
   "server: Smarter Back End v5" +
+  " | version: " +
+  v +
+  " | update available: " +
+  upd +
+  "| server uptime:" +
+  process.uptime() +
+  " | server memory: " +
+  process.memoryUsage().heapUsed / 1024 / 1024 +
+  " | serverid: " +
+  serverid +
+  " | server identity: " +
+  "could not get";
+app.get("/d/data", (req, res, next) => {
+  console.log(
+    "[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING",
+  );
+  db =
+    "server: Smarter Back End v5" +
     " | version: " +
     v +
-    " | update avalible: " +
+    " | update available: " +
     upd +
-    "| server uptime:" +
+    "| server uptime: " +
     process.uptime() +
     " | server memory: " +
     process.memoryUsage().heapUsed / 1024 / 1024 +
-    "serverid: " +
+    " | serverid: " +
     serverid +
-    "server identity: " +
-    "could not get";
-app.get("/d/data", (req, res, next) => {
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
-  db =
-    "server: Smarter Back End v5" +
-      " | version: " +
-      v +
-      " | update avalible: " +
-      upd +
-      "| server uptime:" +
-      process.uptime() +
-      " | server memory: " +
-      process.memoryUsage().heapUsed / 1024 / 1024 +
-      " serverid: " +
-      serverid +
-      " server identity: " +
-      "SG SERVER"
-  ;
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
-    res.send(db);
-    console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
-
+    " server identity: " +
+    "SG SERVER";
+  console.log(
+    "[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING",
+  );
+  res.send(db);
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
 });
 if (config.local !== false) {
   app.get("/e/*", (req, res, next) => {
@@ -111,7 +114,7 @@ server.on("upgrade", (req, socket, head) => {
 fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
   .then((response) => response.text())
   .then((data) => {
-    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data); 
+    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data);
     if (v == parseInt(data)) {
       console.log("[SLOWGUARDIAN]: UP TO DATE");
       upd = true;
@@ -132,9 +135,8 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
               }
               console.log(`Update: ${stdout}`);
             });
-          }
-          else {
-            conosle.log("Okay, exiting...");
+          } else {
+            console.log("Okay, exiting...");
             process.exit(0);
           }
           rl.close();
@@ -183,10 +185,9 @@ if (config.challenge) {
 }
 // -------------------------
 
-  server.on("listening", () => {
-    console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
-  });
-
+server.on("listening", () => {
+  console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
+});
 
 server.listen({
   port: PORT,
