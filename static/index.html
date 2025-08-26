@@ -1,231 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <title id="tab-title">SlowGuardian v9</title>
-    
+
     <!-- Favicon -->
-    <link rel="shortcut icon" id="tab-favicon" href="favicon.png">
-    
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/styles/v9/reset.css">
-    <link rel="stylesheet" href="assets/styles/v9/variables.css">
-    <link rel="stylesheet" href="assets/styles/v9/main.css">
-    <link rel="stylesheet" href="assets/styles/v9/components.css">
-    <link rel="stylesheet" href="assets/styles/v9/animations.css">
-    
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+
     <!-- Progressive Web App -->
-    <meta name="theme-color" content="#1a1a2e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-</head>
-<body>
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
     <!-- Background -->
     <div class="background">
-        <div class="bg-gradient"></div>
-        <div class="bg-particles" id="particles"></div>
-        <div class="bg-overlay"></div>
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
     </div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <span class="brand-icon">🛡️</span>
-                <span class="brand-text">SlowGuardian</span>
-                <span class="brand-version">v9</span>
-            </div>
-            
-            <div class="nav-links">
-                <a href="/" class="nav-link active" data-page="home">
-                    <i class="icon">🏠</i>
-                    <span>Home</span>
-                </a>
-                <a href="/apps" class="nav-link" data-page="apps">
-                    <i class="icon">📱</i>
-                    <span>Apps</span>
-                </a>
-                <a href="/games" class="nav-link" data-page="games">
-                    <i class="icon">🎮</i>
-                    <span>Games</span>
-                </a>
-                <a href="/settings" class="nav-link" data-page="settings">
-                    <i class="icon">⚙️</i>
-                    <span>Settings</span>
-                </a>
-            </div>
-
-            <div class="nav-actions">
-                <button class="btn-icon" id="theme-toggle" title="Toggle theme">
-                    <i class="icon">🌙</i>
-                </button>
-                <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
-                    <i class="icon">⛶</i>
-                </button>
-            </div>
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
         </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link active" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content" id="main-content">
-        <!-- Home Page -->
-        <section class="page active" id="page-home">
-            <div class="hero">
-                <div class="hero-content">
-                    <h1 class="hero-title">
-                        <span class="title-primary">Slow</span><span class="title-secondary">Guardian</span>
-                        <span class="title-glow"></span>
-                    </h1>
-                    
-                    <p class="hero-subtitle">
-                        Your gateway to unrestricted web browsing
-                    </p>
+      <!-- Home Page -->
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              <span class="title-primary">Slow</span><span class="title-secondary">Guardian</span>
+              <span class="title-glow"></span>
+            </h1>
 
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <div class="stat-value" id="uptime">0s</div>
-                            <div class="stat-label">Uptime</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value" id="memory">0MB</div>
-                            <div class="stat-label">Memory</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">✨</div>
-                            <div class="stat-label">Status</div>
-                        </div>
-                    </div>
-                </div>
+            <p class="hero-subtitle">Your gateway to unrestricted web browsing</p>
 
-                <!-- Search Section -->
-                <div class="search-section">
-                    <form class="search-form" id="proxy-form">
-                        <div class="search-container">
-                            <div class="search-icon">🔍</div>
-                            <input 
-                                type="url" 
-                                class="search-input" 
-                                id="url-input"
-                                placeholder="Enter website URL or search term..."
-                                autocomplete="off"
-                                spellcheck="false"
-                            >
-                            <button type="submit" class="search-btn">
-                                <span>Browse</span>
-                                <i class="arrow">→</i>
-                            </button>
-                        </div>
-                        
-                        <div class="search-suggestions" id="suggestions"></div>
-                    </form>
+            <div class="hero-stats">
+              <div class="stat">
+                <div class="stat-value" id="uptime">0s</div>
+                <div class="stat-label">Uptime</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value" id="memory">0MB</div>
+                <div class="stat-label">Memory</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">✨</div>
+                <div class="stat-label">Status</div>
+              </div>
+            </div>
+          </div>
 
-                    <!-- Quick Access -->
-                    <div class="quick-access">
-                        <div class="quick-title">Quick Access</div>
-                        <div class="quick-grid">
-                            <a href="#" class="quick-item" data-url="https://google.com">
-                                <div class="quick-icon">🔍</div>
-                                <div class="quick-label">Google</div>
-                            </a>
-                            <a href="#" class="quick-item" data-url="https://youtube.com">
-                                <div class="quick-icon">📺</div>
-                                <div class="quick-label">YouTube</div>
-                            </a>
-                            <a href="#" class="quick-item" data-url="https://github.com">
-                                <div class="quick-icon">🐙</div>
-                                <div class="quick-label">GitHub</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+          <!-- Search Section -->
+          <div class="search-section">
+            <form class="search-form" id="proxy-form">
+              <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input
+                  type="url"
+                  class="search-input"
+                  id="url-input"
+                  placeholder="Enter website URL or search term..."
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button type="submit" class="search-btn">
+                  <span>Browse</span>
+                  <i class="arrow">→</i>
+                </button>
+              </div>
 
-        <!-- Apps Page -->
-        <section class="page" id="page-apps">
-            <div class="page-header">
-                <h2 class="page-title">Applications</h2>
-                <p class="page-subtitle">Access your favorite web applications</p>
-            </div>
-            
-            <div class="content-grid" id="apps-grid">
-                <!-- Apps will be loaded dynamically -->
-            </div>
-        </section>
+              <div class="search-suggestions" id="suggestions"></div>
+            </form>
 
-        <!-- Games Page -->
-        <section class="page" id="page-games">
-            <div class="page-header">
-                <h2 class="page-title">Games</h2>
-                <p class="page-subtitle">Play unblocked games</p>
+            <!-- Quick Access -->
+            <div class="quick-access">
+              <div class="quick-title">Quick Access</div>
+              <div class="quick-grid">
+                <a href="#" class="quick-item" data-url="https://google.com">
+                  <div class="quick-icon">🔍</div>
+                  <div class="quick-label">Google</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://youtube.com">
+                  <div class="quick-icon">📺</div>
+                  <div class="quick-label">YouTube</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://github.com">
+                  <div class="quick-icon">🐙</div>
+                  <div class="quick-label">GitHub</div>
+                </a>
+              </div>
             </div>
-            
-            <div class="content-grid" id="games-grid">
-                <!-- Games will be loaded dynamically -->
-            </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <!-- Settings Page -->
-        <section class="page" id="page-settings">
-            <div class="page-header">
-                <h2 class="page-title">Settings</h2>
-                <p class="page-subtitle">Customize your experience</p>
-            </div>
-            
-            <div class="settings-container" id="settings-container">
-                <!-- Settings will be loaded dynamically -->
-            </div>
-        </section>
+      <!-- Apps Page -->
+      <section class="page" id="page-apps">
+        <div class="page-header">
+          <h2 class="page-title">Applications</h2>
+          <p class="page-subtitle">Access your favorite web applications</p>
+        </div>
+
+        <div class="content-grid" id="apps-grid">
+          <!-- Apps will be loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- Games Page -->
+      <section class="page" id="page-games">
+        <div class="page-header">
+          <h2 class="page-title">Games</h2>
+          <p class="page-subtitle">Play unblocked games</p>
+        </div>
+
+        <div class="content-grid" id="games-grid">
+          <!-- Games will be loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- Settings Page -->
+      <section class="page" id="page-settings">
+        <div class="page-header">
+          <h2 class="page-title">Settings</h2>
+          <p class="page-subtitle">Customize your experience</p>
+        </div>
+
+        <div class="settings-container" id="settings-container">
+          <!-- Settings will be loaded dynamically -->
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>SlowGuardian v9</h4>
-                <p>Modern web proxy with extensible plugin system</p>
-            </div>
-            <div class="footer-section">
-                <h4>Features</h4>
-                <ul>
-                    <li>Secure browsing</li>
-                    <li>Tab cloaking</li>
-                    <li>Plugin system</li>
-                    <li>Modern UI</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Links</h4>
-                <ul>
-                    <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
-                    <li><a href="/docs">Documentation</a></li>
-                    <li><a href="/api/info">API</a></li>
-                </ul>
-            </div>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
         </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
     </footer>
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loading">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading...</div>
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
     </div>
 
     <!-- Proxy Bundle -->
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
-    
+
     <!-- App Scripts -->
     <script src="assets/scripts/v9/utils.js"></script>
     <script src="assets/scripts/v9/particles.js"></script>
@@ -233,5 +234,5 @@
     <script src="assets/scripts/v9/proxy.js"></script>
     <script src="assets/scripts/v9/ui.js"></script>
     <script src="assets/scripts/v9/app.js"></script>
-</body>
+  </body>
 </html>

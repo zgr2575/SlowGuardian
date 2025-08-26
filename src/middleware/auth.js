@@ -22,19 +22,22 @@ export function setupAuth(app, config) {
   if (config.envusers) {
     // Environment-based authentication (deprecated but supported)
     logger.warn("Environment-based authentication is deprecated");
-    
+
     app.use((req, res, next) => {
       const authHeader = req.headers.authorization;
-      
+
       if (!authHeader || !authHeader.startsWith("Basic ")) {
         res.set("WWW-Authenticate", "Basic realm=\"SlowGuardian\"");
         return res.status(401).json({ error: "Authentication required" });
       }
 
       try {
-        const credentials = Buffer.from(authHeader.split(" ")[1], "base64").toString();
+        const credentials = Buffer.from(
+          authHeader.split(" ")[1],
+          "base64"
+        ).toString();
         const [username, password] = credentials.split(":");
-        
+
         if (config.users[username] && config.users[username] === password) {
           req.user = { username };
           return next();
@@ -50,15 +53,17 @@ export function setupAuth(app, config) {
     });
   } else {
     // Standard basic authentication
-    app.use(basicAuth({
-      users: config.users,
-      challenge: true,
-      realm: "SlowGuardian",
-      unauthorizedResponse: (req) => {
-        logger.warn(`Unauthorized access attempt from ${req.ip}`);
-        return { error: "Authentication required" };
-      },
-    }));
+    app.use(
+      basicAuth({
+        users: config.users,
+        challenge: true,
+        realm: "SlowGuardian",
+        unauthorizedResponse: (req) => {
+          logger.warn(`Unauthorized access attempt from ${req.ip}`);
+          return { error: "Authentication required" };
+        },
+      })
+    );
   }
 
   logger.info("Authentication middleware configured");

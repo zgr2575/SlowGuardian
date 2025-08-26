@@ -36,33 +36,43 @@ async function createSlowGuardianServer() {
   // Create Express app and HTTP server
   const app = express();
   const server = createServer();
-  
+
   // Create bare server for proxy functionality
   const bareServer = createBareServer(config.bare.path);
 
   // Security middleware (must be first)
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https:", "blob:"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https:"],
-        imgSrc: ["'self'", "data:", "https:", "blob:"],
-        connectSrc: ["'self'", "https:", "wss:", "blob:"],
-        fontSrc: ["'self'", "https:", "data:"],
-        objectSrc: ["'none'"],
-        mediaSrc: ["'self'", "https:", "blob:"],
-        frameSrc: ["'self'", "https:"],
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "'unsafe-eval'",
+            "https:",
+            "blob:",
+          ],
+          styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+          imgSrc: ["'self'", "data:", "https:", "blob:"],
+          connectSrc: ["'self'", "https:", "wss:", "blob:"],
+          fontSrc: ["'self'", "https:", "data:"],
+          objectSrc: ["'none'"],
+          mediaSrc: ["'self'", "https:", "blob:"],
+          frameSrc: ["'self'", "https:"],
+        },
       },
-    },
-    crossOriginEmbedderPolicy: false,
-  }));
+      crossOriginEmbedderPolicy: false,
+    })
+  );
 
   // CORS configuration
-  app.use(cors({
-    origin: true,
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    })
+  );
 
   // Basic middleware
   app.use(express.json({ limit: "10mb" }));
@@ -75,10 +85,12 @@ async function createSlowGuardianServer() {
 
   // Static file serving
   if (config.routes && config.local) {
-    app.use(express.static(join(__dirname, "static"), {
-      maxAge: "1d",
-      etag: true,
-    }));
+    app.use(
+      express.static(join(__dirname, "static"), {
+        maxAge: "1d",
+        etag: true,
+      })
+    );
   }
 
   // Initialize plugin system
@@ -151,11 +163,17 @@ async function createSlowGuardianServer() {
 async function startServer() {
   try {
     const { server } = await createSlowGuardianServer();
-    
+
     server.listen(PORT, () => {
-      logger.info(`🚀 SlowGuardian v${config.version} is running on port ${PORT}`);
-      logger.info(`📝 Environment: ${config.debug ? "development" : "production"}`);
-      logger.info(`🔐 Authentication: ${config.challenge ? "enabled" : "disabled"}`);
+      logger.info(
+        `🚀 SlowGuardian v${config.version} is running on port ${PORT}`
+      );
+      logger.info(
+        `📝 Environment: ${config.debug ? "development" : "production"}`
+      );
+      logger.info(
+        `🔐 Authentication: ${config.challenge ? "enabled" : "disabled"}`
+      );
       logger.info(`🔌 Plugins: ${config.plugins ? "enabled" : "disabled"}`);
       logger.info(`📡 Server ready at http://localhost:${PORT}`);
     });
@@ -168,7 +186,6 @@ async function startServer() {
       }
       process.exit(1);
     });
-
   } catch (error) {
     logger.error("Failed to start server:", error);
     process.exit(1);

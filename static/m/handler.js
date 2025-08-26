@@ -36,7 +36,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           ? new URL(e)
           : (e.startsWith("blob:") && (e = e.slice(5)),
             new URL(l.sourceUrl(e))),
-      (e) => l.rewriteUrl(e),
+      (e) => l.rewriteUrl(e)
     )),
     (l.cookieStr = e.__uv$cookies || ""),
     (l.meta.url = l.location),
@@ -126,12 +126,12 @@ async function __uvHook(e, t = {}, a = "/o/") {
       i.nativeMethods.defineProperty(
         t,
         "name",
-        i.nativeMethods.getOwnPropertyDescriptor(e, "name"),
+        i.nativeMethods.getOwnPropertyDescriptor(e, "name")
       ),
         i.nativeMethods.defineProperty(
           t,
           "length",
-          i.nativeMethods.getOwnPropertyDescriptor(e, "length"),
+          i.nativeMethods.getOwnPropertyDescriptor(e, "length")
         ),
         i.nativeMethods.defineProperty(t, l.methods.string, {
           enumerable: !1,
@@ -190,7 +190,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.cookieStr = l.cookie.serialize(e, l.meta, !0);
             });
           });
-        },
+        }
       );
       const t = l.cookie.setCookie(e.data.value)[0];
       t.path || (t.path = "/"),
@@ -228,8 +228,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
             .sourceHtml(
               e.data.value.replace(
                 /<head(.*)>(.*)<\/head>/s,
-                "<op-head$1>$2</op-head>",
-              ),
+                "<op-head$1>$2</op-head>"
+              )
             )
             .replace(/<op-head(.*)>(.*)<\/op-head>/s, "<head$1>$2</head>");
           break;
@@ -238,8 +238,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
             .sourceHtml(
               e.data.value.replace(
                 /<body(.*)>(.*)<\/body>/s,
-                "<op-body$1>$2</op-body>",
-              ),
+                "<op-body$1>$2</op-body>"
+              )
             )
             .replace(/<op-body(.*)>(.*)<\/op-body>/s, "<body$1>$2</body>");
           break;
@@ -270,23 +270,23 @@ async function __uvHook(e, t = {}, a = "/o/") {
       e.data.url &&
         (e.data.url = l.rewriteUrl(
           e.data.url,
-          "__uv" in e.that ? e.that.__uv.meta : l.meta,
+          "__uv" in e.that ? e.that.__uv.meta : l.meta
         ));
     }),
     i.history.on("pushState", (e) => {
       e.data.url &&
         (e.data.url = l.rewriteUrl(
           e.data.url,
-          "__uv" in e.that ? e.that.__uv.meta : l.meta,
+          "__uv" in e.that ? e.that.__uv.meta : l.meta
         ));
     }),
     i.element.on("getAttribute", (e) => {
       i.element.hasAttribute.call(
         e.that,
-        l.attributePrefix + "-attr-" + e.data.name,
+        l.attributePrefix + "-attr-" + e.data.name
       ) &&
         e.respondWith(
-          e.target.call(e.that, l.attributePrefix + "-attr-" + e.data.name),
+          e.target.call(e.that, l.attributePrefix + "-attr-" + e.data.name)
         );
     }),
     i.message.on("postMessage", (e) => {
@@ -305,8 +305,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
             r
               ? [e.data.message, e.data.transfer]
               : [e.data.message, e.data.origin, e.data.transfer],
-            e.that,
-          ),
+            e.that
+          )
         );
     }),
     i.message.on("data", (e) => {
@@ -338,7 +338,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           void (t.data.value = l.blobUrls.get(t.data.value))
         );
@@ -346,14 +346,14 @@ async function __uvHook(e, t = {}, a = "/o/") {
         (t.target.call(
           t.that,
           l.attributePrefix + "-attr-" + t.data.name,
-          t.data.value,
+          t.data.value
         ),
         (t.data.value = l.rewriteUrl(t.data.value))),
         l.attrs.isStyle(t.data.name) &&
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.rewriteCSS(t.data.value, {
             context: "declarationList",
@@ -362,7 +362,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.rewriteHtml(t.data.value, {
             ...l.meta,
@@ -372,14 +372,14 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href,
+              e.location.href
             ),
           }))),
         l.attrs.isSrcset(t.data.name) &&
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.html.wrapSrcset(t.data.value))),
         l.attrs.isForbidden(t.data.name) &&
@@ -433,7 +433,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         i.element.setAttribute.call(
           t,
           l.attributePrefix + "-attr-integrity",
-          a,
+          a
         );
       },
     }),
@@ -480,9 +480,9 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href,
+              e.location.href
             ),
-          }),
+          })
         );
       },
     }),
@@ -523,11 +523,11 @@ async function __uvHook(e, t = {}, a = "/o/") {
     i.attribute.on("getValue", (e) => {
       i.element.hasAttribute.call(
         e.that.ownerElement,
-        l.attributePrefix + "-attr-" + e.data.name,
+        l.attributePrefix + "-attr-" + e.data.name
       ) &&
         (e.data.value = i.element.getAttribute.call(
           e.that.ownerElement,
-          l.attributePrefix + "-attr-" + e.data.name,
+          l.attributePrefix + "-attr-" + e.data.name
         ));
     }),
     i.attribute.on("setValue", (t) => {
@@ -535,14 +535,14 @@ async function __uvHook(e, t = {}, a = "/o/") {
         (i.element.setAttribute.call(
           t.that.ownerElement,
           l.attributePrefix + "-attr-" + t.data.name,
-          t.data.value,
+          t.data.value
         ),
         (t.data.value = l.rewriteUrl(t.data.value))),
         l.attrs.isStyle(t.data.name) &&
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.rewriteCSS(t.data.value, {
             context: "declarationList",
@@ -551,7 +551,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.rewriteHtml(t.data.value, {
             ...l.meta,
@@ -561,14 +561,14 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href,
+              e.location.href
             ),
           }))),
         l.attrs.isSrcset(t.data.name) &&
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value,
+            t.data.value
           ),
           (t.data.value = l.html.wrapSrcset(t.data.value)));
     }),
@@ -624,7 +624,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
     i.storage.on("length", (e) => {
       e.that.__uv$storageObj &&
         e.respondWith(
-          i.nativeMethods.keys.call(null, e.that.__uv$storageObj).length,
+          i.nativeMethods.keys.call(null, e.that.__uv$storageObj).length
         );
     }),
     i.storage.on("key", (e) => {
@@ -632,7 +632,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         e.respondWith(
           i.nativeMethods.keys.call(null, e.that.__uv$storageObj)[
             e.data.index
-          ] || null,
+          ] || null
         );
     }),
     i.websocket.on("websocket", async (t) => {
@@ -680,7 +680,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
                 "sec-websocket-key",
                 "sec-websocket-version",
               ],
-            }),
+            })
           ),
         ]);
       const c = new t.target(t.data.url, t.data.protocols);
@@ -721,7 +721,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           l.sourceCSS(e.target.call(e.that, e.data.property), {
             context: "value",
             ...l.meta,
-          }),
+          })
         );
     }),
     "CSS2Properties" in e)
@@ -751,7 +751,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
                   i.style.setProperty.call(
                     this,
                     i.style.propToDashed[e] || e,
-                    l.rewriteCSS(t, { context: "value", ...l.meta }),
+                    l.rewriteCSS(t, { context: "value", ...l.meta })
                   );
                 },
               }),

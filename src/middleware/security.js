@@ -16,7 +16,8 @@ export function setupSecurity(app, config) {
   // Request size limits
   app.use((req, res, next) => {
     const contentLength = req.get("content-length");
-    if (contentLength && parseInt(contentLength) > 50 * 1024 * 1024) { // 50MB limit
+    if (contentLength && parseInt(contentLength) > 50 * 1024 * 1024) {
+      // 50MB limit
       return res.status(413).json({ error: "Request entity too large" });
     }
     next();

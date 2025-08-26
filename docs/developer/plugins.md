@@ -1,6 +1,7 @@
 # Plugin Development Guide
 
-SlowGuardian v9 features a powerful plugin system that allows you to extend functionality without modifying the core codebase.
+SlowGuardian v9 features a powerful plugin system that allows you to extend functionality without
+modifying the core codebase.
 
 ## Getting Started
 
@@ -16,24 +17,24 @@ export default {
   description: "An awesome plugin for SlowGuardian",
   author: "Your Name",
   license: "MIT",
-  
+
   // Plugin configuration
   config: {
     enabled: true,
     settings: {
       // Plugin-specific settings
-    }
+    },
   },
-  
+
   // Lifecycle hooks
   onLoad(app, config, pluginManager) {
     console.log("Plugin loaded!");
   },
-  
+
   onUnload() {
     console.log("Plugin unloaded!");
   },
-  
+
   // Express routes
   routes: [
     {
@@ -41,10 +42,10 @@ export default {
       path: "/api/plugin/example",
       handler: (req, res) => {
         res.json({ message: "Hello from plugin!" });
-      }
-    }
+      },
+    },
   ],
-  
+
   // Express middleware
   middleware: [
     {
@@ -52,36 +53,38 @@ export default {
       handler: (req, res, next) => {
         // Middleware logic
         next();
-      }
-    }
+      },
+    },
   ],
-  
+
   // Frontend assets
   assets: {
     css: ["styles/plugin.css"],
     js: ["scripts/plugin.js"],
-    static: ["images/", "fonts/"]
+    static: ["images/", "fonts/"],
   },
-  
+
   // Frontend components
   components: {
     navbar: {
       template: "components/navbar-item.html",
-      script: "components/navbar-item.js"
-    }
-  }
+      script: "components/navbar-item.js",
+    },
+  },
 };
 ```
 
 ### Creating Your First Plugin
 
 1. **Create plugin directory**
+
    ```bash
    mkdir plugins/my-plugin
    cd plugins/my-plugin
    ```
 
 2. **Create package.json**
+
    ```json
    {
      "name": "slowguardian-my-plugin",
@@ -99,23 +102,23 @@ export default {
      name: "my-plugin",
      version: "1.0.0",
      description: "My first plugin",
-     
+
      onLoad(app) {
        console.log("My plugin is loading!");
      },
-     
+
      routes: [
        {
          method: "GET",
          path: "/api/my-plugin/hello",
          handler: (req, res) => {
-           res.json({ 
+           res.json({
              message: "Hello from my plugin!",
-             timestamp: new Date().toISOString()
+             timestamp: new Date().toISOString(),
            });
-         }
-       }
-     ]
+         },
+       },
+     ],
    };
    ```
 
@@ -124,17 +127,21 @@ export default {
 ### Lifecycle Hooks
 
 #### onLoad(app, config, pluginManager)
+
 Called when the plugin is loaded.
 
 **Parameters:**
+
 - `app` - Express application instance
 - `config` - SlowGuardian configuration object
 - `pluginManager` - Plugin manager instance
 
 #### onUnload()
+
 Called when the plugin is unloaded.
 
 #### onConfigChange(newConfig)
+
 Called when plugin configuration changes.
 
 ### Routes
@@ -146,12 +153,14 @@ routes: [
   {
     method: "GET|POST|PUT|DELETE",
     path: "/api/plugin/endpoint",
-    middleware: [/* optional middleware */],
+    middleware: [
+      /* optional middleware */
+    ],
     handler: (req, res) => {
       // Route handler
-    }
-  }
-]
+    },
+  },
+];
 ```
 
 ### Middleware
@@ -165,9 +174,9 @@ middleware: [
     handler: (req, res, next) => {
       // Middleware logic
       next();
-    }
-  }
-]
+    },
+  },
+];
 ```
 
 ### Frontend Integration
@@ -178,7 +187,7 @@ Serve static files from your plugin:
 
 ```javascript
 assets: {
-  static: ["public/"] // Serves files from plugins/my-plugin/public/
+  static: ["public/"]; // Serves files from plugins/my-plugin/public/
 }
 ```
 
@@ -216,10 +225,10 @@ Access the database through the plugin API:
 ```javascript
 onLoad(app, config, pluginManager) {
   const db = pluginManager.getDatabase();
-  
+
   // Store plugin data
   db.set("my-plugin:setting", "value");
-  
+
   // Retrieve plugin data
   const value = db.get("my-plugin:setting");
 }
@@ -234,13 +243,13 @@ export default {
   config: {
     enabled: true,
     apiKey: "",
-    timeout: 5000
+    timeout: 5000,
   },
-  
+
   onConfigChange(newConfig) {
     // React to configuration changes
     this.apiKey = newConfig.apiKey;
-  }
+  },
 };
 ```
 
@@ -251,12 +260,12 @@ Listen to and emit events:
 ```javascript
 onLoad(app, config, pluginManager) {
   const events = pluginManager.getEventEmitter();
-  
+
   // Listen to events
   events.on("proxy.request", (data) => {
     console.log("Proxy request:", data.url);
   });
-  
+
   // Emit custom events
   events.emit("my-plugin.action", { data: "example" });
 }
@@ -270,12 +279,12 @@ Communicate with other plugins:
 onLoad(app, config, pluginManager) {
   // Get another plugin
   const otherPlugin = pluginManager.getPlugin("other-plugin");
-  
+
   if (otherPlugin) {
     // Call plugin methods
     otherPlugin.doSomething();
   }
-  
+
   // Register service for other plugins
   pluginManager.registerService("my-service", {
     method1: () => "result",
@@ -297,19 +306,19 @@ routes: [
     path: "/api/plugin/data",
     handler: (req, res) => {
       const { data } = req.body;
-      
+
       // Validate input
       if (!data || typeof data !== "string") {
         return res.status(400).json({ error: "Invalid data" });
       }
-      
+
       // Sanitize if needed
       const sanitized = data.replace(/<script>/gi, "");
-      
+
       res.json({ success: true });
-    }
-  }
-]
+    },
+  },
+];
 ```
 
 ### Permission System
@@ -319,7 +328,7 @@ Check permissions before executing actions:
 ```javascript
 onLoad(app, config, pluginManager) {
   const auth = pluginManager.getAuth();
-  
+
   app.get("/api/plugin/admin", auth.requireAdmin, (req, res) => {
     // Admin-only endpoint
   });
@@ -342,7 +351,7 @@ describe("My Plugin", () => {
     expect(plugin.name).toBe("my-plugin");
     expect(plugin.version).toBe("1.0.0");
   });
-  
+
   it("should handle routes correctly", () => {
     const route = plugin.routes[0];
     expect(route.path).toBe("/api/my-plugin/hello");
@@ -360,10 +369,8 @@ import app from "../index.js";
 
 describe("Plugin Integration", () => {
   it("should respond to plugin routes", async () => {
-    const response = await request(app)
-      .get("/api/my-plugin/hello")
-      .expect(200);
-    
+    const response = await request(app).get("/api/my-plugin/hello").expect(200);
+
     expect(response.body.message).toBe("Hello from my plugin!");
   });
 });
@@ -394,11 +401,13 @@ Create a plugin manifest:
 ### Distribution
 
 1. **GitHub Repository**
+
    - Create a public repository
    - Include comprehensive README
    - Add installation instructions
 
 2. **npm Package**
+
    ```bash
    npm publish
    ```
@@ -415,7 +424,7 @@ Create a plugin manifest:
 export default {
   name: "custom-auth",
   version: "1.0.0",
-  
+
   middleware: [
     {
       path: "/admin",
@@ -425,14 +434,14 @@ export default {
           return res.status(401).json({ error: "Unauthorized" });
         }
         next();
-      }
-    }
+      },
+    },
   ],
-  
+
   validateToken(token) {
     // Token validation logic
     return token === "valid-token";
-  }
+  },
 };
 ```
 
@@ -442,15 +451,15 @@ export default {
 export default {
   name: "analytics",
   version: "1.0.0",
-  
+
   onLoad(app, config, pluginManager) {
     const events = pluginManager.getEventEmitter();
-    
+
     events.on("proxy.request", (data) => {
       this.logRequest(data);
     });
   },
-  
+
   routes: [
     {
       method: "GET",
@@ -458,15 +467,15 @@ export default {
       handler: (req, res) => {
         res.json({
           totalRequests: this.totalRequests,
-          topSites: this.getTopSites()
+          topSites: this.getTopSites(),
         });
-      }
-    }
+      },
+    },
   ],
-  
+
   logRequest(data) {
     // Analytics logic
-  }
+  },
 };
 ```
 

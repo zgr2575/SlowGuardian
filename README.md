@@ -6,37 +6,43 @@
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
-SlowGuardian v9 is a complete rewrite featuring improved readability, maintainability, modern UI design, and a powerful plugin system for ultimate customization.
+SlowGuardian v9 is a complete rewrite featuring improved readability, maintainability, modern UI
+design, and a powerful plugin system for ultimate customization.
 
 ![SlowGuardian Preview](https://github.com/zgr2575/SlowGuardian/assets/62474113/4b9ddea2-45b3-459c-b43f-64755f81547c)
 
 ## ✨ Features
 
 ### 🎨 **Modern UI/UX**
+
 - **Breathtaking Design**: Completely redesigned interface with modern aesthetics
 - **Responsive Layout**: Perfect experience across all devices
 - **Multiple Themes**: Customizable appearance with built-in theme system
 - **Accessibility**: WCAG compliant for inclusive web access
 
 ### 🛡️ **Privacy & Security**
+
 - **About:Blank Cloaking**: Hide activity from prying eyes
 - **Tab Cloaking**: Disguise as legitimate websites
 - **Password Protection**: Optional authentication system
 - **Secure Proxy**: Advanced Ultraviolet proxy technology
 
 ### 🎮 **Entertainment**
+
 - **Extensive Game Library**: Wide collection of unblocked games
 - **App Collection**: Popular web applications and tools
 - **Cloud Gaming**: GeForce NOW and Now.gg support (fully compatible)
 - **Emulators**: Retro gaming experience
 
 ### 🔧 **Developer Features**
+
 - **Plugin System**: Extensible architecture for custom functionality
 - **Modern Codebase**: Clean, maintainable TypeScript-ready code
 - **API Endpoints**: RESTful API for integrations
 - **Documentation**: Comprehensive guides for developers
 
 ### ⚡ **Performance**
+
 - **Fast Speeds**: Optimized proxy performance
 - **Built-in Tab System**: Efficient browsing experience
 - **Caching**: Smart asset caching for faster load times
@@ -45,6 +51,7 @@ SlowGuardian v9 is a complete rewrite featuring improved readability, maintainab
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** ≥ 18.0.0
 - **npm** ≥ 7.0.0
 
@@ -89,12 +96,14 @@ npm run build
 ## 📖 Documentation
 
 ### 📚 **User Guides**
+
 - [Getting Started](docs/user/getting-started.md)
 - [Features Overview](docs/user/features.md)
 - [Themes & Customization](docs/user/themes.md)
 - [Troubleshooting](docs/user/troubleshooting.md)
 
 ### 🛠️ **Developer Guides**
+
 - [Development Setup](docs/developer/setup.md)
 - [Architecture Overview](docs/developer/architecture.md)
 - [Plugin Development](docs/developer/plugins.md)
@@ -102,6 +111,7 @@ npm run build
 - [Contributing](docs/developer/contributing.md)
 
 ### 🔧 **Deployment**
+
 - [Self-Hosting](docs/deployment/self-hosting.md)
 - [Cloud Deployment](docs/deployment/cloud.md)
 - [Docker Setup](docs/deployment/docker.md)
@@ -116,21 +126,21 @@ const config = {
   // Server Settings
   version: 9,
   port: process.env.PORT || 8080,
-  
+
   // Security
-  challenge: false,     // Enable password protection
+  challenge: false, // Enable password protection
   users: {
-    admin: "password"   // Username: password pairs
+    admin: "password", // Username: password pairs
   },
-  
+
   // Features
-  routes: true,         // Enable frontend routes
-  local: true,          // Enable local assets
-  plugins: true,        // Enable plugin system
-  
+  routes: true, // Enable frontend routes
+  local: true, // Enable local assets
+  plugins: true, // Enable plugin system
+
   // Development
-  debug: false,         // Debug mode
-  logLevel: "info",     // Logging level
+  debug: false, // Debug mode
+  logLevel: "info", // Logging level
 };
 ```
 
@@ -144,19 +154,19 @@ export default {
   name: "example-plugin",
   version: "1.0.0",
   description: "Example plugin for SlowGuardian",
-  
+
   onLoad(app, config) {
     // Plugin initialization
   },
-  
+
   routes: [
     {
       path: "/plugin/example",
       handler: (req, res) => {
         res.json({ message: "Hello from plugin!" });
-      }
-    }
-  ]
+      },
+    },
+  ],
 };
 ```
 
@@ -165,33 +175,39 @@ export default {
 ## 🆕 What's New in v9
 
 ### **Complete Rewrite**
+
 - Modern ES6+ JavaScript codebase
 - Improved project structure and organization
 - Enhanced error handling and logging
 
 ### **UI/UX Overhaul**
+
 - Brand new interface design
 - Mobile-first responsive layout
 - Improved accessibility and performance
 
 ### **Plugin Architecture**
+
 - Extensible plugin system
 - Plugin marketplace ready
 - Easy customization and development
 
 ### **Enhanced Compatibility**
+
 - Fixed Now.gg compatibility issues
 - Improved proxy stability
 - Better cross-browser support
 
 ### **Developer Experience**
+
 - Comprehensive documentation
 - Modern development tooling
 - TypeScript support ready
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](docs/developer/contributing.md) for details.
+We welcome contributions! Please see our [Contributing Guide](docs/developer/contributing.md) for
+details.
 
 ### Development Workflow
 

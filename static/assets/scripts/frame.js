@@ -33,7 +33,7 @@ function decodeXor(input) {
     decodeURIComponent(str)
       .split("")
       .map((char, ind) =>
-        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char,
+        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char
       )
       .join("") + (search.length ? "?" + search.join("?") : "")
   );
@@ -43,7 +43,7 @@ function iframeLoad() {
   if (document.readyState === "complete") {
     const website = iframe.contentWindow?.location.href.replace(
       window.location.origin,
-      "",
+      ""
     );
 
     if (website.includes("/a/")) {

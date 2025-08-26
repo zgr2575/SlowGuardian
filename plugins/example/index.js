@@ -14,7 +14,7 @@ export default {
    */
   onLoad(app, config, pluginManager) {
     console.log("🔌 Example plugin loaded!");
-    
+
     // Listen to plugin manager events
     pluginManager.on("pluginLoaded", (pluginName) => {
       if (pluginName !== this.name) {

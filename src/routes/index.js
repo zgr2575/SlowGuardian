@@ -45,7 +45,7 @@ function setupApiRoutes(app, config) {
   // Server information endpoint
   app.get("/api/info", (req, res) => {
     const memoryUsage = process.memoryUsage();
-    
+
     res.json({
       server: "SlowGuardian",
       version: config.version,
@@ -66,7 +66,7 @@ function setupApiRoutes(app, config) {
   // Legacy data endpoint (backward compatibility)
   app.get("/d/data", (req, res) => {
     logger.info("Legacy data endpoint accessed");
-    
+
     const memoryUsage = process.memoryUsage();
     const serverData = [
       `server: SlowGuardian v${config.version}`,
@@ -104,7 +104,7 @@ function setupApiRoutes(app, config) {
  */
 function setupFrontendRoutes(app) {
   const staticDir = join(__dirname, "../../static");
-  
+
   const routes = [
     { path: "/", file: "index-v9.html" }, // Use new v9 UI
     { path: "/ap", file: "apps.html" },
@@ -140,12 +140,12 @@ function setupFrontendRoutes(app) {
  */
 async function fetchExternalContent(req, res, baseUrls, path) {
   const { default: fetch } = await import("node-fetch");
-  
+
   for (const baseUrl of baseUrls) {
     try {
       const url = `${baseUrl}/${path}`;
       logger.debug(`Fetching external content: ${url}`);
-      
+
       const response = await fetch(url, {
         timeout: 10000,
         headers: {
@@ -158,7 +158,7 @@ async function fetchExternalContent(req, res, baseUrls, path) {
         if (contentType) {
           res.set("Content-Type", contentType);
         }
-        
+
         response.body.pipe(res);
         return;
       }

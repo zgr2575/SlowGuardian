@@ -32,7 +32,7 @@ class UVServiceWorker extends EventEmitter {
       (this.statusCode = { empty: [204, 304] }),
       (this.config = e),
       (this.browser = Ultraviolet.Bowser.getParser(
-        self.navigator.userAgent,
+        self.navigator.userAgent
       ).getBrowserName()),
       "Firefox" === this.browser &&
         (this.headers.forward.push("user-agent"),
@@ -54,7 +54,7 @@ class UVServiceWorker extends EventEmitter {
         t,
         this.method.empty.includes(e.method.toUpperCase())
           ? null
-          : await e.blob(),
+          : await e.blob()
       );
       if (
         ("blob:" === t.meta.url.protocol &&
@@ -88,7 +88,7 @@ class UVServiceWorker extends EventEmitter {
           (c.headers.location = t.rewriteUrl(c.headers.location)),
         c.headers["set-cookie"] &&
           (Promise.resolve(
-            t.cookie.setCookies(c.headers["set-cookie"], r, t.meta),
+            t.cookie.setCookies(c.headers["set-cookie"], r, t.meta)
           ).then(() => {
             self.clients.matchAll().then(function (e) {
               e.forEach(function (e) {
@@ -118,7 +118,7 @@ class UVServiceWorker extends EventEmitter {
                   this.config.bundle,
                   this.config.config,
                   t.cookie.serialize(s, t.meta, !0),
-                  e.referrer,
+                  e.referrer
                 ),
               }));
         }
@@ -225,7 +225,7 @@ class RequestContext {
         credentials: this.credentials,
         mode: location.origin !== this.address.origin ? "cors" : this.mode,
         body: this.body,
-      },
+      }
     );
   }
   get url() {
@@ -284,7 +284,7 @@ ReflectOwnKeys =
     : Object.getOwnPropertySymbols
       ? function (e) {
           return Object.getOwnPropertyNames(e).concat(
-            Object.getOwnPropertySymbols(e),
+            Object.getOwnPropertySymbols(e)
           );
         }
       : function (e) {
@@ -307,7 +307,7 @@ function checkListener(e) {
   if ("function" != typeof e)
     throw new TypeError(
       'The "listener" argument must be of type Function. Received type ' +
-        typeof e,
+        typeof e
     );
 }
 function _getMaxListeners(e) {
@@ -342,7 +342,7 @@ function _addListener(e, t, r, n) {
         o.length +
         " " +
         String(t) +
-        " listeners added. Use emitter.setMaxListeners() to increase limit",
+        " listeners added. Use emitter.setMaxListeners() to increase limit"
     );
     (a.name = "MaxListenersExceededWarning"),
       (a.emitter = e),
@@ -425,7 +425,7 @@ function eventTargetAgnosticAddListener(e, t, r, n) {
     if ("function" != typeof e.addEventListener)
       throw new TypeError(
         'The "emitter" argument must be of type EventEmitter. Received type ' +
-          typeof e,
+          typeof e
       );
     e.addEventListener(t, function s(i) {
       n.once && e.removeEventListener(t, s), r(i);
@@ -442,7 +442,7 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
       throw new RangeError(
         'The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' +
           e +
-          ".",
+          "."
       );
     defaultMaxListeners = e;
   },
@@ -458,7 +458,7 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
       throw new RangeError(
         'The value of "n" is out of range. It must be a non-negative number. Received ' +
           e +
-          ".",
+          "."
       );
     return (this._maxListeners = e), this;
   }),

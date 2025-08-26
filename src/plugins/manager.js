@@ -30,7 +30,7 @@ export class PluginManager extends EventEmitter {
 
     try {
       const pluginDirs = await this.discoverPlugins();
-      
+
       for (const pluginDir of pluginDirs) {
         await this.loadPlugin(pluginDir);
       }
@@ -49,11 +49,11 @@ export class PluginManager extends EventEmitter {
 
     try {
       const entries = await readdir(this.pluginDir);
-      
+
       for (const entry of entries) {
         const pluginPath = join(this.pluginDir, entry);
         const stats = await stat(pluginPath);
-        
+
         if (stats.isDirectory()) {
           pluginDirs.push(pluginPath);
         }
@@ -82,7 +82,7 @@ export class PluginManager extends EventEmitter {
 
       // Initialize plugin
       const pluginInstance = new PluginInstance(plugin, pluginPath, this);
-      
+
       // Store plugin
       this.plugins.set(plugin.name, pluginInstance);
 
@@ -91,7 +91,6 @@ export class PluginManager extends EventEmitter {
 
       this.logger.info(`Loaded plugin: ${plugin.name} v${plugin.version}`);
       this.emit("pluginLoaded", plugin.name);
-
     } catch (error) {
       this.logger.error(`Error loading plugin from ${pluginPath}:`, error);
     }
@@ -204,7 +203,11 @@ class PluginInstance {
 
       // Call plugin onLoad hook
       if (typeof this.plugin.onLoad === "function") {
-        await this.plugin.onLoad(this.manager.app, this.manager.config, this.manager);
+        await this.plugin.onLoad(
+          this.manager.app,
+          this.manager.config,
+          this.manager
+        );
       }
 
       this.loaded = true;
@@ -254,7 +257,10 @@ class PluginInstance {
         try {
           await handler(req, res, next);
         } catch (error) {
-          this.logger.error(`Error in route ${method.toUpperCase()} ${path}:`, error);
+          this.logger.error(
+            `Error in route ${method.toUpperCase()} ${path}:`,
+            error
+          );
           next(error);
         }
       };

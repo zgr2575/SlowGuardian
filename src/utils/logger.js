@@ -22,25 +22,37 @@ export class Logger {
 
   error(...args) {
     if (this.level >= LOG_LEVELS.error) {
-      console.error(`[${new Date().toISOString()}] [ERROR] [${this.context}]`, ...args);
+      console.error(
+        `[${new Date().toISOString()}] [ERROR] [${this.context}]`,
+        ...args
+      );
     }
   }
 
   warn(...args) {
     if (this.level >= LOG_LEVELS.warn) {
-      console.warn(`[${new Date().toISOString()}] [WARN] [${this.context}]`, ...args);
+      console.warn(
+        `[${new Date().toISOString()}] [WARN] [${this.context}]`,
+        ...args
+      );
     }
   }
 
   info(...args) {
     if (this.level >= LOG_LEVELS.info) {
-      console.info(`[${new Date().toISOString()}] [INFO] [${this.context}]`, ...args);
+      console.info(
+        `[${new Date().toISOString()}] [INFO] [${this.context}]`,
+        ...args
+      );
     }
   }
 
   debug(...args) {
     if (this.level >= LOG_LEVELS.debug) {
-      console.debug(`[${new Date().toISOString()}] [DEBUG] [${this.context}]`, ...args);
+      console.debug(
+        `[${new Date().toISOString()}] [DEBUG] [${this.context}]`,
+        ...args
+      );
     }
   }
 }

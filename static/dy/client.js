@@ -33,7 +33,7 @@
       t || !e || !e.__esModule
         ? Xe(i, "default", { value: e, enumerable: !0 })
         : i,
-      e,
+      e
     )
   );
   var q = (e, t, i) => (la(e, typeof t != "symbol" ? t + "" : t, i), i);
@@ -42,7 +42,7 @@
     function te(e) {
       if (typeof e != "string")
         throw new TypeError(
-          "Path must be a string. Received " + JSON.stringify(e),
+          "Path must be a string. Received " + JSON.stringify(e)
         );
     }
     function mr(e, t) {
@@ -267,7 +267,7 @@
         if (t === null || typeof t != "object")
           throw new TypeError(
             'The "pathObject" argument must be of type Object. Received type ' +
-              typeof t,
+              typeof t
           );
         return pa("/", t);
       },
@@ -459,7 +459,7 @@
           "set-cookie-parser encountered an error while decoding a cookie with value '" +
             s +
             "'. Set options.decodeValues to false to disable this feature.",
-          c,
+          c
         );
       }
       var o = { name: a, value: s };
@@ -509,7 +509,7 @@
             e.headers.cookie &&
             !t.silent &&
             console.warn(
-              "Warning: set-cookie-parser appears to have been called on a request object. It is designed to parse Set-Cookie headers from responses, not Cookie headers from requests. Set the option {silent: true} to suppress this warning.",
+              "Warning: set-cookie-parser appears to have been called on a request object. It is designed to parse Set-Cookie headers from responses, not Cookie headers from requests. Set the option {silent: true} to suppress this warning."
             ),
             (e = i);
         }
@@ -935,7 +935,7 @@
   function Bt(
     e,
     t,
-    { blocked: i, upgrade: r, blocking: n, terminated: a } = {},
+    { blocked: i, upgrade: r, blocking: n, terminated: a } = {}
   ) {
     let s = indexedDB.open(e, t),
       o = G(s);
@@ -951,7 +951,7 @@
           a && c.addEventListener("close", () => a()),
             n &&
               c.addEventListener("versionchange", (l) =>
-                n(l.oldVersion, l.newVersion, l),
+                n(l.oldVersion, l.newVersion, l)
               );
         })
         .catch(() => {}),
@@ -1350,9 +1350,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (this.options = t = Fa(t)),
         (this.sourceFile = t.sourceFile),
         (this.keywords = pe(
-          Ra[
-            t.ecmaVersion >= 6 ? 6 : t.sourceType === "module" ? "5module" : 5
-          ],
+          Ra[t.ecmaVersion >= 6 ? 6 : t.sourceType === "module" ? "5module" : 5]
         ));
       var n = "";
       t.allowReserved !== !0 &&
@@ -1370,7 +1368,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               this.input.lastIndexOf(
                 `
 `,
-                r - 1,
+                r - 1
               ) + 1),
             (this.curLine = this.input
               .slice(0, this.lineStart)
@@ -1565,13 +1563,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
       e.trailingComma > -1 &&
         this.raiseRecoverable(
           e.trailingComma,
-          "Comma is not permitted after the rest element",
+          "Comma is not permitted after the rest element"
         );
       var i = t ? e.parenthesizedAssign : e.parenthesizedBind;
       i > -1 &&
         this.raiseRecoverable(
           i,
-          t ? "Assigning to rvalue" : "Parenthesized pattern",
+          t ? "Assigning to rvalue" : "Parenthesized pattern"
         );
     }
   };
@@ -1583,7 +1581,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     i >= 0 &&
       this.raise(
         i,
-        "Shorthand property assignments are valid only in destructuring patterns",
+        "Shorthand property assignments are valid only in destructuring patterns"
       ),
       r >= 0 && this.raiseRecoverable(r, "Redefinition of __proto__ property");
   };
@@ -1615,7 +1613,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         var a = n[r];
         this.raiseRecoverable(
           this.undefinedExports[a].start,
-          "Export '" + a + "' is not defined",
+          "Export '" + a + "' is not defined"
         );
       }
     return (
@@ -1721,12 +1719,12 @@ Defaulting to 2020, but this will stop working in the future.`)),
             (t ||
               this.raise(
                 this.start,
-                "'import' and 'export' may only appear at the top level",
+                "'import' and 'export' may only appear at the top level"
               ),
             this.inModule ||
               this.raise(
                 this.start,
-                "'import' and 'export' may appear only with 'sourceType: module'",
+                "'import' and 'export' may appear only with 'sourceType: module'"
               )),
           r === u._import ? this.parseImport(n) : this.parseExport(n, i)
         );
@@ -1830,7 +1828,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           s &&
           this.raise(
             c.start,
-            "The left-hand side of a for-of loop may not start with 'let'.",
+            "The left-hand side of a for-of loop may not start with 'let'."
           ),
         this.toAssignable(c, !1, o),
         this.checkLValPattern(c),
@@ -1882,7 +1880,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             : (i &&
                 this.raiseRecoverable(
                   this.lastTokStart,
-                  "Multiple default clauses",
+                  "Multiple default clauses"
                 ),
               (i = !0),
               (t.test = null)),
@@ -1998,7 +1996,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     return (
       this.labels.push({ name: t, kind: o, statementStart: this.start }),
       (e.body = this.parseStatement(
-        r ? (r.indexOf("label") === -1 ? r + "label" : r) : "label",
+        r ? (r.indexOf("label") === -1 ? r + "label" : r) : "label"
       )),
       this.labels.pop(),
       (e.label = i),
@@ -2060,7 +2058,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.raise(
           t.start,
           (i ? "for-in" : "for-of") +
-            " loop variable declaration may not have an initializer",
+            " loop variable declaration may not have an initializer"
         ),
       (e.left = t),
       (e.right = i ? this.parseExpression() : this.parseMaybeAssign()),
@@ -2090,7 +2088,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 !(t && (this.type === u._in || this.isContextual("of")))
               ? this.raise(
                   this.lastTokEnd,
-                  "Complex binding patterns require an initialization value",
+                  "Complex binding patterns require an initialization value"
                 )
               : (n.init = null),
         e.declarations.push(this.finishNode(n, "VariableDeclarator")),
@@ -2124,7 +2122,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               ? this.treatFunctionsAsVar
                 ? Yt
                 : le
-              : jr,
+              : jr
           ));
     var a = this.yieldPos,
       s = this.awaitPos,
@@ -2148,7 +2146,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (e.params = this.parseBindingList(
         u.parenR,
         !1,
-        this.options.ecmaVersion >= 8,
+        this.options.ecmaVersion >= 8
       )),
       this.checkYieldAwaitInDefaultParams();
   };
@@ -2167,7 +2165,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           ? (a &&
               this.raiseRecoverable(
                 s.start,
-                "Duplicate constructor in the same class",
+                "Duplicate constructor in the same class"
               ),
             (a = !0))
           : s.key &&
@@ -2175,7 +2173,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             Ha(r, s) &&
             this.raiseRecoverable(
               s.key.start,
-              "Identifier '#" + s.key.name + "' has already been declared",
+              "Identifier '#" + s.key.name + "' has already been declared"
             ));
     }
     return (
@@ -2252,7 +2250,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       ? (this.value === "constructor" &&
           this.raise(
             this.start,
-            "Classes can't have an element named '#constructor'",
+            "Classes can't have an element named '#constructor'"
           ),
         (e.computed = !1),
         (e.key = this.parsePrivateIdent()))
@@ -2267,7 +2265,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         tt(e, "prototype") &&
         this.raise(
           n.start,
-          "Classes may not have a static property named prototype",
+          "Classes may not have a static property named prototype"
         );
     var a = (e.value = this.parseMethod(t, i, r));
     return (
@@ -2281,7 +2279,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         a.params[0].type === "RestElement" &&
         this.raiseRecoverable(
           a.params[0].start,
-          "Setter cannot use rest params",
+          "Setter cannot use rest params"
         ),
       this.finishNode(e, "MethodDefinition")
     );
@@ -2291,13 +2289,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (tt(e, "constructor")
         ? this.raise(
             e.key.start,
-            "Classes can't have a field named 'constructor'",
+            "Classes can't have a field named 'constructor'"
           )
         : e.static &&
           tt(e, "prototype") &&
           this.raise(
             e.key.start,
-            "Classes can't have a static field named 'prototype'",
+            "Classes can't have a static field named 'prototype'"
           ),
       this.eat(u.eq))
     ) {
@@ -2357,7 +2355,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 s.start,
                 "Private field '#" +
                   s.name +
-                  "' must be declared in an enclosing class",
+                  "' must be declared in an enclosing class"
               ));
       }
   };
@@ -2434,7 +2432,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             n.local.type === "Literal" &&
               this.raise(
                 n.local.start,
-                "A string literal cannot be used as an exported binding without `from`.",
+                "A string literal cannot be used as an exported binding without `from`."
               );
         }
         e.source = null;
@@ -2594,7 +2592,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         Va.test(e.value) &&
           this.raise(
             e.start,
-            "An export name cannot include a lone surrogate.",
+            "An export name cannot include a lone surrogate."
           ),
         e
       );
@@ -2623,7 +2621,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             e.name === "await" &&
             this.raise(
               e.start,
-              "Cannot use 'await' as identifier inside an async function",
+              "Cannot use 'await' as identifier inside an async function"
             );
           break;
         case "ObjectPattern":
@@ -2646,7 +2644,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           e.kind !== "init" &&
             this.raise(
               e.key.start,
-              "Object pattern can't contain getter or setter",
+              "Object pattern can't contain getter or setter"
             ),
             this.toAssignable(e.value, t);
           break;
@@ -2661,14 +2659,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
             e.argument.type === "AssignmentPattern" &&
               this.raise(
                 e.argument.start,
-                "Rest elements cannot have a default value",
+                "Rest elements cannot have a default value"
               );
           break;
         case "AssignmentExpression":
           e.operator !== "=" &&
             this.raise(
               e.left.end,
-              "Only '=' operator can be used for specifying default value.",
+              "Only '=' operator can be used for specifying default value."
             ),
             (e.type = "AssignmentPattern"),
             delete e.operator,
@@ -2680,7 +2678,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         case "ChainExpression":
           this.raiseRecoverable(
             e.start,
-            "Optional chaining cannot appear in left-hand side",
+            "Optional chaining cannot appear in left-hand side"
           );
           break;
         case "MemberExpression":
@@ -2754,7 +2752,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             this.type === u.comma &&
               this.raiseRecoverable(
                 this.start,
-                "Comma is not permitted after the rest element",
+                "Comma is not permitted after the rest element"
               ),
             this.expect(e);
           break;
@@ -2791,14 +2789,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
           this.reservedWordsStrictBind.test(e.name) &&
           this.raiseRecoverable(
             e.start,
-            (r ? "Binding " : "Assigning to ") + e.name + " in strict mode",
+            (r ? "Binding " : "Assigning to ") + e.name + " in strict mode"
           ),
           r &&
             (t === le &&
               e.name === "let" &&
               this.raiseRecoverable(
                 e.start,
-                "let is disallowed as a lexically bound name",
+                "let is disallowed as a lexically bound name"
               ),
             i &&
               (Te(i, e.name) &&
@@ -2809,7 +2807,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       case "ChainExpression":
         this.raiseRecoverable(
           e.start,
-          "Optional chaining cannot appear in left-hand side",
+          "Optional chaining cannot appear in left-hand side"
         );
         break;
       case "MemberExpression":
@@ -3014,7 +3012,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               ? i.doubleProto < 0 && (i.doubleProto = r.start)
               : this.raiseRecoverable(
                   r.start,
-                  "Redefinition of __proto__ property",
+                  "Redefinition of __proto__ property"
                 )),
           (t.proto = !0));
         return;
@@ -3126,7 +3124,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           (o && (this.type === u.logicalOR || this.type === u.logicalAND))) &&
           this.raiseRecoverable(
             this.start,
-            "Logical expressions and coalesce expressions cannot be mixed. Wrap either by parentheses",
+            "Logical expressions and coalesce expressions cannot be mixed. Wrap either by parentheses"
           ),
         this.parseExprOp(A, t, i, r, n)
       );
@@ -3137,7 +3135,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     r.type === "PrivateIdentifier" &&
       this.raise(
         r.start,
-        "Private identifier can only be left side of binary expression",
+        "Private identifier can only be left side of binary expression"
       );
     var s = this.startNodeAt(e, t);
     return (
@@ -3168,12 +3166,12 @@ Defaulting to 2020, but this will stop working in the future.`)),
               o.argument.type === "Identifier"
             ? this.raiseRecoverable(
                 o.start,
-                "Deleting local variable in strict mode",
+                "Deleting local variable in strict mode"
               )
             : o.operator === "delete" && qr(o.argument)
               ? this.raiseRecoverable(
                   o.start,
-                  "Private fields can not be deleted",
+                  "Private fields can not be deleted"
                 )
               : (t = !0),
         (s = this.finishNode(o, c ? "UpdateExpression" : "UnaryExpression"));
@@ -3205,7 +3203,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           s,
           this.parseMaybeUnary(null, !1, !1, r),
           "**",
-          !1,
+          !1
         );
     else return s;
   };
@@ -3276,7 +3274,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       c &&
       this.raise(
         this.lastTokStart,
-        "Optional chaining cannot appear in the callee of new expressions",
+        "Optional chaining cannot appear in the callee of new expressions"
       );
     var l = this.eat(u.bracketL);
     if (
@@ -3291,7 +3289,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           : this.type === u.privateId && e.type !== "Super"
             ? (h.property = this.parsePrivateIdent())
             : (h.property = this.parseIdent(
-                this.options.allowReserved !== "never",
+                this.options.allowReserved !== "never"
               )),
         (h.computed = !!l),
         o && (h.optional = c),
@@ -3306,7 +3304,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         u.parenR,
         this.options.ecmaVersion >= 8,
         !1,
-        f,
+        f
       );
       if (n && !c && this.shouldParseAsyncArrow())
         return (
@@ -3315,7 +3313,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           this.awaitIdentPos > 0 &&
             this.raise(
               this.awaitIdentPos,
-              "Cannot use 'await' as identifier inside an async function",
+              "Cannot use 'await' as identifier inside an async function"
             ),
           (this.yieldPos = A),
           (this.awaitPos = d),
@@ -3335,7 +3333,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (c || a) &&
         this.raise(
           this.start,
-          "Optional chaining cannot appear in the tag of tagged template expressions",
+          "Optional chaining cannot appear in the tag of tagged template expressions"
         );
       var se = this.startNodeAt(t, i);
       (se.tag = e),
@@ -3359,7 +3357,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             !this.allowDirectSuper &&
             this.raise(
               r.start,
-              "super() call outside constructor of a subclass",
+              "super() call outside constructor of a subclass"
             ),
           this.type !== u.dot &&
             this.type !== u.bracketL &&
@@ -3395,7 +3393,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               this.startNodeAt(a, s),
               [c],
               !1,
-              t,
+              t
             );
           if (
             this.options.ecmaVersion >= 8 &&
@@ -3501,18 +3499,18 @@ Defaulting to 2020, but this will stop working in the future.`)),
       e.property.name !== "meta" &&
         this.raiseRecoverable(
           e.property.start,
-          "The only valid meta property for import is 'import.meta'",
+          "The only valid meta property for import is 'import.meta'"
         ),
       t &&
         this.raiseRecoverable(
           e.start,
-          "'import.meta' must not contain escaped characters",
+          "'import.meta' must not contain escaped characters"
         ),
       this.options.sourceType !== "module" &&
         !this.options.allowImportExportEverywhere &&
         this.raiseRecoverable(
           e.start,
-          "Cannot use 'import.meta' outside a module",
+          "Cannot use 'import.meta' outside a module"
         ),
       this.finishNode(e, "MetaProperty")
     );
@@ -3565,7 +3563,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             this.type === u.comma &&
               this.raiseRecoverable(
                 this.start,
-                "Comma is not permitted after the rest element",
+                "Comma is not permitted after the rest element"
               );
           break;
         } else c.push(this.parseMaybeAssign(!1, f, this.parseParenItem));
@@ -3620,17 +3618,17 @@ Defaulting to 2020, but this will stop working in the future.`)),
         e.property.name !== "target" &&
           this.raiseRecoverable(
             e.property.start,
-            "The only valid meta property for new is 'new.target'",
+            "The only valid meta property for new is 'new.target'"
           ),
         i &&
           this.raiseRecoverable(
             e.start,
-            "'new.target' must not contain escaped characters",
+            "'new.target' must not contain escaped characters"
           ),
         this.allowNewDotTarget ||
           this.raiseRecoverable(
             e.start,
-            "'new.target' can only be used in functions and class static block",
+            "'new.target' can only be used in functions and class static block"
           ),
         this.finishNode(e, "MetaProperty")
       );
@@ -3643,13 +3641,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
         r,
         n,
         !0,
-        !1,
+        !1
       )),
       this.eat(u.parenL)
         ? (e.arguments = this.parseExprList(
             u.parenR,
             this.options.ecmaVersion >= 8,
-            !1,
+            !1
           ))
         : (e.arguments = Wa),
       this.finishNode(e, "NewExpression")
@@ -3663,14 +3661,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
         ? (t ||
             this.raiseRecoverable(
               this.start,
-              "Bad escape sequence in untagged template literal",
+              "Bad escape sequence in untagged template literal"
             ),
           (i.value = { raw: this.value, cooked: null }))
         : (i.value = {
             raw: this.input.slice(this.start, this.end).replace(
               /\r\n?/g,
               `
-`,
+`
             ),
             cooked: this.value,
           }),
@@ -3737,7 +3735,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           this.type === u.comma &&
             this.raiseRecoverable(
               this.start,
-              "Comma is not permitted after the rest element",
+              "Comma is not permitted after the rest element"
             ),
           this.finishNode(i, "RestElement"))
         : ((i.argument = this.parseMaybeAssign(!1, t)),
@@ -3778,7 +3776,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         e.value.params[0].type === "RestElement" &&
         this.raiseRecoverable(
           e.value.params[0].start,
-          "Setter cannot use rest params",
+          "Setter cannot use rest params"
         );
   };
   v.parsePropertyValue = function (e, t, i, r, n, a, s, o) {
@@ -3816,7 +3814,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                   ? (e.value = this.parseMaybeDefault(
                       n,
                       a,
-                      this.copyNode(e.key),
+                      this.copyNode(e.key)
                     ))
                   : this.type === u.eq && s
                     ? (s.shorthandAssign < 0 &&
@@ -3824,7 +3822,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                       (e.value = this.parseMaybeDefault(
                         n,
                         a,
-                        this.copyNode(e.key),
+                        this.copyNode(e.key)
                       )))
                     : (e.value = this.copyNode(e.key)),
                 (e.shorthand = !0))
@@ -3868,7 +3866,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (r.params = this.parseBindingList(
         u.parenR,
         !1,
-        this.options.ecmaVersion >= 8,
+        this.options.ecmaVersion >= 8
       )),
       this.checkYieldAwaitInDefaultParams(),
       this.parseFunctionBody(r, !1, !0, !1),
@@ -3914,14 +3912,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
           o &&
           this.raiseRecoverable(
             e.start,
-            "Illegal 'use strict' directive in function with non-simple parameter list",
+            "Illegal 'use strict' directive in function with non-simple parameter list"
           ));
       var c = this.labels;
       (this.labels = []),
         s && (this.strict = !0),
         this.checkParams(
           e,
-          !a && !s && !t && !i && this.isSimpleParamList(e.params),
+          !a && !s && !t && !i && this.isSimpleParamList(e.params)
         ),
         this.strict && e.id && this.checkLValSimple(e.id, Hr),
         (e.body = this.parseBlock(!1, void 0, s && !a)),
@@ -3975,25 +3973,25 @@ Defaulting to 2020, but this will stop working in the future.`)),
         r === "yield" &&
         this.raiseRecoverable(
           t,
-          "Cannot use 'yield' as identifier inside a generator",
+          "Cannot use 'yield' as identifier inside a generator"
         ),
       this.inAsync &&
         r === "await" &&
         this.raiseRecoverable(
           t,
-          "Cannot use 'await' as identifier inside an async function",
+          "Cannot use 'await' as identifier inside an async function"
         ),
       this.currentThisScope().inClassFieldInit &&
         r === "arguments" &&
         this.raiseRecoverable(
           t,
-          "Cannot use 'arguments' in class field initializer",
+          "Cannot use 'arguments' in class field initializer"
         ),
       this.inClassStaticBlock &&
         (r === "arguments" || r === "await") &&
         this.raise(
           t,
-          "Cannot use " + r + " in class static initialization block",
+          "Cannot use " + r + " in class static initialization block"
         ),
       this.keywords.test(r) && this.raise(t, "Unexpected keyword '" + r + "'"),
       !(
@@ -4007,7 +4005,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           r === "await" &&
           this.raiseRecoverable(
             t,
-            "Cannot use keyword 'await' outside an async function",
+            "Cannot use keyword 'await' outside an async function"
           ),
         this.raiseRecoverable(t, "The keyword '" + r + "' is reserved"));
     }
@@ -4052,10 +4050,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
               e.start,
               "Private field '#" +
                 e.name +
-                "' must be declared in an enclosing class",
+                "' must be declared in an enclosing class"
             )
           : this.privateNameStack[this.privateNameStack.length - 1].used.push(
-              e,
+              e
             )),
       e
     );
@@ -4152,7 +4150,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     r &&
       this.raiseRecoverable(
         i,
-        "Identifier '" + e + "' has already been declared",
+        "Identifier '" + e + "' has already been declared"
       );
   };
   de.checkLocalExport = function (e) {
@@ -4297,7 +4295,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   re.prototype.raise = function (t) {
     this.parser.raiseRecoverable(
       this.start,
-      "Invalid regular expression: /" + this.source + "/: " + t,
+      "Invalid regular expression: /" + this.source + "/: " + t
     );
   };
   re.prototype.at = function (t, i) {
@@ -5129,7 +5127,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.containsEsc &&
       this.raiseRecoverable(
         this.start,
-        "Escape sequence in keyword " + this.type.keyword,
+        "Escape sequence in keyword " + this.type.keyword
       ),
       this.options.onToken && this.options.onToken(new Zt(this)),
       (this.lastTokEnd = this.end),
@@ -5192,7 +5190,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         t,
         this.pos,
         e,
-        this.curPosition(),
+        this.curPosition()
       );
   };
   C.skipLineComment = function (e) {
@@ -5211,7 +5209,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         t,
         this.pos,
         i,
-        this.curPosition(),
+        this.curPosition()
       );
   };
   C.skipSpace = function () {
@@ -5341,7 +5339,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     return t === 61
       ? this.finishOp(
           u.equality,
-          this.input.charCodeAt(this.pos + 2) === 61 ? 3 : 2,
+          this.input.charCodeAt(this.pos + 2) === 61 ? 3 : 2
         )
       : e === 61 && t === 62 && this.options.ecmaVersion >= 6
         ? ((this.pos += 2), this.finishToken(u.arrow))
@@ -5500,17 +5498,17 @@ Defaulting to 2020, but this will stop working in the future.`)),
         n &&
           this.raiseRecoverable(
             this.pos,
-            "Numeric separator is not allowed in legacy octal numeric literals",
+            "Numeric separator is not allowed in legacy octal numeric literals"
           ),
           o === 95 &&
             this.raiseRecoverable(
               this.pos,
-              "Numeric separator must be exactly one underscore",
+              "Numeric separator must be exactly one underscore"
             ),
           c === 0 &&
             this.raiseRecoverable(
               this.pos,
-              "Numeric separator is not allowed at the first of digits",
+              "Numeric separator is not allowed at the first of digits"
             ),
           (o = h);
         continue;
@@ -5533,7 +5531,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         o === 95 &&
         this.raiseRecoverable(
           this.pos - 1,
-          "Numeric separator is not allowed at the last of digits",
+          "Numeric separator is not allowed at the last of digits"
         ),
       this.pos === a || (t != null && this.pos - a !== t) ? null : s
     );
@@ -5683,7 +5681,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         case "`":
           return this.finishToken(
             u.invalidTemplate,
-            this.input.slice(this.start, this.pos),
+            this.input.slice(this.start, this.pos)
           );
       }
     this.raise(this.start, "Unterminated template");
@@ -5726,7 +5724,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           var i = this.pos - 1;
           this.invalidStringToken(
             i,
-            "Invalid escape sequence in template string",
+            "Invalid escape sequence in template string"
           );
         }
       default:
@@ -5743,7 +5741,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 this.pos - 1 - r.length,
                 e
                   ? "Octal literal in template string"
-                  : "Octal literal in strict mode",
+                  : "Octal literal in strict mode"
               ),
             String.fromCharCode(n)
           );
@@ -5774,7 +5772,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.input.charCodeAt(++this.pos) !== 117 &&
           this.invalidStringToken(
             this.pos,
-            "Expecting Unicode escape sequence \\uXXXX",
+            "Expecting Unicode escape sequence \\uXXXX"
           ),
           ++this.pos;
         var s = this.readCodePoint();
@@ -6065,7 +6063,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           h = (f) => {
             if ((c(), typeof f.data != "string"))
               throw new TypeError(
-                "the first websocket message was not a text frame",
+                "the first websocket message was not a text frame"
               );
             let A = JSON.parse(f.data);
             if (A.type !== "open")
@@ -6092,11 +6090,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
                       protocols: r,
                       headers: A,
                       forwardHeaders: [],
-                    }),
-                  ),
+                    })
+                  )
                 );
             },
-            { once: !0 },
+            { once: !0 }
           ),
           o
         );
@@ -6163,7 +6161,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     let i = await ti(e, { signal: t });
     if (!i.ok)
       throw new Error(
-        `Unable to fetch Bare meta: ${i.status} ${await i.text()}`,
+        `Unable to fetch Bare meta: ${i.status} ${await i.text()}`
       );
     return await i.json();
   }
@@ -6202,30 +6200,30 @@ Defaulting to 2020, but this will stop working in the future.`)),
         for (let [t, i] of Ss)
           if (this.manifest.versions.includes(t)) return new i(this.server);
         throw new Error(
-          "Unable to find compatible client version. Starting from v2.0.0, @tomphttp/bare-client only supports Bare servers v3+. For more information, see https://github.com/tomphttp/bare-client/",
+          "Unable to find compatible client version. Starting from v2.0.0, @tomphttp/bare-client only supports Bare servers v3+. For more information, see https://github.com/tomphttp/bare-client/"
         );
       }
       createWebSocket(t, i = [], r) {
         if (!this.client)
           throw new TypeError(
-            "You need to wait for the client to finish fetching the manifest before creating any WebSockets. Try caching the manifest data before making this request.",
+            "You need to wait for the client to finish fetching the manifest before creating any WebSockets. Try caching the manifest data before making this request."
           );
         try {
           t = new URL(t);
         } catch {
           throw new DOMException(
-            `Faiiled to construct 'WebSocket': The URL '${t}' is invalid.`,
+            `Faiiled to construct 'WebSocket': The URL '${t}' is invalid.`
           );
         }
         if (!Cs.includes(t.protocol))
           throw new DOMException(
-            `Failed to construct 'WebSocket': The URL's scheme must be either 'ws' or 'wss'. '${t.protocol}' is not allowed.`,
+            `Failed to construct 'WebSocket': The URL's scheme must be either 'ws' or 'wss'. '${t.protocol}' is not allowed.`
           );
         Array.isArray(i) || (i = [i]), (i = i.map(String));
         for (let h of i)
           if (!vs(h))
             throw new DOMException(
-              `Failed to construct 'WebSocket': The subprotocol '${h}' is invalid.`,
+              `Failed to construct 'WebSocket': The subprotocol '${h}' is invalid.`
             );
         let n = this.client.connect(
             t,
@@ -6252,7 +6250,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             (h) => {
               s = h;
             },
-            r.webSocketImpl || me,
+            r.webSocketImpl || me
           ),
           a = "",
           s = ge.CONNECTING,
@@ -6270,7 +6268,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         let c = () => {
           if (o() === ge.CONNECTING)
             return new DOMException(
-              "Failed to execute 'send' on 'WebSocket': Still in CONNECTING state.",
+              "Failed to execute 'send' on 'WebSocket': Still in CONNECTING state."
             );
         };
         r.sendErrorHook
@@ -6342,11 +6340,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
   var { stringify: Os } = JSON;
   if (!String.prototype.repeat)
     throw new Error(
-      "String.prototype.repeat is undefined, see https://github.com/davidbonnet/astring#installation",
+      "String.prototype.repeat is undefined, see https://github.com/davidbonnet/astring#installation"
     );
   if (!String.prototype.endsWith)
     throw new Error(
-      "String.prototype.endsWith is undefined, see https://github.com/davidbonnet/astring#installation",
+      "String.prototype.endsWith is undefined, see https://github.com/davidbonnet/astring#installation"
     );
   var ht = {
       "||": 2,
@@ -6459,7 +6457,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 s.value.trim() +
                 `
 `,
-              s,
+              s
             )
           : (e.write("/*"), Fs(e, s.value, i, r), e.write("*/" + r));
     }
@@ -6670,7 +6668,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           (e.async ? "async " : "") +
             (e.generator ? "function* " : "function ") +
             (e.id ? e.id.name : ""),
-          e,
+          e
         ),
           Ce(t, e.params),
           t.write(" "),
@@ -7210,7 +7208,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 value:
                   "data:application/javascript;base64," +
                   btoa(
-                    `self.__dynamic$cookies = atob("${btoa(r)}");document.currentScript?.remove();`,
+                    `self.__dynamic$cookies = atob("${btoa(r)}");document.currentScript?.remove();`
                   ),
               },
             ],
@@ -7255,19 +7253,19 @@ Defaulting to 2020, but this will stop working in the future.`)),
       return (
         this.ctx.config.assets.files.inject &&
           l.unshift(
-            `<script src="${this.ctx.config.assets.files.inject + (o ? "?" + Math.floor(Math.random() * (99999 - 1e4) + 1e4) : "")}"><\/script>`,
+            `<script src="${this.ctx.config.assets.files.inject + (o ? "?" + Math.floor(Math.random() * (99999 - 1e4) + 1e4) : "")}"><\/script>`
           ),
         r &&
           l.unshift(
-            `<script src="${"data:application/javascript;base64," + btoa(`self.__dynamic$cookies = atob("${btoa(r)}");document.currentScript?.remove();`)}"><\/script>`,
+            `<script src="${"data:application/javascript;base64," + btoa(`self.__dynamic$cookies = atob("${btoa(r)}");document.currentScript?.remove();`)}"><\/script>`
           ),
         n &&
           l.unshift(
-            `<script src="${"data:application/javascript;base64," + btoa(n + ";document.currentScript?.remove();")}"><\/script>`,
+            `<script src="${"data:application/javascript;base64," + btoa(n + ";document.currentScript?.remove();")}"><\/script>`
           ),
         s &&
           l.unshift(
-            `<script src="${"data:application/javascript;base64," + btoa(s + ";document.currentScript?.remove();")}"><\/script>`,
+            `<script src="${"data:application/javascript;base64," + btoa(s + ";document.currentScript?.remove();")}"><\/script>`
           ),
         l
       );
@@ -7347,16 +7345,16 @@ The document has moved
             .replace(
               /(<!DOCTYPE html>|<html(.*?)>)/im,
               `$1${r.join("")}
-`,
+`
             )
             .replace(/<(script|link)\b[^>]*>/g, (n, a) =>
               n
                 .replace(/\snonce\s*=\s*"[^"]*"/, (s) =>
-                  s.replace("nonce", "nononce"),
+                  s.replace("nonce", "nononce")
                 )
                 .replace(/\sintegrity\s*=\s*"[^"]*"/, (s) =>
-                  s.replace("integrity", "nointegrity"),
-                ),
+                  s.replace("integrity", "nointegrity")
+                )
             ))
       );
     }
@@ -7840,9 +7838,9 @@ ${t}`;
               i
                 .split(" ")
                 .map((r, n) =>
-                  n == 0 ? t.url.encode(r, t.baseURL || t.meta) : r,
+                  n == 0 ? t.url.encode(r, t.baseURL || t.meta) : r
                 )
-                .join(" "),
+                .join(" ")
             )
             .join(", ");
     },
@@ -7909,7 +7907,7 @@ ${t}`;
         Array.isArray(e[n])
           ? (e[n] = e[n].map(
               (a) =>
-                this.ctx.modules.setCookieParser(a, { decodeValues: !1 })[0],
+                this.ctx.modules.setCookieParser(a, { decodeValues: !1 })[0]
             ))
           : (e[n] = this.ctx.modules.setCookieParser(e[n], {
               decodeValues: !1,
@@ -7920,7 +7918,7 @@ ${t}`;
             this.ctx.modules.cookie.serialize(r.name, r.value, {
               ...r,
               encode: (a) => a,
-            }),
+            })
           );
         delete e[n];
         continue;
@@ -7934,7 +7932,7 @@ ${t}`;
       (["origin", "Origin", "host", "Host", "referer", "Referer"].forEach(
         (a) => {
           e[a] && delete e[a];
-        },
+        }
       ),
       (e.Origin = `${t.protocol}//${t.host}${t.port ? ":" + t.port : ""}`),
       (e.Host = t.host + (t.port ? ":" + t.port : "")),
@@ -8032,7 +8030,7 @@ ${t}`;
             `${await r.text()}
 self.document?.currentScript?.remove();`,
           ],
-          { type: "application/javascript" },
+          { type: "application/javascript" }
         )),
       new Response(r, {
         headers: t.headers,
@@ -8121,7 +8119,7 @@ self.document?.currentScript?.remove();`,
       e.startsWith(location.origin + this.ctx.config.prefix) ||
       e.startsWith(this.ctx.config.prefix) ||
       e.startsWith(
-        location.origin + this.ctx.config.assets.prefix + "dynamic.",
+        location.origin + this.ctx.config.assets.prefix + "dynamic."
       ) ||
       e.match(this.ctx.regex.BypassRegex)
     )
@@ -8143,8 +8141,8 @@ self.document?.currentScript?.remove();`,
                       location.origin + "/dy/client.j",
                       location.origin + "/dy/config.js?v=3",
                       "",
-                      `window.__dynamic$url = "${t.href}"; window.__dynamic$parentURL = "${location.href}";`,
-                    ),
+                      `window.__dynamic$url = "${t.href}"; window.__dynamic$parentURL = "${location.href}";`
+                    )
                   ))
                 : n == "text/css"
                   ? (o = this.ctx.rewrite.css.rewrite(o, t))
@@ -8169,7 +8167,7 @@ self.document?.currentScript?.remove();`,
       t.href.match(this.ctx.regex.BypassRegex) &&
         (e = new URL(
           e,
-          new URL((this.ctx.parent.__dynamic || this.ctx).meta.href),
+          new URL((this.ctx.parent.__dynamic || this.ctx).meta.href)
         ).href),
       (e = new URL(e, t.href)),
       (this.ctx._location?.origin ||
@@ -8202,8 +8200,8 @@ self.document?.currentScript?.remove();`,
               .slice(t + this.ctx.config.prefix.length)
               .replace("https://", "https:/")
               .replace("https:/", "https://")
-              .split("?")[0],
-          ),
+              .split("?")[0]
+          )
         );
     } catch {
       return e;
@@ -8276,7 +8274,7 @@ self.document?.currentScript?.remove();`,
   function $i(e, t = "") {
     return (
       (this.ctx.modules.mime.contentType(t || e.pathname) || "text/css").split(
-        ";",
+        ";"
       )[0] === "text/css"
     );
   }
@@ -8365,8 +8363,8 @@ self.document?.currentScript?.remove();`,
       var c = new URL(
         e.__dynamic$url ||
           e.__dynamic.url.decode(
-            e.location.pathname + e.location.search + e.location.hash,
-          ),
+            e.location.pathname + e.location.search + e.location.hash
+          )
       );
     } catch {
       e.__dynamic$url = "about:blank";
@@ -8387,7 +8385,7 @@ self.document?.currentScript?.remove();`,
             l === "href"
               ? (e.location[l] = e.__dynamic.url.encode(
                   e.__dynamic.meta.href.replace(c[l], h),
-                  c,
+                  c
                 ))
               : (e.location[l] = h.toString());
           },
@@ -8419,7 +8417,7 @@ self.document?.currentScript?.remove();`,
               ? () => c.href
               : new e.__dynamic.Function(
                   "arg",
-                  `return window.location.${l}(arg?${l !== "reload" && l !== "toString" ? "(self.__dynamic).url.encode(arg, new URL('" + c.href + "'))" : "arg"}:null)`,
+                  `return window.location.${l}(arg?${l !== "reload" && l !== "toString" ? "(self.__dynamic).url.encode(arg, new URL('" + c.href + "'))" : "arg"}:null)`
                 ),
           set: () => null,
         });
@@ -8475,7 +8473,7 @@ self.document?.currentScript?.remove();`,
         return t
           ? e.__dynamic.url.encode(
               e.__dynamic.meta.href.replace(e.__dynamic.property.href, i),
-              e.__dynamic.property,
+              e.__dynamic.property
             )
           : i;
       }),
@@ -8631,7 +8629,7 @@ self.document?.currentScript?.remove();`,
                 s.innerHTML,
                 { type: "script" },
                 i,
-                {},
+                {}
               ));
         }),
         a.querySelectorAll("link").forEach(function (s) {
@@ -8644,7 +8642,7 @@ self.document?.currentScript?.remove();`,
             s.srcset &&
               (s.srcset = e.__dynamic.rewrite.srcset.encode(
                 s.getAttribute("srcset"),
-                e.__dynamic,
+                e.__dynamic
               ));
         }),
         a.querySelectorAll("a").forEach(function (s) {
@@ -8679,7 +8677,7 @@ self.document?.currentScript?.remove();`,
                       (this.rel == "icon" || this.rel == "shortcut icon")
                       ? ((c[1] = e.__dynamic$icon), Reflect.apply(o, this, c))
                       : e.__dynamic.elements.attributes.indexOf(
-                            c[0].toLowerCase(),
+                            c[0].toLowerCase()
                           ) == -1
                         ? Reflect.apply(o, this, c)
                         : c[0].toLowerCase() == "srcset" ||
@@ -8687,7 +8685,7 @@ self.document?.currentScript?.remove();`,
                           ? ((this.dataset[`dynamic_${c[0]}`] = c[1]),
                             (c[1] = e.__dynamic.rewrite.srcset.encode(
                               c[1],
-                              e.__dynamic,
+                              e.__dynamic
                             )),
                             Reflect.apply(o, this, c))
                           : c[0].toLowerCase() == "integrity" ||
@@ -8698,11 +8696,11 @@ self.document?.currentScript?.remove();`,
                             : ((this.dataset[`dynamic_${c[0]}`] = c[1]),
                               (c[1] = e.__dynamic.url.encode(
                                 c[1],
-                                e.__dynamic.baseURL || e.__dynamic.meta,
+                                e.__dynamic.baseURL || e.__dynamic.meta
                               )),
                               Reflect.apply(o, this, c));
                   },
-                  "setAttribute",
+                  "setAttribute"
                 )),
                 (n.prototype.setAttributeNS = e.__dynamic.wrap(
                   n.prototype.setAttributeNS,
@@ -8713,7 +8711,7 @@ self.document?.currentScript?.remove();`,
                       (this.rel == "icon" || this.rel == "shortcut icon")
                       ? ((c[2] = e.__dynamic$icon), Reflect.apply(o, this, c))
                       : e.__dynamic.elements.attributes.indexOf(
-                            c[1].toLowerCase(),
+                            c[1].toLowerCase()
                           ) == -1
                         ? Reflect.apply(o, this, c)
                         : c[1].toLowerCase() == "srcset" ||
@@ -8721,7 +8719,7 @@ self.document?.currentScript?.remove();`,
                           ? ((this.dataset[`dynamic_${c[1]}`] = c[2]),
                             (c[2] = e.__dynamic.rewrite.srcset.encode(
                               c[2],
-                              e.__dynamic,
+                              e.__dynamic
                             )),
                             Reflect.apply(o, this, c))
                           : c[1].toLowerCase() == "integrity" ||
@@ -8732,11 +8730,11 @@ self.document?.currentScript?.remove();`,
                             : ((this.dataset[`dynamic_${c[1]}`] = c[2]),
                               (c[2] = e.__dynamic.url.encode(
                                 c[2],
-                                e.__dynamic.baseURL || e.__dynamic.meta,
+                                e.__dynamic.baseURL || e.__dynamic.meta
                               )),
                               Reflect.apply(o, this, c));
                   },
-                  "setAttributeNS",
+                  "setAttributeNS"
                 )),
                 (n.prototype.getAttribute = e.__dynamic.wrap(
                   n.prototype.getAttribute,
@@ -8745,7 +8743,7 @@ self.document?.currentScript?.remove();`,
                       ? this.dataset[`dynamic_${c[0]}`]
                       : Reflect.apply(o, this, c);
                   },
-                  "getAttribute",
+                  "getAttribute"
                 )),
                 (n.prototype.getAttributeNS = e.__dynamic.wrap(
                   n.prototype.getAttributeNS,
@@ -8754,7 +8752,7 @@ self.document?.currentScript?.remove();`,
                       ? this.dataset[`dynamic_${c[1]}`]
                       : Reflect.apply(o, this, c);
                   },
-                  "getAttributeNS",
+                  "getAttributeNS"
                 ))),
               e.__dynamic.define(n.prototype, a, {
                 get() {
@@ -8772,7 +8770,7 @@ self.document?.currentScript?.remove();`,
                           e.__dynamic.elements.client(
                             o,
                             e.__dynamic$config,
-                            decodeURIComponent(this.src),
+                            decodeURIComponent(this.src)
                           )),
                       a == "contentDocument")
                     )
@@ -8800,8 +8798,8 @@ self.document?.currentScript?.remove();`,
                           e.__dynamic.createBlobHandler(
                             new Blob([o], { type: "text/html" }),
                             this,
-                            o,
-                          ),
+                            o
+                          )
                         ).then((c) => {
                           this.setAttribute(a, c);
                         }),
@@ -8809,7 +8807,7 @@ self.document?.currentScript?.remove();`,
                       : (r.action == "srcset" &&
                           (o = e.__dynamic.rewrite.srcset.encode(
                             o,
-                            e.__dynamic,
+                            e.__dynamic
                           )),
                         r.action == "rewrite"
                           ? ((this.dataset[`dynamic_${a}`] = o),
@@ -8818,12 +8816,12 @@ self.document?.currentScript?.remove();`,
                           : (r.action == "css" &&
                               (o = e.__dynamic.rewrite.css.rewrite(
                                 o,
-                                e.__dynamic.meta,
+                                e.__dynamic.meta
                               )),
                             r.action == "url" &&
                               (o = e.__dynamic.url.encode(
                                 o,
-                                e.__dynamic.baseURL || e.__dynamic.meta,
+                                e.__dynamic.baseURL || e.__dynamic.meta
                               )),
                             (this.dataset[`dynamic_${a}`] = o),
                             s.set.call(this, o)))
@@ -8848,16 +8846,16 @@ self.document?.currentScript?.remove();`,
                 : this instanceof e.HTMLScriptElement
                   ? e.__dynamic.elements[r].set.call(
                       this,
-                      e.__dynamic.rewrite.js.rewrite(n, { type: "script" }),
+                      e.__dynamic.rewrite.js.rewrite(n, { type: "script" })
                     )
                   : this instanceof e.HTMLStyleElement
                     ? e.__dynamic.elements[r].set.call(
                         this,
-                        e.__dynamic.rewrite.css.rewrite(n, e.__dynamic.meta),
+                        e.__dynamic.rewrite.css.rewrite(n, e.__dynamic.meta)
                       )
                     : e.__dynamic.elements[r].set.call(
                         this,
-                        e.__dynamic.rewrite.dom(n, e.__dynamic.meta),
+                        e.__dynamic.rewrite.dom(n, e.__dynamic.meta)
                       )
             );
           },
@@ -8873,9 +8871,9 @@ self.document?.currentScript?.remove();`,
                 Reflect.apply(n, this, a)
               );
             },
-            r + ".prototype.observe",
+            r + ".prototype.observe"
           );
-        },
+        }
       ),
       e.__dynamic.defines(e.HTMLAnchorElement.prototype, {
         pathname: e.__dynamic.elements.createGetter("pathname"),
@@ -8913,7 +8911,7 @@ self.document?.currentScript?.remove();`,
                     n[1],
                     { type: "script" },
                     !1,
-                    e.__dynamic,
+                    e.__dynamic
                   ),
                 ])
               : this instanceof e.HTMLTextAreaElement
@@ -8923,7 +8921,7 @@ self.document?.currentScript?.remove();`,
                     e.__dynamic.rewrite.html.rewrite(n[1], e.__dynamic.meta),
                   ]);
         },
-        "insertAdjacentHTML",
+        "insertAdjacentHTML"
       )),
       [
         [e.Node, "textContent"],
@@ -8941,7 +8939,7 @@ self.document?.currentScript?.remove();`,
               a?.set &&
                 a.set.call(
                   this,
-                  e.__dynamic.rewrite.css.rewrite(o, e.__dynamic.meta),
+                  e.__dynamic.rewrite.css.rewrite(o, e.__dynamic.meta)
                 )
             );
           },
@@ -8963,8 +8961,8 @@ self.document?.currentScript?.remove();`,
                         o,
                         { type: "script" },
                         !1,
-                        e.__dynamic,
-                      ),
+                        e.__dynamic
+                      )
                     )
               );
             },
@@ -8983,7 +8981,7 @@ self.document?.currentScript?.remove();`,
             a
           );
         },
-        "createElement",
+        "createElement"
       )),
       !document.querySelector('link[rel="icon"], link[rel="shortcut icon"]'))
     ) {
@@ -9003,12 +9001,12 @@ self.document?.currentScript?.remove();`,
           this.name == "href" || this.name == "src"
             ? e.__dynamic.elements.attrValue.set.call(
                 this,
-                e.__dynamic.url.encode(r, e.__dynamic.meta),
+                e.__dynamic.url.encode(r, e.__dynamic.meta)
               )
             : this.name == "style"
               ? e.__dynamic.elements.attrValue.set.call(
                   this,
-                  e.__dynamic.rewrite.css.rewrite(r, e.__dynamic.meta),
+                  e.__dynamic.rewrite.css.rewrite(r, e.__dynamic.meta)
                 )
               : this.name == "onclick"
                 ? e.__dynamic.elements.attrValue.set.call(
@@ -9017,8 +9015,8 @@ self.document?.currentScript?.remove();`,
                       r,
                       { type: "script" },
                       !1,
-                      e.__dynamic,
-                    ),
+                      e.__dynamic
+                    )
                   )
                 : e.__dynamic.elements.attrValue.set.call(this, r)
         );
@@ -9039,7 +9037,7 @@ self.document?.currentScript?.remove();`,
             let a = e.__dynamic.rewrite.js.rewrite(
                 n.responseText,
                 { type: "worker" },
-                !0,
+                !0
               ),
               s = new Blob([a], { type: "application/javascript" });
             r[0] = URL.createObjectURL(s);
@@ -9056,11 +9054,11 @@ self.document?.currentScript?.remove();`,
     }),
       (e.History.prototype.pushState = e.__dynamic.wrap(
         e.History.prototype.pushState,
-        e.__dynamic$history,
+        e.__dynamic$history
       )),
       (e.History.prototype.replaceState = e.__dynamic.wrap(
         e.History.prototype.replaceState,
-        e.__dynamic$history,
+        e.__dynamic$history
       ));
   }
   var Ks =
@@ -9085,7 +9083,7 @@ self.document?.currentScript?.remove();`,
         "//" +
         new URL(
           (e.__dynamic$config.bare.path + "/" || "/bare/") + "v1/",
-          new URL(location.origin),
+          new URL(location.origin)
         ).href
           .replace(/http(s?):\/\//g, "")
           .replace(/\/\//g, "/"),
@@ -9143,7 +9141,7 @@ self.document?.currentScript?.remove();`,
       e.__dynamic.define(e.Request.prototype, "url", {
         get() {
           return e.__dynamic.url.decode(
-            e.__dynamic.http.RequestURL.get.call(this),
+            e.__dynamic.http.RequestURL.get.call(this)
           );
         },
         set(t) {
@@ -9161,7 +9159,7 @@ self.document?.currentScript?.remove();`,
                 (i[0] = e.__dynamic.url.encode(i[0], e.__dynamic.meta)),
               Reflect.apply(t, e, i));
         },
-        "fetch",
+        "fetch"
       )),
       (e.XMLHttpRequest.prototype.open = e.__dynamic.wrap(
         e.XMLHttpRequest.prototype.open,
@@ -9172,12 +9170,12 @@ self.document?.currentScript?.remove();`,
             Reflect.apply(t, this, i)
           );
         },
-        "XMLHttpRequest.prototype.open",
+        "XMLHttpRequest.prototype.open"
       )),
       Object.defineProperty(e.XMLHttpRequest.prototype, "responseURL", {
         get() {
           return e.__dynamic.url.decode(
-            e.__dynamic.http.XMLResponseURL.get.call(this),
+            e.__dynamic.http.XMLResponseURL.get.call(this)
           );
         },
         set(t) {
@@ -9187,7 +9185,7 @@ self.document?.currentScript?.remove();`,
       Object.defineProperty(e.Response.prototype, "url", {
         get() {
           return e.__dynamic.url.decode(
-            e.__dynamic.http.ResponseURL.get.call(this),
+            e.__dynamic.http.ResponseURL.get.call(this)
           );
         },
         set(t) {
@@ -9215,7 +9213,7 @@ self.document?.currentScript?.remove();`,
             r.__dynamic$window
           );
         },
-        "window.open",
+        "window.open"
       )),
       e.__dynamic.define(e, "__dynamic$import", {
         get() {
@@ -9267,7 +9265,7 @@ self.document?.currentScript?.remove();`,
                 s !== e,
               ],
               "*",
-              c[2] || [],
+              c[2] || []
             ));
       }
       return o;
@@ -9397,7 +9395,7 @@ self.document?.currentScript?.remove();`,
             ? ((e.__dynamic$location[n[1]] = n[2]), !0)
             : Reflect.apply(i, this, n);
       },
-      "Reflect.set",
+      "Reflect.set"
     )),
       (e.Reflect.get = e.__dynamic.wrap(
         e.Reflect.get,
@@ -9416,7 +9414,7 @@ self.document?.currentScript?.remove();`,
           }
           return Reflect.apply(t, this, n);
         },
-        "Reflect.get",
+        "Reflect.get"
       )),
       (e.__dynamic.Reflect = {
         get: t,
@@ -9464,13 +9462,13 @@ self.document?.currentScript?.remove();`,
           apply(i, r, n) {
             return Reflect.apply(i, r, n)
               .filter(
-                (a) => !a.name?.includes(e.location.origin + "/dy/dynamic."),
+                (a) => !a.name?.includes(e.location.origin + "/dy/dynamic.")
               )
               .filter(
                 (a) =>
                   !a.name.includes(
-                    e.location.origin + e.__dynamic.config.prefix + "caches/",
-                  ),
+                    e.location.origin + e.__dynamic.config.prefix + "caches/"
+                  )
               )
               .map((a) => {
                 if (a.name) {
@@ -9519,7 +9517,7 @@ self.document?.currentScript?.remove();`,
               i.length && (i = i.map((r) => (r == e.__dynamic$window ? e : r))),
               Reflect.apply(t, this, i)
             );
-          },
+          }
         )),
       e.KeyboardEvent &&
         (e.KeyboardEvent.prototype.initKeyboardEvent = e.__dynamic.wrap(
@@ -9529,7 +9527,7 @@ self.document?.currentScript?.remove();`,
               i.length && (i = i.map((r) => (r == e.__dynamic$window ? e : r))),
               Reflect.apply(t, this, i)
             );
-          },
+          }
         )),
       e.StorageEvent &&
         (e.StorageEvent.prototype.initStorageEvent = e.__dynamic.wrap(
@@ -9542,11 +9540,11 @@ self.document?.currentScript?.remove();`,
                     ? e.__dynamic.storage.localStorage
                     : r == e.sessionStorage
                       ? e.__dynamic.storage.sessionStorage
-                      : r,
+                      : r
                 )),
               Reflect.apply(t, this, i)
             );
-          },
+          }
         )),
       (e.Object.defineProperty = e.__dynamic.wrap(
         e.Object.defineProperty,
@@ -9558,7 +9556,7 @@ self.document?.currentScript?.remove();`,
               (i[0].__defined || (i[0].__defined = {}),
               (i[0].__defined[i[1]] = i[2]));
           }
-        },
+        }
       )),
       e.__dynamic.meta.origin == "https://www.google.com" &&
         (e.setInterval = new Proxy(e.setInterval, {
@@ -9578,7 +9576,7 @@ self.document?.currentScript?.remove();`,
           Reflect.apply(t, this, i)
         );
       },
-      "Storage.prototype.setItem",
+      "Storage.prototype.setItem"
     )),
       (e.Storage.prototype.getItem = e.__dynamic.wrap(
         e.Storage.prototype.getItem,
@@ -9593,7 +9591,7 @@ self.document?.currentScript?.remove();`,
             Reflect.apply(t, this, i) || null
           );
         },
-        "Storage.prototype.getItem",
+        "Storage.prototype.getItem"
       )),
       (e.Storage.prototype.removeItem = e.__dynamic.wrap(
         e.Storage.prototype.removeItem,
@@ -9608,7 +9606,7 @@ self.document?.currentScript?.remove();`,
             Reflect.apply(t, this, i)
           );
         },
-        "Storage.prototype.removeItem",
+        "Storage.prototype.removeItem"
       )),
       (e.Storage.prototype.clear = e.__dynamic.wrap(
         e.Storage.prototype.clear,
@@ -9620,11 +9618,11 @@ self.document?.currentScript?.remove();`,
               r.push(
                 t
                   .call(this, n)
-                  ?.replace("__dynamic$" + e.__dynamic$location.host + "$", ""),
+                  ?.replace("__dynamic$" + e.__dynamic$location.host + "$", "")
               );
           for (var a in r) t.call(this, r[a]);
         },
-        "Storage.prototype.clear",
+        "Storage.prototype.clear"
       )),
       (e.Storage.prototype.key = e.__dynamic.wrap(
         e.Storage.prototype.key,
@@ -9636,11 +9634,11 @@ self.document?.currentScript?.remove();`,
               r.push(
                 t
                   .call(this, n)
-                  ?.replace("__dynamic$" + e.__dynamic$location.host + "$", ""),
+                  ?.replace("__dynamic$" + e.__dynamic$location.host + "$", "")
               );
           return r[i[0]] ? r[i[0]] : null;
         },
-        "Storage.prototype.key",
+        "Storage.prototype.key"
       )),
       ["localStorage", "sessionStorage"].forEach((t) => {
         (e["__dynamic$" + t] = new Proxy(e[t], {
@@ -9652,34 +9650,34 @@ self.document?.currentScript?.remove();`,
                 a++
               )
                 Object.keys(e.__dynamic.storage[t])[a].startsWith(
-                  "__dynamic$" + e.__dynamic$location.host + "$",
+                  "__dynamic$" + e.__dynamic$location.host + "$"
                 ) &&
                   n.push(
                     Object.keys(e.__dynamic.storage[t])[a].replace(
                       "__dynamic$" + e.__dynamic$location.host + "$",
-                      "",
-                    ),
+                      ""
+                    )
                   );
               return n.length;
             }
             return e.__dynamic.storage.methods.includes(r)
               ? e.__dynamic.storage.cloned[t][r].bind(e.__dynamic.storage[t])
               : e.__dynamic.storage[t].getItem(
-                  "__dynamic$" + e.__dynamic$location.host + "$" + r.toString(),
+                  "__dynamic$" + e.__dynamic$location.host + "$" + r.toString()
                 );
           },
           set(i, r, n) {
             return (
               e.__dynamic.storage[t].setItem(
                 "__dynamic$" + e.__dynamic$location.host + "$" + r.toString(),
-                n,
+                n
               ),
               n || !0
             );
           },
           deleteProperty(i, r) {
             return e.__dynamic.storage[t].removeItem(
-              "__dynamic$" + e.__dynamic$location.host + "$" + r.toString(),
+              "__dynamic$" + e.__dynamic$location.host + "$" + r.toString()
             );
           },
         })),
@@ -9700,7 +9698,7 @@ self.document?.currentScript?.remove();`,
             Reflect.apply(t, this, i)
           );
         },
-        "navigator.sendBeacon",
+        "navigator.sendBeacon"
       ));
   }
   var er = (e) =>
@@ -9745,18 +9743,18 @@ self.document?.currentScript?.remove();`,
                 e.__dynamic.modules.cookie.serialize(i.name, i.value, {
                   ...i,
                   encode: (a) => a,
-                }),
-              ),
+                })
+              )
             ).then(async (a) => {
               await e.__dynamic.cookies.update(e.__dynamic.location.host),
                 (e.__dynamic.cookie.str = await e.__dynamic.cookies.get(
-                  e.__dynamic.location.host,
+                  e.__dynamic.location.host
                 ));
             });
           var n = er(e.__dynamic.cookie.str || "");
           (n[i.name] = i.value),
             (e.__dynamic.cookie.str = We(
-              Object.entries(n).map((a) => ({ name: a[0], value: a[1] })),
+              Object.entries(n).map((a) => ({ name: a[0], value: a[1] }))
             ));
         },
       }),
@@ -9769,7 +9767,7 @@ self.document?.currentScript?.remove();`,
               r = er(e.__dynamic.cookie.str || "");
             (r[Object.entries(i)[0][0]] = Object.entries(i)[0][1]),
               (e.__dynamic.cookie.str = We(
-                Object.entries(r).map((n) => ({ name: n[0], value: n[1] })),
+                Object.entries(r).map((n) => ({ name: n[0], value: n[1] }))
               ));
           }
           t.host == e.__dynamic.location.host &&
@@ -9792,7 +9790,7 @@ self.document?.currentScript?.remove();`,
             t.apply(this, i)
           );
         },
-        "CSSStyleDeclaration.prototype.setProperty",
+        "CSSStyleDeclaration.prototype.setProperty"
       )),
       e.__dynamic.define(e.CSSStyleDeclaration.prototype, "background", {
         get() {
@@ -9805,7 +9803,7 @@ self.document?.currentScript?.remove();`,
             (this._background = t),
             this._setProperty(
               "background",
-              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta),
+              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta)
             )
           );
         },
@@ -9821,7 +9819,7 @@ self.document?.currentScript?.remove();`,
             (this._backgroundImage = t),
             this._setProperty(
               "background-image",
-              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta),
+              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta)
             )
           );
         },
@@ -9837,7 +9835,7 @@ self.document?.currentScript?.remove();`,
             (this._backgroundImage = t),
             this._setProperty(
               "background-image",
-              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta),
+              e.__dynamic.rewrite.css.rewrite(t, e.__dynamic.meta)
             )
           );
         },
@@ -9851,13 +9849,13 @@ self.document?.currentScript?.remove();`,
         ({ data: { url: a } }) => {
           a && e.__dynamic.elements.iframeSrc.set.call(i, a);
         },
-        { once: !0 },
+        { once: !0 }
       ),
         n.postMessage({
           type: "createBlobHandler",
           blob: t,
           url: e.__dynamic.modules.base64.encode(
-            r.toString().split("").slice(0, 10),
+            r.toString().split("").slice(0, 10)
           ),
           location: e.__dynamic.location.href,
         });
@@ -9874,8 +9872,8 @@ self.document?.currentScript?.remove();`,
                 characterData: "characterData",
                 childList: "nodeChanged",
               }[a.type],
-              { detail: a },
-            ),
+              { detail: a }
+            )
           );
     })).observe(t, { subtree: !0, attributes: !0, childList: !0 }),
     i
@@ -9932,7 +9930,7 @@ self.document?.currentScript?.remove();`,
                   n.textContent,
                   { type: "script" },
                   !1,
-                  t,
+                  t
                 ))
               : !n.type &&
                 n.textContent?.length &&
@@ -9940,7 +9938,7 @@ self.document?.currentScript?.remove();`,
                   n.textContent,
                   { type: "script" },
                   !1,
-                  t,
+                  t
                 ))),
           n instanceof HTMLStyleElement &&
             n.textContent?.length &&
@@ -9980,13 +9978,13 @@ self.document?.currentScript?.remove();`,
                           ((n.dataset.dynamic_imagesrcset = n.imageSrcset),
                           (n.imageSrcset = t.rewrite.srcset.encode(
                             n.imageSrcset,
-                            t,
+                            t
                           ))),
                         o.preventDefault(),
                         !1
                       );
                   },
-                  { once: !0 },
+                  { once: !0 }
                 )),
           n instanceof HTMLAnchorElement &&
             n.href &&
@@ -10056,7 +10054,7 @@ self.document?.currentScript?.remove();`,
             (n.getAttribute("style") &&
               n.setAttribute(
                 "style",
-                t.rewrite.css.rewrite(n.getAttribute("style"), t.meta),
+                t.rewrite.css.rewrite(n.getAttribute("style"), t.meta)
               ),
             n.integrity &&
               (n.setAttribute("nointegrity", n.integrity),
@@ -10078,14 +10076,14 @@ self.document?.currentScript?.remove();`,
         attributes(n) {},
         characterData(n) {},
       },
-      e.document,
+      e.document
     );
     e.document.addEventListener(
       "DOMContentLoaded",
       function () {
         r.disconnect();
       },
-      { once: !0 },
+      { once: !0 }
     );
   }
   function rr(e) {
@@ -10099,13 +10097,13 @@ self.document?.currentScript?.remove();`,
               r,
               { type: "script" },
               !1,
-              e.__dynamic,
+              e.__dynamic
             )),
             t.apply(this, [r])
           );
         }
       },
-      "eval",
+      "eval"
     )),
       e.__dynamic.define(e.Object.prototype, "__dynamic$eval", {
         get() {
@@ -10124,7 +10122,7 @@ self.document?.currentScript?.remove();`,
             t,
             { type: "script" },
             !1,
-            e.__dynamic,
+            e.__dynamic
           )),
           t)
         );
@@ -10167,7 +10165,7 @@ self.document?.currentScript?.remove();`,
               o,
               { type: "script" },
               !1,
-              e.__dynamic,
+              e.__dynamic
             )),
             e.eval(o)
           );
@@ -10181,7 +10179,7 @@ self.document?.currentScript?.remove();`,
               s,
               { type: "script" },
               !1,
-              e.__dynamic,
+              e.__dynamic
             )),
             e.eval(s)
           );
@@ -10196,7 +10194,7 @@ self.document?.currentScript?.remove();`,
             Reflect.apply(r, this, n)
           );
         },
-        "Function.prototype.apply",
+        "Function.prototype.apply"
       )),
       (e.Function.prototype.call = new Proxy(e.Function.prototype.call, {
         apply(r, n, a) {
@@ -10216,7 +10214,7 @@ self.document?.currentScript?.remove();`,
             r.apply(this, n)
           );
         },
-        "Function.prototype.bind",
+        "Function.prototype.bind"
       ));
   }
   function ar(e) {}
@@ -10321,7 +10319,7 @@ self.document?.currentScript?.remove();`,
         ).put(
           "__dynamic$cookies",
           Qs(await (await i).get("__dynamic$cookies", e), t),
-          e,
+          e
         ),
         !0
       );
@@ -10339,7 +10337,7 @@ self.document?.currentScript?.remove();`,
                 he.remove(
                   e,
                   n.find((l) => l.name == a && l.value == s && l.expires == o),
-                  t,
+                  t
                 );
                 continue;
               }
@@ -10626,7 +10624,7 @@ self.document?.currentScript?.remove();`,
             t[r * 4 + o][0],
             t[r * 4 + o][1],
             t[r * 4 + o][2],
-            t[r * 4 + o][3],
+            t[r * 4 + o][3]
           );
       return s;
     },
@@ -10668,7 +10666,7 @@ self.document?.currentScript?.remove();`,
     },
     ur = cr(
       "637c777bf26b6fc53001672bfed7ab76ca82c97dfa5947f0add4a2af9ca472c0b7fd9326363ff7cc34a5e5f171d8311504c723c31896059a071280e2eb27b27509832c1a1b6e5aa0523bd6b329e32f8453d100ed20fcb15b6acbbe394a4c58cfd0efaafb434d338545f9027f503c9fa851a3408f929d38f5bcb6da2110fff3d2cd0c13ec5f974417c4a77e3d645d197360814fdc222a908846eeb814de5e0bdbe0323a0a4906245cc2d3ac629195e479e7c8376d8dd54ea96c56f4ea657aae08ba78252e1ca6b4c6e8dd741f4bbd8b8a703eb5664803f60e613557b986c11d9ee1f8981169d98e949b1e87e9ce5528df8ca1890dbfe6426841992d0fb054bb16",
-      2,
+      2
     ),
     co = so(ur),
     uo = cr("01020408102040801b366cd8ab4d9a2f5ebc63c697356ad4b37dfaefc591", 2),
@@ -10785,7 +10783,7 @@ self.document?.currentScript?.remove();`,
         x,
         _ = cr(
           "67452301efcdab8998badcfe10325476d76aa478e8c7b756242070dbc1bdceeef57c0faf4787c62aa8304613fd469501698098d88b44f7afffff5bb1895cd7be6b901122fd987193a679438e49b40821f61e2562c040b340265e5a51e9b6c7aad62f105d02441453d8a1e681e7d3fbc821e1cde6c33707d6f4d50d87455a14eda9e3e905fcefa3f8676f02d98d2a4c8afffa39428771f6816d9d6122fde5380ca4beea444bdecfa9f6bb4b60bebfbc70289b7ec6eaa127fad4ef308504881d05d9d4d039e6db99e51fa27cf8c4ac5665f4292244432aff97ab9423a7fc93a039655b59c38f0ccc92ffeff47d85845dd16fa87e4ffe2ce6e0a30143144e0811a1f7537e82bd3af2352ad7d2bbeb86d391",
-          8,
+          8
         );
       for (
         d = f(e), m = _[0], y = _[1], g = _[2], x = _[3], p = 0;
@@ -10929,9 +10927,9 @@ self.document?.currentScript?.remove();`,
           e
             .split("")
             .map((i, r) =>
-              r % t ? String.fromCharCode(i.charCodeAt(0) ^ t) : i,
+              r % t ? String.fromCharCode(i.charCodeAt(0) ^ t) : i
             )
-            .join(""),
+            .join("")
         ),
       decode: (e, t = 2) =>
         e &&
@@ -11015,19 +11013,19 @@ self.document?.currentScript?.remove();`,
           ],
           iframeSrc: Object.getOwnPropertyDescriptor(
             e.HTMLIFrameElement.prototype,
-            "src",
+            "src"
           ),
           contentWindow: Object.getOwnPropertyDescriptor(
             e.HTMLIFrameElement.prototype,
-            "contentWindow",
+            "contentWindow"
           ),
           innerHTML: Object.getOwnPropertyDescriptor(
             e.Element.prototype,
-            "innerHTML",
+            "innerHTML"
           ),
           outerHTML: Object.getOwnPropertyDescriptor(
             e.Element.prototype,
-            "outerHTML",
+            "outerHTML"
           ),
           attrValue: Object.getOwnPropertyDescriptor(e.Attr.prototype, "value"),
           setAttribute: e.Element.prototype.setAttribute,
@@ -11119,15 +11117,15 @@ self.document?.currentScript?.remove();`,
         (t.http = {
           XMLResponseURL: Object.getOwnPropertyDescriptor(
             e.XMLHttpRequest.prototype,
-            "responseURL",
+            "responseURL"
           ),
           ResponseURL: Object.getOwnPropertyDescriptor(
             e.Response.prototype,
-            "url",
+            "url"
           ),
           RequestURL: Object.getOwnPropertyDescriptor(
             e.Request.prototype,
-            "url",
+            "url"
           ),
           XMLHttpRequest: e.XMLHttpRequest,
         }),
@@ -11255,7 +11253,7 @@ self.document?.currentScript?.remove();`,
       (e.__dynamic = r),
       (e.__dynamic.bare = new e.__dynamic.modules.bare.BareClient(
         e.__dynamic$config.bare.path,
-        e.__dynamic$bare,
+        e.__dynamic$bare
       )),
       e.__dynamic.meta.load(new URL(e.__dynamic$baseURL)),
       hr(e, null),

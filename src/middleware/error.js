@@ -14,7 +14,7 @@ export function setupErrorHandling(app) {
   // 404 handler
   app.use("*", (req, res) => {
     logger.warn(`404 - Not found: ${req.method} ${req.originalUrl}`);
-    
+
     if (req.accepts("json")) {
       res.status(404).json({
         error: "Not Found",
@@ -49,7 +49,7 @@ export function setupErrorHandling(app) {
 
     // Don't expose stack traces in production
     const isDevelopment = process.env.NODE_ENV !== "production";
-    
+
     const errorResponse = {
       error: "Internal Server Error",
       message: isDevelopment ? err.message : "Something went wrong",
