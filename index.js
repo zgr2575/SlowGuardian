@@ -10,8 +10,8 @@ const server = http.createServer();
 const app = express(server);
 const bareServer = createBareServer("/o/");
 const PORT = process.env.PORT || 8080;
-var v = config.version;
-var upd = false;
+const v = config.version;
+let upd = false;
 import readline from "readline";
 import { exec } from "node:child_process";
 app.use(express.json());
@@ -35,9 +35,9 @@ if (config.routes !== false) {
     });
   });
 }
-var serverid = Math.floor(Math.random() * 101);
+const serverid = Math.floor(Math.random() * 101);
 
-var db =
+let db =
   "server: Smarter Back End v5" +
   " | version: " +
   v +

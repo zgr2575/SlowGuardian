@@ -91,7 +91,7 @@ eventKeyInput.addEventListener("input", function () {
   eventKey = eventKeyInput.value.split(",");
 });
 
-var linkInput = document.getElementById("linkInput");
+const linkInput = document.getElementById("linkInput");
 linkInput.addEventListener("input", function () {
   pLink = linkInput.value;
 });
@@ -105,10 +105,10 @@ function saveEventKey() {
   window.location = window.location;
 }
 // Tab Cloaker
-var dropdown = document.getElementById("dropdown");
-var options = dropdown.getElementsByTagName("option");
+const dropdown = document.getElementById("dropdown");
+const options = dropdown.getElementsByTagName("option");
 
-var sortedOptions = Array.from(options).sort(function (a, b) {
+const sortedOptions = Array.from(options).sort(function (a, b) {
   return a.textContent.localeCompare(b.textContent);
 });
 
@@ -227,7 +227,7 @@ switches.addEventListener("change", (event) => {
 });
 // Themes
 
-var themeId = localStorage.getItem("theme");
+let themeId = localStorage.getItem("theme");
 if (themeId == "") {
   themeId = "d";
 }
