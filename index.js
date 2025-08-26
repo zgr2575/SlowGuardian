@@ -25,7 +25,7 @@ if (config.routes !== false) {
     { path: "/s", file: "settings.html" },
     { path: "/p", file: "go.html" },
     { path: "/li", file: "login.html" },
-    { path: "/tos", file: "tos.html" }
+    { path: "/tos", file: "tos.html" },
   ];
 
   routes.forEach((route) => {
@@ -36,8 +36,26 @@ if (config.routes !== false) {
 }
 var serverid = Math.floor(Math.random() * 101);
 
-var db=
+var db =
   "server: Smarter Back End v5" +
+  " | version: " +
+  v +
+  " | update avalible: " +
+  upd +
+  "| server uptime:" +
+  process.uptime() +
+  " | server memory: " +
+  process.memoryUsage().heapUsed / 1024 / 1024 +
+  "serverid: " +
+  serverid +
+  "server identity: " +
+  "could not get";
+app.get("/d/data", (req, res, next) => {
+  console.log(
+    "[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING",
+  );
+  db =
+    "server: Smarter Back End v5" +
     " | version: " +
     v +
     " | update avalible: " +
@@ -46,31 +64,15 @@ var db=
     process.uptime() +
     " | server memory: " +
     process.memoryUsage().heapUsed / 1024 / 1024 +
-    "serverid: " +
+    " serverid: " +
     serverid +
-    "server identity: " +
-    "could not get";
-app.get("/d/data", (req, res, next) => {
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
-  db =
-    "server: Smarter Back End v5" +
-      " | version: " +
-      v +
-      " | update avalible: " +
-      upd +
-      "| server uptime:" +
-      process.uptime() +
-      " | server memory: " +
-      process.memoryUsage().heapUsed / 1024 / 1024 +
-      " serverid: " +
-      serverid +
-      " server identity: " +
-      "SG SERVER"
-  ;
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING");
-    res.send(db);
-    console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
-
+    " server identity: " +
+    "SG SERVER";
+  console.log(
+    "[SMARTERBACKEND]: SERVER DATA HAS BEEN PACKAGED | STATUS: PACKAGED, SENDING",
+  );
+  res.send(db);
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
 });
 if (config.local !== false) {
   app.get("/e/*", (req, res, next) => {
@@ -111,7 +113,7 @@ server.on("upgrade", (req, socket, head) => {
 fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
   .then((response) => response.text())
   .then((data) => {
-    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data); 
+    console.log("[SLOWGUARDIAN]: CURRENT VERSION: " + data);
     if (v == parseInt(data)) {
       console.log("[SLOWGUARDIAN]: UP TO DATE");
       upd = true;
@@ -132,8 +134,7 @@ fetch("https://raw.githubusercontent.com/zgr2575/SlowGuardian/main/version.txt")
               }
               console.log(`Update: ${stdout}`);
             });
-          }
-          else {
+          } else {
             conosle.log("Okay, exiting...");
             process.exit(0);
           }
@@ -183,10 +184,9 @@ if (config.challenge) {
 }
 // -------------------------
 
-  server.on("listening", () => {
-    console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
-  });
-
+server.on("listening", () => {
+  console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
+});
 
 server.listen({
   port: PORT,
