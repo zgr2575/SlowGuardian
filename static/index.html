@@ -100,7 +100,7 @@
 
           <!-- Search Section -->
           <div class="search-section">
-            <form class="search-form" id="fs" method="POST">
+            <form class="search-form" id="fs" method="POST" onsubmit="return false;">
               <div class="search-container">
                 <div class="search-icon">🔍</div>
                 <input
@@ -111,7 +111,7 @@
                   autocomplete="off"
                   spellcheck="false"
                 />
-                <button type="submit" class="search-btn">
+                <button type="submit" class="search-btn" onclick="go(document.getElementById('is').value); return false;">
                   <span>Browse</span>
                   <i class="arrow">→</i>
                 </button>
