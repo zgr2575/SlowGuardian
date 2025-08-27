@@ -95,10 +95,10 @@
               </div>
               <div class="settings-controls">
                 <label class="switch">
-                  <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" onchange="toggleAB()" />
+                  <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" />
                   <span class="switch-slider"></span>
                 </label>
-                <button onclick="AB()" class="btn btn-secondary">Open Popup</button>
+                <button id="ab-popup-btn" class="btn btn-secondary">Open Popup</button>
               </div>
             </div>
 
@@ -114,7 +114,7 @@
               <div class="settings-controls">
                 <input type="text" id="eventKeyInput" placeholder="Panic Keys (comma separated)" class="form-input" />
                 <input class="form-input" placeholder="Panic Link" type="text" id="linkInput" />
-                <button class="btn btn-primary" onclick="saveEventKey()">Save</button>
+                <button id="save-panic-key-btn" class="btn btn-primary">Save</button>
               </div>
             </div>
 
@@ -125,7 +125,7 @@
                 <p class="card-description">Change the title and icon of the page.</p>
               </div>
               <div class="settings-controls">
-                <select id="dropdown" class="form-select" onchange="handleDropdownChange(this)">
+                <select id="dropdown" class="form-select">
                   <option value="Classroom">Default</option>
                   <option value="Clever">Clever</option>
                   <option value="Canvas">Canvas</option>
@@ -174,10 +174,10 @@
                 <input class="form-input" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
                 <input class="form-input" type="text" id="name" name="name" placeholder="Change Tab Name" />
                 <div class="button-group">
-                  <button class="btn btn-primary" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
+                  <button id="save-tab-cloak-btn" class="btn btn-primary">
                     Save
                   </button>
-                  <button class="btn btn-secondary" onclick="ResetCustomCloak(); redirectToMainDomain();">
+                  <button id="reset-tab-cloak-btn" class="btn btn-secondary">
                     Reset Cloak
                   </button>
                 </div>
@@ -191,7 +191,7 @@
                 <p class="card-description">Change the search engine when searching.</p>
               </div>
               <div class="settings-controls">
-                <select title="engine" id="engine" class="form-select" onchange="EngineChange(this)">
+                <select title="engine" id="engine" class="form-select">
                   <option value="Google">Google (Default)</option>
                   <option value="Bing">Bing</option>
                   <option value="DuckDuckGo">DuckDuckGo</option>
@@ -201,7 +201,7 @@
                   <option value="Ecosia">Ecosia</option>
                 </select>
                 <input class="form-input" type="text" id="engine-form" placeholder="Change Search Engine" name="engine" />
-                <button class="btn btn-primary" onclick="SaveEngine();">Save</button>
+                <button id="save-engine-btn" class="btn btn-primary">Save</button>
               </div>
             </div>
 
@@ -247,7 +247,7 @@
                 </p>
               </div>
               <div class="settings-controls">
-                <select id="adType" class="form-select" onchange="adChange(this)">
+                <select id="adType" class="form-select">
                   <option value="default">Default</option>
                   <option value="off">Off</option>
                 </select>
@@ -275,7 +275,7 @@
                 <p class="card-description">Pick from a variety of themes!</p>
               </div>
               <div class="settings-controls">
-                <select placeholder="Solid Color Themes" id="theme-dropdown" class="form-select" onchange="themeChange(this)">
+                <select placeholder="Solid Color Themes" id="theme-dropdown" class="form-select">
                   <option disabled selected>Solid Color Themes</option>
                   <option value="d">Default</option>
                   <option disabled selected>Catppuccin Themes</option>

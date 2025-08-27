@@ -35,6 +35,90 @@ document.addEventListener("DOMContentLoaded", function () {
 
   localStorage.setItem("ab", true);
   document.getElementById("ab-settings-switch").checked = true;
+
+  // Add proper event listeners to replace inline handlers
+  
+  // About:Blank functionality
+  const abSwitch = document.getElementById("ab-settings-switch");
+  const abPopupBtn = document.getElementById("ab-popup-btn");
+  
+  if (abSwitch) {
+    abSwitch.addEventListener("change", toggleAB);
+  }
+  
+  if (abPopupBtn) {
+    abPopupBtn.addEventListener("click", AB);
+  }
+
+  // Panic key save button
+  const savePanicBtn = document.getElementById("save-panic-key-btn");
+  if (savePanicBtn) {
+    savePanicBtn.addEventListener("click", saveEventKey);
+  }
+
+  // Tab cloaker dropdown and buttons
+  const dropdown = document.getElementById("dropdown");
+  const saveTabCloakBtn = document.getElementById("save-tab-cloak-btn");
+  const resetTabCloakBtn = document.getElementById("reset-tab-cloak-btn");
+  
+  if (dropdown) {
+    dropdown.addEventListener("change", function() {
+      handleDropdownChange(this);
+    });
+  }
+  
+  if (saveTabCloakBtn) {
+    saveTabCloakBtn.addEventListener("click", function() {
+      CustomIcon(); 
+      CustomName(); 
+      redirectToMainDomain();
+    });
+  }
+  
+  if (resetTabCloakBtn) {
+    resetTabCloakBtn.addEventListener("click", function() {
+      ResetCustomCloak(); 
+      redirectToMainDomain();
+    });
+  }
+
+  // Search engine
+  const engineSelect = document.getElementById("engine");
+  const saveEngineBtn = document.getElementById("save-engine-btn");
+  
+  if (engineSelect) {
+    engineSelect.addEventListener("change", function() {
+      EngineChange(this);
+    });
+  }
+  
+  if (saveEngineBtn) {
+    saveEngineBtn.addEventListener("click", SaveEngine);
+  }
+
+  // Advertisements
+  const adTypeSelect = document.getElementById("adType");
+  if (adTypeSelect) {
+    adTypeSelect.addEventListener("change", function() {
+      adChange(this);
+    });
+  }
+
+  // Themes
+  const themeDropdown = document.getElementById("theme-dropdown");
+  if (themeDropdown) {
+    themeDropdown.addEventListener("change", function() {
+      themeChange(this);
+    });
+  }
+
+  // Proxy selection
+  const proxySelect = document.getElementById("pChange");
+  if (proxySelect) {
+    proxySelect.addEventListener("change", function() {
+      pChange(this.value);
+    });
+  }
 });
 
 // Dyn

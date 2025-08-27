@@ -99,7 +99,7 @@
             />
           </div>
           
-          <select id="category" name="category" class="filter-select" onchange="show_category()">
+          <select id="category" name="category" class="filter-select">
             <option value="all">All Categories</option>
             <option value="android">Android Emulator</option>
             <option value="social">Social</option>
@@ -198,6 +198,12 @@
         const searchInput = document.getElementById('searchbarbottom');
         if (searchInput) {
           searchInput.addEventListener('input', search_bar);
+        }
+
+        // Add event listener for category filter
+        const categorySelect = document.getElementById('category');
+        if (categorySelect) {
+          categorySelect.addEventListener('change', show_category);
         }
       });
     </script>
