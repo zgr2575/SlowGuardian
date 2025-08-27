@@ -285,14 +285,9 @@
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
     <script src="assets/scripts/main.js?v=31"></script>
-    <script src="assets/scripts/v9/particles.js"></script>
     <script>
-      // Initialize particles for background effect
+      // Simple particle effect for v9 (without conflicts)
       document.addEventListener('DOMContentLoaded', function() {
-        if (typeof initParticles === 'function') {
-          initParticles();
-        }
-        
         // Initialize welcome modal
         const modal = document.getElementById('welcome-modal');
         const closeBtn = document.querySelector('.modal-close');
