@@ -9,8 +9,27 @@ if (!iframe) {
 window.addEventListener("load", function() {
   let GoUrl = sessionStorage.getItem("GoUrl");
   let dyValue = localStorage.getItem("dy");
+  const addressInput = document.getElementById("is");
 
   if (GoUrl) {
+    // Display the original URL in the address bar
+    if (addressInput) {
+      try {
+        // Try to decode the URL to show the original domain
+        let displayUrl = GoUrl;
+        if (typeof __uv$config !== 'undefined' && __uv$config.decodeUrl) {
+          displayUrl = __uv$config.decodeUrl(GoUrl);
+        } else {
+          // Simple decode attempt for common patterns
+          displayUrl = decodeURIComponent(GoUrl);
+        }
+        addressInput.value = displayUrl;
+      } catch (error) {
+        // Fallback: show the encoded URL
+        addressInput.value = GoUrl;
+      }
+    }
+
     if (!GoUrl.startsWith("/e/")) {
       if (dyValue === "true" || dyValue === "auto") {
         GoUrl = "/a/q/" + GoUrl;
