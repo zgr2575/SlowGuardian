@@ -234,7 +234,7 @@ class SlowGuardianApp {
       // Focus search on '/' key
       if (e.key === "/" && !e.target.matches("input, textarea")) {
         e.preventDefault();
-        const searchInput = document.getElementById("url-input");
+        const searchInput = document.getElementById("is") || document.getElementById("url-input");
         if (searchInput) {
           searchInput.focus();
         }
@@ -253,6 +253,36 @@ class SlowGuardianApp {
         this.togglePerformanceMode();
       }
     });
+
+    // Setup search form handling
+    this.setupSearchForm();
+  }
+
+  setupSearchForm() {
+    const searchForm = document.getElementById("fs");
+    if (searchForm) {
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const searchInput = document.getElementById("is");
+        if (searchInput && searchInput.value.trim()) {
+          // Use the global go function if available
+          if (typeof go === 'function') {
+            go(searchInput.value.trim());
+          } else if (typeof processUrl === 'function') {
+            processUrl(searchInput.value.trim(), '/p');
+          }
+        }
+      });
+
+      // Also handle button click
+      const searchBtn = document.getElementById("search-submit-btn");
+      if (searchBtn) {
+        searchBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          searchForm.dispatchEvent(new Event('submit'));
+        });
+      }
+    }
   }
 
   setupTabManagement() {
