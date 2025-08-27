@@ -100,13 +100,13 @@
 
           <!-- Search Section -->
           <div class="search-section">
-            <form class="search-form" id="proxy-form" onsubmit="return handleProxySubmit(event)">
+            <form class="search-form" id="fs" method="POST">
               <div class="search-container">
                 <div class="search-icon">🔍</div>
                 <input
                   type="text"
                   class="search-input"
-                  id="url-input"
+                  id="is"
                   placeholder="Enter website URL or search term..."
                   autocomplete="off"
                   spellcheck="false"
@@ -124,15 +124,15 @@
             <div class="quick-access">
               <div class="quick-title">Quick Access</div>
               <div class="quick-grid">
-                <a href="#" class="quick-item" onclick="handleQuickAccess('https://google.com'); return false;">
+                <a href="#" class="quick-item" onclick="go('https://google.com'); return false;">
                   <div class="quick-icon">🔍</div>
                   <div class="quick-label">Google</div>
                 </a>
-                <a href="#" class="quick-item" onclick="handleQuickAccess('https://youtube.com'); return false;">
+                <a href="#" class="quick-item" onclick="go('https://youtube.com'); return false;">
                   <div class="quick-icon">📺</div>
                   <div class="quick-label">YouTube</div>
                 </a>
-                <a href="#" class="quick-item" onclick="handleQuickAccess('https://github.com'); return false;">
+                <a href="#" class="quick-item" onclick="go('https://github.com'); return false;">
                   <div class="quick-icon">🐙</div>
                   <div class="quick-label">GitHub</div>
                 </a>
@@ -280,114 +280,93 @@
         }, duration);
       };
 
-      // Global proxy handler for form submission
-      function handleProxySubmit(event) {
-        event.preventDefault();
-        const input = document.getElementById('url-input');
-        const value = input.value.trim();
-        
-        if (!value) {
-          showNotification("Please enter a URL or search term", "error");
-          return false;
-        }
-
-        // Use the legacy go function for compatibility
-        if (typeof go === 'function') {
-          go(value);
-        } else {
-          // Fallback to modern proxy manager
-          if (window.SlowGuardian && window.SlowGuardian.proxyManager) {
-            window.SlowGuardian.proxyManager.handleRequest(value);
-          } else {
-            // Last resort - direct navigation
-            window.location.href = '/p?url=' + encodeURIComponent(value);
-          }
-        }
-        
-        return false;
-      }
-
-      // Quick access handler
-      function handleQuickAccess(url) {
-        if (typeof go === 'function') {
-          go(url);
-        } else {
-          document.getElementById('url-input').value = url;
-          handleProxySubmit({ preventDefault: () => {} });
-        }
-      }
-
-      // Enhanced legacy proxy functions for better compatibility
-      window.processUrl = function(value, path) {
-        let url = value.trim();
-        const engine = localStorage.getItem("engine") || "https://www.google.com/search?q=";
-
-        if (!isUrl(url)) {
-          url = engine + encodeURIComponent(url);
-        } else if (!(url.startsWith("https://") || url.startsWith("http://"))) {
-          url = "https://" + url;
-        }
-
-        if (typeof __uv$config !== "undefined") {
-          sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
-          const dy = localStorage.getItem("dy");
-
-          if (path) {
-            location.href = path;
-          } else if (dy === "true") {
-            window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
-          } else {
-            window.location.href = "/a/" + __uv$config.encodeUrl(url);
-          }
-        } else {
-          // Fallback if UV not ready
-          sessionStorage.setItem("GoUrl", url);
-          window.location.href = path || "/p";
-        }
-      };
-
-      window.go = function(value) {
-        processUrl(value, "/p");
-      };
-
-      window.blank = function(value) {
-        processUrl(value);
-      };
-
-      window.dy = function(value) {
-        if (typeof __uv$config !== "undefined") {
-          processUrl(value, "/a/q/" + __uv$config.encodeUrl(value));
-        }
-      };
-
-      window.now = function(value) {
-        processUrl(value);
-      };
-
-      window.isUrl = function(val = "") {
-        if (
-          /^http(s?):\/\//.test(val) ||
-          (val.includes(".") && val.substr(0, 1) !== " ")
-        )
-          return true;
-        return false;
-      };
-
-      // Initialize proxy system when DOM is ready
+    <!-- Scripts -->
+    <script src="assets/scripts/index.js?v=14"></script>
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+    <script src="assets/scripts/main.js?v=31"></script>
+    <script src="assets/scripts/v9/particles.js"></script>
+    <script>
+      // Initialize particles for background effect
       document.addEventListener('DOMContentLoaded', function() {
-        // Set up form handler
-        const form = document.getElementById('proxy-form');
-        if (form) {
-          form.addEventListener('submit', handleProxySubmit);
+        if (typeof initParticles === 'function') {
+          initParticles();
         }
-
-        // Wait a bit for modules to load, then set up additional handlers
-        setTimeout(function() {
-          // Connect v9 proxy manager to global scope for compatibility
-          if (window.SlowGuardian && window.SlowGuardian.proxyManager) {
-            window.proxyManager = window.SlowGuardian.proxyManager;
+        
+        // Initialize welcome modal
+        const modal = document.getElementById('welcome-modal');
+        const closeBtn = document.querySelector('.modal-close');
+        const getStartedBtn = document.querySelector('.modal-btn');
+        
+        // Show modal for first time users or v9 update
+        if (!localStorage.getItem('v9-welcome-shown')) {
+          setTimeout(() => {
+            modal.style.display = 'flex';
+          }, 500);
+          localStorage.setItem('v9-welcome-shown', 'true');
+        }
+        
+        // Close modal handlers
+        [closeBtn, getStartedBtn].forEach(btn => {
+          if (btn) {
+            btn.addEventListener('click', () => {
+              modal.style.display = 'none';
+            });
           }
-        }, 1000);
+        });
+        
+        // Close on backdrop click
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+        
+        // Quick focus on search with / key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === '/' && e.target === document.body) {
+            e.preventDefault();
+            document.getElementById('is').focus();
+          }
+        });
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', function() {
+            let theme = localStorage.getItem('theme') || 'default';
+            const themes = ['default', 'catppuccinMocha', 'catppuccinLatte'];
+            const currentIndex = themes.indexOf(theme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            const nextTheme = themes[nextIndex];
+            
+            localStorage.setItem('theme', nextTheme);
+            location.reload(); // Reload to apply theme
+          });
+        }
+        
+        // Motivational quotes rotation
+        const quotes = [
+          { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+          { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+          { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+          { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+          { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+          { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
+          { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+          { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+          { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+          { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" }
+        ];
+        
+        const dailyQuote = quotes[new Date().getDate() % quotes.length];
+        const quoteText = document.querySelector('.quote-text');
+        const quoteAuthor = document.querySelector('.quote-author');
+        
+        if (quoteText && quoteAuthor) {
+          quoteText.textContent = `"${dailyQuote.text}"`;
+          quoteAuthor.textContent = `- ${dailyQuote.author}`;
+        }
       });
     </script>
   </body>

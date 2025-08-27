@@ -1,9 +1,31 @@
 const iframe = document.getElementById("ifra");
 
-// Enhanced error handling
+// Enhanced error handling and URL loading
 if (!iframe) {
   console.error("Browser iframe not found");
 }
+
+// Load URL from sessionStorage when page loads
+window.addEventListener("load", function() {
+  let GoUrl = sessionStorage.getItem("GoUrl");
+  let dyValue = localStorage.getItem("dy");
+
+  if (GoUrl) {
+    if (!GoUrl.startsWith("/e/")) {
+      if (dyValue === "true" || dyValue === "auto") {
+        GoUrl = "/a/q/" + GoUrl;
+      } else {
+        GoUrl = "/a/" + GoUrl;
+      }
+    }
+    console.log("Loading URL:", GoUrl);
+    if (iframe) {
+      iframe.src = GoUrl;
+    }
+  } else {
+    console.warn("No URL found in sessionStorage");
+  }
+});
 
 // Browser navigation functions with error handling
 function goBack() {
@@ -32,6 +54,111 @@ function goForward() {
 
 function goHome() {
   window.location.href = "/";
+}
+
+// Decode URL function for displaying in address bar
+function decodeXor(input) {
+  if (!input) return input;
+  let [str, ...search] = input.split("?");
+
+  return (
+    decodeURIComponent(str)
+      .split("")
+      .map((char, ind) =>
+        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char,
+      )
+      .join("") + (search.length ? "?" + search.join("?") : "")
+  );
+}
+
+// Update address bar when iframe loads
+function iframeLoad() {
+  if (document.readyState === "complete") {
+    const website = iframe.contentWindow?.location.href.replace(
+      window.location.origin,
+      "",
+    );
+
+    if (website.includes("/a/")) {
+      const website = iframe.contentWindow?.location.href
+        .replace(window.location.origin, "")
+        .replace("/a/", "");
+      const addressInput = document.getElementById("is");
+      if (addressInput) {
+        addressInput.value = decodeXor(website);
+        localStorage.setItem("decoded", decodeXor(website));
+      }
+    } else if (website.includes("/a/q/")) {
+      const website = iframe.contentWindow?.location.href
+        .replace(window.location.origin, "")
+        .replace("/a/q/", "");
+      const addressInput = document.getElementById("is");
+      if (addressInput) {
+        addressInput.value = decodeXor(website);
+        localStorage.setItem("decoded", decodeXor(website));
+      }
+    }
+  }
+}
+
+// Reload function
+function reload() {
+  if (iframe) {
+    iframe.src = iframe.src;
+  }
+}
+
+// Popout function with about:blank window
+function popout() {
+  const newWindow = window.open("about:blank", "_blank");
+
+  if (newWindow) {
+    const name = localStorage.getItem("name") || "My Drive - Google Drive";
+    const icon =
+      localStorage.getItem("icon") ||
+      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
+    newWindow.document.title = name;
+
+    const link = newWindow.document.createElement("link");
+    link.rel = "icon";
+    link.href = encodeURI(icon);
+    newWindow.document.head.appendChild(link);
+
+    const newIframe = newWindow.document.createElement("iframe");
+    const style = newIframe.style;
+    style.position = "fixed";
+    style.top = style.bottom = style.left = style.right = 0;
+    style.border = style.outline = "none";
+    style.width = style.height = "100%";
+
+    newIframe.src = iframe.src;
+
+    newWindow.document.body.appendChild(newIframe);
+  }
+}
+
+// Eruda debugging toggle
+function erudaToggle() {
+  if (!iframe) return;
+
+  const erudaWindow = iframe.contentWindow;
+  const erudaDocument = iframe.contentDocument;
+
+  if (!erudaWindow || !erudaDocument) return;
+
+  if (erudaWindow.eruda?._isInit) {
+    erudaWindow.eruda.destroy();
+  } else {
+    let script = erudaDocument.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/eruda";
+    script.onload = function () {
+      if (!erudaWindow) return;
+      erudaWindow.eruda.init();
+      erudaWindow.eruda.show();
+    };
+    erudaDocument.head.appendChild(script);
+  }
 }
 
 // Enhanced fullscreen functionality
@@ -98,6 +225,64 @@ if (navigator.userAgent.includes("Chrome")) {
     try {
       if (navigator.keyboard && navigator.keyboard.lock) {
         navigator.keyboard.lock(["Escape"]);
+      }
+    } catch (error) {
+      console.warn("Keyboard lock failed:", error);
+    }
+  });
+}
+
+// Remove Nav on fullscreen
+document.addEventListener("fullscreenchange", function () {
+  const isFullscreen = Boolean(document.fullscreenElement);
+  document.body.classList.toggle("fullscreen", isFullscreen);
+});
+
+// Initialize form handling for the browser address bar
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById("fs");
+  const input = document.getElementById("is");
+
+  if (form && input) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      processUrl(input.value, "/p");
+    });
+  }
+});
+
+// Process URL function (needed for navigation from address bar)
+function processUrl(value, path) {
+  let url = value.trim();
+  const engine = localStorage.getItem("engine");
+  const searchUrl = engine ? engine : "https://www.google.com/search?q=";
+
+  if (!isUrl(url)) {
+    url = searchUrl + url;
+  } else if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+    url = "https://" + url;
+  }
+
+  sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+  const dy = localStorage.getItem("dy");
+
+  if (path) {
+    location.href = path;
+  } else if (dy === "true") {
+    window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+  } else {
+    window.location.href = "/a/" + __uv$config.encodeUrl(url);
+  }
+}
+
+function isUrl(val = "") {
+  if (
+    /^http(s?):\/\//.test(val) ||
+    (val.includes(".") && val.substr(0, 1) !== " ")
+  )
+    return true;
+  return false;
+}
       }
     } catch (error) {
       console.debug("Keyboard lock not available:", error);
