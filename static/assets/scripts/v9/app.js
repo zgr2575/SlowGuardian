@@ -749,6 +749,7 @@ if (document.readyState === "loading") {
 
 // Export for global access
 window.SlowGuardian = app;
+window.theme = theme; // Make theme globally accessible
 
 // Also export for modules
 export default app;

@@ -92,6 +92,37 @@ document.addEventListener("DOMContentLoaded", function () {
     abPopupBtn.addEventListener("click", AB);
   }
 
+  // Screenshot Protection functionality
+  const screenshotProtectionSwitch = document.getElementById("screenshot-protection-switch");
+  const testProtectionBtn = document.getElementById("test-protection-btn");
+  
+  if (screenshotProtectionSwitch) {
+    // Set initial state
+    screenshotProtectionSwitch.checked = localStorage.getItem('screenshot-protection') === 'true';
+    
+    screenshotProtectionSwitch.addEventListener("change", function() {
+      if (this.checked) {
+        window.ScreenshotProtection.enable();
+      } else {
+        window.ScreenshotProtection.disable();
+      }
+    });
+  }
+  
+  if (testProtectionBtn) {
+    testProtectionBtn.addEventListener("click", function() {
+      if (window.ScreenshotProtection) {
+        window.ScreenshotProtection.activateProtection();
+        setTimeout(() => {
+          window.ScreenshotProtection.deactivateProtection();
+          if (window.showNotification) {
+            window.showNotification('Screenshot protection test completed', 'info');
+          }
+        }, 3000);
+      }
+    });
+  }
+
   // Panic key save button
   const savePanicBtn = document.getElementById("save-panic-key-btn");
   if (savePanicBtn) {
@@ -146,11 +177,290 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Themes
+  // Enhanced Themes functionality with Custom Theme Creator
   const themeDropdown = document.getElementById("theme-dropdown");
+  const createCustomThemeBtn = document.getElementById("create-custom-theme-btn");
+  const exportThemeBtn = document.getElementById("export-theme-btn");
+  const importThemeBtn = document.getElementById("import-theme-btn");
+  
   if (themeDropdown) {
-    themeDropdown.addEventListener("change", function() {
-      themeChange(this);
+    // Set current theme value
+    const currentTheme = localStorage.getItem("theme") || "d";
+    themeDropdown.value = currentTheme;
+    
+    // Add change listener
+    themeDropdown.addEventListener("change", function () {
+      const selectedTheme = this.value;
+      localStorage.setItem("theme", selectedTheme);
+      
+      // Apply theme immediately via utils
+      if (window.theme && window.theme.set) {
+        window.theme.set(selectedTheme);
+      } else {
+        // Fallback to legacy method
+        applyTheme(selectedTheme);
+      }
+      
+      // Show notification
+      if (window.showNotification) {
+        window.showNotification(`Theme changed to ${this.options[this.selectedIndex].text}`, 'success');
+      }
+    });
+  }
+  
+  // Custom Theme Creator
+  if (createCustomThemeBtn) {
+    createCustomThemeBtn.addEventListener("click", function() {
+      openCustomThemeModal();
+    });
+  }
+  
+  if (exportThemeBtn) {
+    exportThemeBtn.addEventListener("click", function() {
+      exportCurrentTheme();
+    });
+  }
+  
+  if (importThemeBtn) {
+    importThemeBtn.addEventListener("click", function() {
+      openImportThemeModal();
+    });
+  }
+  
+  // Theme Creator Modal Functions
+  function openCustomThemeModal() {
+    const modal = document.getElementById('custom-theme-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
+      
+      // Initialize with current theme colors or defaults
+      initializeThemeCreator();
+      updateThemePreview();
+    }
+  }
+  
+  function closeCustomThemeModal() {
+    const modal = document.getElementById('custom-theme-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+  }
+  
+  function initializeThemeCreator() {
+    // Set default values for theme creator
+    const defaults = {
+      'theme-name': 'My Custom Theme',
+      'primary-bg-color': '#1a1a2e',
+      'secondary-bg-color': '#16213e',
+      'accent-color': '#3b82f6',
+      'text-primary-color': '#ffffff',
+      'text-secondary-color': '#b8bcc8',
+      'gradient-start-color': '#1a1a2e',
+      'gradient-end-color': '#16213e'
+    };
+    
+    Object.entries(defaults).forEach(([id, value]) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.value = value;
+      }
+    });
+    
+    // Add event listeners for live preview
+    Object.keys(defaults).forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.addEventListener('input', updateThemePreview);
+      }
+    });
+  }
+  
+  function updateThemePreview() {
+    const previewContainer = document.getElementById('theme-preview-container');
+    if (!previewContainer) return;
+    
+    const primaryBg = document.getElementById('primary-bg-color').value;
+    const secondaryBg = document.getElementById('secondary-bg-color').value;
+    const accentColor = document.getElementById('accent-color').value;
+    const textPrimary = document.getElementById('text-primary-color').value;
+    const textSecondary = document.getElementById('text-secondary-color').value;
+    const gradientStart = document.getElementById('gradient-start-color').value;
+    const gradientEnd = document.getElementById('gradient-end-color').value;
+    
+    // Apply preview styles
+    previewContainer.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
+    
+    const navbar = previewContainer.querySelector('.preview-navbar');
+    if (navbar) {
+      navbar.style.background = `rgba(${hexToRgb(primaryBg)}, 0.95)`;
+    }
+    
+    const content = previewContainer.querySelector('.preview-content');
+    if (content) {
+      content.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
+    }
+    
+    const card = previewContainer.querySelector('.preview-card');
+    if (card) {
+      card.style.background = secondaryBg;
+      card.style.borderColor = accentColor;
+    }
+    
+    // Update text colors
+    const h2 = previewContainer.querySelector('h2');
+    const h3 = previewContainer.querySelector('h3');
+    const paragraphs = previewContainer.querySelectorAll('p');
+    
+    if (h2) h2.style.color = textPrimary;
+    if (h3) h3.style.color = textPrimary;
+    paragraphs.forEach(p => p.style.color = textSecondary);
+  }
+  
+  function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? 
+      parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16)
+      : '26,26,46';
+  }
+  
+  function saveCustomTheme() {
+    const themeData = {
+      name: document.getElementById('theme-name').value || 'Custom Theme',
+      primaryBg: document.getElementById('primary-bg-color').value,
+      secondaryBg: document.getElementById('secondary-bg-color').value,
+      accentColor: document.getElementById('accent-color').value,
+      textPrimary: document.getElementById('text-primary-color').value,
+      textSecondary: document.getElementById('text-secondary-color').value,
+      gradientStart: document.getElementById('gradient-start-color').value,
+      gradientEnd: document.getElementById('gradient-end-color').value,
+      created: new Date().toISOString()
+    };
+    
+    localStorage.setItem('sg-custom-theme', JSON.stringify(themeData));
+    
+    // Apply the theme immediately
+    if (window.theme && window.theme.set) {
+      window.theme.set('custom');
+    }
+    
+    closeCustomThemeModal();
+    
+    if (window.showNotification) {
+      window.showNotification(`Custom theme "${themeData.name}" saved and applied!`, 'success');
+    }
+  }
+  
+  function exportCurrentTheme() {
+    const customTheme = localStorage.getItem('sg-custom-theme');
+    if (!customTheme) {
+      if (window.showNotification) {
+        window.showNotification('No custom theme to export. Create one first!', 'warning');
+      }
+      return;
+    }
+    
+    const blob = new Blob([customTheme], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'slowguardian-theme.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    if (window.showNotification) {
+      window.showNotification('Theme exported successfully!', 'success');
+    }
+  }
+  
+  function openImportThemeModal() {
+    const modal = document.getElementById('import-theme-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
+    }
+  }
+  
+  function closeImportThemeModal() {
+    const modal = document.getElementById('import-theme-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+  }
+  
+  function importTheme() {
+    const importData = document.getElementById('theme-import-data').value.trim();
+    if (!importData) {
+      if (window.showNotification) {
+        window.showNotification('Please paste theme data to import', 'warning');
+      }
+      return;
+    }
+    
+    try {
+      const themeData = JSON.parse(importData);
+      
+      // Validate theme data
+      const requiredFields = ['name', 'primaryBg', 'secondaryBg', 'accentColor', 'textPrimary', 'textSecondary'];
+      const isValid = requiredFields.every(field => themeData.hasOwnProperty(field));
+      
+      if (!isValid) {
+        throw new Error('Invalid theme format');
+      }
+      
+      localStorage.setItem('sg-custom-theme', JSON.stringify(themeData));
+      
+      if (window.theme && window.theme.set) {
+        window.theme.set('custom');
+      }
+      
+      closeImportThemeModal();
+      document.getElementById('theme-import-data').value = '';
+      
+      if (window.showNotification) {
+        window.showNotification(`Theme "${themeData.name}" imported and applied!`, 'success');
+      }
+    } catch (error) {
+      if (window.showNotification) {
+        window.showNotification('Invalid theme data format. Please check your JSON.', 'error');
+      }
+    }
+  }
+  
+  // Modal event listeners
+  const customThemeModal = document.getElementById('custom-theme-modal');
+  const importThemeModal = document.getElementById('import-theme-modal');
+  
+  // Custom Theme Modal
+  if (customThemeModal) {
+    document.getElementById('close-theme-modal')?.addEventListener('click', closeCustomThemeModal);
+    document.getElementById('save-custom-theme-btn')?.addEventListener('click', saveCustomTheme);
+    document.getElementById('apply-theme-preview-btn')?.addEventListener('click', updateThemePreview);
+    document.getElementById('cancel-theme-btn')?.addEventListener('click', closeCustomThemeModal);
+    
+    // Close on outside click
+    customThemeModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeCustomThemeModal();
+      }
+    });
+  }
+  
+  // Import Theme Modal
+  if (importThemeModal) {
+    document.getElementById('close-import-modal')?.addEventListener('click', closeImportThemeModal);
+    document.getElementById('import-theme-confirm-btn')?.addEventListener('click', importTheme);
+    document.getElementById('cancel-import-btn')?.addEventListener('click', closeImportThemeModal);
+    
+    // Close on outside click
+    importThemeModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeImportThemeModal();
+      }
     });
   }
 

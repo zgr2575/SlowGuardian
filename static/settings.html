@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="assets/styles/v9/components.css" />
     <link rel="stylesheet" href="assets/styles/v9/animations.css" />
     <link rel="stylesheet" href="assets/styles/custom-dropdown.css" />
+    <link rel="stylesheet" href="assets/styles/theme-creator.css" />
     <link rel="stylesheet" href="assets/styles/auth.css" />
 
     <!-- Progressive Web App -->
@@ -101,6 +102,21 @@
                   <span class="switch-slider"></span>
                 </label>
                 <button id="ab-popup-btn" class="btn btn-secondary">Open Popup</button>
+              </div>
+            </div>
+
+            <!-- Screenshot Protection -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🛡️ Screenshot Protection</h3>
+                <p class="card-description">Automatically shows your spoofed tab content when screenshots are detected. Protects against unauthorized surveillance and screen capture attempts.</p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" id="screenshot-protection-switch" class="slider-checkbox" />
+                  <span class="switch-slider"></span>
+                </label>
+                <button id="test-protection-btn" class="btn btn-secondary">Test Protection</button>
               </div>
             </div>
 
@@ -318,6 +334,11 @@
                   <option value="catppuccinFrappe">🥤 Frappe</option>
                   <option value="catppuccinLatte">☀️ Latte (Light)</option>
                 </select>
+                <div class="button-group">
+                  <button id="create-custom-theme-btn" class="btn btn-secondary">🎨 Create Custom Theme</button>
+                  <button id="export-theme-btn" class="btn btn-secondary">📤 Export Current</button>
+                  <button id="import-theme-btn" class="btn btn-secondary">📥 Import Theme</button>
+                </div>
               </div>
             </div>
 
@@ -373,10 +394,115 @@
       <div class="loading-text">Loading...</div>
     </div>
 
+    <!-- Custom Theme Creator Modal -->
+    <div id="custom-theme-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🎨 Create Custom Theme</h3>
+          <button class="modal-close" id="close-theme-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="theme-creator-grid">
+            <div class="theme-inputs">
+              <div class="input-group">
+                <label for="theme-name">Theme Name</label>
+                <input type="text" id="theme-name" class="form-input" placeholder="My Awesome Theme" />
+              </div>
+              
+              <div class="color-inputs">
+                <div class="color-input-row">
+                  <label for="primary-bg-color">Primary Background</label>
+                  <input type="color" id="primary-bg-color" value="#1a1a2e" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="secondary-bg-color">Secondary Background</label>
+                  <input type="color" id="secondary-bg-color" value="#16213e" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="accent-color">Accent Color</label>
+                  <input type="color" id="accent-color" value="#0f3460" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="text-primary-color">Primary Text</label>
+                  <input type="color" id="text-primary-color" value="#ffffff" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="text-secondary-color">Secondary Text</label>
+                  <input type="color" id="text-secondary-color" value="#b8bcc8" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="gradient-start-color">Gradient Start</label>
+                  <input type="color" id="gradient-start-color" value="#1a1a2e" />
+                </div>
+                
+                <div class="color-input-row">
+                  <label for="gradient-end-color">Gradient End</label>
+                  <input type="color" id="gradient-end-color" value="#16213e" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="theme-preview">
+              <h4>Live Preview</h4>
+              <div id="theme-preview-container">
+                <div class="preview-navbar">
+                  <span class="preview-brand">🛡️ SlowGuardian</span>
+                  <div class="preview-nav-links">
+                    <span>🏠 Home</span>
+                    <span>📱 Apps</span>
+                    <span>🎮 Games</span>
+                  </div>
+                </div>
+                <div class="preview-content">
+                  <h2>SlowGuardian</h2>
+                  <p>Your gateway to unrestricted web browsing</p>
+                  <div class="preview-card">
+                    <h3>Sample Card</h3>
+                    <p>This is how cards will look with your theme</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="save-custom-theme-btn" class="btn btn-primary">💾 Save Theme</button>
+          <button id="apply-theme-preview-btn" class="btn btn-secondary">👁️ Apply Preview</button>
+          <button id="cancel-theme-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Theme Modal -->
+    <div id="import-theme-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📥 Import Custom Theme</h3>
+          <button class="modal-close" id="close-import-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="theme-import-data">Paste Theme Data (JSON)</label>
+            <textarea id="theme-import-data" class="form-textarea" rows="10" placeholder='{"name":"Theme Name","primaryBg":"#1a1a2e",...}'></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="import-theme-confirm-btn" class="btn btn-primary">Import Theme</button>
+          <button id="cancel-import-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <!-- App Scripts -->
     <!-- Legacy Settings Script -->
     <script src="assets/scripts/custom-dropdown.js?v=1"></script>
     <script src="assets/scripts/auth.js?v=1"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
     <script src="assets/scripts/settings.js?v=21"></script>
     <script src="assets/scripts/main.js?v=31"></script>
 
