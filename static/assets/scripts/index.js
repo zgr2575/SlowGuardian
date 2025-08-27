@@ -38,7 +38,7 @@ function processUrl(value, path) {
 }
 
 function go(value) {
-  processUrl(value, "/go");
+  processUrl(value, "/p");
 }
 
 function blank(value) {

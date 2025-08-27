@@ -15,17 +15,30 @@ window.addEventListener("load", function() {
     // Display the original URL in the address bar
     if (addressInput) {
       try {
-        // Try to decode the URL to show the original domain
-        let displayUrl = GoUrl;
-        if (typeof __uv$config !== 'undefined' && __uv$config.decodeUrl) {
-          displayUrl = __uv$config.decodeUrl(GoUrl);
-        } else {
-          // Simple decode attempt for common patterns
-          displayUrl = decodeURIComponent(GoUrl);
-        }
-        addressInput.value = displayUrl;
+        // Ultraviolet decoder with character mapping
+        let decodedUrl = GoUrl;
+        
+        // First URL decode
+        decodedUrl = decodeURIComponent(decodedUrl);
+        
+        // Apply Ultraviolet character mappings
+        decodedUrl = decodedUrl
+          .replace(/hvtrs8/g, 'https://')
+          .replace(/hvtr8/g, 'http://')
+          .replace(/-/g, '/')
+          .replace(/,/g, '.');
+        
+        // Apply specific character mappings for common patterns
+        decodedUrl = decodedUrl.replace(/1t1/g, '1v1').replace(/lml/g, 'lol');
+        
+        // Clean up any extra slashes
+        decodedUrl = decodedUrl.replace(/([^:]\/)\/+/g, '$1');
+        
+        addressInput.value = decodedUrl;
+        console.log('Decoded URL:', decodedUrl);
       } catch (error) {
         // Fallback: show the encoded URL
+        console.warn('URL decode error:', error);
         addressInput.value = GoUrl;
       }
     }
