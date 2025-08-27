@@ -233,7 +233,7 @@ class ScreenshotProtection {
       if (document.hidden && this.enabled) {
         this.activateProtection();
         // Revert after a short delay
-        setTimeout(() => this.deactivateProtection(), 1000);
+        setTimeout(() => this.deactivateProtection(), 2000);
       }
     });
 
@@ -243,13 +243,33 @@ class ScreenshotProtection {
       if (this.enabled) {
         blurTimeout = setTimeout(() => {
           this.activateProtection();
-        }, 100);
+        }, 50); // Reduced delay for faster response
       }
     });
 
     window.addEventListener('focus', () => {
       clearTimeout(blurTimeout);
       this.deactivateProtection();
+    });
+
+    // Additional detection for window resize (common during screenshots)
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      if (this.enabled) {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          this.activateProtection();
+          setTimeout(() => this.deactivateProtection(), 1000);
+        }, 100);
+      }
+    });
+
+    // Detect context menu (right-click) which might indicate screenshot attempts
+    document.addEventListener('contextmenu', (e) => {
+      if (this.enabled) {
+        this.activateProtection();
+        setTimeout(() => this.deactivateProtection(), 1500);
+      }
     });
   }
 
@@ -294,20 +314,47 @@ class ScreenshotProtection {
 
       // Print Screen key
       if (e.key === 'PrintScreen') {
+        e.preventDefault(); // Try to prevent the screenshot
         this.activateProtection();
-        setTimeout(() => this.deactivateProtection(), 1000);
+        setTimeout(() => this.deactivateProtection(), 2000);
       }
 
       // Windows + Shift + S (Windows Snipping Tool)
-      if (e.metaKey && e.shiftKey && e.key === 'S') {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
         this.activateProtection();
-        setTimeout(() => this.deactivateProtection(), 1000);
+        setTimeout(() => this.deactivateProtection(), 2000);
       }
 
-      // Cmd + Shift + 4/5 (macOS screenshots)
-      if (e.metaKey && e.shiftKey && (e.key === '4' || e.key === '5')) {
+      // Cmd + Shift + 3/4/5 (macOS screenshots)
+      if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) {
+        e.preventDefault();
         this.activateProtection();
-        setTimeout(() => this.deactivateProtection(), 1000);
+        setTimeout(() => this.deactivateProtection(), 2000);
+      }
+
+      // Alt + Print Screen (Windows active window screenshot)
+      if (e.altKey && e.key === 'PrintScreen') {
+        e.preventDefault();
+        this.activateProtection();
+        setTimeout(() => this.deactivateProtection(), 2000);
+      }
+
+      // Ctrl + Print Screen (some applications)
+      if (e.ctrlKey && e.key === 'PrintScreen') {
+        e.preventDefault();
+        this.activateProtection();
+        setTimeout(() => this.deactivateProtection(), 2000);
+      }
+    });
+
+    // Also detect key combinations that might not trigger keydown
+    document.addEventListener('keyup', (e) => {
+      if (!this.enabled) return;
+      
+      if (e.key === 'PrintScreen') {
+        this.activateProtection();
+        setTimeout(() => this.deactivateProtection(), 2000);
       }
     });
   }

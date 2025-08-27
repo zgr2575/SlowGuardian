@@ -85,6 +85,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const abPopupBtn = document.getElementById("ab-popup-btn");
   
   if (abSwitch) {
+    // Set initial state
+    const abEnabled = localStorage.getItem("ab");
+    abSwitch.checked = abEnabled === "true";
+    
     abSwitch.addEventListener("change", toggleAB);
   }
   
@@ -281,41 +285,76 @@ document.addEventListener("DOMContentLoaded", function () {
     const previewContainer = document.getElementById('theme-preview-container');
     if (!previewContainer) return;
     
-    const primaryBg = document.getElementById('primary-bg-color').value;
-    const secondaryBg = document.getElementById('secondary-bg-color').value;
-    const accentColor = document.getElementById('accent-color').value;
-    const textPrimary = document.getElementById('text-primary-color').value;
-    const textSecondary = document.getElementById('text-secondary-color').value;
-    const gradientStart = document.getElementById('gradient-start-color').value;
-    const gradientEnd = document.getElementById('gradient-end-color').value;
+    // Get color values safely
+    const primaryBg = document.getElementById('primary-bg-color')?.value || '#1a1a2e';
+    const secondaryBg = document.getElementById('secondary-bg-color')?.value || '#16213e';
+    const accentColor = document.getElementById('accent-color')?.value || '#3b82f6';
+    const textPrimary = document.getElementById('text-primary-color')?.value || '#ffffff';
+    const textSecondary = document.getElementById('text-secondary-color')?.value || '#b8bcc8';
+    const gradientStart = document.getElementById('gradient-start-color')?.value || '#1a1a2e';
+    const gradientEnd = document.getElementById('gradient-end-color')?.value || '#16213e';
     
-    // Apply preview styles
+    // Apply preview styles with smooth transitions
+    previewContainer.style.transition = 'all 0.3s ease';
     previewContainer.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
     
     const navbar = previewContainer.querySelector('.preview-navbar');
     if (navbar) {
+      navbar.style.transition = 'all 0.3s ease';
       navbar.style.background = `rgba(${hexToRgb(primaryBg)}, 0.95)`;
+      navbar.style.borderBottomColor = accentColor;
     }
     
     const content = previewContainer.querySelector('.preview-content');
     if (content) {
+      content.style.transition = 'all 0.3s ease';
       content.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
     }
     
     const card = previewContainer.querySelector('.preview-card');
     if (card) {
+      card.style.transition = 'all 0.3s ease';
       card.style.background = secondaryBg;
       card.style.borderColor = accentColor;
+      card.style.boxShadow = `0 4px 12px rgba(${hexToRgb(accentColor)}, 0.2)`;
     }
     
-    // Update text colors
+    // Update text colors with smooth transitions
     const h2 = previewContainer.querySelector('h2');
     const h3 = previewContainer.querySelector('h3');
     const paragraphs = previewContainer.querySelectorAll('p');
+    const brandElement = previewContainer.querySelector('.preview-brand');
     
-    if (h2) h2.style.color = textPrimary;
-    if (h3) h3.style.color = textPrimary;
-    paragraphs.forEach(p => p.style.color = textSecondary);
+    if (h2) {
+      h2.style.transition = 'color 0.3s ease';
+      h2.style.color = textPrimary;
+    }
+    if (h3) {
+      h3.style.transition = 'color 0.3s ease';
+      h3.style.color = textPrimary;
+    }
+    if (brandElement) {
+      brandElement.style.transition = 'color 0.3s ease';
+      brandElement.style.color = textPrimary;
+    }
+    
+    paragraphs.forEach(p => {
+      p.style.transition = 'color 0.3s ease';
+      p.style.color = textSecondary;
+    });
+    
+    // Update navigation link styles
+    const navLinks = previewContainer.querySelectorAll('.preview-nav-links span');
+    navLinks.forEach((link, index) => {
+      link.style.transition = 'all 0.3s ease';
+      if (index === 0) {
+        // Active link
+        link.style.background = accentColor;
+        link.style.color = textPrimary;
+      } else {
+        link.style.color = textSecondary;
+      }
+    });
   }
   
   function hexToRgb(hex) {

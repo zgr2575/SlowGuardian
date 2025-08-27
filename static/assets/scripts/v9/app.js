@@ -385,37 +385,9 @@ class SlowGuardianApp {
   }
 
   showWelcomeMessage() {
-    const isFirstVisit = !this.getPreference("visited");
-    if (isFirstVisit) {
-      setTimeout(() => {
-        ui.createModal({
-          title: "Welcome to SlowGuardian v9! 🚀",
-          content: `
-            <p>Welcome to the completely rewritten SlowGuardian v9!</p>
-            <ul>
-              <li>✨ Modern, breathtaking UI design</li>
-              <li>🔌 Powerful plugin system</li>
-              <li>⚡ Enhanced performance</li>
-              <li>🛡️ Better security features</li>
-              <li>📱 Mobile-friendly design</li>
-            </ul>
-            <p>Press <kbd>/</kbd> to quickly focus the search bar.</p>
-          `,
-          actions: [
-            {
-              text: "Get Started",
-              class: "btn-primary",
-              action: "start",
-              handler: (close) => {
-                close();
-                this.savePreference("visited", true);
-                document.getElementById("url-input")?.focus();
-              },
-            },
-          ],
-        });
-      }, 1000);
-    }
+    // Welcome modal is handled by the onboarding system
+    // Disabled to prevent conflicts with the structured onboarding flow
+    return;
   }
 
   showUpdateAvailable() {

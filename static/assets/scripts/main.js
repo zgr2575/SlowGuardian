@@ -19,6 +19,19 @@ document.addEventListener("DOMContentLoaded", function () {
     advDiv.remove();
     console.log("The adv div has been removed.");
   }
+
+  // Auto About:Blank Popup on page load if enabled
+  const abEnabled = localStorage.getItem("ab");
+  if (abEnabled === "true") {
+    // Only auto-popup on pages that aren't settings to avoid interference
+    if (!window.location.pathname.includes("/settings")) {
+      setTimeout(() => {
+        if (typeof AB === 'function') {
+          AB();
+        }
+      }, 1000); // Delay to ensure page is fully loaded
+    }
+  }
 });
 
 // Nav
