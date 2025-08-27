@@ -512,8 +512,17 @@ body {
     display: none;
   }
 
+  .nav-link {
+    padding: var(--space-2);
+    font-size: var(--font-size-lg);
+  }
+
   .hero {
     padding: var(--space-8) 0;
+  }
+
+  .hero-title {
+    font-size: var(--font-size-3xl);
   }
 
   .hero-stats {
@@ -521,23 +530,80 @@ body {
     gap: var(--space-4);
   }
 
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .search-input {
+    min-height: 48px;
+    font-size: var(--font-size-base);
+  }
+
+  .search-btn {
+    min-height: 48px;
+    border-radius: var(--radius-lg);
+  }
+
   .quick-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .quick-item {
+    padding: var(--space-3);
   }
 
   .content-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 
   .footer-content {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: var(--space-6);
+  }
+
+  .page-title {
+    font-size: var(--font-size-3xl);
   }
 }
 
 @media (max-width: 480px) {
+  .nav-container {
+    height: 56px;
+    padding: 0 var(--space-3);
+  }
+
+  .nav-brand {
+    font-size: var(--font-size-base);
+  }
+
+  .brand-icon {
+    font-size: var(--font-size-xl);
+  }
+
+  .brand-version {
+    padding: var(--space-1);
+    font-size: 10px;
+  }
+
   .page {
     padding: var(--space-4) var(--space-3);
+  }
+
+  .hero {
+    padding: var(--space-6) 0;
+  }
+
+  .hero-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-sm);
   }
 
   .search-container {
@@ -547,9 +613,49 @@ body {
 
   .search-input {
     text-align: center;
+    font-size: var(--font-size-base);
+    min-height: 44px;
+  }
+
+  .search-btn {
+    min-height: 44px;
+    font-size: var(--font-size-sm);
   }
 
   .quick-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .quick-item {
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .quick-icon {
+    font-size: var(--font-size-xl);
+  }
+
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .page-subtitle {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Touch-specific optimizations */
+@media (pointer: coarse) {
+  .nav-link,
+  .btn,
+  .quick-item,
+  .search-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .nav-link {
+    padding: var(--space-2) var(--space-3);
   }
 }

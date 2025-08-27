@@ -46,6 +46,19 @@ export function setupRoutes(app, config) {
  * Setup API routes
  */
 function setupApiRoutes(app, config) {
+  // Configuration endpoint (for frontend)
+  app.get("/api/config", (req, res) => {
+    res.json({
+      challenge: config.challenge,
+      users: config.users || {},
+      version: config.version,
+      features: {
+        plugins: config.plugins,
+        localAssets: config.local,
+      },
+    });
+  });
+
   // Server information endpoint
   app.get("/api/info", (req, res) => {
     const memoryUsage = process.memoryUsage();

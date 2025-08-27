@@ -476,56 +476,554 @@ class SettingsController extends PageController {
 
     container.innerHTML = `
       <div class="settings-section">
-        <h3>Appearance</h3>
+        <h3>🎨 Appearance</h3>
         <div class="form-group">
           <label class="form-label">Theme</label>
-          <select class="form-select" id="theme-select">
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-            <option value="high-contrast">High Contrast</option>
+          <div class="theme-selector">
+            <select class="form-select" id="theme-select">
+              <option value="default">Default</option>
+              <option value="cyberpunk">Cyberpunk</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+              <option value="catppuccinMocha">Catppuccin Mocha</option>
+              <option value="catppuccinLatte">Catppuccin Latte</option>
+              <option value="custom">Custom</option>
+            </select>
+            <button class="btn btn-secondary" id="create-theme-btn">Create Custom Theme</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>🔒 Privacy & Security</h3>
+        <div class="form-checkbox">
+          <input type="checkbox" id="ab-cloak-toggle">
+          <label for="ab-cloak-toggle">
+            <strong>About:Blank Popup</strong><br>
+            <small>Open links in cloaked about:blank windows</small>
+          </label>
+        </div>
+        <div class="form-checkbox">
+          <input type="checkbox" id="tab-cloak-toggle">
+          <label for="tab-cloak-toggle">
+            <strong>Tab Cloaking</strong><br>
+            <small>Disguise browser tab as Google Drive</small>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tab Disguise</label>
+          <select class="form-select" id="tab-disguise-select">
+            <option value="drive">My Drive - Google Drive</option>
+            <option value="gmail">Gmail</option>
+            <option value="youtube">YouTube</option>
+            <option value="google">Google</option>
+            <option value="canvas">Canvas</option>
+            <option value="schoology">Schoology</option>
           </select>
         </div>
       </div>
       
       <div class="settings-section">
-        <h3>Performance</h3>
+        <h3>⚡ Performance</h3>
         <div class="form-checkbox">
           <input type="checkbox" id="particles-toggle" checked>
-          <label for="particles-toggle">Enable background particles</label>
+          <label for="particles-toggle">
+            <strong>Background Particles</strong><br>
+            <small>Enable animated particle effects</small>
+          </label>
         </div>
         <div class="form-checkbox">
           <input type="checkbox" id="animations-toggle" checked>
-          <label for="animations-toggle">Enable animations</label>
+          <label for="animations-toggle">
+            <strong>Animations</strong><br>
+            <small>Enable UI transitions and animations</small>
+          </label>
         </div>
       </div>
-      
+
       <div class="settings-section">
-        <h3>Privacy</h3>
-        <div class="form-checkbox">
-          <input type="checkbox" id="tab-cloaking-toggle">
-          <label for="tab-cloaking-toggle">Enable tab cloaking</label>
+        <h3>🔍 Search & Proxy</h3>
+        <div class="form-group">
+          <label class="form-label">Search Engine</label>
+          <select class="form-select" id="search-engine-select">
+            <option value="https://www.google.com/search?q=">Google</option>
+            <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+            <option value="https://www.bing.com/search?q=">Bing</option>
+            <option value="https://search.brave.com/search?q=">Brave</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Proxy Service</label>
+          <select class="form-select" id="proxy-select">
+            <option value="ultraviolet">Ultraviolet (Recommended)</option>
+            <option value="dynamic">Dynamic</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>💾 Data Management</h3>
+        <div class="button-group">
+          <button class="btn btn-warning" id="reset-settings-btn">Reset Settings</button>
+          <button class="btn btn-secondary" id="export-settings-btn">Export Settings</button>
+          <button class="btn btn-secondary" id="import-settings-btn">Import Settings</button>
         </div>
       </div>
     `;
 
+    // Custom Theme Creator Modal
+    this.createThemeCreatorModal();
     this.setupSettingsEvents();
+    this.loadCurrentSettings();
+  }
+
+  createThemeCreatorModal() {
+    const modal = document.createElement('div');
+    modal.id = 'theme-creator-modal';
+    modal.className = 'theme-creator-modal';
+    modal.style.display = 'none';
+    modal.innerHTML = `
+      <div class="modal-overlay"></div>
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3>🎨 Create Custom Theme</h3>
+          <button class="modal-close" id="close-theme-creator">&times;</button>
+        </div>
+        <div class="modal-content">
+          <div class="theme-creator-grid">
+            <div class="color-section">
+              <h4>Background Colors</h4>
+              <div class="color-input-group">
+                <label>Primary Background</label>
+                <input type="color" id="bg-primary" value="#0a0a0f">
+              </div>
+              <div class="color-input-group">
+                <label>Secondary Background</label>
+                <input type="color" id="bg-secondary" value="#1a1a2e">
+              </div>
+              <div class="color-input-group">
+                <label>Card Background</label>
+                <input type="color" id="bg-card" value="#16213e">
+              </div>
+            </div>
+            
+            <div class="color-section">
+              <h4>Text Colors</h4>
+              <div class="color-input-group">
+                <label>Primary Text</label>
+                <input type="color" id="text-primary" value="#ffffff">
+              </div>
+              <div class="color-input-group">
+                <label>Secondary Text</label>
+                <input type="color" id="text-secondary" value="#a0a0a0">
+              </div>
+            </div>
+            
+            <div class="color-section">
+              <h4>Accent Colors</h4>
+              <div class="color-input-group">
+                <label>Primary Accent</label>
+                <input type="color" id="accent-primary" value="#4f46e5">
+              </div>
+              <div class="color-input-group">
+                <label>Secondary Accent</label>
+                <input type="color" id="accent-secondary" value="#7c3aed">
+              </div>
+            </div>
+          </div>
+          
+          <div class="theme-preview">
+            <h4>Preview</h4>
+            <div class="preview-container" id="theme-preview">
+              <div class="preview-card">
+                <h5>Sample Card</h5>
+                <p>This is how your theme will look</p>
+                <button class="preview-btn">Sample Button</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="theme-name-section">
+            <label for="theme-name">Theme Name</label>
+            <input type="text" id="theme-name" placeholder="My Custom Theme">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-theme">Cancel</button>
+          <button class="btn btn-primary" id="save-theme">Save Theme</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
   }
 
   setupSettingsEvents() {
     // Theme selector
     const themeSelect = $("#theme-select");
     if (themeSelect) {
-      themeSelect.value =
-        document.documentElement.getAttribute("data-theme") || "dark";
-      on(themeSelect, "change", (e) => {
-        import("./utils.js").then(({ theme }) => {
-          theme.set(e.target.value);
-        });
+      themeSelect.value = localStorage.getItem('theme') || 'default';
+      themeSelect.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        this.applyTheme(theme);
+        localStorage.setItem('theme', theme);
       });
     }
 
-    // Settings toggles would be implemented here
-    // For now, they're just UI elements
+    // Create theme button
+    const createThemeBtn = $("#create-theme-btn");
+    if (createThemeBtn) {
+      createThemeBtn.addEventListener('click', () => {
+        document.getElementById('theme-creator-modal').style.display = 'flex';
+      });
+    }
+
+    // Theme creator modal events
+    this.setupThemeCreatorEvents();
+
+    // Privacy settings
+    const abCloakToggle = $("#ab-cloak-toggle");
+    if (abCloakToggle) {
+      abCloakToggle.checked = localStorage.getItem('ab') === 'true';
+      abCloakToggle.addEventListener('change', (e) => {
+        localStorage.setItem('ab', e.target.checked.toString());
+      });
+    }
+
+    const tabCloakToggle = $("#tab-cloak-toggle");
+    if (tabCloakToggle) {
+      tabCloakToggle.checked = localStorage.getItem('tab-cloak-enabled') === 'true';
+      tabCloakToggle.addEventListener('change', (e) => {
+        localStorage.setItem('tab-cloak-enabled', e.target.checked.toString());
+      });
+    }
+
+    // Performance settings
+    const particlesToggle = $("#particles-toggle");
+    if (particlesToggle) {
+      particlesToggle.checked = localStorage.getItem('Particles') !== 'false';
+      particlesToggle.addEventListener('change', (e) => {
+        localStorage.setItem('Particles', e.target.checked.toString());
+        if (window.showNotification) {
+          window.showNotification('Reload the page to see particle changes', 'info');
+        }
+      });
+    }
+
+    const animationsToggle = $("#animations-toggle");
+    if (animationsToggle) {
+      animationsToggle.checked = localStorage.getItem('animations') !== 'false';
+      animationsToggle.addEventListener('change', (e) => {
+        localStorage.setItem('animations', e.target.checked.toString());
+        document.documentElement.classList.toggle('no-animations', !e.target.checked);
+      });
+    }
+
+    // Search and proxy settings
+    const searchEngineSelect = $("#search-engine-select");
+    if (searchEngineSelect) {
+      searchEngineSelect.value = localStorage.getItem('search-engine') || 'https://www.google.com/search?q=';
+      searchEngineSelect.addEventListener('change', (e) => {
+        localStorage.setItem('search-engine', e.target.value);
+      });
+    }
+
+    const proxySelect = $("#proxy-select");
+    if (proxySelect) {
+      proxySelect.value = localStorage.getItem('proxy-service') || 'ultraviolet';
+      proxySelect.addEventListener('change', (e) => {
+        localStorage.setItem('proxy-service', e.target.value);
+      });
+    }
+
+    // Data management
+    const resetBtn = $("#reset-settings-btn");
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset all settings? This cannot be undone.')) {
+          localStorage.clear();
+          sessionStorage.clear();
+          location.reload();
+        }
+      });
+    }
+
+    const exportBtn = $("#export-settings-btn");
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        this.exportSettings();
+      });
+    }
+
+    const importBtn = $("#import-settings-btn");
+    if (importBtn) {
+      importBtn.addEventListener('click', () => {
+        this.importSettings();
+      });
+    }
+  }
+
+  setupThemeCreatorEvents() {
+    // Close modal events
+    const closeBtn = $("#close-theme-creator");
+    const cancelBtn = $("#cancel-theme");
+    const modal = document.getElementById('theme-creator-modal');
+    
+    [closeBtn, cancelBtn].forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+    });
+
+    // Close on overlay click
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+
+    // Color input events for live preview
+    const colorInputs = ['bg-primary', 'bg-secondary', 'bg-card', 'text-primary', 'text-secondary', 'accent-primary', 'accent-secondary'];
+    colorInputs.forEach(inputId => {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.addEventListener('input', () => {
+          this.updateThemePreview();
+        });
+      }
+    });
+
+    // Save theme button
+    const saveBtn = $("#save-theme");
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        this.saveCustomTheme();
+      });
+    }
+  }
+
+  updateThemePreview() {
+    const preview = document.getElementById('theme-preview');
+    if (!preview) return;
+
+    const colors = {
+      bgPrimary: document.getElementById('bg-primary')?.value || '#0a0a0f',
+      bgSecondary: document.getElementById('bg-secondary')?.value || '#1a1a2e',
+      bgCard: document.getElementById('bg-card')?.value || '#16213e',
+      textPrimary: document.getElementById('text-primary')?.value || '#ffffff',
+      textSecondary: document.getElementById('text-secondary')?.value || '#a0a0a0',
+      accentPrimary: document.getElementById('accent-primary')?.value || '#4f46e5',
+      accentSecondary: document.getElementById('accent-secondary')?.value || '#7c3aed',
+    };
+
+    preview.style.background = colors.bgPrimary;
+    const card = preview.querySelector('.preview-card');
+    if (card) {
+      card.style.background = colors.bgCard;
+      card.style.color = colors.textPrimary;
+      card.style.border = `1px solid ${colors.accentPrimary}`;
+      
+      const title = card.querySelector('h5');
+      if (title) title.style.color = colors.textPrimary;
+      
+      const text = card.querySelector('p');
+      if (text) text.style.color = colors.textSecondary;
+      
+      const btn = card.querySelector('.preview-btn');
+      if (btn) {
+        btn.style.background = `linear-gradient(45deg, ${colors.accentPrimary}, ${colors.accentSecondary})`;
+        btn.style.color = '#ffffff';
+        btn.style.border = `1px solid ${colors.accentPrimary}`;
+      }
+    }
+  }
+
+  saveCustomTheme() {
+    const themeName = document.getElementById('theme-name')?.value || 'Custom Theme';
+    
+    const customTheme = {
+      name: themeName,
+      colors: {
+        bgPrimary: document.getElementById('bg-primary')?.value || '#0a0a0f',
+        bgSecondary: document.getElementById('bg-secondary')?.value || '#1a1a2e',
+        bgCard: document.getElementById('bg-card')?.value || '#16213e',
+        textPrimary: document.getElementById('text-primary')?.value || '#ffffff',
+        textSecondary: document.getElementById('text-secondary')?.value || '#a0a0a0',
+        accentPrimary: document.getElementById('accent-primary')?.value || '#4f46e5',
+        accentSecondary: document.getElementById('accent-secondary')?.value || '#7c3aed',
+      }
+    };
+
+    // Save to localStorage
+    localStorage.setItem('custom-theme', JSON.stringify(customTheme));
+    
+    // Apply the theme
+    this.applyCustomTheme(customTheme);
+    localStorage.setItem('theme', 'custom');
+    
+    // Close modal and update selector
+    document.getElementById('theme-creator-modal').style.display = 'none';
+    document.getElementById('theme-select').value = 'custom';
+    
+    if (window.showNotification) {
+      window.showNotification(`Custom theme "${themeName}" saved successfully!`, 'success');
+    }
+  }
+
+  applyCustomTheme(theme) {
+    const css = `
+      :root {
+        --bg-primary: ${theme.colors.bgPrimary};
+        --bg-secondary: ${theme.colors.bgSecondary};
+        --bg-tertiary: ${theme.colors.bgCard};
+        --text-primary: ${theme.colors.textPrimary};
+        --text-secondary: ${theme.colors.textSecondary};
+        --accent-primary: ${theme.colors.accentPrimary};
+        --accent-secondary: ${theme.colors.accentSecondary};
+        --gradient-bg: linear-gradient(135deg, ${theme.colors.bgPrimary} 0%, ${theme.colors.bgSecondary} 50%, ${theme.colors.bgCard} 100%);
+        --gradient-primary: linear-gradient(45deg, ${theme.colors.accentPrimary}, ${theme.colors.accentSecondary});
+      }
+    `;
+    
+    // Remove existing custom theme
+    const existingCustom = document.getElementById('custom-theme-style');
+    if (existingCustom) {
+      existingCustom.remove();
+    }
+    
+    // Add new custom theme
+    const style = document.createElement('style');
+    style.id = 'custom-theme-style';
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+
+  applyTheme(theme) {
+    // Remove existing theme stylesheets
+    const existingTheme = document.querySelector('link[href*="/themes/"]');
+    if (existingTheme) {
+      existingTheme.remove();
+    }
+    
+    const existingCustom = document.getElementById('custom-theme-style');
+    if (existingCustom) {
+      existingCustom.remove();
+    }
+
+    if (theme === 'custom') {
+      const customTheme = JSON.parse(localStorage.getItem('custom-theme') || '{}');
+      if (customTheme.colors) {
+        this.applyCustomTheme(customTheme);
+      }
+    } else if (theme && theme !== 'default') {
+      const themeEle = document.createElement("link");
+      themeEle.rel = "stylesheet";
+      
+      if (theme.startsWith('catppuccin')) {
+        const variant = theme.replace('catppuccin', '').toLowerCase();
+        themeEle.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
+      } else {
+        themeEle.href = `/assets/styles/themes/${theme}.css?v=1`;
+      }
+      
+      document.head.appendChild(themeEle);
+    }
+  }
+
+  loadCurrentSettings() {
+    // Load and apply current theme
+    const currentTheme = localStorage.getItem('theme') || 'default';
+    this.applyTheme(currentTheme);
+  }
+
+  exportSettings() {
+    const settings = {
+      theme: localStorage.getItem('theme'),
+      customTheme: localStorage.getItem('custom-theme'),
+      particles: localStorage.getItem('Particles'),
+      animations: localStorage.getItem('animations'),
+      abCloak: localStorage.getItem('ab'),
+      tabCloak: localStorage.getItem('tab-cloak-enabled'),
+      searchEngine: localStorage.getItem('search-engine'),
+      proxyService: localStorage.getItem('proxy-service'),
+    };
+
+    const dataStr = JSON.stringify(settings, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'slowguardian-settings.json';
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    
+    if (window.showNotification) {
+      window.showNotification('Settings exported successfully!', 'success');
+    }
+  }
+
+  importSettings() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const settings = JSON.parse(e.target.result);
+          
+          // Apply imported settings
+          Object.entries(settings).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+              if (key === 'customTheme') {
+                localStorage.setItem('custom-theme', value);
+              } else {
+                const storageKey = {
+                  theme: 'theme',
+                  particles: 'Particles',
+                  animations: 'animations',
+                  abCloak: 'ab',
+                  tabCloak: 'tab-cloak-enabled',
+                  searchEngine: 'search-engine',
+                  proxyService: 'proxy-service'
+                }[key];
+                
+                if (storageKey) {
+                  localStorage.setItem(storageKey, value);
+                }
+              }
+            }
+          });
+          
+          if (window.showNotification) {
+            window.showNotification('Settings imported successfully! Reloading page...', 'success');
+          }
+          
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+          
+        } catch (error) {
+          if (window.showNotification) {
+            window.showNotification('Failed to import settings. Invalid file format.', 'error');
+          }
+        }
+      };
+      
+      reader.readAsText(file);
+    };
+    
+    input.click();
   }
 }
 

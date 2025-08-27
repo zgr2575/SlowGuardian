@@ -3,11 +3,13 @@ const config = {
   version: 9, // SlowGuardian v9
   port: process.env.PORT || 8080,
 
-  // Security Settings
+  // Security Settings - DEVELOPER CONFIGURATION
+  // Set challenge to true and configure users below to enable KEY authentication
   challenge: false, // Set to true to enable password protection
   users: {
     // Add users in format username: 'password'
-    username: "password",
+    // Example: admin: 'securepassword123',
+    // Example: developer: 'mypassword',
   },
   envusers: false, // Environment-based user management (deprecated)
 

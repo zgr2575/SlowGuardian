@@ -91,35 +91,6 @@ class OnboardingSystem {
         buttons: ["Previous", "Continue"]
       },
       {
-        title: "Authentication (Optional) 🔐",
-        content: `
-          <div class="onboarding-auth">
-            <h3>Protect your access with KEY authentication:</h3>
-            <p>Set up username and password protection to secure SlowGuardian access.</p>
-            <div class="auth-toggle">
-              <label class="setting-label">
-                <input type="checkbox" id="onboard-enable-auth">
-                <span class="setting-text">
-                  <strong>Enable KEY Authentication</strong><br>
-                  Require login to access SlowGuardian
-                </span>
-              </label>
-            </div>
-            <div class="auth-fields" id="auth-fields" style="display: none;">
-              <div class="input-group">
-                <label for="onboard-username">Username:</label>
-                <input type="text" id="onboard-username" placeholder="Enter username">
-              </div>
-              <div class="input-group">
-                <label for="onboard-password">Password:</label>
-                <input type="password" id="onboard-password" placeholder="Enter password">
-              </div>
-            </div>
-          </div>
-        `,
-        buttons: ["Previous", "Continue"]
-      },
-      {
         title: "All Set! 🎉",
         content: `
           <div class="onboarding-complete">
@@ -132,6 +103,7 @@ class OnboardingSystem {
                 <li>⚙️ Visit Settings to customize your experience further</li>
                 <li>🛡️ Your privacy settings are now configured</li>
                 <li>📱 SlowGuardian works great on mobile devices too!</li>
+                <li>🎨 You can create custom themes in the Settings</li>
               </ul>
             </div>
             <p><strong>Enjoy your enhanced browsing experience!</strong></p>
@@ -150,8 +122,11 @@ class OnboardingSystem {
       return;
     }
 
-    this.createOnboardingModal();
-    this.showStep(0);
+    // Wait a bit for the page to load properly
+    setTimeout(() => {
+      this.createOnboardingModal();
+      this.showStep(0);
+    }, 1000);
   }
 
   createOnboardingModal() {
@@ -201,18 +176,6 @@ class OnboardingSystem {
         this.applyTheme(theme);
       }
     });
-
-    // Auth toggle
-    document.addEventListener('change', (e) => {
-      if (e.target.id === 'onboard-enable-auth') {
-        const authFields = document.getElementById('auth-fields');
-        if (e.target.checked) {
-          authFields.style.display = 'block';
-        } else {
-          authFields.style.display = 'none';
-        }
-      }
-    });
   }
 
   showStep(stepIndex) {
@@ -252,9 +215,6 @@ class OnboardingSystem {
         if (this.currentStep === 2) {
           // Save privacy settings
           this.savePrivacySettings();
-        } else if (this.currentStep === 3) {
-          // Save auth settings
-          this.saveAuthSettings();
         }
         this.nextStep();
         break;
@@ -287,25 +247,6 @@ class OnboardingSystem {
     localStorage.setItem('ab', abCloak.toString());
     localStorage.setItem('tab-cloak-enabled', tabCloak.toString());
     localStorage.setItem('Particles', particles.toString());
-  }
-
-  saveAuthSettings() {
-    const enableAuth = document.getElementById('onboard-enable-auth').checked;
-    
-    if (enableAuth) {
-      const username = document.getElementById('onboard-username').value;
-      const password = document.getElementById('onboard-password').value;
-      
-      if (username && password) {
-        localStorage.setItem('sg-auth-enabled', 'true');
-        localStorage.setItem('sg-auth-username', username);
-        localStorage.setItem('sg-auth-password', password);
-      }
-    } else {
-      localStorage.removeItem('sg-auth-enabled');
-      localStorage.removeItem('sg-auth-username');
-      localStorage.removeItem('sg-auth-password');
-    }
   }
 
   applyTheme(theme) {

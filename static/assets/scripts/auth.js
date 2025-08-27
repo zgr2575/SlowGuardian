@@ -4,18 +4,29 @@
 
 class AuthSystem {
   constructor() {
-    this.isEnabled = localStorage.getItem('sg-auth-enabled') === 'true';
-    this.username = localStorage.getItem('sg-auth-username');
-    this.password = localStorage.getItem('sg-auth-password');
     this.isAuthenticated = sessionStorage.getItem('sg-authenticated') === 'true';
+    this.config = null;
     
     this.init();
   }
 
-  init() {
+  async init() {
+    // Fetch auth config from server
+    await this.loadConfig();
+    
     // Only show login if auth is enabled and user is not authenticated
-    if (this.isEnabled && !this.isAuthenticated && this.username && this.password) {
+    if (this.config?.challenge && !this.isAuthenticated) {
       this.showLoginScreen();
+    }
+  }
+
+  async loadConfig() {
+    try {
+      const response = await fetch('/api/config');
+      this.config = await response.json();
+    } catch (error) {
+      console.warn('Failed to load auth config:', error);
+      this.config = { challenge: false, users: {} };
     }
   }
 
@@ -136,7 +147,8 @@ class AuthSystem {
   }
 
   authenticate(username, password) {
-    return username === this.username && password === this.password;
+    if (!this.config?.users) return false;
+    return this.config.users[username] === password;
   }
 
   onAuthSuccess() {
@@ -186,36 +198,9 @@ class AuthSystem {
     }, 3000);
   }
 
-  // Method to enable authentication (called from settings)
-  static enable(username, password) {
-    localStorage.setItem('sg-auth-enabled', 'true');
-    localStorage.setItem('sg-auth-username', username);
-    localStorage.setItem('sg-auth-password', password);
-    
-    if (window.showNotification) {
-      window.showNotification('Authentication enabled successfully', 'success');
-    }
-  }
-
-  // Method to disable authentication
-  static disable() {
-    localStorage.removeItem('sg-auth-enabled');
-    localStorage.removeItem('sg-auth-username');
-    localStorage.removeItem('sg-auth-password');
-    sessionStorage.removeItem('sg-authenticated');
-    
-    if (window.showNotification) {
-      window.showNotification('Authentication disabled', 'info');
-    }
-  }
-
   // Method to check if user is authenticated
   static isAuthenticated() {
-    const isEnabled = localStorage.getItem('sg-auth-enabled') === 'true';
-    const isAuth = sessionStorage.getItem('sg-authenticated') === 'true';
-    
-    // If auth is not enabled, consider user as authenticated
-    return !isEnabled || isAuth;
+    return sessionStorage.getItem('sg-authenticated') === 'true';
   }
 
   // Method to logout
