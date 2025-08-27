@@ -41,6 +41,8 @@ if (nav) {
 var themeid = localStorage.getItem("theme");
 var themeEle = document.createElement("link");
 themeEle.rel = "stylesheet";
+
+// Catppuccin themes
 if (themeid == "catppuccinMocha") {
   themeEle.href = "/assets/styles/themes/catppuccin/mocha.css?v=1";
 }
@@ -53,7 +55,21 @@ if (themeid == "catppuccinFrappe") {
 if (themeid == "catppuccinLatte") {
   themeEle.href = "/assets/styles/themes/catppuccin/latte.css?v=1";
 }
-document.body.appendChild(themeEle);
+
+// New modern themes
+if (themeid == "cyberpunk") {
+  themeEle.href = "/assets/styles/themes/cyberpunk.css?v=1";
+}
+if (themeid == "ocean") {
+  themeEle.href = "/assets/styles/themes/ocean.css?v=1";
+}
+if (themeid == "sunset") {
+  themeEle.href = "/assets/styles/themes/sunset.css?v=1";
+}
+
+if (themeEle.href) {
+  document.body.appendChild(themeEle);
+}
 // Tab Cloaker
 document.addEventListener("DOMContentLoaded", function (event) {
   const icon = document.getElementById("tab-favicon");

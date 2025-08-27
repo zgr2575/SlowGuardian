@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="assets/styles/v9/main.css" />
     <link rel="stylesheet" href="assets/styles/v9/components.css" />
     <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/custom-dropdown.css" />
+    <link rel="stylesheet" href="assets/styles/auth.css" />
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -268,6 +270,35 @@
               </div>
             </div>
 
+            <!-- Authentication -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🔐 KEY Authentication</h3>
+                <p class="card-description">
+                  Protect SlowGuardian access with username and password authentication. When enabled, users must login to access the proxy.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" class="slider-checkbox" id="auth-toggle" />
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Enable Authentication</span>
+                </label>
+                
+                <div class="auth-credentials" id="auth-credentials" style="display: none; margin-top: 16px;">
+                  <div class="input-group">
+                    <label for="auth-username-setting">Username:</label>
+                    <input type="text" id="auth-username-setting" class="form-input" placeholder="Enter username" />
+                  </div>
+                  <div class="input-group">
+                    <label for="auth-password-setting">Password:</label>
+                    <input type="password" id="auth-password-setting" class="form-input" placeholder="Enter password" />
+                  </div>
+                  <button id="save-auth-btn" class="btn btn-primary">Save Credentials</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Themes -->
             <div class="card settings-card">
               <div class="card-header">
@@ -275,14 +306,17 @@
                 <p class="card-description">Pick from a variety of themes!</p>
               </div>
               <div class="settings-controls">
-                <select placeholder="Solid Color Themes" id="theme-dropdown" class="form-select">
-                  <option disabled selected>Solid Color Themes</option>
+                <select placeholder="Themes" id="theme-dropdown" class="form-select">
                   <option value="d">Default</option>
-                  <option disabled selected>Catppuccin Themes</option>
-                  <option value="catppuccinMocha">GoGaurdian Theme</option>
-                  <option value="catppuccinMacchiato">VS Studio Dark</option>
-                  <option value="catppuccinFrappe">SG Dark</option>
-                  <option value="catppuccinLatte">Light Mode</option>
+                  <option disabled>────── Modern Themes ──────</option>
+                  <option value="cyberpunk">🔮 Cyberpunk</option>
+                  <option value="ocean">🌊 Ocean</option>
+                  <option value="sunset">🌅 Sunset</option>
+                  <option disabled>────── Catppuccin Themes ──────</option>
+                  <option value="catppuccinMocha">🌙 Mocha (Dark)</option>
+                  <option value="catppuccinMacchiato">☕ Macchiato</option>
+                  <option value="catppuccinFrappe">🥤 Frappe</option>
+                  <option value="catppuccinLatte">☀️ Latte (Light)</option>
                 </select>
               </div>
             </div>
@@ -341,6 +375,8 @@
 
     <!-- App Scripts -->
     <!-- Legacy Settings Script -->
+    <script src="assets/scripts/custom-dropdown.js?v=1"></script>
+    <script src="assets/scripts/auth.js?v=1"></script>
     <script src="assets/scripts/settings.js?v=21"></script>
     <script src="assets/scripts/main.js?v=31"></script>
 

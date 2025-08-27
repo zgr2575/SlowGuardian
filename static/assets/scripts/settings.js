@@ -33,8 +33,50 @@ document.addEventListener("DOMContentLoaded", function () {
   iconElement.value = customIcon;
   nameElement.value = customName;
 
-  localStorage.setItem("ab", true);
-  document.getElementById("ab-settings-switch").checked = true;
+  // Auth toggle and credentials
+  const authToggle = document.getElementById("auth-toggle");
+  const authCredentials = document.getElementById("auth-credentials");
+  const saveAuthBtn = document.getElementById("save-auth-btn");
+  
+  if (authToggle) {
+    // Set initial state
+    authToggle.checked = localStorage.getItem('sg-auth-enabled') === 'true';
+    if (authToggle.checked) {
+      authCredentials.style.display = 'block';
+      // Load existing credentials if any
+      const existingUsername = localStorage.getItem('sg-auth-username');
+      if (existingUsername) {
+        document.getElementById('auth-username-setting').value = existingUsername;
+      }
+    }
+    
+    authToggle.addEventListener("change", function() {
+      if (this.checked) {
+        authCredentials.style.display = 'block';
+      } else {
+        authCredentials.style.display = 'none';
+        // Disable auth
+        AuthSystem.disable();
+      }
+    });
+  }
+  
+  if (saveAuthBtn) {
+    saveAuthBtn.addEventListener("click", function() {
+      const username = document.getElementById('auth-username-setting').value.trim();
+      const password = document.getElementById('auth-password-setting').value;
+      
+      if (username && password) {
+        AuthSystem.enable(username, password);
+        // Clear password field for security
+        document.getElementById('auth-password-setting').value = '';
+      } else {
+        if (window.showNotification) {
+          window.showNotification('Please enter both username and password', 'error');
+        }
+      }
+    });
+  }
 
   // Add proper event listeners to replace inline handlers
   
@@ -324,29 +366,52 @@ switches.addEventListener("change", (event) => {
   }
 });
 // Themes
-
-var themeId = localStorage.getItem("theme");
-if (themeId == "") {
-  themeId = "d";
-}
-
-document.getElementsByClassName("td")[0].value = themeId;
-
-const themeDropdown = document.getElementsByClassName("td");
-dropdown.addEventListener("change", function () {
-  const selectedValue = dropdown.value;
-
-  localStorage.setItem("theme", selectedValue);
-
-  window.location = window.location;
+document.addEventListener("DOMContentLoaded", function () {
+  const themeDropdown = document.getElementById("theme-dropdown");
+  
+  if (themeDropdown) {
+    // Set current theme value
+    const currentTheme = localStorage.getItem("theme") || "d";
+    themeDropdown.value = currentTheme;
+    
+    // Add change listener
+    themeDropdown.addEventListener("change", function () {
+      const selectedTheme = this.value;
+      localStorage.setItem("theme", selectedTheme);
+      
+      // Apply theme immediately
+      applyTheme(selectedTheme);
+      
+      // Show notification
+      if (window.showNotification) {
+        window.showNotification(`Theme changed to ${this.options[this.selectedIndex].text}`, 'success');
+      }
+    });
+  }
 });
 
-function themeChange(ele) {
-  const selTheme = ele.value;
+function applyTheme(theme) {
+  // Remove existing theme
+  const existingTheme = document.querySelector('link[href*="/themes/"]');
+  if (existingTheme) {
+    existingTheme.remove();
+  }
 
-  localStorage.setItem("theme", selTheme);
-
-  window.location = window.location;
+  if (theme && theme !== 'd' && theme !== 'default') {
+    const themeEle = document.createElement("link");
+    themeEle.rel = "stylesheet";
+    
+    // Handle catppuccin themes
+    if (theme.startsWith('catppuccin')) {
+      const variant = theme.replace('catppuccin', '').toLowerCase();
+      themeEle.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
+    } else {
+      // Handle new modern themes
+      themeEle.href = `/assets/styles/themes/${theme}.css?v=1`;
+    }
+    
+    document.head.appendChild(themeEle);
+  }
 }
 // AB Cloak
 function AB() {
@@ -411,6 +476,10 @@ function toggleAB() {
     localStorage.setItem("ab", "false");
   } else {
     localStorage.setItem("ab", "true");
+    // Auto-open popup when enabled
+    setTimeout(() => {
+      AB();
+    }, 500);
   }
 }
 // Search Engine

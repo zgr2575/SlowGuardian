@@ -128,7 +128,111 @@
         text-decoration: underline;
       }
 
-      /* Mobile optimizations */
+      /* Loading bar styles */
+      .loading-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        transition: width 0.3s ease;
+        z-index: 1000;
+      }
+
+      .loading-bar.active {
+        animation: loadingProgress 2s ease-out forwards;
+      }
+
+      @keyframes loadingProgress {
+        0% { width: 0%; }
+        50% { width: 70%; }
+        100% { width: 100%; }
+      }
+
+      /* Loading overlay with spinner and tips */
+      .loading-overlay {
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 64px);
+        background: var(--bg-primary);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        gap: var(--space-6);
+      }
+
+      .loading-overlay.active {
+        display: flex;
+      }
+
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(79, 70, 229, 0.1);
+        border-left: 4px solid var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-content {
+        text-align: center;
+        max-width: 400px;
+        padding: 0 var(--space-4);
+      }
+
+      .loading-title {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-3);
+      }
+
+      .loading-tip {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        min-height: 20px;
+        opacity: 0;
+        animation: fadeInTip 0.5s ease-in-out forwards;
+      }
+
+      @keyframes fadeInTip {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .loading-steps {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-top: var(--space-4);
+      }
+
+      .loading-step {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(79, 70, 229, 0.2);
+        transition: background 0.3s ease;
+      }
+
+      .loading-step.active {
+        background: var(--accent-primary);
+      }
+
+      .loading-step.completed {
+        background: var(--success, #10b981);
+      }
       @media (max-width: 768px) {
         .browser-toolbar {
           padding: var(--space-2);
@@ -250,6 +354,9 @@
     <div class="browser-container">
       <!-- Browser Toolbar -->
       <div class="browser-toolbar">
+        <!-- Loading Bar -->
+        <div class="loading-bar" id="loading-bar"></div>
+        
         <!-- Navigation Controls -->
         <div class="browser-nav-controls">
           <button title="Home Page" id="home-page" class="btn-icon">
@@ -294,6 +401,22 @@
         </div>
       </div>
 
+      <!-- Enhanced Loading Overlay -->
+      <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-content">
+          <div class="loading-title" id="loading-title">Loading Website...</div>
+          <div class="loading-tip" id="loading-tip">Preparing your browsing experience</div>
+          <div class="loading-steps" id="loading-steps">
+            <div class="loading-step" data-step="0"></div>
+            <div class="loading-step" data-step="1"></div>
+            <div class="loading-step" data-step="2"></div>
+            <div class="loading-step" data-step="3"></div>
+            <div class="loading-step" data-step="4"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Loading Overlay -->
       <div class="overlay">
         <h1>Now.gg fix is being applied, please wait.</h1>
@@ -323,6 +446,157 @@
     
     <!-- Enhanced Browser Functionality -->
     <script>
+      // Loading tips and system
+      const loadingTips = [
+        "SlowGuardian protects your privacy while browsing",
+        "Use Ctrl+L or Cmd+L to quickly focus the address bar",
+        "Your browsing activity is encrypted and secured",
+        "Tab cloaking disguises your browser tab for privacy",
+        "Try the about:blank popup feature for stealth browsing",
+        "SlowGuardian works on mobile devices too!",
+        "All your data stays private and secure",
+        "Check out the Apps and Games sections for quick access",
+        "Use the settings to customize your experience",
+        "SlowGuardian v9 features a modern UI and enhanced performance"
+      ];
+
+      const loadingSteps = [
+        "Initializing proxy connection...",
+        "Establishing secure tunnel...",
+        "Configuring privacy settings...",
+        "Loading website content...",
+        "Finalizing connection..."
+      ];
+
+      class BrowserLoadingSystem {
+        constructor() {
+          this.currentTip = 0;
+          this.currentStep = 0;
+          this.isLoading = false;
+          this.tipInterval = null;
+          this.stepInterval = null;
+          
+          this.loadingOverlay = document.getElementById('loading-overlay');
+          this.loadingBar = document.getElementById('loading-bar');
+          this.loadingTitle = document.getElementById('loading-title');
+          this.loadingTip = document.getElementById('loading-tip');
+          this.loadingSteps = document.getElementById('loading-steps');
+        }
+
+        startLoading(url = '') {
+          if (this.isLoading) return;
+          
+          this.isLoading = true;
+          this.currentTip = 0;
+          this.currentStep = 0;
+          
+          // Show loading overlay
+          this.loadingOverlay.classList.add('active');
+          this.loadingBar.classList.add('active');
+          
+          // Update title with URL if provided
+          if (url) {
+            this.loadingTitle.textContent = `Loading ${this.getDisplayUrl(url)}...`;
+          }
+          
+          // Start cycling through tips
+          this.cycleTips();
+          this.cycleSteps();
+          
+          // Auto-hide after a reasonable time
+          setTimeout(() => {
+            this.stopLoading();
+          }, 3000);
+        }
+
+        stopLoading() {
+          if (!this.isLoading) return;
+          
+          this.isLoading = false;
+          
+          // Clear intervals
+          if (this.tipInterval) clearInterval(this.tipInterval);
+          if (this.stepInterval) clearInterval(this.stepInterval);
+          
+          // Mark all steps as completed
+          this.loadingSteps.querySelectorAll('.loading-step').forEach((step, index) => {
+            step.classList.remove('active');
+            step.classList.add('completed');
+          });
+          
+          // Hide loading overlay after a short delay
+          setTimeout(() => {
+            this.loadingOverlay.classList.remove('active');
+            this.loadingBar.classList.remove('active');
+            
+            // Reset steps
+            setTimeout(() => {
+              this.loadingSteps.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active', 'completed');
+              });
+            }, 500);
+          }, 800);
+        }
+
+        cycleTips() {
+          this.updateTip();
+          this.tipInterval = setInterval(() => {
+            this.currentTip = (this.currentTip + 1) % loadingTips.length;
+            this.updateTip();
+          }, 2000);
+        }
+
+        cycleSteps() {
+          this.updateStep();
+          this.stepInterval = setInterval(() => {
+            if (this.currentStep < loadingSteps.length - 1) {
+              // Mark current step as completed
+              const currentStepElement = this.loadingSteps.querySelector(`[data-step="${this.currentStep}"]`);
+              if (currentStepElement) {
+                currentStepElement.classList.remove('active');
+                currentStepElement.classList.add('completed');
+              }
+              
+              this.currentStep++;
+              this.updateStep();
+            } else {
+              if (this.stepInterval) clearInterval(this.stepInterval);
+            }
+          }, 600);
+        }
+
+        updateTip() {
+          this.loadingTip.style.opacity = '0';
+          setTimeout(() => {
+            this.loadingTip.textContent = loadingTips[this.currentTip];
+            this.loadingTip.style.opacity = '1';
+          }, 250);
+        }
+
+        updateStep() {
+          // Mark current step as active
+          const stepElement = this.loadingSteps.querySelector(`[data-step="${this.currentStep}"]`);
+          if (stepElement) {
+            stepElement.classList.add('active');
+          }
+          
+          // Update title with current step
+          this.loadingTitle.textContent = loadingSteps[this.currentStep];
+        }
+
+        getDisplayUrl(url) {
+          try {
+            const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
+            return urlObj.hostname;
+          } catch {
+            return url.length > 30 ? url.substring(0, 30) + '...' : url;
+          }
+        }
+      }
+
+      // Initialize loading system
+      const browserLoading = new BrowserLoadingSystem();
+
       // Enhanced home function for the browser
       function goHome() {
         window.location.href = "./";
@@ -398,8 +672,22 @@
 
         if (iframe) {
           iframe.addEventListener('load', function() {
+            // Stop loading when iframe loads
+            browserLoading.stopLoading();
+            
             if (typeof iframeLoad === 'function') {
               iframeLoad();
+            }
+          });
+        }
+
+        // Override form submission to show loading
+        const form = document.getElementById('fs');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            const addressInput = document.getElementById('is');
+            if (addressInput && addressInput.value.trim()) {
+              browserLoading.startLoading(addressInput.value.trim());
             }
           });
         }
