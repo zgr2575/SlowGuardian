@@ -52,12 +52,13 @@ export const delegate = (parent, selector, event, handler) => {
 
 // Animation utilities
 export const animate = (element, keyframes, options = {}) => {
-  return element.animate(keyframes, {
+  const animation = element.animate(keyframes, {
     duration: 300,
     easing: "ease-out",
     fill: "forwards",
     ...options,
   });
+  return animation.finished;
 };
 
 export const fadeIn = (element, duration = 300) => {
