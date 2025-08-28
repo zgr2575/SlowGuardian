@@ -117,19 +117,35 @@ class OnboardingSystem {
   }
 
   init() {
-    // Check if onboarding was already completed
-    if (localStorage.getItem('sg-onboarding-completed') === 'true') {
+    // Check if onboarding was already completed or if first-boot setup is running
+    if (localStorage.getItem('sg-onboarding-completed') === 'true' || 
+        localStorage.getItem('setup-completed') === 'true' ||
+        getCookie('setup-completed') === 'true') {
       return;
     }
 
-    // Wait a bit for the page to load properly
+    // Don't run onboarding on developer page (first-boot setup handles it)
+    if (window.location.pathname.includes('/developer')) {
+      return;
+    }
+
+    // Wait a bit for the page to load properly and ensure no other modals are present
     setTimeout(() => {
-      this.createOnboardingModal();
-      this.showStep(0);
-    }, 1000);
+      // Double-check no setup modal is present
+      if (!document.getElementById('first-boot-setup')) {
+        this.createOnboardingModal();
+        this.showStep(0);
+      }
+    }, 1500);
   }
 
   createOnboardingModal() {
+    // Remove any existing onboarding modal
+    const existingModal = document.getElementById('onboarding-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+    
     const modal = document.createElement('div');
     modal.id = 'onboarding-modal';
     modal.className = 'onboarding-modal';
@@ -137,23 +153,35 @@ class OnboardingSystem {
       <div class="onboarding-overlay"></div>
       <div class="onboarding-container">
         <div class="onboarding-header">
-          <h2 id="onboarding-title"></h2>
+          <h2 id="onboarding-title">Welcome to SlowGuardian v9!</h2>
           <div class="onboarding-progress">
             <div class="progress-bar">
               <div class="progress-fill" id="progress-fill"></div>
             </div>
-            <span class="progress-text" id="progress-text"></span>
+            <span class="progress-text" id="progress-text">1 of 4</span>
           </div>
         </div>
-        <div class="onboarding-content" id="onboarding-content"></div>
+        <div class="onboarding-content" id="onboarding-content">
+          <div class="onboarding-intro">
+            <h3>Loading onboarding...</h3>
+          </div>
+        </div>
         <div class="onboarding-footer">
-          <div class="onboarding-buttons" id="onboarding-buttons"></div>
+          <div class="onboarding-buttons" id="onboarding-buttons">
+            <button class="btn btn-primary">Loading...</button>
+          </div>
         </div>
       </div>
     `;
 
     document.body.appendChild(modal);
     this.setupEventListeners();
+    
+    console.log('Onboarding modal created and added to DOM');
+    
+    // Ensure modal is visible
+    modal.style.display = 'flex';
+    modal.style.zIndex = '10001'; // Higher than first-boot setup
   }
 
   setupEventListeners() {
@@ -182,14 +210,33 @@ class OnboardingSystem {
     this.currentStep = stepIndex;
     const step = this.steps[stepIndex];
     
+    console.log(`Showing onboarding step ${stepIndex}:`, step.title);
+    
     // Update content
-    document.getElementById('onboarding-title').textContent = step.title;
-    document.getElementById('onboarding-content').innerHTML = step.content;
+    const titleElement = document.getElementById('onboarding-title');
+    const contentElement = document.getElementById('onboarding-content');
+    
+    if (titleElement) {
+      titleElement.textContent = step.title;
+    } else {
+      console.error('Title element not found');
+    }
+    
+    if (contentElement) {
+      contentElement.innerHTML = step.content;
+    } else {
+      console.error('Content element not found');
+    }
     
     // Update progress
-    const progress = ((stepIndex + 1) / this.steps.length) * 100;
-    document.getElementById('progress-fill').style.width = progress + '%';
-    document.getElementById('progress-text').textContent = `${stepIndex + 1} of ${this.steps.length}`;
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    
+    if (progressFill && progressText) {
+      const progress = ((stepIndex + 1) / this.steps.length) * 100;
+      progressFill.style.width = progress + '%';
+      progressText.textContent = `${stepIndex + 1} of ${this.steps.length}`;
+    }
     
     // Update buttons
     this.updateButtons(step.buttons);
@@ -197,15 +244,42 @@ class OnboardingSystem {
 
   updateButtons(buttons) {
     const buttonContainer = document.getElementById('onboarding-buttons');
+    if (!buttonContainer) {
+      console.error('Button container not found');
+      return;
+    }
+    
     buttonContainer.innerHTML = '';
     
     buttons.forEach(buttonText => {
       const button = document.createElement('button');
       button.className = 'btn ' + (buttonText === 'Finish' || buttonText === 'Get Started' || buttonText === 'Continue' ? 'btn-primary' : 'btn-secondary');
       button.textContent = buttonText;
+      button.style.cssText = `
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 100px;
+      `;
+      
+      if (button.classList.contains('btn-primary')) {
+        button.style.background = 'var(--accent-primary, #4f46e5)';
+        button.style.color = 'white';
+      } else {
+        button.style.background = 'var(--bg-quaternary, #374151)';
+        button.style.color = 'var(--text-secondary, #9ca3af)';
+        button.style.border = '1px solid var(--border-primary, #4b5563)';
+      }
+      
       button.addEventListener('click', () => this.handleButtonClick(buttonText));
       buttonContainer.appendChild(button);
     });
+    
+    console.log(`Created ${buttons.length} buttons:`, buttons);
   }
 
   handleButtonClick(buttonText) {
@@ -292,3 +366,12 @@ class OnboardingSystem {
 document.addEventListener('DOMContentLoaded', () => {
   new OnboardingSystem();
 });
+
+// Helper function to get cookies (if not already defined)
+if (typeof getCookie === 'undefined') {
+  window.getCookie = function(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
+}

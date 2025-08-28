@@ -12,7 +12,13 @@ class FirstBootSetup {
   }
 
   init() {
-    if (this.isFirstBoot) {
+    // Only show first-boot setup if accessing developer page or developer mode is explicitly requested
+    const isDeveloperPage = window.location.pathname.includes('/developer');
+    const isDeveloperIntent = new URLSearchParams(window.location.search).has('developer-setup');
+    
+    if (this.isFirstBoot && (isDeveloperPage || isDeveloperIntent)) {
+      // Prevent regular onboarding from running
+      localStorage.setItem('sg-onboarding-completed', 'true');
       this.showSetupWizard();
     }
   }
