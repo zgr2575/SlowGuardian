@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { Logger } from "../utils/logger.js";
 import adminRoutes from "./admin.js";
+import keyauthRoutes, { initializeKeyAuth } from "./keyauth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

@@ -13,6 +13,18 @@ const config = {
   },
   envusers: false, // Environment-based user management (deprecated)
 
+  // KeyAuth API Configuration - NEW AUTHENTICATION SYSTEM
+  keyauth: {
+    enabled: false, // Set to true to enable KeyAuth authentication
+    name: process.env.KEYAUTH_NAME || 'SlowGuardian', // Your KeyAuth application name
+    ownerId: process.env.KEYAUTH_OWNER_ID || '', // Your KeyAuth owner ID
+    secret: process.env.KEYAUTH_SECRET || '', // Your KeyAuth application secret
+    version: '1.0', // Your application version in KeyAuth
+    requireLicense: false, // Set to true if users need license keys
+    allowRegistration: true, // Allow new user registrations
+    sessionTimeout: 24 * 60 * 60 * 1000, // Session timeout in milliseconds (24 hours)
+  },
+
   // Developer Mode Settings - ADMIN CONFIGURATION
   developerMode: {
     enabled: true, // Enable developer/admin features
