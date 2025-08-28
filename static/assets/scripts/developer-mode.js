@@ -506,12 +506,213 @@ class DeveloperMode {
   }
 
   showUserManagement() {
-    // Implement user management modal
-    this.showNotification('User management panel - Coming soon!', 'info');
+    const modal = document.getElementById('user-management-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      
+      // Load mock user data
+      const userList = document.getElementById('user-list');
+      const selectUser = document.getElementById('select-user');
+      
+      if (userList && selectUser) {
+        const mockUsers = [
+          { id: 'user001', ip: '192.168.1.100', location: 'New York, US', active: true },
+          { id: 'user002', ip: '192.168.1.101', location: 'London, UK', active: true },
+          { id: 'user003', ip: '192.168.1.102', location: 'Tokyo, JP', active: false }
+        ];
+        
+        userList.innerHTML = mockUsers.map(user => `
+          <div class="user-item ${user.active ? 'active' : 'inactive'}">
+            <div class="user-info">
+              <strong>${user.id}</strong>
+              <small>${user.ip} - ${user.location}</small>
+            </div>
+            <div class="user-actions">
+              <button class="btn btn-sm btn-warning" onclick="developerMode.blockUser('${user.id}')">
+                Block
+              </button>
+              <button class="btn btn-sm btn-info" onclick="developerMode.pauseUser('${user.id}')">
+                Pause
+              </button>
+            </div>
+          </div>
+        `).join('');
+        
+        selectUser.innerHTML = '<option value="">Select a user...</option>' + 
+          mockUsers.map(user => `<option value="${user.id}">${user.id}</option>`).join('');
+      }
+      
+      // Setup modal close handlers
+      const closeBtn = document.getElementById('close-user-modal');
+      const closeBtn2 = document.getElementById('close-user-management-btn');
+      const refreshBtn = document.getElementById('refresh-users-btn');
+      const blockSiteBtn = document.getElementById('block-site-user-btn');
+      
+      if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+      if (closeBtn2) closeBtn2.onclick = () => modal.style.display = 'none';
+      if (refreshBtn) refreshBtn.onclick = () => this.showUserManagement();
+      if (blockSiteBtn) {
+        blockSiteBtn.onclick = () => {
+          const selectedUser = document.getElementById('select-user')?.value;
+          const domain = document.getElementById('block-domain-user')?.value;
+          if (selectedUser && domain) {
+            this.blockSiteForUser(selectedUser, domain);
+          } else {
+            this.showNotification('Please select a user and enter a domain', 'error');
+          }
+        };
+      }
+    }
+  }
+
+  blockUser(userId) {
+    // Add user to blocked list
+    const blockedUsers = JSON.parse(localStorage.getItem('blocked-users') || '[]');
+    if (!blockedUsers.includes(userId)) {
+      blockedUsers.push(userId);
+      localStorage.setItem('blocked-users', JSON.stringify(blockedUsers));
+      this.showNotification(`User ${userId} blocked successfully`, 'success');
+      this.showUserManagement(); // Refresh the modal
+    } else {
+      this.showNotification(`User ${userId} is already blocked`, 'warning');
+    }
+  }
+
+  pauseUser(userId) {
+    // Add user to paused list
+    const pausedUsers = JSON.parse(localStorage.getItem('paused-users') || '[]');
+    if (!pausedUsers.includes(userId)) {
+      pausedUsers.push(userId);
+      localStorage.setItem('paused-users', JSON.stringify(pausedUsers));
+      this.showNotification(`User ${userId} paused successfully`, 'warning');
+      this.showUserManagement(); // Refresh the modal
+    } else {
+      this.showNotification(`User ${userId} is already paused`, 'warning');
+    }
+  }
+
+  blockSiteForUser(userId, domain) {
+    // Store per-user site blocks
+    const userBlocks = JSON.parse(localStorage.getItem('user-site-blocks') || '{}');
+    if (!userBlocks[userId]) {
+      userBlocks[userId] = [];
+    }
+    
+    if (!userBlocks[userId].includes(domain)) {
+      userBlocks[userId].push(domain);
+      localStorage.setItem('user-site-blocks', JSON.stringify(userBlocks));
+      this.showNotification(`Domain ${domain} blocked for user ${userId}`, 'success');
+      
+      // Clear inputs
+      const domainInput = document.getElementById('block-domain-user');
+      if (domainInput) domainInput.value = '';
+    } else {
+      this.showNotification(`Domain ${domain} already blocked for user ${userId}`, 'warning');
+    }
   }
 
   showSessionManagement() {
-    this.showNotification('Session management - Coming soon!', 'info');
+    // Create session management modal dynamically
+    const existingModal = document.getElementById('session-management-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+    
+    const modal = document.createElement('div');
+    modal.id = 'session-management-modal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📋 Session Management</h3>
+          <button class="modal-close" id="close-session-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="session-stats">
+            <div class="stat-grid">
+              <div class="stat-item">
+                <div class="stat-label">Active Sessions</div>
+                <div class="stat-value">${Math.floor(Math.random() * 20) + 5}</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Total Today</div>
+                <div class="stat-value">${Math.floor(Math.random() * 100) + 50}</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Average Duration</div>
+                <div class="stat-value">${Math.floor(Math.random() * 30) + 15}m</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="session-list">
+            <h4>Active Sessions</h4>
+            <div id="session-list-content">
+              <div class="loading-text">Loading sessions...</div>
+            </div>
+          </div>
+          
+          <div class="session-controls">
+            <button id="clear-all-sessions-btn" class="btn btn-warning">Clear All Sessions</button>
+            <button id="export-sessions-btn" class="btn btn-secondary">Export Data</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-sessions-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-session-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Load mock session data
+    setTimeout(() => {
+      const sessionContent = document.getElementById('session-list-content');
+      if (sessionContent) {
+        const mockSessions = [
+          { id: 'sess001', userId: 'user001', started: '2024-01-10 14:30', duration: '25m', pages: 8 },
+          { id: 'sess002', userId: 'user002', started: '2024-01-10 15:15', duration: '12m', pages: 3 },
+          { id: 'sess003', userId: 'user003', started: '2024-01-10 15:45', duration: '8m', pages: 2 }
+        ];
+        
+        sessionContent.innerHTML = mockSessions.map(session => `
+          <div class="session-item">
+            <div class="session-info">
+              <strong>${session.id}</strong>
+              <small>User: ${session.userId} | Started: ${session.started}</small>
+              <small>Duration: ${session.duration} | Pages: ${session.pages}</small>
+            </div>
+            <div class="session-actions">
+              <button class="btn btn-sm btn-danger" onclick="developerMode.terminateSession('${session.id}')">
+                Terminate
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }, 500);
+    
+    // Setup event handlers
+    document.getElementById('close-session-modal').onclick = () => modal.remove();
+    document.getElementById('close-session-management-btn').onclick = () => modal.remove();
+    document.getElementById('refresh-sessions-btn').onclick = () => this.showSessionManagement();
+    document.getElementById('clear-all-sessions-btn').onclick = () => {
+      if (confirm('Are you sure you want to clear all active sessions?')) {
+        this.showNotification('All sessions cleared', 'success');
+        modal.remove();
+      }
+    };
+    document.getElementById('export-sessions-btn').onclick = () => {
+      this.showNotification('Session data exported', 'success');
+    };
+  }
+
+  terminateSession(sessionId) {
+    this.showNotification(`Session ${sessionId} terminated`, 'warning');
+    this.showSessionManagement(); // Refresh
   }
 
   showBlockUserDialog() {

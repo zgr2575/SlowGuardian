@@ -98,7 +98,31 @@ function blank(value) {
 }
 
 function dy(value) {
-  processUrl(value, "/a/q/" + __uv$config.encodeUrl(value));
+  // Direct navigation for Ultraviolet proxy
+  try {
+    let url = value.trim();
+    
+    if (!isUrl(url)) {
+      const engine = localStorage.getItem("engine") || "https://www.google.com/search?q=";
+      url = engine + url;
+    } else if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+      url = "https://" + url;
+    }
+    
+    if (typeof __uv$config !== 'undefined' && __uv$config.encodeUrl) {
+      const encodedUrl = __uv$config.encodeUrl(url);
+      console.log('DY encoding URL:', url, '→', encodedUrl);
+      sessionStorage.setItem("GoUrl", encodedUrl);
+      window.location.href = "/a/" + encodedUrl;
+    } else {
+      console.error('Ultraviolet config not available for dy function');
+      // Fallback to processUrl
+      processUrl(value, "/go");
+    }
+  } catch (error) {
+    console.error('Error in dy function:', error);
+    processUrl(value, "/go");
+  }
 }
 
 function isUrl(val = "") {
