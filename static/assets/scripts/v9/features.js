@@ -813,6 +813,17 @@ class SlowGuardianFeatures {
     });
     return features;
   }
+
+  // Missing method implementations
+  initAutoComplete() {
+    console.log('🔧 Initializing Auto-Complete feature...');
+    // TODO: Implement auto-complete functionality
+  }
+
+  initRecentlyVisited() {
+    console.log('🔧 Initializing Recently Visited feature...');
+    // TODO: Implement recently visited functionality
+  }
 }
 
 // Initialize features when DOM is ready
