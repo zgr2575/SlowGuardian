@@ -51,6 +51,28 @@ class ScreenshotProtection {
     }
   }
 
+  // Test method to manually trigger protection
+  test() {
+    if (!this.enabled) {
+      if (window.showNotification) {
+        window.showNotification('Screenshot protection is disabled. Enable it first.', 'warning');
+      }
+      return;
+    }
+    
+    if (window.showNotification) {
+      window.showNotification('Testing screenshot protection...', 'info');
+    }
+    
+    this.activateProtection();
+    setTimeout(() => {
+      this.deactivateProtection();
+      if (window.showNotification) {
+        window.showNotification('Screenshot protection test complete!', 'success');
+      }
+    }, 3000);
+  }
+
   setupProtection() {
     if (!this.enabled) return;
 

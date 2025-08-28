@@ -537,6 +537,28 @@ class SettingsController extends PageController {
           </select>
         </div>
       </div>
+
+      <div class="settings-section">
+        <h3>🛡️ Screenshot Protection</h3>
+        <div class="form-checkbox">
+          <input type="checkbox" id="screenshot-protection-toggle">
+          <label for="screenshot-protection-toggle">
+            <strong>Anti-Surveillance Mode</strong><br>
+            <small>Hide SlowGuardian when screenshot attempts are detected</small>
+          </label>
+        </div>
+        <div class="button-group">
+          <button class="btn btn-secondary" id="test-screenshot-protection">Test Protection</button>
+        </div>
+        <div class="form-info">
+          <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+              <strong>How it works:</strong> When enabled, this feature detects screenshot attempts (PrintScreen, Snipping Tool, etc.) and temporarily shows spoofed content instead of SlowGuardian.
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div class="settings-section">
         <h3>⚡ Performance</h3>
@@ -710,6 +732,36 @@ class SettingsController extends PageController {
       tabCloakToggle.checked = localStorage.getItem('tab-cloak-enabled') === 'true';
       tabCloakToggle.addEventListener('change', (e) => {
         localStorage.setItem('tab-cloak-enabled', e.target.checked.toString());
+      });
+    }
+
+    // Screenshot protection settings
+    const screenshotProtectionToggle = $("#screenshot-protection-toggle");
+    if (screenshotProtectionToggle) {
+      screenshotProtectionToggle.checked = localStorage.getItem('screenshot-protection') === 'true';
+      screenshotProtectionToggle.addEventListener('change', (e) => {
+        if (window.ScreenshotProtection) {
+          if (e.target.checked) {
+            window.ScreenshotProtection.enable();
+          } else {
+            window.ScreenshotProtection.disable();
+          }
+        } else {
+          localStorage.setItem('screenshot-protection', e.target.checked.toString());
+        }
+      });
+    }
+
+    const testScreenshotProtection = $("#test-screenshot-protection");
+    if (testScreenshotProtection) {
+      testScreenshotProtection.addEventListener('click', () => {
+        if (window.ScreenshotProtection) {
+          window.ScreenshotProtection.test();
+        } else {
+          if (window.showNotification) {
+            window.showNotification('Screenshot protection not available', 'error');
+          }
+        }
       });
     }
 

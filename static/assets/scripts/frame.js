@@ -11,37 +11,89 @@ window.addEventListener("load", function() {
   let dyValue = localStorage.getItem("dy");
   const addressInput = document.getElementById("is");
 
-  if (GoUrl) {
+  if (GoUrl && addressInput) {
     // Display the original URL in the address bar
-    if (addressInput) {
-      try {
-        // Ultraviolet decoder with character mapping
-        let decodedUrl = GoUrl;
-        
-        // First URL decode
-        decodedUrl = decodeURIComponent(decodedUrl);
-        
-        // Apply Ultraviolet character mappings
-        decodedUrl = decodedUrl
-          .replace(/hvtrs8/g, 'https://')
-          .replace(/hvtr8/g, 'http://')
-          .replace(/-/g, '/')
-          .replace(/,/g, '.');
-        
-        // Apply specific character mappings for common patterns
-        decodedUrl = decodedUrl.replace(/1t1/g, '1v1').replace(/lml/g, 'lol');
-        
-        // Clean up any extra slashes
-        decodedUrl = decodedUrl.replace(/([^:]\/)\/+/g, '$1');
-        
-        addressInput.value = decodedUrl;
-        console.log('Decoded URL:', decodedUrl);
-      } catch (error) {
-        // Fallback: show the encoded URL
-        console.warn('URL decode error:', error);
-        addressInput.value = GoUrl;
+    try {
+      // Enhanced Ultraviolet URL decoder
+      let decodedUrl = GoUrl;
+      
+      console.log('Original encoded URL:', GoUrl);
+      
+      // Check if it's already decoded (starts with http)
+      if (!decodedUrl.startsWith('http') && !decodedUrl.startsWith('/e/')) {
+        // Try Ultraviolet decoding
+        if (typeof __uv$config !== 'undefined' && __uv$config.decodeUrl) {
+          try {
+            decodedUrl = __uv$config.decodeUrl(GoUrl);
+            console.log('UV decoded URL:', decodedUrl);
+          } catch (uvError) {
+            console.warn('UV decode failed, using manual decode:', uvError);
+            // Fallback to manual decoding
+            decodedUrl = manualUrlDecode(GoUrl);
+          }
+        } else {
+          // Manual decoding if UV config not available
+          decodedUrl = manualUrlDecode(GoUrl);
+        }
       }
+      
+      // Clean and display
+      if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
+        addressInput.value = decodedUrl;
+        addressInput.setAttribute('title', decodedUrl);
+      } else {
+        addressInput.value = GoUrl; // Show encoded if decoding failed
+      }
+      
+      console.log('Final displayed URL:', addressInput.value);
+    } catch (error) {
+      console.error('URL decode error:', error);
+      addressInput.value = GoUrl; // Show encoded URL as fallback
     }
+  } else if (!GoUrl && addressInput) {
+    addressInput.placeholder = "Search or enter a new URL...";
+  }
+
+  // Manual URL decoder function
+  function manualUrlDecode(encodedUrl) {
+    try {
+      let decoded = encodedUrl;
+      
+      // First URL decode
+      decoded = decodeURIComponent(decoded);
+      
+      // Apply Ultraviolet character mappings
+      decoded = decoded
+        .replace(/hvtrs8%2F%2F/g, 'https://')
+        .replace(/hvtr8%2F%2F/g, 'http://')
+        .replace(/hvtrs8/g, 'https://')
+        .replace(/hvtr8/g, 'http://')
+        .replace(/%2F/g, '/')
+        .replace(/%2C/g, '.')
+        .replace(/-/g, '/')
+        .replace(/,/g, '.');
+      
+      // Apply specific character mappings for common patterns
+      decoded = decoded
+        .replace(/1t1/g, '1v1')
+        .replace(/lml/g, 'lol')
+        .replace(/gmogle/g, 'google')
+        .replace(/youtybe/g, 'youtube');
+      
+      // Clean up any extra slashes
+      decoded = decoded.replace(/([^:]\/)\/+/g, '$1');
+      
+      // Ensure proper protocol
+      if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
+        decoded = 'https://' + decoded;
+      }
+      
+      return decoded;
+    } catch (error) {
+      console.warn('Manual decode failed:', error);
+      return encodedUrl;
+    }
+  }
 
     if (!GoUrl.startsWith("/e/")) {
       if (dyValue === "true" || dyValue === "auto") {
@@ -52,6 +104,8 @@ window.addEventListener("load", function() {
     }
     console.log("Loading URL:", GoUrl);
     if (iframe) {
+      // Show loading indicators
+      showLoadingProgress();
       iframe.src = GoUrl;
     }
   } else {
@@ -603,5 +657,93 @@ window.erudaToggle = erudaToggle;
 window.toggleFullscreen = toggleFullscreen;
 window.goHome = goHome;
 window.iframeLoad = iframeLoad;
+
+// Loading progress system with tips
+function showLoadingProgress() {
+  const loadingOverlay = document.querySelector('.loading-overlay');
+  const loadingBar = document.querySelector('.loading-bar');
+  const loadingSteps = document.getElementById('loading-steps');
+  const loadingTitle = document.querySelector('.loading-title');
+  const loadingTip = document.querySelector('.loading-tip');
+  
+  if (loadingOverlay) {
+    loadingOverlay.classList.add('active');
+  }
+  
+  if (loadingBar) {
+    loadingBar.classList.add('active');
+  }
+  
+  // Loading tips
+  const tips = [
+    "Establishing secure connection...",
+    "Encrypting your traffic...",
+    "Bypassing restrictions...",
+    "Loading content safely...",
+    "Almost ready!"
+  ];
+  
+  const steps = [
+    "Connecting to proxy",
+    "Validating security",
+    "Decoding URL",
+    "Loading content",
+    "Finalizing"
+  ];
+  
+  let currentStep = 0;
+  
+  function updateProgress() {
+    if (loadingTitle) {
+      loadingTitle.textContent = steps[currentStep] || "Loading...";
+    }
+    
+    if (loadingTip) {
+      loadingTip.textContent = tips[currentStep] || "Please wait...";
+    }
+    
+    if (loadingSteps) {
+      const stepElements = loadingSteps.querySelectorAll('.loading-step');
+      stepElements.forEach((step, index) => {
+        if (index <= currentStep) {
+          step.classList.add('active');
+        } else {
+          step.classList.remove('active');
+        }
+      });
+    }
+    
+    currentStep++;
+    
+    if (currentStep < steps.length) {
+      setTimeout(updateProgress, 600 + Math.random() * 400);
+    }
+  }
+  
+  updateProgress();
+  
+  // Auto-hide after 5 seconds
+  setTimeout(hideLoadingProgress, 5000);
+}
+
+function hideLoadingProgress() {
+  const loadingOverlay = document.querySelector('.loading-overlay');
+  const loadingBar = document.querySelector('.loading-bar');
+  
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('active');
+  }
+  
+  if (loadingBar) {
+    loadingBar.classList.remove('active');
+    // Reset the bar after animation
+    setTimeout(() => {
+      loadingBar.style.width = '0%';
+    }, 300);
+  }
+}
+
+window.showLoadingProgress = showLoadingProgress;
+window.hideLoadingProgress = hideLoadingProgress;
 
 
