@@ -139,6 +139,10 @@ function setupFrontendRoutes(app) {
     { path: "/proxy", file: "go.html" }, // Alternative route
     { path: "/go", file: "go.html" }, // Additional browser route
     { path: "/browser", file: "go.html" }, // Alternative browser route
+    { path: "/tabs", file: "tabs.html" }, // Browser tabs system
+    { path: "/t", file: "tabs.html" }, // Short alias for tabs
+    { path: "/developer", file: "developer.html" }, // Developer mode
+    { path: "/dev", file: "developer.html" }, // Short alias for developer mode
     { path: "/li", file: "login.html" },
     { path: "/login", file: "login.html" }, // Alternative route
     { path: "/tos", file: "tos.html" },
