@@ -93,24 +93,23 @@ class ProxyManager {
     const popup = window.open("about:blank", "_blank");
     if (popup) {
       popup.document.title = "My Drive - Google Drive";
-      popup.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>My Drive - Google Drive</title>
-          <link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="margin:0;padding:0;overflow:hidden;">
-          <script>
-            // Set the encoded URL in sessionStorage and redirect to browser
-            sessionStorage.setItem("GoUrl", "${url}");
-            window.location.href = "${window.location.origin}/go";
-          </script>
-        </body>
-        </html>
-      `);
+      popup.document.write(
+        '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        '<title>My Drive - Google Drive</title>' +
+        '<link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">' +
+        '<meta charset="UTF-8">' +
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+        '</head>' +
+        '<body style="margin:0;padding:0;overflow:hidden;">' +
+        '<script>' +
+        'sessionStorage.setItem("GoUrl", ' + JSON.stringify(url) + ');' +
+        'window.location.href = ' + JSON.stringify(window.location.origin + '/go') + ';' +
+        '</script>' +
+        '</body>' +
+        '</html>'
+      );
     } else {
       showNotification("Popup blocked. Please allow popups for this site.", "warning");
       // Fallback to direct navigation
@@ -199,22 +198,22 @@ class ProxyManager {
     const popup = window.open("about:blank", "_blank");
 
     if (popup) {
-      popup.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>SlowGuardian</title>
-          <link rel="icon" href="/favicon.png">
-          <style>
-            body { margin: 0; padding: 0; overflow: hidden; }
-            iframe { width: 100vw; height: 100vh; border: none; }
-          </style>
-        </head>
-        <body>
-          <iframe src="${window.location.href}"></iframe>
-        </body>
-        </html>
-      `);
+      popup.document.write(
+        '<!DOCTYPE html>' +
+        '<html>' +
+        '<head>' +
+        '<title>SlowGuardian</title>' +
+        '<link rel="icon" href="/favicon.png">' +
+        '<style>' +
+        'body { margin: 0; padding: 0; overflow: hidden; }' +
+        'iframe { width: 100vw; height: 100vh; border: none; }' +
+        '</style>' +
+        '</head>' +
+        '<body>' +
+        '<iframe src="' + window.location.href + '"></iframe>' +
+        '</body>' +
+        '</html>'
+      );
 
       // Close current window
       window.close();
