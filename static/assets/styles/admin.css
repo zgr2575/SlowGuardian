@@ -1,0 +1,380 @@
+/**
+ * Admin Panel Styles - Developer Mode Features
+ * CSS styles for administrative controls and user management
+ */
+
+/* Admin Panel Card */
+#admin-panel {
+  border: 2px solid var(--accent-primary);
+  background: linear-gradient(135deg, 
+    rgba(var(--accent-primary-rgb), 0.1), 
+    rgba(var(--accent-primary-rgb), 0.05));
+}
+
+#admin-panel .card-title {
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Admin Stats */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: rgba(var(--accent-primary-rgb), 0.1);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(var(--accent-primary-rgb), 0.2);
+}
+
+.stat-card h4 {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-card span {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+/* Admin Controls */
+.admin-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.control-section {
+  background: rgba(var(--surface-secondary-rgb), 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+}
+
+.control-section h4 {
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+/* User and Admin Cards */
+.user-card, .admin-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info, .admin-info {
+  flex: 1;
+}
+
+.user-info strong, .admin-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.user-details {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-details span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.user-actions, .admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Role Badge */
+.role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+}
+
+.role-admin {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.role-super_admin {
+  background: rgba(155, 89, 182, 0.2);
+  color: #9b59b6;
+  border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+/* Button Variants */
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.btn-warning {
+  background: #f39c12;
+  color: white;
+  border: none;
+}
+
+.btn-warning:hover {
+  background: #e67e22;
+}
+
+.btn-danger {
+  background: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #c0392b;
+}
+
+.btn-success {
+  background: #27ae60;
+  color: white;
+  border: none;
+}
+
+.btn-success:hover {
+  background: #229954;
+}
+
+/* Modal Improvements for Admin */
+.modal-content {
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Input Groups */
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+/* Warning Box */
+.warning-box {
+  background: rgba(243, 156, 18, 0.1);
+  border: 1px solid rgba(243, 156, 18, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 16px;
+  color: #f39c12;
+  font-size: 14px;
+}
+
+.warning-box strong {
+  color: #e67e22;
+}
+
+/* Loading and Error States */
+.loading-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 20px;
+}
+
+.error-text {
+  text-align: center;
+  color: #e74c3c;
+  padding: 20px;
+}
+
+.no-data {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Account Section */
+.account-section {
+  background: rgba(var(--surface-secondary-rgb), 0.3);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+}
+
+.account-section h4 {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* User List Styles */
+.user-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.admin-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-card, .admin-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-actions, .admin-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .control-section {
+    padding: 12px;
+  }
+  
+  .modal-content {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+  }
+}
+
+/* Animation for admin panel reveal */
+#admin-panel {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Status indicators */
+.status-active {
+  color: #27ae60;
+}
+
+.status-paused {
+  color: #e74c3c;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-indicator.active {
+  background: #27ae60;
+}
+
+.status-indicator.paused {
+  background: #e74c3c;
+}
+
+/* Enhanced button group styling */
+.admin-controls .button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-controls .button-group .btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Improved form styling for admin */
+.admin-login .input-group,
+.account-section .input-group {
+  margin-bottom: 12px;
+}
+
+.admin-login .form-input,
+.account-section .form-input,
+.account-section .form-select {
+  width: 100%;
+}
+
+/* User action buttons in modal */
+.user-actions .btn {
+  min-width: 60px;
+}
+
+/* Enhanced modal header */
+.modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Scrollable lists with custom scrollbar */
+.user-list::-webkit-scrollbar,
+.admin-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.user-list::-webkit-scrollbar-track,
+.admin-list::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+  border-radius: 3px;
+}
+
+.user-list::-webkit-scrollbar-thumb,
+.admin-list::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+
+.user-list::-webkit-scrollbar-thumb:hover,
+.admin-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}

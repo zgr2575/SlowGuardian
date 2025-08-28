@@ -16,6 +16,7 @@ import config from "./config.js";
 import { setupSecurity } from "./src/middleware/security.js";
 import { setupAuth } from "./src/middleware/auth.js";
 import { setupLogging } from "./src/middleware/logging.js";
+import { sessionTracker, blockingEnforcer, pauseEnforcer, websiteBlockingEnforcer } from "./src/middleware/admin.js";
 import { setupRoutes } from "./src/routes/index.js";
 import { setupErrorHandling } from "./src/middleware/error.js";
 import { PluginManager } from "./src/plugins/manager.js";
@@ -32,6 +33,9 @@ const logger = new Logger("Server");
  */
 async function createSlowGuardianServer() {
   logger.info(`Starting SlowGuardian v${config.version}...`);
+
+  // Make config globally available for admin middleware
+  global.config = config;
 
   // Create Express app and HTTP server
   const app = express();
@@ -82,6 +86,12 @@ async function createSlowGuardianServer() {
   setupLogging(app);
   setupSecurity(app, config);
   setupAuth(app, config);
+  
+  // Admin middleware for developer mode features
+  app.use(sessionTracker);
+  app.use(pauseEnforcer);
+  app.use(blockingEnforcer);
+  app.use(websiteBlockingEnforcer);
 
   // Static file serving
   if (config.routes && config.local) {

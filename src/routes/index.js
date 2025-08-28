@@ -7,6 +7,7 @@ import express from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { Logger } from "../utils/logger.js";
+import adminRoutes from "./admin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,6 +32,9 @@ export function setupRoutes(app, config) {
   // API endpoints
   setupApiRoutes(app, config);
 
+  // Admin API routes
+  app.use("/api/admin", adminRoutes);
+
   // Custom apps and settings endpoints
   setupCustomEndpoints(app, config);
 
@@ -52,6 +56,7 @@ function setupApiRoutes(app, config) {
       challenge: config.challenge,
       users: config.users || {},
       version: config.version,
+      developerMode: config.developerMode || { enabled: false },
       features: {
         plugins: config.plugins,
         localAssets: config.local,

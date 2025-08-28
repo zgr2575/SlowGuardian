@@ -13,6 +13,21 @@ const config = {
   },
   envusers: false, // Environment-based user management (deprecated)
 
+  // Developer Mode Settings - ADMIN CONFIGURATION
+  developerMode: {
+    enabled: true, // Enable developer/admin features
+    defaultAdminCredentials: {
+      username: 'admin',
+      password: 'SlowGuardian2024!' // CHANGE THIS IN PRODUCTION!
+    },
+    features: {
+      userTracking: true, // Track online users and sessions
+      siteBlocking: true, // Enable per-user website blocking
+      globalPause: true, // Enable global site pausing
+      adminPanel: true // Enable admin control panel
+    }
+  },
+
   // Feature Flags
   routes: true, // Enable frontend routes (set false for bare server only)
   local: true, // Enable local asset serving

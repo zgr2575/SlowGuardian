@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="assets/styles/custom-dropdown.css" />
     <link rel="stylesheet" href="assets/styles/theme-creator.css" />
     <link rel="stylesheet" href="assets/styles/auth.css" />
+    <link rel="stylesheet" href="assets/styles/admin.css" />
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -342,6 +343,63 @@
               </div>
             </div>
 
+            <!-- Developer Mode Admin Panel -->
+            <div class="card settings-card" id="admin-panel" style="display: none;">
+              <div class="card-header">
+                <h3 class="card-title">🛠️ Developer Mode</h3>
+                <p class="card-description">Administrative controls for website hosting and user management</p>
+              </div>
+              <div class="settings-controls">
+                <div class="admin-login" id="admin-login">
+                  <div class="input-group">
+                    <label for="admin-username">Admin Username:</label>
+                    <input type="text" id="admin-username" class="form-input" placeholder="Enter admin username" />
+                  </div>
+                  <div class="input-group">
+                    <label for="admin-password">Admin Password:</label>
+                    <input type="password" id="admin-password" class="form-input" placeholder="Enter admin password" />
+                  </div>
+                  <button id="admin-login-btn" class="btn btn-primary">Login to Admin Panel</button>
+                </div>
+                
+                <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
+                  <div class="admin-stats">
+                    <div class="stat-card">
+                      <h4>Online Users</h4>
+                      <span id="online-users-count">0</span>
+                    </div>
+                    <div class="stat-card">
+                      <h4>Total Admins</h4>
+                      <span id="total-admins-count">0</span>
+                    </div>
+                    <div class="stat-card">
+                      <h4>Site Status</h4>
+                      <span id="site-status">Active</span>
+                    </div>
+                  </div>
+                  
+                  <div class="admin-controls">
+                    <div class="control-section">
+                      <h4>Global Controls</h4>
+                      <div class="button-group">
+                        <button id="pause-site-btn" class="btn btn-warning">⏸️ Pause Site</button>
+                        <button id="unpause-site-btn" class="btn btn-success" style="display: none;">▶️ Unpause Site</button>
+                        <button id="refresh-stats-btn" class="btn btn-secondary">🔄 Refresh</button>
+                      </div>
+                    </div>
+                    
+                    <div class="control-section">
+                      <h4>User Management</h4>
+                      <button id="view-users-btn" class="btn btn-primary">👥 View Online Users</button>
+                      <button id="manage-accounts-btn" class="btn btn-secondary">🔐 Manage Accounts</button>
+                    </div>
+                  </div>
+                  
+                  <button id="admin-logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Site Info -->
             <div class="card settings-card">
               <div class="card-header">
@@ -498,6 +556,102 @@
       </div>
     </div>
 
+    <!-- User Management Modal -->
+    <div id="user-management-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>👥 User Management</h3>
+          <button class="modal-close" id="close-user-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="user-list" id="user-list">
+            <div class="loading-text">Loading users...</div>
+          </div>
+          
+          <div class="user-actions" style="margin-top: 20px;">
+            <h4>Block Website for User</h4>
+            <div class="input-group">
+              <select id="select-user" class="form-select">
+                <option value="">Select a user...</option>
+              </select>
+              <input type="text" id="block-domain" class="form-input" placeholder="Enter domain (e.g., youtube.com)" />
+              <button id="block-site-btn" class="btn btn-warning">Block Site</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-users-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-user-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Management Modal -->
+    <div id="account-management-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🔐 Account Management</h3>
+          <button class="modal-close" id="close-account-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="account-section">
+            <h4>Create New Admin Account</h4>
+            <div class="input-group">
+              <label for="new-admin-username">Username:</label>
+              <input type="text" id="new-admin-username" class="form-input" placeholder="Enter username" />
+            </div>
+            <div class="input-group">
+              <label for="new-admin-password">Password:</label>
+              <input type="password" id="new-admin-password" class="form-input" placeholder="Enter password" />
+            </div>
+            <div class="input-group">
+              <label for="new-admin-role">Role:</label>
+              <select id="new-admin-role" class="form-select">
+                <option value="admin">Admin</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+            </div>
+            <button id="create-admin-btn" class="btn btn-primary">Create Account</button>
+          </div>
+          
+          <div class="account-section" style="margin-top: 30px;">
+            <h4>Existing Admin Accounts</h4>
+            <div class="admin-list" id="admin-list">
+              <div class="loading-text">Loading accounts...</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-accounts-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-account-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Pause Modal -->
+    <div id="pause-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>⏸️ Pause Site Globally</h3>
+          <button class="modal-close" id="close-pause-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>This will temporarily disable the site for all users with a maintenance-style message.</p>
+          <div class="input-group">
+            <label for="pause-password">Set Pause Password:</label>
+            <input type="password" id="pause-password" class="form-input" placeholder="Enter password to unpause later" required />
+          </div>
+          <div class="warning-box">
+            <strong>⚠️ Warning:</strong> Users will see a "SlowGuardian is paused" message and won't be able to access the site until you unpause it with this password.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="confirm-pause-btn" class="btn btn-warning">Pause Site</button>
+          <button id="cancel-pause-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <!-- App Scripts -->
     <!-- Enhanced Features System -->
     <script src="assets/scripts/v9/features.js?v=1"></script>
@@ -506,6 +660,7 @@
     <script src="assets/scripts/custom-dropdown.js?v=1"></script>
     <script src="assets/scripts/auth.js?v=1"></script>
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="assets/scripts/admin.js?v=1"></script>
     <script src="assets/scripts/settings.js?v=21"></script>
     <script src="assets/scripts/main.js?v=31"></script>
 
