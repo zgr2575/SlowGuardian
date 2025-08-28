@@ -188,7 +188,7 @@ class OnboardingSystem {
     
     console.log('Onboarding modal created and added to DOM');
     
-    // Ensure modal is visible with better z-index handling
+    // Ensure modal is visible with better z-index handling and height management
     modal.style.cssText = `
       display: flex !important;
       z-index: 10001 !important;
@@ -197,19 +197,44 @@ class OnboardingSystem {
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px !important;
+      box-sizing: border-box !important;
     `;
     
-    // Add debug info if needed
-    const debugElement = document.createElement('div');
-    debugElement.className = 'onboarding-debug';
-    debugElement.textContent = `Modal: ${modal.offsetWidth}x${modal.offsetHeight}`;
-    document.body.appendChild(debugElement);
+    // Set proper container height constraints
+    const container = modal.querySelector('.onboarding-container');
+    if (container) {
+      container.style.cssText = `
+        max-height: calc(100vh - 40px) !important;
+        height: auto !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+      `;
+    }
     
+    // Ensure footer is always visible
+    const footer = modal.querySelector('.onboarding-footer');
+    if (footer) {
+      footer.style.cssText = `
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+        margin-top: auto !important;
+      `;
+    }
+    
+    // Add debugging info
     setTimeout(() => {
-      if (debugElement.parentNode) {
-        debugElement.parentNode.removeChild(debugElement);
-      }
-    }, 5000);
+      const debugInfo = {
+        modalHeight: modal.offsetHeight,
+        containerHeight: container ? container.offsetHeight : 'N/A',
+        footerHeight: footer ? footer.offsetHeight : 'N/A',
+        viewportHeight: window.innerHeight
+      };
+      console.log('Onboarding modal debug info:', debugInfo);
+    }, 100);
   }
 
   setupEventListeners() {
