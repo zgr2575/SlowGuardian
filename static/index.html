@@ -218,29 +218,18 @@
       <div class="loading-text">Loading...</div>
     </div>
 
-    <!-- Proxy Bundle (must load before other scripts) -->
+    <!-- Proxy Bundle (must load first) -->
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
 
-    <!-- Legacy compatibility scripts -->
-    <script src="assets/scripts/main.js?v=31"></script>
-    <script src="assets/scripts/auth.js?v=1"></script>
-    <script src="assets/scripts/onboarding.js?v=1"></script>
-    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <!-- Core utility scripts -->
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/storage-wrapper.js?v=1"></script>
 
-    <!-- App Scripts -->
-    <script src="assets/scripts/v9/utils.js" type="module"></script>
-    <script src="assets/scripts/v9/particles.js" type="module"></script>
-    <script src="assets/scripts/v9/router.js" type="module"></script>
-    <script src="assets/scripts/v9/proxy.js" type="module"></script>
-    <script src="assets/scripts/v9/ui.js" type="module"></script>
-    <script src="assets/scripts/v9/app.js" type="module"></script>
-
-    <!-- Legacy proxy handler functions -->
+    <!-- Global notification system -->
     <script>
-      // Make showNotification available globally
+      // Global notification system
       window.showNotification = function(message, type = "info", duration = 5000) {
-        // Simple notification implementation
         const notification = document.createElement("div");
         notification.style.cssText = `
           position: fixed;
@@ -254,10 +243,10 @@
           font-size: 14px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           animation: slideIn 0.3s ease-out;
+          max-width: 300px;
         `;
         notification.textContent = message;
         
-        // Add animation keyframes
         if (!document.getElementById('notification-styles')) {
           const style = document.createElement('style');
           style.id = 'notification-styles';
@@ -286,52 +275,173 @@
         }, duration);
       };
 
-    <!-- Scripts -->
-    <script src="assets/scripts/cookie-storage.js?v=1"></script>
-    <script src="assets/scripts/storage-wrapper.js?v=1"></script>
-    <script src="assets/scripts/index.js?v=14"></script>
-    <script src="./m/bundle.js?v=5"></script>
-    <script src="./m/config.js?v=5"></script>
-    <script src="assets/scripts/main.js?v=31"></script>
-    <script src="assets/scripts/particles.js?v=1"></script>
+      // Global proxy handler functions for legacy compatibility
+      window.go = function(url) {
+        if (window.SlowGuardian?.handleProxyRequest) {
+          window.SlowGuardian.handleProxyRequest(url);
+        } else {
+          // Fallback for direct navigation
+          sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+          window.location.href = "/go";
+        }
+      };
+
+      window.blank = function(url) {
+        if (window.SlowGuardian?.handleProxyRequest) {
+          window.SlowGuardian.handleProxyRequest(url, true);
+        } else {
+          // Fallback for about:blank popup
+          const win = window.open("about:blank");
+          if (win) {
+            win.document.write(`
+              <html><head><title>My Drive - Google Drive</title></head><body>
+              <script>
+                sessionStorage.setItem("GoUrl", "${__uv$config.encodeUrl(url)}");
+                window.location.href = "/go";
+              </script>
+              </body></html>
+            `);
+          }
+        }
+      };
+
+      window.dy = function(url) {
+        sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+        window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+      };
+
+      // About:blank popup function
+      window.AB = function() {
+        const popup = window.open("about:blank", "_blank");
+        if (popup) {
+          popup.document.title = "My Drive - Google Drive";
+          popup.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>My Drive - Google Drive</title>
+              <link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">
+            </head>
+            <body style="margin:0;">
+              <iframe src="${window.location.origin}" style="border:none;width:100%;height:100vh;"></iframe>
+            </body>
+            </html>
+          `);
+        }
+      };
+    </script>
+
+    <!-- SlowGuardian v9 Application -->
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/v9/router.js" type="module"></script>
+    <script src="assets/scripts/v9/proxy.js" type="module"></script>
+    <script src="assets/scripts/v9/ui.js" type="module"></script>
+    <script src="assets/scripts/v9/app.js" type="module"></script>
+
+    <!-- Legacy compatibility (loaded after v9) -->
+    <script src="assets/scripts/auth.js?v=1"></script>
+    <script src="assets/scripts/onboarding.js?v=1"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <!-- Legacy Theme Support & Auto-Actions -->
     <script>
-      // Simple particle effect for v9 (without conflicts)
-      document.addEventListener('DOMContentLoaded', function() {        
+      document.addEventListener('DOMContentLoaded', function() {
+        // Auto About:Blank Popup on page load if enabled
+        const abEnabled = localStorage.getItem("ab");
+        if (abEnabled === "true") {
+          // Only auto-popup on main pages to avoid interference
+          if (!window.location.pathname.includes("/settings") && !window.location.pathname.includes("/go")) {
+            setTimeout(() => {
+              if (typeof AB === 'function') {
+                AB();
+              }
+            }, 1500); // Delay to ensure page is fully loaded
+          }
+        }
+
         // Quick focus on search with / key
         document.addEventListener('keydown', (e) => {
-          if (e.key === '/' && e.target === document.body) {
+          if (e.key === '/' && e.target === document.body && !e.ctrlKey && !e.metaKey) {
             e.preventDefault();
-            document.getElementById('is').focus();
+            const searchInput = document.getElementById('is') || document.getElementById('url-input');
+            if (searchInput) {
+              searchInput.focus();
+            }
           }
         });
-        
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-          themeToggle.addEventListener('click', function() {
-            let theme = localStorage.getItem('theme') || 'default';
-            const themes = ['default', 'catppuccinMocha', 'catppuccinLatte'];
-            const currentIndex = themes.indexOf(theme);
-            const nextIndex = (currentIndex + 1) % themes.length;
-            const nextTheme = themes[nextIndex];
+
+        // Initialize legacy theme system with enhanced loading
+        function initThemes() {
+          const themeid = localStorage.getItem("theme");
+          if (themeid && themeid !== 'default') {
+            const themeEle = document.createElement("link");
+            themeEle.rel = "stylesheet";
             
-            localStorage.setItem('theme', nextTheme);
-            location.reload(); // Reload to apply theme
-          });
+            // Modern themes
+            const themeMap = {
+              'catppuccinMocha': '/assets/styles/themes/catppuccin/mocha.css?v=1',
+              'catppuccinMacchiato': '/assets/styles/themes/catppuccin/macchiato.css?v=1',
+              'catppuccinFrappe': '/assets/styles/themes/catppuccin/frappe.css?v=1',
+              'catppuccinLatte': '/assets/styles/themes/catppuccin/latte.css?v=1',
+              'cyberpunk': '/assets/styles/themes/cyberpunk.css?v=1',
+              'ocean': '/assets/styles/themes/ocean.css?v=1',
+              'sunset': '/assets/styles/themes/sunset.css?v=1'
+            };
+            
+            if (themeMap[themeid]) {
+              themeEle.href = themeMap[themeid];
+              document.head.appendChild(themeEle);
+            }
+          }
         }
+        
+        // Initialize tab cloaking 
+        function initTabCloaking() {
+          const icon = document.getElementById("tab-favicon");
+          const title = document.getElementById("tab-title");
+          const selectedValue = localStorage.getItem("selectedOption");
+
+          function setCloak(nameValue, iconUrl) {
+            const customName = localStorage.getItem("CustomName");
+            const customIcon = localStorage.getItem("CustomIcon");
+
+            if (customName) nameValue = customName;
+            if (customIcon) iconUrl = customIcon;
+
+            if (title) title.textContent = nameValue;
+            if (icon) icon.href = iconUrl;
+          }
+
+          const cloakOptions = {
+            "Google": ["Google", "https://www.google.com/favicon.ico"],
+            "Drive": ["My Drive - Google Drive", "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"],
+            "Classroom": ["Home", "https://ssl.gstatic.com/classroom/favicon.png"],
+            "Gmail": ["Gmail", "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"],
+            "Netflix": ["Netflix", "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico"]
+          };
+
+          if (selectedValue && cloakOptions[selectedValue]) {
+            const [name, iconUrl] = cloakOptions[selectedValue];
+            setCloak(name, iconUrl);
+          }
+        }
+
+        // Initialize all legacy systems
+        initThemes();
+        initTabCloaking();
         
         // Motivational quotes rotation
         const quotes = [
           { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
           { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
-          { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
           { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
           { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
           { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
           { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
           { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
           { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
-          { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" }
+          { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+          { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" }
         ];
         
         const dailyQuote = quotes[new Date().getDate() % quotes.length];

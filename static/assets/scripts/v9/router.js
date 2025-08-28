@@ -27,13 +27,28 @@ class Router {
       this.handleRoute();
     });
 
-    // Handle navigation clicks
+    // Handle navigation clicks with enhanced detection
     on(document, "click", (e) => {
       const link = e.target.closest('a[href^="/"], .nav-link');
       if (link && link.href) {
-        e.preventDefault();
         const url = new URL(link.href);
-        this.navigate(url.pathname);
+        const path = url.pathname;
+        
+        // Only handle SPA routes, let external links work normally
+        if (this.routes.has(path)) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.navigate(path);
+        }
+      }
+    });
+
+    // Enhanced route detection for forms and other elements
+    on(document, "submit", (e) => {
+      const form = e.target;
+      if (form.id === "fs" || form.classList.contains("search-form")) {
+        // Let the existing form handler deal with this
+        return;
       }
     });
   }
@@ -229,7 +244,7 @@ class HomeController extends PageController {
   handleSearch(input) {
     // Import proxy utilities and handle the search
     import("./proxy.js").then(({ handleProxyRequest }) => {
-      handleProxyRequest(input);
+      handleProxyRequest(input, false);
     });
   }
 
@@ -356,7 +371,7 @@ class AppsController extends PageController {
     const launchBtn = element.querySelector(".btn");
     on(launchBtn, "click", () => {
       import("./proxy.js").then(({ handleProxyRequest }) => {
-        handleProxyRequest(app.link);
+        handleProxyRequest(app.link, false);
       });
     });
 
@@ -450,7 +465,7 @@ class GamesController extends PageController {
     if (!game.error) {
       on(playBtn, "click", () => {
         import("./proxy.js").then(({ handleProxyRequest }) => {
-          handleProxyRequest(game.link);
+          handleProxyRequest(game.link, false);
         });
       });
     }

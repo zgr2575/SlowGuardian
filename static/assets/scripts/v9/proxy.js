@@ -14,7 +14,7 @@ class ProxyManager {
     };
   }
 
-  async handleRequest(input) {
+  async handleRequest(input, useBlankPopup = false) {
     if (!input || !input.trim()) {
       showNotification("Please enter a URL or search term", "warning");
       return;
@@ -24,9 +24,9 @@ class ProxyManager {
 
     try {
       if (isSearchQuery(normalizedInput)) {
-        await this.handleSearch(normalizedInput);
+        await this.handleSearch(normalizedInput, useBlankPopup);
       } else {
-        await this.handleUrl(normalizedInput);
+        await this.handleUrl(normalizedInput, useBlankPopup);
       }
     } catch (error) {
       console.error("Proxy request failed:", error);
@@ -34,12 +34,12 @@ class ProxyManager {
     }
   }
 
-  async handleSearch(query) {
+  async handleSearch(query, useBlankPopup = false) {
     const searchUrl = this.config.searchEngine + encodeURIComponent(query);
-    await this.handleUrl(searchUrl);
+    await this.handleUrl(searchUrl, useBlankPopup);
   }
 
-  async handleUrl(url) {
+  async handleUrl(url, useBlankPopup = false) {
     showNotification("Loading...", "info", 2000);
 
     // Ensure URL has protocol
@@ -56,23 +56,65 @@ class ProxyManager {
         const encodedUrl = __uv$config.encodeUrl(url);
         sessionStorage.setItem("GoUrl", encodedUrl);
         
-        // Check if dynamic proxy should be used
-        const dy = localStorage.getItem("dy");
+        // Check about:blank setting
+        const abEnabled = localStorage.getItem("ab") === "true" || useBlankPopup;
         
-        if (dy === "true") {
-          window.location.href = "/a/q/" + encodedUrl;
+        if (abEnabled) {
+          // Open in about:blank popup
+          this.openBlankPopup(encodedUrl);
         } else {
-          // Navigate to the browser page which will load the URL
-          window.location.href = "/p";
+          // Check if dynamic proxy should be used
+          const dy = localStorage.getItem("dy");
+          
+          if (dy === "true") {
+            window.location.href = "/a/q/" + encodedUrl;
+          } else {
+            // For SPA navigation, we need to open the actual go.html file
+            // since the browser page is a separate complex interface
+            window.location.href = "/go";
+          }
         }
       } else {
         // Fallback without Ultraviolet
         sessionStorage.setItem("GoUrl", url);
-        window.location.href = `/p?url=${encodeURIComponent(url)}`;
+        if (useBlankPopup || localStorage.getItem("ab") === "true") {
+          this.openBlankPopup(url);
+        } else {
+          window.location.href = "/go";
+        }
       }
     } catch (error) {
       console.error("Failed to handle URL:", error);
       showNotification("Failed to load the requested page", "error");
+    }
+  }
+
+  openBlankPopup(url) {
+    const popup = window.open("about:blank", "_blank");
+    if (popup) {
+      popup.document.title = "My Drive - Google Drive";
+      popup.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>My Drive - Google Drive</title>
+          <link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin:0;padding:0;overflow:hidden;">
+          <script>
+            // Set the encoded URL in sessionStorage and redirect to browser
+            sessionStorage.setItem("GoUrl", "${url}");
+            window.location.href = "${window.location.origin}/go";
+          </script>
+        </body>
+        </html>
+      `);
+    } else {
+      showNotification("Popup blocked. Please allow popups for this site.", "warning");
+      // Fallback to direct navigation
+      window.location.href = "/go";
     }
   }
 
@@ -538,3 +580,8 @@ window.isUrl = function(val = "") {
 };
 
 export { proxyManager, suggestionSystem };
+
+// Export the main proxy request handler for compatibility
+export function handleProxyRequest(url, useBlankPopup = false) {
+  return proxyManager.handleRequest(url, useBlankPopup);
+}

@@ -120,9 +120,14 @@ class SlowGuardianApp {
 
   async initializeParticles() {
     const particlesContainer = document.getElementById("particles");
-    if (particlesContainer) {
+    if (particlesContainer && !window.location.pathname.includes("/go")) {
       try {
-        // Determine particle type based on device capabilities
+        // Skip particles on browser page to avoid conflicts
+        if (window.location.pathname === "/go" || window.location.pathname === "/p") {
+          return;
+        }
+
+        // Determine particle type based on device capabilities  
         let particleType = "floating";
 
         if (device.isDesktop() && !device.isLowEndDevice?.()) {
@@ -130,10 +135,66 @@ class SlowGuardianApp {
         }
 
         this.particleSystem = initParticles(particlesContainer, particleType);
+        
+        // Ensure particles are visible
+        particlesContainer.style.position = "fixed";
+        particlesContainer.style.top = "0";
+        particlesContainer.style.left = "0";
+        particlesContainer.style.width = "100%";
+        particlesContainer.style.height = "100%";
+        particlesContainer.style.pointerEvents = "none";
+        particlesContainer.style.zIndex = "1";
+        
         console.log(`✨ Particle system initialized: ${particleType}`);
       } catch (error) {
         console.warn("Failed to initialize particle system:", error);
+        // Fallback to simple CSS particle animation
+        this.createSimpleParticles(particlesContainer);
       }
+    }
+  }
+
+  createSimpleParticles(container) {
+    // Simple CSS-based floating particles as fallback
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement("div");
+      particle.style.cssText = `
+        position: absolute;
+        width: ${2 + Math.random() * 4}px;
+        height: ${2 + Math.random() * 4}px;
+        background: rgba(255, 255, 255, ${0.3 + Math.random() * 0.4});
+        border-radius: 50%;
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 100}%;
+        animation: float ${10 + Math.random() * 20}s infinite linear;
+        opacity: ${0.3 + Math.random() * 0.4};
+      `;
+      container.appendChild(particle);
+    }
+    
+    // Add CSS keyframes if not already added
+    if (!document.getElementById("simple-particles-css")) {
+      const style = document.createElement("style");
+      style.id = "simple-particles-css";
+      style.textContent = `
+        @keyframes float {
+          0% {
+            transform: translateY(100vh) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.3;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-100px) translateX(${-50 + Math.random() * 100}px);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     }
   }
 
@@ -554,6 +615,17 @@ class SlowGuardianApp {
     }
   }
 
+  // Global proxy handler for legacy compatibility
+  async handleProxyRequest(url, useBlankPopup = false) {
+    try {
+      const { handleProxyRequest } = await import("./proxy.js");
+      return handleProxyRequest(url, useBlankPopup);
+    } catch (error) {
+      console.error("Failed to handle proxy request:", error);
+      showNotification("Failed to load the requested page", "error");
+    }
+  }
+
   enableTabCloaking(title = "Google", favicon = "/favicon-google.ico") {
     document.title = title;
 
@@ -580,10 +652,15 @@ class SlowGuardianApp {
 
   loadPreferences() {
     try {
-      const preferences = JSON.parse(
-        localStorage.getItem("sg_preferences") || "{}"
-      );
+      // Use the unified storage interface
+      const preferences = window.storage ? 
+        window.storage.getItem("sg_preferences", {}) :
+        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+      
       this.features = { ...this.features, ...preferences };
+      
+      // Migrate old localStorage data to new storage system
+      this.migrateOldSettings();
     } catch (error) {
       console.warn("Failed to load preferences:", error);
     }
@@ -591,11 +668,20 @@ class SlowGuardianApp {
 
   savePreference(key, value) {
     try {
-      const preferences = JSON.parse(
-        localStorage.getItem("sg_preferences") || "{}"
-      );
-      preferences[key] = value;
-      localStorage.setItem("sg_preferences", JSON.stringify(preferences));
+      const currentPrefs = window.storage ?
+        window.storage.getItem("sg_preferences", {}) :
+        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+      
+      currentPrefs[key] = value;
+      
+      if (window.storage) {
+        window.storage.setItem("sg_preferences", currentPrefs);
+      } else {
+        localStorage.setItem("sg_preferences", JSON.stringify(currentPrefs));
+      }
+      
+      // Update features
+      this.features[key] = value;
     } catch (error) {
       console.warn("Failed to save preference:", error);
     }
@@ -603,13 +689,34 @@ class SlowGuardianApp {
 
   getPreference(key, defaultValue = null) {
     try {
-      const preferences = JSON.parse(
-        localStorage.getItem("sg_preferences") || "{}"
-      );
-      return preferences[key] ?? defaultValue;
+      const preferences = window.storage ?
+        window.storage.getItem("sg_preferences", {}) :
+        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+      
+      return preferences[key] !== undefined ? preferences[key] : defaultValue;
     } catch (error) {
+      console.warn("Failed to get preference:", error);
       return defaultValue;
     }
+  }
+
+  migrateOldSettings() {
+    // Migrate common settings from localStorage to unified storage
+    const settingsToMigrate = [
+      'theme', 'selectedOption', 'ab', 'dy', 'engine', 'Gcustom', 'Gpinned'
+    ];
+    
+    settingsToMigrate.forEach(key => {
+      const oldValue = localStorage.getItem(key);
+      if (oldValue && window.storage && !window.storage.getItem(key)) {
+        try {
+          window.storage.setItem(key, oldValue);
+          console.log(`Migrated setting: ${key}`);
+        } catch (error) {
+          console.warn(`Failed to migrate setting ${key}:`, error);
+        }
+      }
+    });
   }
 
   // Public API methods
