@@ -121,11 +121,13 @@ class OnboardingSystem {
     if (localStorage.getItem('sg-onboarding-completed') === 'true' || 
         localStorage.getItem('setup-completed') === 'true' ||
         getCookie('setup-completed') === 'true') {
+      console.log('Onboarding skipped - already completed or setup exists');
       return;
     }
 
     // Don't run onboarding on developer page (first-boot setup handles it)
     if (window.location.pathname.includes('/developer')) {
+      console.log('Onboarding skipped - on developer page');
       return;
     }
 
@@ -133,8 +135,15 @@ class OnboardingSystem {
     setTimeout(() => {
       // Double-check no setup modal is present
       if (!document.getElementById('first-boot-setup')) {
+        console.log('Starting onboarding system...');
         this.createOnboardingModal();
-        this.showStep(0);
+        
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+          this.showStep(0);
+        }, 100);
+      } else {
+        console.log('First-boot setup detected, skipping onboarding');
       }
     }, 1500);
   }
@@ -179,9 +188,28 @@ class OnboardingSystem {
     
     console.log('Onboarding modal created and added to DOM');
     
-    // Ensure modal is visible
-    modal.style.display = 'flex';
-    modal.style.zIndex = '10001'; // Higher than first-boot setup
+    // Ensure modal is visible with better z-index handling
+    modal.style.cssText = `
+      display: flex !important;
+      z-index: 10001 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+    `;
+    
+    // Add debug info if needed
+    const debugElement = document.createElement('div');
+    debugElement.className = 'onboarding-debug';
+    debugElement.textContent = `Modal: ${modal.offsetWidth}x${modal.offsetHeight}`;
+    document.body.appendChild(debugElement);
+    
+    setTimeout(() => {
+      if (debugElement.parentNode) {
+        debugElement.parentNode.removeChild(debugElement);
+      }
+    }, 5000);
   }
 
   setupEventListeners() {
@@ -256,30 +284,43 @@ class OnboardingSystem {
       button.className = 'btn ' + (buttonText === 'Finish' || buttonText === 'Get Started' || buttonText === 'Continue' ? 'btn-primary' : 'btn-secondary');
       button.textContent = buttonText;
       button.style.cssText = `
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 14px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 100px;
+        padding: 12px 24px !important;
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        min-width: 100px !important;
+        display: inline-block !important;
+        text-align: center !important;
+        white-space: nowrap !important;
       `;
       
       if (button.classList.contains('btn-primary')) {
-        button.style.background = 'var(--accent-primary, #4f46e5)';
-        button.style.color = 'white';
+        button.style.background = 'var(--accent-primary, #4f46e5) !important';
+        button.style.color = 'white !important';
       } else {
-        button.style.background = 'var(--bg-quaternary, #374151)';
-        button.style.color = 'var(--text-secondary, #9ca3af)';
-        button.style.border = '1px solid var(--border-primary, #4b5563)';
+        button.style.background = 'var(--bg-quaternary, #374151) !important';
+        button.style.color = 'var(--text-secondary, #9ca3af) !important';
+        button.style.border = '1px solid var(--border-primary, #4b5563) !important';
       }
       
       button.addEventListener('click', () => this.handleButtonClick(buttonText));
       buttonContainer.appendChild(button);
     });
     
+    // Ensure button container is visible
+    buttonContainer.style.cssText = `
+      display: flex !important;
+      gap: 12px !important;
+      justify-content: flex-end !important;
+      margin-top: auto !important;
+    `;
+    
     console.log(`Created ${buttons.length} buttons:`, buttons);
+    console.log('Button container height:', buttonContainer.offsetHeight);
+    console.log('Button container visible:', buttonContainer.offsetHeight > 0);
   }
 
   handleButtonClick(buttonText) {

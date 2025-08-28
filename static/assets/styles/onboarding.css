@@ -11,6 +11,8 @@
   justify-content: center;
   opacity: 1;
   transition: opacity 0.3s ease;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .onboarding-overlay {
@@ -30,8 +32,11 @@
   border-radius: 16px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   max-width: 600px;
-  width: 90%;
-  max-height: 80vh;
+  width: 100%;
+  max-height: calc(100vh - 40px);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   animation: slideInScale 0.4s ease-out;
 }
@@ -51,6 +56,7 @@
   padding: 24px 24px 16px;
   border-bottom: 1px solid var(--border-primary, #374151);
   background: var(--bg-tertiary, #111827);
+  flex-shrink: 0;
 }
 
 .onboarding-header h2 {
@@ -90,8 +96,9 @@
 
 .onboarding-content {
   padding: 24px;
-  max-height: 400px;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .onboarding-intro h3,
@@ -288,6 +295,8 @@
   padding: 16px 24px 24px;
   border-top: 1px solid var(--border-primary, #374151);
   background: var(--bg-tertiary, #111827);
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .onboarding-buttons {
@@ -297,13 +306,17 @@
 }
 
 .onboarding-buttons .btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: inline-block !important;
+  min-width: 100px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
 }
 
 .onboarding-buttons .btn-primary {
@@ -328,10 +341,15 @@
 }
 
 /* Mobile responsiveness */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .onboarding-modal {
+    padding: 10px;
+  }
+  
   .onboarding-container {
-    width: 95%;
-    max-height: 90vh;
+    width: 100%;
+    max-height: calc(100vh - 20px);
+    min-height: 400px;
   }
   
   .onboarding-header,
@@ -347,10 +365,41 @@
   
   .onboarding-buttons {
     flex-direction: column;
+    gap: 8px;
   }
   
   .onboarding-buttons .btn {
     width: 100%;
     padding: 14px;
   }
+}
+
+@media (max-height: 600px) {
+  .onboarding-container {
+    max-height: calc(100vh - 20px);
+    min-height: auto;
+  }
+  
+  .onboarding-content {
+    padding: 16px 24px;
+  }
+  
+  .onboarding-header,
+  .onboarding-footer {
+    padding: 12px 24px;
+  }
+}
+
+/* Debug helper */
+.onboarding-debug {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 20000;
+  font-family: monospace;
 }
