@@ -157,8 +157,66 @@ function decodeXor(input) {
   );
 }
 
-// Update address bar when iframe loads
+// Loading progress indicator
+function showLoadingProgress() {
+  const loadingBar = document.getElementById('loading-bar');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  
+  if (loadingBar) {
+    loadingBar.classList.add('active');
+    loadingBar.style.width = '0%';
+    
+    // Animate loading bar
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 95) progress = 95;
+      loadingBar.style.width = progress + '%';
+      
+      if (progress >= 95) {
+        clearInterval(interval);
+      }
+    }, 200);
+  }
+  
+  if (loadingOverlay) {
+    loadingOverlay.classList.add('active');
+  }
+  
+  // Activate browserLoading if available
+  if (typeof browserLoading !== 'undefined') {
+    browserLoading.startLoading();
+  }
+}
+
+// Hide loading indicators
+function hideLoadingProgress() {
+  const loadingBar = document.getElementById('loading-bar');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  
+  if (loadingBar) {
+    loadingBar.style.width = '100%';
+    setTimeout(() => {
+      loadingBar.classList.remove('active');
+      loadingBar.style.width = '0%';
+    }, 300);
+  }
+  
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('active');
+  }
+  
+  // Stop browserLoading if available
+  if (typeof browserLoading !== 'undefined') {
+    browserLoading.stopLoading();
+  }
+}
+
+// Enhanced iframe load handler
 function iframeLoad() {
+  // Hide loading indicators when page loads
+  hideLoadingProgress();
+  
   if (document.readyState === "complete") {
     const website = iframe.contentWindow?.location.href.replace(
       window.location.origin,
@@ -274,7 +332,7 @@ function toggleFullscreen() {
   }
 }
 
-// Enhanced keyboard support
+// Enhanced keyboard support and iframe focus
 document.addEventListener('keydown', function(e) {
   // Ctrl+L to focus address bar
   if (e.ctrlKey && e.key === 'l') {
@@ -303,6 +361,52 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     goForward();
   }
+  
+  // F5 for reload
+  if (e.key === 'F5') {
+    e.preventDefault();
+    reload();
+  }
+  
+  // Focus iframe for game input (when not typing in address bar)
+  const addressInput = document.getElementById('is');
+  const isTypingInAddressBar = addressInput && document.activeElement === addressInput;
+  
+  if (!isTypingInAddressBar && iframe && iframe.contentWindow) {
+    // For game input, ensure iframe is focused for key events
+    // This helps with games that need keyboard input
+    try {
+      if (e.key.length === 1 || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.key)) {
+        iframe.contentWindow.focus();
+      }
+    } catch (error) {
+      // Ignore cross-origin errors
+    }
+  }
+});
+
+// Improve iframe focus when clicked
+if (iframe) {
+  iframe.addEventListener('click', function() {
+    try {
+      iframe.contentWindow.focus();
+      console.log('Iframe focused for better keyboard input');
+    } catch (error) {
+      // Ignore cross-origin errors
+    }
+  });
+  
+  // Auto-focus iframe when page loads for game input
+  iframe.addEventListener('load', function() {
+    setTimeout(() => {
+      try {
+        iframe.contentWindow.focus();
+        console.log('Iframe auto-focused after load');
+      } catch (error) {
+        // Ignore cross-origin errors
+      }
+    }, 1000); // Wait a bit for the game to initialize
+  });
 });
 
 // Chrome keyboard lock for better fullscreen experience

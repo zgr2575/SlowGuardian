@@ -444,6 +444,33 @@
     <script src="/assets/scripts/main.js?v=31"></script>
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
+    
+    <!-- URL extraction for direct /p/encoded_url access -->
+    <script>
+      // Extract encoded URL from path for direct /p/encoded_url access
+      (function() {
+        const path = window.location.pathname;
+        console.log('Browser page loaded, checking path:', path);
+        
+        // Check if this is a direct /p/encoded_url access
+        if (path.startsWith('/p/') && path.length > 3) {
+          const encodedUrl = path.substring(3); // Remove '/p/' prefix
+          console.log('Extracted encoded URL from path:', encodedUrl);
+          
+          if (encodedUrl && encodedUrl.trim()) {
+            // Store the encoded URL in sessionStorage for frame.js to use
+            sessionStorage.setItem("GoUrl", encodedUrl);
+            console.log('Stored encoded URL in sessionStorage:', encodedUrl);
+            
+            // Set dy flag for proper proxy routing
+            if (!localStorage.getItem("dy")) {
+              localStorage.setItem("dy", "false"); // Default to regular UV proxy
+            }
+          }
+        }
+      })();
+    </script>
+    
     <script src="assets/scripts/frame.js?v=36"></script>
     <!-- Enhanced Features System -->
     <script src="assets/scripts/v9/features.js"></script>
@@ -600,6 +627,15 @@
 
       // Initialize loading system
       const browserLoading = new BrowserLoadingSystem();
+
+      // Auto-start loading if we have a URL to load
+      window.addEventListener('load', function() {
+        const GoUrl = sessionStorage.getItem("GoUrl");
+        if (GoUrl) {
+          console.log('Auto-starting loading animation for URL:', GoUrl);
+          browserLoading.startLoading();
+        }
+      });
 
       // Enhanced home function for the browser
       function goHome() {

@@ -177,13 +177,21 @@ class PerformanceMode {
   }
 
   addPerformanceModeToggle() {
+    // Only add the toggle on the settings page
+    if (!window.location.pathname.includes('/settings') && 
+        !window.location.pathname.includes('/s') &&
+        !document.querySelector('.settings-container')) {
+      return; // Don't add performance mode toggle on non-settings pages
+    }
+    
     // Add toggle to settings page when it loads
     const addToggleToSettings = () => {
-      const settingsContainer = document.querySelector('.settings-container') || 
-                               document.querySelector('main') || 
-                               document.body;
+      const settingsContainer = document.querySelector('.settings-container');
       
-      if (!settingsContainer) return;
+      if (!settingsContainer) {
+        console.log('Settings container not found, skipping performance mode toggle');
+        return;
+      }
       
       // Remove existing toggle
       const existingToggle = document.getElementById('performance-mode-section');

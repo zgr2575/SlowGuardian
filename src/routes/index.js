@@ -175,6 +175,37 @@ function setupFrontendRoutes(app) {
       });
     });
   });
+
+  // Wildcard routes for proxy URLs (must come after exact routes)
+  app.get('/p/*', (req, res) => {
+    const filePath = join(staticDir, "go.html");
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        logger.error(`Error serving go.html for /p/*:`, err);
+        res.status(404).send("Page not found");
+      }
+    });
+  });
+
+  app.get('/proxy/*', (req, res) => {
+    const filePath = join(staticDir, "go.html");
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        logger.error(`Error serving go.html for /proxy/*:`, err);
+        res.status(404).send("Page not found");
+      }
+    });
+  });
+
+  app.get('/go/*', (req, res) => {
+    const filePath = join(staticDir, "go.html");
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        logger.error(`Error serving go.html for /go/*:`, err);
+        res.status(404).send("Page not found");
+      }
+    });
+  });
 }
 
 /**
