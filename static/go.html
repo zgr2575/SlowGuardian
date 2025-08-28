@@ -445,6 +445,26 @@
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
     
+    <!-- Service Worker Registration -->
+    <script>
+      // Register Ultraviolet service worker
+      (async function() {
+        try {
+          if ('serviceWorker' in navigator) {
+            console.log('Registering Ultraviolet service worker...');
+            await navigator.serviceWorker.register('/m/sw.js', {
+              scope: '/a/'
+            });
+            console.log('✅ Ultraviolet service worker registered successfully');
+          } else {
+            console.warn('⚠️ Service worker not supported in this browser');
+          }
+        } catch (error) {
+          console.error('❌ Failed to register service worker:', error);
+        }
+      })();
+    </script>
+    
     <!-- URL extraction for direct /p/encoded_url access -->
     <script>
       // Extract encoded URL from path for direct /p/encoded_url access

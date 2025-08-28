@@ -296,16 +296,19 @@ router.get("/stats", adminAuth, (req, res) => {
   try {
     const onlineUsers = adminStore.getOnlineUsers();
     const admins = adminStore.getAdmins();
+    const memoryUsage = process.memoryUsage();
     
     res.json({
       success: true,
-      stats: {
-        onlineUsers: onlineUsers.length,
-        totalAdmins: admins.length,
-        isPaused: adminStore.isGloballyPaused(),
-        serverUptime: process.uptime(),
-        timestamp: new Date().toISOString()
-      }
+      onlineUsers: onlineUsers.length,
+      activeSessions: onlineUsers.length, // Same as online users for now
+      blockedUsers: 0, // TODO: Implement user blocking tracking
+      uptime: process.uptime(),
+      memoryUsageMB: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+      totalRequests: adminStore.getTotalRequests?.() || 0,
+      totalAdmins: admins.length,
+      isPaused: adminStore.isGloballyPaused(),
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     logger.error("Get stats error:", error);

@@ -277,6 +277,19 @@
     margin: 10px;
     max-width: calc(100vw - 20px);
   }
+  
+  /* Ensure admin modals are properly positioned */
+  .modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 }
 
 /* Animation for admin panel reveal */

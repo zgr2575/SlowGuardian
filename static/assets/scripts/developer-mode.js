@@ -258,15 +258,29 @@ class DeveloperMode {
     if (password) password.value = '';
   }
 
-  refreshStats() {
-    // Simulate real-time stats
-    const onlineUsers = Math.floor(Math.random() * 50) + 1;
-    const uptime = this.formatUptime(Math.floor(Math.random() * 86400));
-
-    this.updateStat('online-users-count', onlineUsers);
-    this.updateStat('uptime', uptime);
-    this.updateStat('active-sessions', Math.floor(onlineUsers * 0.8));
-    this.updateStat('blocked-users', Math.floor(Math.random() * 5));
+  async refreshStats() {
+    try {
+      // Get real server statistics
+      const response = await fetch('/api/admin/stats');
+      const stats = await response.json();
+      
+      // Update with real data
+      this.updateStat('online-users-count', stats.onlineUsers || 0);
+      this.updateStat('uptime', this.formatUptime(stats.uptime || 0));
+      this.updateStat('active-sessions', stats.activeSessions || 0);
+      this.updateStat('blocked-users', stats.blockedUsers || 0);
+      
+      // Additional real statistics
+      this.updateStat('memory-usage', `${stats.memoryUsageMB || 0}MB`);
+      this.updateStat('total-requests', stats.totalRequests || 0);
+    } catch (error) {
+      console.error('Failed to fetch real stats:', error);
+      // Fallback to basic stats - at least show real uptime
+      this.updateStat('online-users-count', 1); // At least the admin
+      this.updateStat('uptime', this.formatUptime(Date.now() / 1000));
+      this.updateStat('active-sessions', 1);
+      this.updateStat('blocked-users', 0);
+    }
   }
 
   updateStat(id, value) {
@@ -313,39 +327,81 @@ class DeveloperMode {
     }
   }
 
-  confirmPause() {
+  async confirmPause() {
     const password = document.getElementById('pause-password')?.value;
     if (!password) {
       this.showNotification('Please set a pause password', 'error');
       return;
     }
 
-    // Store pause password
-    localStorage.setItem('pause-password', password);
-    localStorage.setItem('site-paused', 'true');
+    try {
+      // Call server API to pause site globally
+      const response = await fetch('/api/admin/pause', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('admin-token')}`
+        },
+        body: JSON.stringify({ password })
+      });
 
-    // Update UI
-    this.updateStat('site-status', 'Paused');
-    document.getElementById('pause-site-btn').style.display = 'none';
-    document.getElementById('unpause-site-btn').style.display = 'block';
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        // Store pause password locally for UI
+        localStorage.setItem('pause-password', password);
+        localStorage.setItem('site-paused', 'true');
 
-    this.hidePauseModal();
-    this.showNotification('Site paused globally', 'warning');
+        // Update UI
+        this.updateStat('site-status', 'Paused');
+        document.getElementById('pause-site-btn').style.display = 'none';
+        document.getElementById('unpause-site-btn').style.display = 'block';
+
+        this.hidePauseModal();
+        this.showNotification('Site paused globally', 'warning');
+      } else {
+        this.showNotification(result.error || 'Failed to pause site', 'error');
+      }
+    } catch (error) {
+      console.error('Pause site error:', error);
+      this.showNotification('Network error occurred', 'error');
+    }
   }
 
-  unpauseSite() {
+  async unpauseSite() {
     const savedPassword = localStorage.getItem('pause-password');
     if (savedPassword) {
       const password = prompt('Enter pause password to resume site:');
       if (password === savedPassword) {
-        localStorage.removeItem('site-paused');
-        localStorage.removeItem('pause-password');
-        
-        this.updateStat('site-status', 'Active');
-        document.getElementById('pause-site-btn').style.display = 'block';
-        document.getElementById('unpause-site-btn').style.display = 'none';
-        
-        this.showNotification('Site resumed successfully', 'success');
+        try {
+          // Call server API to unpause site
+          const response = await fetch('/api/admin/unpause', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('admin-token')}`
+            },
+            body: JSON.stringify({ password })
+          });
+
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
+            localStorage.removeItem('site-paused');
+            localStorage.removeItem('pause-password');
+            
+            this.updateStat('site-status', 'Active');
+            document.getElementById('pause-site-btn').style.display = 'block';
+            document.getElementById('unpause-site-btn').style.display = 'none';
+            
+            this.showNotification('Site resumed successfully', 'success');
+          } else {
+            this.showNotification(result.error || 'Failed to resume site', 'error');
+          }
+        } catch (error) {
+          console.error('Unpause site error:', error);
+          this.showNotification('Network error occurred', 'error');
+        }
       } else {
         this.showNotification('Incorrect password', 'error');
       }
