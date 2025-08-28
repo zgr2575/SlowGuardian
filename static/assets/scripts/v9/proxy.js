@@ -505,7 +505,6 @@ const setupSuggestions = () => {
 };
 
 // Export main functions
-export const handleProxyRequest = (input) => proxyManager.handleRequest(input);
 export const setupProxyFeatures = () => {
   setupSuggestions();
 

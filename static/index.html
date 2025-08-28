@@ -103,7 +103,7 @@
 
           <!-- Search Section -->
           <div class="search-section">
-            <form class="search-form" id="fs" method="POST">
+            <form class="search-form" id="fs">
               <div class="search-container">
                 <div class="search-icon">🔍</div>
                 <input
@@ -330,6 +330,13 @@
         }
       };
     </script>
+
+    <!-- Ultraviolet Configuration (Load early) -->
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+
+    <!-- Legacy form handler and service worker -->
+    <script src="assets/scripts/index.js?v=14"></script>
 
     <!-- SlowGuardian v9 Application -->
     <script src="assets/scripts/v9/utils.js" type="module"></script>
