@@ -184,6 +184,45 @@ window.dy = function(url) {
   window.location.href = "/a/" + __uv$config.encodeUrl(url);
 };
 
+// Global theme switching function
+window.changeTheme = function(themeId) {
+  localStorage.setItem('theme', themeId);
+  setCookie('theme', themeId);
+  
+  // Remove existing theme links
+  const existingThemeLinks = document.querySelectorAll('link[href*="/themes/"]');
+  existingThemeLinks.forEach(link => link.remove());
+  
+  // Apply new theme if not default
+  if (themeId !== 'default') {
+    const themeLink = document.createElement('link');
+    themeLink.rel = 'stylesheet';
+    
+    if (themeId.startsWith('catppuccin')) {
+      const variant = themeId.replace('catppuccin', '').toLowerCase();
+      themeLink.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
+    } else {
+      themeLink.href = `/assets/styles/themes/${themeId}.css?v=1`;
+    }
+    
+    document.head.appendChild(themeLink);
+  }
+  
+  if (window.showNotification) {
+    window.showNotification(`Theme changed to ${themeId}`, 'success');
+  }
+};
+
+// Global about:blank toggle function
+window.toggleAboutBlank = function(enabled) {
+  localStorage.setItem('ab', enabled ? 'true' : 'false');
+  setCookie('ab', enabled ? 'true' : 'false');
+  
+  if (window.showNotification) {
+    window.showNotification(`About:blank ${enabled ? 'enabled' : 'disabled'}`, 'info');
+  }
+};
+
 // About:blank popup function
 window.AB = function() {
   let inFrame;

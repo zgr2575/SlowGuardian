@@ -497,28 +497,194 @@ class MoveableButtons {
 
   // Button action implementations
   toggleNotes() {
-    // Implementation for notes functionality
-    this.showNotification('Notes feature - Coming soon!', 'info');
+    if (window.notesManager) {
+      window.notesManager.toggle();
+    } else {
+      this.showNotification('Notes manager not available', 'error');
+    }
   }
 
   takeScreenshot() {
-    // Implementation for screenshot functionality
-    this.showNotification('Screenshot feature - Coming soon!', 'info');
+    // Enhanced screenshot functionality
+    if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+      navigator.mediaDevices.getDisplayMedia({ video: true })
+        .then(stream => {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+          
+          video.addEventListener('loadedmetadata', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            
+            canvas.toBlob(blob => {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `screenshot-${Date.now()}.png`;
+              a.click();
+              URL.revokeObjectURL(url);
+              
+              this.showNotification('Screenshot saved!', 'success');
+            });
+            
+            // Stop the stream
+            stream.getTracks().forEach(track => track.stop());
+          });
+        })
+        .catch(err => {
+          console.error('Screenshot failed:', err);
+          this.showNotification('Screenshot failed - please allow screen capture', 'error');
+        });
+    } else {
+      this.showNotification('Screenshot not supported in this browser', 'error');
+    }
   }
 
   toggleBookmarks() {
-    // Implementation for bookmarks functionality
-    this.showNotification('Bookmarks feature - Coming soon!', 'info');
+    if (window.bookmarkSystem) {
+      window.bookmarkSystem.toggle();
+    } else {
+      this.showNotification('Bookmark system not available', 'error');
+    }
   }
 
   toggleQuickSettings() {
-    // Implementation for quick settings
-    this.showNotification('Quick Settings - Coming soon!', 'info');
+    // Create quick settings panel
+    let panel = document.getElementById('quick-settings-panel');
+    
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'quick-settings-panel';
+      panel.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(26, 26, 46, 0.98);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 20px;
+        z-index: 10002;
+        min-width: 300px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      `;
+      
+      panel.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 style="margin: 0; color: var(--text-primary);">⚡ Quick Settings</h3>
+          <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: var(--text-secondary); font-size: 18px; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="quick-setting-item">
+          <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="color: var(--text-primary);">🎨 Theme</span>
+            <select onchange="window.changeTheme(this.value)" style="background: var(--bg-tertiary); border: 1px solid var(--border-secondary); color: var(--text-primary); padding: 4px; border-radius: 4px;">
+              <option value="default">Default</option>
+              <option value="cyberpunk">Cyberpunk</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+              <option value="catppuccinMocha">Catppuccin Mocha</option>
+            </select>
+          </label>
+        </div>
+        
+        <div class="quick-setting-item">
+          <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="color: var(--text-primary);">🛡️ Tab Cloak</span>
+            <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+              <input type="checkbox" ${localStorage.getItem('ab') === 'true' ? 'checked' : ''} onchange="window.toggleAboutBlank(this.checked)" style="opacity: 0; width: 0; height: 0;">
+              <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 24px; ${localStorage.getItem('ab') === 'true' ? 'background-color: var(--accent-primary);' : ''}"></span>
+            </label>
+          </label>
+        </div>
+        
+        <div class="quick-setting-item">
+          <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="color: var(--text-primary);">📜 Legacy UI</span>
+            <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+              <input type="checkbox" ${localStorage.getItem('legacy-ui') === 'true' ? 'checked' : ''} onchange="window.legacyUIMode?.toggle()" style="opacity: 0; width: 0; height: 0;">
+              <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 24px; ${localStorage.getItem('legacy-ui') === 'true' ? 'background-color: var(--accent-primary);' : ''}"></span>
+            </label>
+          </label>
+        </div>
+        
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-secondary);">
+          <button onclick="window.location.href='/settings'" style="width: 100%; background: var(--accent-primary); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer;">
+            Full Settings
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(panel);
+    } else {
+      panel.remove();
+    }
   }
 
   toggleThemeSwitcher() {
-    // Implementation for theme switcher
-    this.showNotification('Theme Switcher - Coming soon!', 'info');
+    // Create theme switcher panel  
+    let panel = document.getElementById('theme-switcher-panel');
+    
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'theme-switcher-panel';
+      panel.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(26, 26, 46, 0.98);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 15px;
+        z-index: 10002;
+        min-width: 200px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      `;
+      
+      const themes = [
+        { id: 'default', name: 'Default', color: '#1a1a2e' },
+        { id: 'cyberpunk', name: 'Cyberpunk', color: '#0f0f0f' },
+        { id: 'ocean', name: 'Ocean', color: '#0066cc' },
+        { id: 'sunset', name: 'Sunset', color: '#ff6b35' },
+        { id: 'catppuccinMocha', name: 'Mocha', color: '#1e1e2e' }
+      ];
+      
+      panel.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h4 style="margin: 0; color: var(--text-primary);">🎨 Themes</h4>
+          <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;">&times;</button>
+        </div>
+        
+        <div class="theme-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          ${themes.map(theme => `
+            <button onclick="window.changeTheme('${theme.id}'); this.parentElement.parentElement.parentElement.remove();" style="
+              background: ${theme.color};
+              border: 2px solid ${localStorage.getItem('theme') === theme.id ? 'var(--accent-primary)' : 'var(--border-secondary)'};
+              color: white;
+              padding: 8px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 11px;
+              text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+              transition: all 0.2s ease;
+            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              ${theme.name}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      
+      document.body.appendChild(panel);
+    } else {
+      panel.remove();
+    }
   }
 
   showNotification(message, type = 'info') {
