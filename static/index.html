@@ -310,7 +310,8 @@
           // Fallback for about:blank popup
           const win = window.open("about:blank");
           if (win) {
-            win.document.write('<html><head><title>My Drive - Google Drive</title></head><body><script>sessionStorage.setItem("GoUrl","' + __uv$config.encodeUrl(url) + '");window.location.href="/go";</script></body></html>');
+            const htmlContent = `<html><head><title>My Drive - Google Drive</title></head><body><sc` + `ript>sessionStorage.setItem("GoUrl","${__uv$config.encodeUrl(url)}");window.location.href="/go";</sc` + `ript></body></html>`;
+            win.document.write(htmlContent);
           }
         }
       };
@@ -325,7 +326,8 @@
         const popup = window.open("about:blank", "_blank");
         if (popup) {
           popup.document.title = "My Drive - Google Drive";
-          popup.document.write('<!DOCTYPE html><html><head><title>My Drive - Google Drive</title><link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"></head><body style="margin:0;"><iframe src="' + window.location.origin + '" style="border:none;width:100%;height:100vh;"></iframe></body></html>');
+          const htmlContent = `<!DOCTYPE html><html><head><title>My Drive - Google Drive</title><link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"></head><body style="margin:0;"><iframe src="${window.location.origin}" style="border:none;width:100%;height:100vh;"></iframe></body></html>`;
+          popup.document.write(htmlContent);
         }
       };
     </script>
