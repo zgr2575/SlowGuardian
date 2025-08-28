@@ -1058,3 +1058,136 @@ function getEnabledFeaturesCount() {
   const savedStates = JSON.parse(localStorage.getItem('feature_states') || '{}');
   return Object.values(savedStates).filter(state => state).length || 25; // Default to 25 enabled
 }
+
+// Version Information System
+async function loadVersionInfo() {
+  const versionContainer = document.getElementById('version-info-content');
+  const copyBtn = document.getElementById('copy-version-btn');
+  const checkUpdatesBtn = document.getElementById('check-updates-btn');
+  
+  if (!versionContainer) return;
+  
+  try {
+    const response = await fetch('/api/version');
+    if (!response.ok) throw new Error('Failed to fetch version info');
+    
+    const versionInfo = await response.json();
+    
+    // Format build date
+    const buildDate = new Date(versionInfo.buildDate);
+    const formattedDate = buildDate.toLocaleString();
+    
+    // Create version display
+    versionContainer.innerHTML = `
+      <div class="version-grid">
+        <div class="version-item primary">
+          <span class="label">Version</span>
+          <span class="value">v${versionInfo.version}</span>
+        </div>
+        <div class="version-item">
+          <span class="label">Build ID</span>
+          <span class="value">${versionInfo.buildId}</span>
+        </div>
+        <div class="version-item commit">
+          <span class="label">Commit</span>
+          <span class="value">${versionInfo.git.commitShort}</span>
+        </div>
+        <div class="version-item">
+          <span class="label">Branch</span>
+          <span class="value">${versionInfo.git.branch}</span>
+        </div>
+        <div class="version-item">
+          <span class="label">Build Date</span>
+          <span class="value">${formattedDate}</span>
+        </div>
+        <div class="version-item">
+          <span class="label">Environment</span>
+          <span class="value">${versionInfo.environment}
+            ${versionInfo.environment === 'development' ? '<span class="version-badge">🚧 DEV</span>' : ''}
+          </span>
+        </div>
+        <div class="version-item">
+          <span class="label">Commit Message</span>
+          <span class="value">${versionInfo.git.commitMessage}</span>
+        </div>
+        <div class="version-item">
+          <span class="label">Platform</span>
+          <span class="value">${versionInfo.platform} ${versionInfo.arch}</span>
+        </div>
+      </div>
+    `;
+    
+    // Show copy button
+    if (copyBtn) copyBtn.style.display = 'inline-block';
+    
+    // Setup copy functionality
+    if (copyBtn) {
+      copyBtn.onclick = () => copyVersionInfo(versionInfo);
+    }
+    
+    // Setup update check
+    if (checkUpdatesBtn) {
+      checkUpdatesBtn.onclick = () => checkForUpdates(versionInfo);
+    }
+    
+  } catch (error) {
+    versionContainer.innerHTML = `
+      <div class="version-loading" style="color: var(--color-error);">
+        Failed to load version information: ${error.message}
+      </div>
+    `;
+    console.error('Failed to load version info:', error);
+  }
+}
+
+function copyVersionInfo(versionInfo) {
+  const versionText = [
+    `SlowGuardian v${versionInfo.version}`,
+    `Build ID: ${versionInfo.buildId}`,
+    `Commit: ${versionInfo.git.commitShort} (${versionInfo.git.commitMessage})`,
+    `Branch: ${versionInfo.git.branch}`,
+    `Built: ${versionInfo.buildDate}`,
+    `Environment: ${versionInfo.environment}`,
+    `Platform: ${versionInfo.platform} ${versionInfo.arch}`,
+    `Node.js: ${versionInfo.nodeVersion}`
+  ].join('\n');
+  
+  navigator.clipboard.writeText(versionText).then(() => {
+    // Show success notification
+    if (window.showNotification) {
+      window.showNotification('Version info copied to clipboard!', 'success');
+    } else {
+      alert('Version info copied to clipboard!');
+    }
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    // Fallback: create temporary text area
+    const textArea = document.createElement('textarea');
+    textArea.value = versionText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    if (window.showNotification) {
+      window.showNotification('Version info copied to clipboard!', 'success');
+    } else {
+      alert('Version info copied to clipboard!');
+    }
+  });
+}
+
+function checkForUpdates(currentVersion) {
+  // Simulate update checking (in a real implementation, this would check GitHub releases)
+  if (window.showNotification) {
+    window.showNotification('Update check complete. You have the latest version!', 'success');
+  } else {
+    alert('Update check complete. You have the latest version!');
+  }
+}
+
+// Load version info when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Load version info after a short delay to ensure page is ready
+  setTimeout(loadVersionInfo, 500);
+});

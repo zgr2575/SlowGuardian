@@ -1,0 +1,18 @@
+{
+  "version": "9.0.0",
+  "name": "slowguardian",
+  "buildId": "576c973-1756393515963",
+  "buildDate": "2025-08-28T15:05:15.963Z",
+  "buildTimestamp": 1756393515963,
+  "git": {
+    "commit": "576c973d6a86d9ec58c91720e66e5f102968e817",
+    "commitShort": "576c973",
+    "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
+    "commitDate": "2025-08-28T14:40:55Z",
+    "commitMessage": "Fix template literal syntax errors in HTML"
+  },
+  "environment": "development",
+  "nodeVersion": "v20.19.4",
+  "platform": "linux",
+  "arch": "x64"
+}

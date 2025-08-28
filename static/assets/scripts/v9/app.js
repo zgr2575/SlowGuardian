@@ -11,6 +11,7 @@ import { ui } from "./ui.js";
 class SlowGuardianApp {
   constructor() {
     this.version = "9.0.0";
+    this.buildInfo = null;
     this.initialized = false;
     this.particleSystem = null;
     this.features = {
@@ -24,7 +25,16 @@ class SlowGuardianApp {
   async init() {
     if (this.initialized) return;
 
+    // Load build information first
+    await this.loadVersionInfo();
+
     console.log(`🚀 SlowGuardian v${this.version} initializing...`);
+    if (this.buildInfo) {
+      console.log(`🔨 Build: ${this.buildInfo.buildId}`);
+      console.log(`📅 Built: ${this.buildInfo.buildDate}`);
+      console.log(`🌿 Branch: ${this.buildInfo.git.branch}`);
+      console.log(`🔗 Commit: ${this.buildInfo.git.commitShort} - ${this.buildInfo.git.commitMessage}`);
+    }
 
     try {
       // Show loading screen
@@ -72,6 +82,93 @@ class SlowGuardianApp {
 
     // Setup performance monitoring
     this.setupPerformanceMonitoring();
+  }
+
+  async loadVersionInfo() {
+    try {
+      const response = await fetch('/version.json');
+      if (response.ok) {
+        this.buildInfo = await response.json();
+        this.version = this.buildInfo.version;
+        
+        // Update page title with version if needed
+        if (document.title.includes('v9')) {
+          document.title = document.title.replace('v9', `v${this.version}`);
+        }
+        
+        // Update footer version info
+        this.updateFooterVersion();
+        
+        // Add version info to console for debugging
+        console.log(`%c🛡️ SlowGuardian v${this.version}`, 'color: #7c3aed; font-weight: bold; font-size: 16px;');
+        
+        // Make version info globally available
+        window.SlowGuardianVersion = this.buildInfo;
+        
+      } else {
+        console.warn('Could not load version information');
+      }
+    } catch (error) {
+      console.warn('Failed to load version info:', error);
+    }
+  }
+
+  updateFooterVersion() {
+    const footerVersionText = document.getElementById('footer-version-text');
+    const footerBuildInfo = document.getElementById('footer-build-info');
+    
+    if (footerVersionText && this.buildInfo) {
+      footerVersionText.textContent = `v${this.buildInfo.version}`;
+    }
+    
+    if (footerBuildInfo && this.buildInfo) {
+      const buildDate = new Date(this.buildInfo.buildDate);
+      const timeAgo = this.getTimeAgo(buildDate);
+      
+      footerBuildInfo.textContent = `Build ${this.buildInfo.git.commitShort} (${timeAgo})`;
+      footerBuildInfo.className = 'build-info loaded';
+      footerBuildInfo.title = `
+Full Build Info:
+Build ID: ${this.buildInfo.buildId}
+Commit: ${this.buildInfo.git.commitShort} - ${this.buildInfo.git.commitMessage}
+Branch: ${this.buildInfo.git.branch}
+Built: ${this.buildInfo.buildDate}
+Environment: ${this.buildInfo.environment}
+      `.trim();
+      
+      // Make build info clickable to copy version details
+      footerBuildInfo.addEventListener('click', () => {
+        this.copyVersionToClipboard();
+      });
+    }
+  }
+
+  getTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 60) {
+      return `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    } else {
+      return `${diffDays}d ago`;
+    }
+  }
+
+  copyVersionToClipboard() {
+    if (!this.buildInfo) return;
+    
+    const versionText = `SlowGuardian v${this.buildInfo.version} - Build ${this.buildInfo.git.commitShort}`;
+    
+    navigator.clipboard.writeText(versionText).then(() => {
+      console.log('Version info copied to clipboard:', versionText);
+    }).catch(err => {
+      console.warn('Failed to copy version info:', err);
+    });
   }
 
   async initializeUI() {
@@ -312,6 +409,12 @@ class SlowGuardianApp {
       if (e.ctrlKey && e.shiftKey && e.key === "P") {
         e.preventDefault();
         this.togglePerformanceMode();
+      }
+
+      // Show version info on Ctrl+Shift+V
+      if (e.ctrlKey && e.shiftKey && e.key === "V") {
+        e.preventDefault();
+        this.showVersionModal();
       }
     });
 
@@ -717,6 +820,134 @@ class SlowGuardianApp {
         }
       }
     });
+  }
+
+  showVersionModal() {
+    if (!this.buildInfo) {
+      console.log('Version info not loaded yet');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal version-modal';
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    `;
+
+    const buildDate = new Date(this.buildInfo.buildDate);
+    
+    modal.innerHTML = `
+      <div class="modal-content" style="
+        background: var(--bg-primary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+      ">
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+          <h2 style="color: var(--text-primary); margin: 0;">🛡️ SlowGuardian Version</h2>
+          <button class="close-btn" style="
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+          ">&times;</button>
+        </div>
+        <div class="version-details" style="
+          display: grid;
+          gap: var(--space-3);
+          font-family: var(--font-mono);
+          font-size: var(--font-size-sm);
+        ">
+          <div><strong>Version:</strong> v${this.buildInfo.version}</div>
+          <div><strong>Build ID:</strong> ${this.buildInfo.buildId}</div>
+          <div><strong>Commit:</strong> ${this.buildInfo.git.commitShort} (${this.buildInfo.git.commitMessage})</div>
+          <div><strong>Branch:</strong> ${this.buildInfo.git.branch}</div>
+          <div><strong>Built:</strong> ${buildDate.toLocaleString()}</div>
+          <div><strong>Environment:</strong> ${this.buildInfo.environment}</div>
+          <div><strong>Platform:</strong> ${this.buildInfo.platform} ${this.buildInfo.arch}</div>
+          <div><strong>Node.js:</strong> ${this.buildInfo.nodeVersion}</div>
+        </div>
+        <div class="modal-actions" style="
+          margin-top: var(--space-4);
+          display: flex;
+          gap: var(--space-2);
+          justify-content: flex-end;
+        ">
+          <button class="copy-btn btn btn-secondary">📋 Copy Info</button>
+          <button class="close-btn btn btn-primary">Close</button>
+        </div>
+      </div>
+    `;
+
+    // Add event listeners
+    const closeButtons = modal.querySelectorAll('.close-btn');
+    const copyButton = modal.querySelector('.copy-btn');
+    
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.remove();
+      });
+    });
+    
+    copyButton.addEventListener('click', () => {
+      const versionText = [
+        `SlowGuardian v${this.buildInfo.version}`,
+        `Build ID: ${this.buildInfo.buildId}`,
+        `Commit: ${this.buildInfo.git.commitShort} (${this.buildInfo.git.commitMessage})`,
+        `Branch: ${this.buildInfo.git.branch}`,
+        `Built: ${this.buildInfo.buildDate}`,
+        `Environment: ${this.buildInfo.environment}`,
+        `Platform: ${this.buildInfo.platform} ${this.buildInfo.arch}`,
+        `Node.js: ${this.buildInfo.nodeVersion}`
+      ].join('\n');
+      
+      navigator.clipboard.writeText(versionText).then(() => {
+        copyButton.textContent = '✅ Copied!';
+        setTimeout(() => {
+          copyButton.textContent = '📋 Copy Info';
+        }, 2000);
+      });
+    });
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+
+    // Close on Escape key
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+
+    document.body.appendChild(modal);
   }
 
   // Public API methods

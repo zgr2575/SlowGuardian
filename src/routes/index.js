@@ -50,6 +50,49 @@ export function setupRoutes(app, config) {
  * Setup API routes
  */
 function setupApiRoutes(app, config) {
+  // Version information endpoint
+  app.get("/api/version", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const versionData = fs.readFileSync(
+        join(__dirname, "../../static/version.json"), 
+        "utf8"
+      );
+      const versionInfo = JSON.parse(versionData);
+      res.json(versionInfo);
+    } catch (error) {
+      // Fallback if version.json doesn't exist
+      res.json({
+        version: config.version,
+        name: "slowguardian",
+        buildId: "unknown",
+        buildDate: new Date().toISOString(),
+        git: {
+          commit: "unknown",
+          commitShort: "unknown",
+          branch: "unknown",
+          commitMessage: "unknown"
+        },
+        environment: config.debug ? "development" : "production"
+      });
+    }
+  });
+
+  // Short version endpoint
+  app.get("/version", async (req, res) => {
+    try {
+      const fs = await import("fs");
+      const versionData = fs.readFileSync(
+        join(__dirname, "../../static/version.json"), 
+        "utf8"
+      );
+      const versionInfo = JSON.parse(versionData);
+      res.send(`${versionInfo.version}-${versionInfo.git.commitShort}`);
+    } catch (error) {
+      res.send(`${config.version}-unknown`);
+    }
+  });
+
   // Configuration endpoint (for frontend)
   app.get("/api/config", (req, res) => {
     res.json({

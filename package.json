@@ -15,13 +15,14 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "start": "npm run build:version && node index.js",
+    "dev": "npm run build:version && node --watch index.js",
     "format": "npx prettier . --write",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
     "test": "node --test",
-    "build": "npm run format && npm run lint",
+    "build": "npm run build:version && npm run format && npm run lint",
+    "build:version": "node scripts/build-version.js",
     "audit-fix": "npm audit fix",
     "upd": "git pull --force --allow-unrelated-histories"
   },
