@@ -1,151 +1,180 @@
 /**
- * Legacy UI Mode for SlowGuardian v9
- * Provides backward compatibility with older UI styles
+ * Performance Mode for SlowGuardian v9
+ * Optimized interface for less intensive laptops and slower devices
  */
 
-class LegacyUIMode {
+class PerformanceMode {
   constructor() {
-    this.isLegacyMode = getCookie('legacy-ui') === 'true' || localStorage.getItem('legacy-ui') === 'true';
-    this.legacyCSS = null;
+    this.isPerformanceMode = getCookie('performance-mode') === 'true' || localStorage.getItem('performance-mode') === 'true';
+    this.performanceCSS = null;
     this.init();
   }
 
   init() {
-    if (this.isLegacyMode) {
-      this.enableLegacyMode();
+    if (this.isPerformanceMode) {
+      this.enablePerformanceMode();
     }
     
-    // Add legacy mode toggle to settings
-    this.addLegacyModeToggle();
+    // Add performance mode toggle to settings
+    this.addPerformanceModeToggle();
   }
 
-  enableLegacyMode() {
-    console.log('🔄 Enabling Legacy UI Mode...');
+  enablePerformanceMode() {
+    console.log('🚀 Enabling Performance Mode...');
     
-    // Remove modern styles and apply legacy styles
-    this.removeModernStyles();
-    this.applyLegacyStyles();
-    this.modifyLayout();
+    // Apply performance optimizations
+    this.removeHeavyAnimations();
+    this.optimizeParticles();
+    this.reduceVisualEffects();
+    this.optimizeLayout();
     
     // Store preference
-    setCookie('legacy-ui', 'true');
-    localStorage.setItem('legacy-ui', 'true');
+    setCookie('performance-mode', 'true', 365);
+    localStorage.setItem('performance-mode', 'true');
     
-    console.log('✅ Legacy UI Mode enabled');
+    console.log('✅ Performance Mode enabled');
   }
 
-  disableLegacyMode() {
-    console.log('🔄 Disabling Legacy UI Mode...');
+  disablePerformanceMode() {
+    console.log('🔄 Disabling Performance Mode...');
     
-    // Remove legacy styles and restore modern styles
-    this.removeLegacyStyles();
-    this.restoreModernStyles();
+    // Restore full visual effects
+    this.restoreAnimations();
+    this.restoreParticles();
+    this.restoreVisualEffects();
     this.restoreLayout();
     
     // Store preference
-    setCookie('legacy-ui', 'false');
-    localStorage.setItem('legacy-ui', 'false');
+    setCookie('performance-mode', 'false', 365);
+    localStorage.setItem('performance-mode', 'false');
     
-    console.log('✅ Legacy UI Mode disabled');
+    console.log('✅ Performance Mode disabled');
   }
 
-  removeModernStyles() {
-    // Remove modern CSS files
-    const modernStyles = [
-      'assets/styles/v9/main.css',
-      'assets/styles/v9/components.css',
-      'assets/styles/v9/animations.css'
-    ];
-    
-    modernStyles.forEach(href => {
-      const link = document.querySelector(`link[href*="${href}"]`);
-      if (link) {
-        link.disabled = true;
+  removeHeavyAnimations() {
+    // Disable heavy CSS animations for better performance
+    const style = document.createElement('style');
+    style.id = 'performance-mode-animations';
+    style.textContent = `
+      /* Performance Mode - Reduced Animations */
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: -1ms !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
       }
-    });
+      
+      .particles-js-canvas-el {
+        display: none !important;
+      }
+      
+      .floating-shapes * {
+        animation: none !important;
+      }
+      
+      .bg-gradient {
+        background: #1a1a2e !important;
+        animation: none !important;
+      }
+    `;
+    document.head.appendChild(style);
   }
 
-  applyLegacyStyles() {
-    if (!this.legacyCSS) {
-      this.legacyCSS = document.createElement('style');
-      this.legacyCSS.id = 'legacy-ui-styles';
-      this.legacyCSS.textContent = `
-        /* Legacy UI Styles - SlowGuardian v8 Compatible */
+  optimizeParticles() {
+    // Disable particles for better performance
+    const particlesContainer = document.querySelector('#particles');
+    if (particlesContainer) {
+      particlesContainer.style.display = 'none';
+    }
+    
+    // Disable any particle.js instances
+    if (window.pJSDom && window.pJSDom.length > 0) {
+      window.pJSDom.forEach(pjs => {
+        if (pjs.pJS.fn.vendors.destroypJS) {
+          pjs.pJS.fn.vendors.destroypJS();
+        }
+      });
+    }
+  }
+
+  reduceVisualEffects() {
+    // Apply performance-focused styles
+    if (!this.performanceCSS) {
+      this.performanceCSS = document.createElement('style');
+      this.performanceCSS.id = 'performance-mode-styles';
+      this.performanceCSS.textContent = `
+        /* Performance Mode Optimizations */
         
-        :root {
-          --legacy-bg-primary: #1a1a2e;
-          --legacy-bg-secondary: #16213e;
-          --legacy-bg-tertiary: #0f3460;
-          --legacy-text-primary: #eee;
-          --legacy-text-secondary: #aaa;
-          --legacy-accent: #e94560;
-          --legacy-border: #333;
+        .background {
+          background: #1a1a2e !important;
         }
         
-        body {
-          background: var(--legacy-bg-primary) !important;
-          color: var(--legacy-text-primary) !important;
-          font-family: 'Arial', sans-serif !important;
+        .bg-gradient, .bg-particles, .bg-overlay {
+          display: none !important;
         }
         
         .navbar {
-          background: var(--legacy-bg-secondary) !important;
-          border-bottom: 2px solid var(--legacy-accent) !important;
-          height: 60px !important;
-          border-radius: 0 !important;
+          backdrop-filter: none !important;
+          background: rgba(26, 26, 46, 0.95) !important;
+        }
+        
+        .card, .settings-card, .feature-card {
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
           backdrop-filter: none !important;
         }
         
-        .nav-brand {
-          font-size: 18px !important;
-          font-weight: bold !important;
+        .btn {
+          transition: none !important;
         }
         
-        .nav-link {
-          background: transparent !important;
-          border: 1px solid var(--legacy-border) !important;
-          color: var(--legacy-text-primary) !important;
-          padding: 8px 12px !important;
-          margin: 0 5px !important;
-          border-radius: 4px !important;
-          transition: all 0.2s ease !important;
+        .loading-spinner {
+          animation: none !important;
         }
         
-        .nav-link:hover {
-          background: var(--legacy-accent) !important;
-          border-color: var(--legacy-accent) !important;
+        img, video {
+          image-rendering: optimizeSpeed !important;
         }
-        
-        .nav-link.active {
-          background: var(--legacy-accent) !important;
-          border-color: var(--legacy-accent) !important;
-        }
-        
-        .hero {
-          background: linear-gradient(135deg, var(--legacy-bg-secondary), var(--legacy-bg-tertiary)) !important;
-          border-radius: 8px !important;
-          margin: 20px !important;
-          padding: 40px !important;
-        }
-        
-        .hero-title {
-          font-size: 3rem !important;
-          text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
-        }
-        
-        .search-container {
-          background: var(--legacy-bg-secondary) !important;
-          border: 2px solid var(--legacy-border) !important;
-          border-radius: 25px !important;
-          padding: 10px 20px !important;
-        }
-        
-        .search-input {
-          background: transparent !important;
-          border: none !important;
-          color: var(--legacy-text-primary) !important;
-          font-size: 16px !important;
-        }
+      `;
+    }
+    document.head.appendChild(this.performanceCSS);
+  }
+
+  optimizeLayout() {
+    // Add performance class to body
+    document.body.classList.add('performance-mode');
+    
+    // Reduce DOM updates
+    document.documentElement.style.setProperty('--animation-speed', '0');
+  }
+
+  restoreAnimations() {
+    const style = document.getElementById('performance-mode-animations');
+    if (style) style.remove();
+  }
+
+  restoreParticles() {
+    const particlesContainer = document.querySelector('#particles');
+    if (particlesContainer) {
+      particlesContainer.style.display = '';
+    }
+    
+    // Reinitialize particles if available
+    if (typeof initParticles === 'function') {
+      initParticles();
+    }
+  }
+
+  restoreVisualEffects() {
+    if (this.performanceCSS) {
+      this.performanceCSS.remove();
+      this.performanceCSS = null;
+    }
+  }
+
+  restoreLayout() {
+    document.body.classList.remove('performance-mode');
+    document.documentElement.style.removeProperty('--animation-speed');
+  }
         
         .btn {
           background: var(--legacy-accent) !important;

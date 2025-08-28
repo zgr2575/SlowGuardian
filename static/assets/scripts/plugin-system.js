@@ -34,7 +34,7 @@ class PluginSystem {
   }
 
   async loadCorePlugins() {
-    // Load essential plugins that come with SlowGuardian
+    // Load essential plugins that come with SlowGuardian - all disabled by default
     const corePlugins = [
       'notes-manager',
       'bookmark-system',
@@ -43,11 +43,14 @@ class PluginSystem {
       'theme-creator'
     ];
 
+    // Only load core plugins if they are explicitly enabled
     for (const pluginId of corePlugins) {
-      try {
-        await this.loadPlugin(pluginId, true);
-      } catch (error) {
-        console.warn(`Failed to load core plugin ${pluginId}:`, error);
+      if (this.enabledPlugins.includes(pluginId)) {
+        try {
+          await this.loadPlugin(pluginId, true);
+        } catch (error) {
+          console.warn(`Failed to load core plugin ${pluginId}:`, error);
+        }
       }
     }
   }

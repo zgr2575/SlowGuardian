@@ -27,7 +27,7 @@ class SlowGuardianFeatures {
       name: 'Smart Search Suggestions',
       description: 'AI-powered search suggestions with history',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initSmartSearch()
     });
 
@@ -36,7 +36,7 @@ class SlowGuardianFeatures {
       name: 'Quick Access Toolbar',
       description: 'Customizable toolbar for frequent sites',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initQuickAccess()
     });
 
@@ -54,7 +54,7 @@ class SlowGuardianFeatures {
       name: 'Gesture Navigation',
       description: 'Swipe gestures for navigation',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initGestureNavigation()
     });
 
@@ -63,7 +63,7 @@ class SlowGuardianFeatures {
       name: 'URL Auto-Complete',
       description: 'Smart URL completion based on history',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initAutoComplete()
     });
 
@@ -72,7 +72,7 @@ class SlowGuardianFeatures {
       name: 'Recently Visited Sites',
       description: 'Quick access to recent sites',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initRecentlyVisited()
     });
 
@@ -81,7 +81,7 @@ class SlowGuardianFeatures {
       name: 'Bookmark System',
       description: 'Save and organize favorite sites',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initBookmarks()
     });
 
@@ -90,7 +90,7 @@ class SlowGuardianFeatures {
       name: 'Tab Groups',
       description: 'Organize tabs into groups',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initTabGroups()
     });
 
@@ -99,7 +99,7 @@ class SlowGuardianFeatures {
       name: 'Smart Notifications',
       description: 'Contextual notifications and alerts',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initSmartNotifications()
     });
 
@@ -108,7 +108,7 @@ class SlowGuardianFeatures {
       name: 'Progressive Loading',
       description: 'Enhanced loading with progress indicators',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initProgressiveLoading()
     });
 
@@ -122,7 +122,7 @@ class SlowGuardianFeatures {
       name: 'Adaptive UI',
       description: 'UI adapts to usage patterns',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initAdaptiveUI()
     });
 
@@ -131,7 +131,7 @@ class SlowGuardianFeatures {
       name: 'Contextual Menus',
       description: 'Smart right-click menus',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initContextualMenus()
     });
 
@@ -140,7 +140,7 @@ class SlowGuardianFeatures {
       name: 'Enhanced Keyboard Shortcuts',
       description: 'Comprehensive keyboard navigation',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initKeyboardShortcuts()
     });
 
@@ -149,7 +149,7 @@ class SlowGuardianFeatures {
       name: 'Search Within Page',
       description: 'Find text within current page',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initPageSearch()
     });
 
@@ -158,7 +158,7 @@ class SlowGuardianFeatures {
       name: 'Auto-Save Forms',
       description: 'Automatically save form data',
       category: 'ux',
-      enabled: true,
+      enabled: false,
       init: () => this.initAutoSaveForms()
     });
 
@@ -174,7 +174,7 @@ class SlowGuardianFeatures {
         name: this.formatFeatureName(feature),
         description: `Enhanced ${feature} functionality`,
         category: 'ux',
-        enabled: true,
+        enabled: false,
         init: () => this.initGenericFeature(feature)
       });
     });
@@ -190,7 +190,7 @@ class SlowGuardianFeatures {
       name: 'Built-in Note Taking',
       description: 'Take notes while browsing',
       category: 'productivity',
-      enabled: true,
+      enabled: false,
       init: () => this.initNoteTaking()
     });
 
@@ -199,7 +199,7 @@ class SlowGuardianFeatures {
       name: 'Advanced Screenshot Tools',
       description: 'Capture, edit, and annotate screenshots',
       category: 'productivity',
-      enabled: true,
+      enabled: false,
       init: () => this.initScreenshotTools()
     });
 
@@ -208,7 +208,7 @@ class SlowGuardianFeatures {
       name: 'Built-in PDF Reader',
       description: 'View PDFs without external apps',
       category: 'productivity',
-      enabled: true,
+      enabled: false,
       init: () => this.initPDFReader()
     });
 
@@ -217,7 +217,7 @@ class SlowGuardianFeatures {
       name: 'Download Manager',
       description: 'Manage downloads with progress tracking',
       category: 'productivity',
-      enabled: true,
+      enabled: false,
       init: () => this.initDownloadManager()
     });
 
@@ -226,7 +226,7 @@ class SlowGuardianFeatures {
       name: 'Password Manager',
       description: 'Secure password storage and generation',
       category: 'productivity',
-      enabled: true,
+      enabled: false,
       init: () => this.initPasswordManager()
     });
 
@@ -248,7 +248,7 @@ class SlowGuardianFeatures {
         name: this.formatFeatureName(feature),
         description: `Advanced ${feature} functionality`,
         category: 'productivity',
-        enabled: true,
+        enabled: false,
         init: () => this.initProductivityFeature(feature)
       });
     });
@@ -264,7 +264,7 @@ class SlowGuardianFeatures {
       name: 'Advanced Theme Builder',
       description: 'Create and share custom themes',
       category: 'customization',
-      enabled: true,
+      enabled: false,
       init: () => this.initThemeBuilder()
     });
 
@@ -273,7 +273,7 @@ class SlowGuardianFeatures {
       name: 'Custom CSS Injection',
       description: 'Inject custom CSS into websites',
       category: 'customization',
-      enabled: true,
+      enabled: false,
       init: () => this.initCustomCSS()
     });
 
@@ -282,7 +282,7 @@ class SlowGuardianFeatures {
       name: 'Layout Customizer',
       description: 'Customize browser layout',
       category: 'customization',
-      enabled: true,
+      enabled: false,
       init: () => this.initLayoutCustomizer()
     });
 
@@ -301,7 +301,7 @@ class SlowGuardianFeatures {
         name: this.formatFeatureName(feature),
         description: `Customize ${feature} appearance`,
         category: 'customization',
-        enabled: true,
+        enabled: false,
         init: () => this.initCustomizationFeature(feature)
       });
     });
@@ -783,11 +783,16 @@ class SlowGuardianFeatures {
     this.features.forEach((feature, id) => {
       featureStates[id] = feature.enabled;
     });
-    localStorage.setItem('feature_states', JSON.stringify(featureStates));
+    
+    // Save to both cookies and localStorage for better persistence
+    const stateString = JSON.stringify(featureStates);
+    setCookie('feature_states', stateString, 365);
+    localStorage.setItem('feature_states', stateString);
   }
 
   loadFeatureState() {
-    const saved = localStorage.getItem('feature_states');
+    // Try cookies first, then localStorage
+    const saved = getCookie('feature_states') || localStorage.getItem('feature_states');
     if (saved) {
       const featureStates = JSON.parse(saved);
       this.features.forEach((feature, id) => {
