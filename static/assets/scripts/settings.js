@@ -828,9 +828,28 @@ function toggleAB() {
     // Auto-open popup when enabled
     setTimeout(() => {
       AB();
-    }, 500);
+    }, 1000); // Increased delay for better reliability
   }
 }
+
+// Check for auto-popup on page load
+document.addEventListener("DOMContentLoaded", function() {
+  const abEnabled = localStorage.getItem("ab");
+  const abSwitch = document.getElementById("ab-settings-switch");
+  
+  if (abSwitch) {
+    abSwitch.checked = abEnabled === "true";
+    abSwitch.addEventListener("change", toggleAB);
+  }
+  
+  // Auto-popup if enabled and not in iframe
+  if (abEnabled === "true" && window.self === window.top) {
+    // Add a small delay to ensure page is fully loaded
+    setTimeout(() => {
+      AB();
+    }, 2000);
+  }
+});
 // Search Engine
 function EngineChange(dropdown) {
   var selectedEngine = dropdown.value;
@@ -867,4 +886,175 @@ document.addEventListener("DOMContentLoaded", function () {
   if (selectedEngineName) {
     dropdown.value = selectedEngineName;
   }
+
+  // Features Management
+  const openFeaturesBtn = document.getElementById("open-features-manager-btn");
+  if (openFeaturesBtn) {
+    openFeaturesBtn.addEventListener("click", openFeaturesManager);
+  }
+
+  // Update features preview
+  updateFeaturesPreview();
+  
+  // Auto-update features preview every 5 seconds
+  setInterval(updateFeaturesPreview, 5000);
 });
+
+// Features Management Functions
+function openFeaturesManager() {
+  // Create features manager modal
+  if (!document.getElementById('features-manager-modal')) {
+    createFeaturesManagerModal();
+  }
+  
+  const modal = document.getElementById('features-manager-modal');
+  modal.classList.add('active');
+  
+  // Initialize features manager if not already done
+  if (!window.featuresManagerInitialized) {
+    initializeFeaturesManager();
+    window.featuresManagerInitialized = true;
+  }
+}
+
+function createFeaturesManagerModal() {
+  const modal = document.createElement('div');
+  modal.id = 'features-manager-modal';
+  modal.className = 'features-modal';
+  modal.innerHTML = `
+    <div class="features-modal-content">
+      <div class="features-modal-header">
+        <h3>🚀 Features Manager</h3>
+        <button class="features-modal-close" onclick="closeFeaturesManager()">&times;</button>
+      </div>
+      <div class="features-modal-body" id="features-manager-container">
+        <!-- Features manager content will be loaded here -->
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Close on outside click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeFeaturesManager();
+    }
+  });
+}
+
+function closeFeaturesManager() {
+  const modal = document.getElementById('features-manager-modal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+function initializeFeaturesManager() {
+  const container = document.getElementById('features-manager-container');
+  if (!container) return;
+  
+  // Create a temporary features manager instance
+  const featuresManager = new FeaturesManager();
+  featuresManager.createFeaturesInterface = function() {
+    // Override to inject into modal instead
+    const featuresSection = document.createElement('div');
+    featuresSection.innerHTML = this.getFeaturesHTML();
+    container.appendChild(featuresSection);
+    
+    // Setup event listeners
+    this.setupEventListeners();
+    this.loadFeatures();
+  };
+  
+  featuresManager.getFeaturesHTML = function() {
+    return `
+      <div class="features-controls">
+        <div class="features-search">
+          <input type="text" id="features-search-modal" placeholder="🔍 Search features..." />
+        </div>
+        
+        <div class="features-categories">
+          <button class="category-btn active" data-category="all">All (100)</button>
+          <button class="category-btn" data-category="ux">User Experience (25)</button>
+          <button class="category-btn" data-category="productivity">Productivity (25)</button>
+          <button class="category-btn" data-category="customization">Customization (25)</button>
+          <button class="category-btn" data-category="advanced">Advanced (25)</button>
+        </div>
+        
+        <div class="features-bulk-actions">
+          <button id="enable-all-btn-modal" class="btn btn-success">✅ Enable All</button>
+          <button id="disable-all-btn-modal" class="btn btn-warning">❌ Disable All</button>
+          <button id="reset-features-btn-modal" class="btn btn-secondary">🔄 Reset to Defaults</button>
+        </div>
+      </div>
+      
+      <div class="features-stats">
+        <div class="stat-card">
+          <span class="stat-number" id="enabled-count-modal">0</span>
+          <span class="stat-label">Enabled</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="disabled-count-modal">0</span>
+          <span class="stat-label">Disabled</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="total-count-modal">100</span>
+          <span class="stat-label">Total</span>
+        </div>
+      </div>
+      
+      <div class="features-grid" id="features-grid-modal">
+        <!-- Features will be populated here -->
+      </div>
+      
+      <div class="features-performance">
+        <h3>⚡ Performance Impact</h3>
+        <div class="performance-bar">
+          <div class="performance-fill" id="performance-fill-modal"></div>
+        </div>
+        <p id="performance-text-modal">Low impact - All features can be enabled safely</p>
+      </div>
+    `;
+  };
+  
+  featuresManager.createFeaturesInterface();
+}
+
+function updateFeaturesPreview() {
+  // Update the features preview in settings
+  const enabledFeatures = getEnabledFeaturesCount();
+  const totalFeatures = 100;
+  const disabledFeatures = totalFeatures - enabledFeatures;
+  
+  // Update preview counts
+  const enabledElement = document.getElementById('preview-enabled-count');
+  const disabledElement = document.getElementById('preview-disabled-count');
+  
+  if (enabledElement) enabledElement.textContent = enabledFeatures;
+  if (disabledElement) disabledElement.textContent = disabledFeatures;
+  
+  // Update category counts (simulate for now)
+  updateCategoryCount('ux-count', Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount('productivity-count', Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount('customization-count', Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount('advanced-count', Math.floor(enabledFeatures * 0.25));
+}
+
+function updateCategoryCount(elementId, enabled) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.textContent = `${enabled}/25 enabled`;
+  }
+}
+
+function getEnabledFeaturesCount() {
+  // Get from features manager if available, otherwise simulate
+  if (window.sgFeatures && window.sgFeatures.features) {
+    return Array.from(window.sgFeatures.features.values()).filter(f => f.enabled).length;
+  }
+  
+  // Simulate based on localStorage or default
+  const savedStates = JSON.parse(localStorage.getItem('feature_states') || '{}');
+  return Object.values(savedStates).filter(state => state).length || 25; // Default to 25 enabled
+}

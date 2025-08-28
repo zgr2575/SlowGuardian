@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="assets/styles/theme-creator.css" />
     <link rel="stylesheet" href="assets/styles/auth.css" />
     <link rel="stylesheet" href="assets/styles/admin.css" />
+    <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -64,9 +65,17 @@
             <i class="icon">🎮</i>
             <span>Games</span>
           </a>
+          <a href="/tabs" class="nav-link" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
           <a href="/settings" class="nav-link active" data-page="settings">
             <i class="icon">⚙️</i>
             <span>Settings</span>
+          </a>
+          <a href="/developer" class="nav-link" data-page="developer">
+            <i class="icon">🛠️</i>
+            <span>Developer</span>
           </a>
         </div>
 
@@ -91,6 +100,55 @@
 
         <div class="settings-container">
           <div class="settings-grid">
+            <!-- Features Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🚀 Features Management</h3>
+                <p class="card-description">Customize your SlowGuardian experience with 100+ quality of life improvements</p>
+              </div>
+              <div class="settings-controls">
+                <div class="features-preview">
+                  <div class="feature-stats">
+                    <div class="feature-stat">
+                      <span class="stat-number" id="preview-enabled-count">0</span>
+                      <span class="stat-label">Enabled</span>
+                    </div>
+                    <div class="feature-stat">
+                      <span class="stat-number" id="preview-disabled-count">0</span>
+                      <span class="stat-label">Disabled</span>
+                    </div>
+                    <div class="feature-stat">
+                      <span class="stat-number">100</span>
+                      <span class="stat-label">Total</span>
+                    </div>
+                  </div>
+                  
+                  <div class="feature-categories-preview">
+                    <div class="category-preview">
+                      <span class="category-name">User Experience</span>
+                      <span class="category-count" id="ux-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Productivity</span>
+                      <span class="category-count" id="productivity-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Customization</span>
+                      <span class="category-count" id="customization-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Advanced</span>
+                      <span class="category-count" id="advanced-count">25 features</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <button id="open-features-manager-btn" class="btn btn-primary btn-block">
+                  🎛️ Open Features Manager
+                </button>
+              </div>
+            </div>
+
             <!-- About:Blank -->
             <div class="card settings-card">
               <div class="card-header">
@@ -109,15 +167,18 @@
             <!-- Screenshot Protection -->
             <div class="card settings-card">
               <div class="card-header">
-                <h3 class="card-title">🛡️ Screenshot Protection</h3>
-                <p class="card-description">Automatically shows your spoofed tab content when screenshots are detected. Protects against unauthorized surveillance and screen capture attempts.</p>
+                <h3 class="card-title">🛡️ Screenshot Protection <span class="feature-badge disabled">Developer Only</span></h3>
+                <p class="card-description">Advanced anti-surveillance system that shows spoofed content when screenshots are detected. This feature is only available in Developer Mode.</p>
               </div>
               <div class="settings-controls">
-                <label class="switch">
-                  <input type="checkbox" id="screenshot-protection-switch" class="slider-checkbox" />
+                <label class="switch disabled">
+                  <input type="checkbox" id="screenshot-protection-switch" class="slider-checkbox" disabled />
                   <span class="switch-slider"></span>
                 </label>
-                <button id="test-protection-btn" class="btn btn-secondary">Test Protection</button>
+                <button id="test-protection-btn" class="btn btn-secondary" disabled>Test Protection</button>
+                <div class="feature-notice">
+                  <p>🔒 This feature requires Developer Mode access. Contact your administrator or access Developer Mode to enable screenshot protection.</p>
+                </div>
               </div>
             </div>
 
@@ -397,6 +458,39 @@
                   
                   <button id="admin-logout-btn" class="btn btn-secondary">Logout</button>
                 </div>
+              </div>
+            </div>
+
+            <!-- Developer Mode Access -->
+            <div class="card settings-card developer-access">
+              <div class="card-header">
+                <h3 class="card-title">🛠️ Developer Mode</h3>
+                <p class="card-description">Access advanced administrative controls, user management, and developer-only features</p>
+              </div>
+              <div class="settings-controls">
+                <div class="developer-info">
+                  <div class="developer-features">
+                    <div class="dev-feature">
+                      <span class="dev-icon">👥</span>
+                      <span class="dev-text">User Management</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🌐</span>
+                      <span class="dev-text">Global Site Controls</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🛡️</span>
+                      <span class="dev-text">Advanced Security</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🤖</span>
+                      <span class="dev-text">ChatGPT Integration</span>
+                    </div>
+                  </div>
+                </div>
+                <a href="/developer" class="btn btn-primary btn-block">
+                  🚪 Access Developer Mode
+                </a>
               </div>
             </div>
 

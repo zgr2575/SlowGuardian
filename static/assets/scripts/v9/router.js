@@ -1118,6 +1118,16 @@ router.register("/settings", {
   onEnter: () => new SettingsController().onEnter(),
 });
 
+router.register("/tabs", {
+  title: "SlowGuardian v9 - Browser Tabs",
+  onEnter: () => new TabsController().onEnter(),
+});
+
+router.register("/developer", {
+  title: "SlowGuardian v9 - Developer Mode",
+  onEnter: () => new DeveloperController().onEnter(),
+});
+
 export {
   router,
   PageController,
@@ -1125,4 +1135,42 @@ export {
   AppsController,
   GamesController,
   SettingsController,
+  TabsController,
+  DeveloperController,
 };
+
+// Tabs page controller
+class TabsController extends PageController {
+  constructor() {
+    super("tabs");
+  }
+
+  async init() {
+    this.element = $("#page-tabs");
+  }
+
+  async load() {
+    // Initialize browser tabs system
+    if (window.browserTabs) {
+      window.browserTabs.updateUI();
+    }
+  }
+}
+
+// Developer page controller
+class DeveloperController extends PageController {
+  constructor() {
+    super("developer");
+  }
+
+  async init() {
+    this.element = $("#page-developer");
+  }
+
+  async load() {
+    // Initialize developer mode
+    if (window.developerMode) {
+      window.developerMode.checkAuthStatus();
+    }
+  }
+}

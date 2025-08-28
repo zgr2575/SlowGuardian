@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Browser Tabs</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/browser-tabs.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/tabs" class="nav-link active" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+          <a href="/developer" class="nav-link" data-page="developer">
+            <i class="icon">🛠️</i>
+            <span>Developer</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-tabs">
+        <div class="page-header">
+          <h2 class="page-title">🗂️ Browser Tabs</h2>
+          <p class="page-subtitle">Multi-tab browsing with session management</p>
+        </div>
+
+        <!-- Tab Management Bar -->
+        <div class="tab-management-bar">
+          <div class="tab-controls">
+            <button id="new-tab-btn" class="btn btn-primary">
+              ➕ New Tab
+            </button>
+            <button id="close-all-tabs-btn" class="btn btn-secondary">
+              ✖️ Close All
+            </button>
+            <button id="duplicate-tab-btn" class="btn btn-secondary">
+              📋 Duplicate Tab
+            </button>
+          </div>
+          <div class="tab-actions">
+            <button id="save-session-btn" class="btn btn-info">
+              💾 Save Session
+            </button>
+            <button id="restore-session-btn" class="btn btn-info">
+              📂 Restore Session
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation" id="tab-navigation">
+          <div class="tab-list" id="tab-list">
+            <!-- Tabs will be dynamically added here -->
+          </div>
+          <div class="tab-overflow">
+            <button id="tab-overflow-btn" class="btn-icon" title="More tabs">
+              <i class="icon">⋯</i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Browser Container -->
+        <div class="browser-container" id="browser-container">
+          
+          <!-- No Tabs State -->
+          <div class="no-tabs-state" id="no-tabs-state">
+            <div class="empty-state">
+              <div class="empty-icon">🗂️</div>
+              <h3>No tabs open</h3>
+              <p>Click "New Tab" to start browsing</p>
+              <button id="new-tab-quick-btn" class="btn btn-primary">
+                ➕ Open New Tab
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab Content Area -->
+          <div class="tab-content-area" id="tab-content-area" style="display: none;">
+            
+            <!-- Browser Controls -->
+            <div class="browser-controls">
+              <div class="navigation-controls">
+                <button id="back-btn" class="btn-icon" title="Go back" disabled>
+                  <i class="icon">⬅️</i>
+                </button>
+                <button id="forward-btn" class="btn-icon" title="Go forward" disabled>
+                  <i class="icon">➡️</i>
+                </button>
+                <button id="refresh-btn" class="btn-icon" title="Refresh">
+                  <i class="icon">🔄</i>
+                </button>
+                <button id="home-btn" class="btn-icon" title="Home">
+                  <i class="icon">🏠</i>
+                </button>
+              </div>
+
+              <div class="address-bar-container">
+                <form id="address-form" class="address-form">
+                  <div class="security-indicator" id="security-indicator">
+                    <i class="icon">🔒</i>
+                  </div>
+                  <input 
+                    type="text" 
+                    id="address-bar" 
+                    class="address-bar" 
+                    placeholder="Enter URL or search term..."
+                    autocomplete="off"
+                  />
+                  <button type="submit" class="search-btn" title="Go">
+                    <i class="icon">🔍</i>
+                  </button>
+                </form>
+              </div>
+
+              <div class="page-controls">
+                <button id="bookmark-btn" class="btn-icon" title="Bookmark this page">
+                  <i class="icon">⭐</i>
+                </button>
+                <button id="share-btn" class="btn-icon" title="Share">
+                  <i class="icon">📤</i>
+                </button>
+                <button id="menu-btn" class="btn-icon" title="Menu">
+                  <i class="icon">⋮</i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading Bar -->
+            <div class="loading-bar" id="loading-bar">
+              <div class="loading-progress" id="loading-progress"></div>
+            </div>
+
+            <!-- Browser Loading State -->
+            <div class="browser-loading" id="browser-loading">
+              <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loading-text">Loading...</div>
+                <div class="loading-tip" id="loading-tip">
+                  💡 Tip: Use Ctrl+T to open a new tab quickly
+                </div>
+                <div class="loading-steps">
+                  <div class="step" id="step-1">
+                    <span class="step-icon">🔍</span>
+                    <span class="step-text">Resolving URL...</span>
+                  </div>
+                  <div class="step" id="step-2">
+                    <span class="step-icon">🌐</span>
+                    <span class="step-text">Connecting to proxy...</span>
+                  </div>
+                  <div class="step" id="step-3">
+                    <span class="step-icon">📄</span>
+                    <span class="step-text">Loading content...</span>
+                  </div>
+                  <div class="step" id="step-4">
+                    <span class="step-icon">✅</span>
+                    <span class="step-text">Complete!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Browser Iframe -->
+            <div class="browser-frame-container" id="browser-frame-container">
+              <!-- Active tab iframes will be inserted here -->
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab Context Menu -->
+        <div class="context-menu" id="tab-context-menu" style="display: none;">
+          <div class="context-item" data-action="refresh">
+            <i class="icon">🔄</i>
+            <span>Refresh Tab</span>
+          </div>
+          <div class="context-item" data-action="duplicate">
+            <i class="icon">📋</i>
+            <span>Duplicate Tab</span>
+          </div>
+          <div class="context-item" data-action="bookmark">
+            <i class="icon">⭐</i>
+            <span>Bookmark Tab</span>
+          </div>
+          <div class="context-separator"></div>
+          <div class="context-item" data-action="close">
+            <i class="icon">✖️</i>
+            <span>Close Tab</span>
+          </div>
+          <div class="context-item" data-action="close-others">
+            <i class="icon">❌</i>
+            <span>Close Other Tabs</span>
+          </div>
+        </div>
+
+        <!-- ChatGPT Integration Panel -->
+        <div class="chatgpt-panel" id="chatgpt-panel">
+          <div class="chatgpt-toggle">
+            <button id="chatgpt-toggle-btn" class="btn-icon" title="Toggle ChatGPT">
+              <i class="icon">🤖</i>
+            </button>
+          </div>
+          <div class="chatgpt-content" id="chatgpt-content" style="display: none;">
+            <div class="chatgpt-header">
+              <h4>🤖 ChatGPT Assistant</h4>
+              <button id="chatgpt-close-btn" class="btn-icon">
+                <i class="icon">✖️</i>
+              </button>
+            </div>
+            <div class="chatgpt-messages" id="chatgpt-messages">
+              <div class="message assistant">
+                <div class="message-content">
+                  Hello! I'm your AI assistant. I can help you with web browsing, answer questions, or assist with any tasks. How can I help you today?
+                </div>
+              </div>
+            </div>
+            <div class="chatgpt-input">
+              <form id="chatgpt-form">
+                <input 
+                  type="text" 
+                  id="chatgpt-input" 
+                  placeholder="Ask me anything..."
+                  autocomplete="off"
+                />
+                <button type="submit" class="btn btn-primary">
+                  <i class="icon">📤</i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Multi-tab browsing with advanced session management</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Session Management Modal -->
+    <div id="session-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="session-modal-title">💾 Save Session</h3>
+          <button class="modal-close" id="close-session-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="session-modal-body">
+          <!-- Content will be dynamically inserted -->
+        </div>
+        <div class="modal-footer" id="session-modal-footer">
+          <!-- Buttons will be dynamically inserted -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/v9/proxy.js" type="module"></script>
+    <script src="assets/scripts/browser-tabs.js"></script>
+    <script src="assets/scripts/chatgpt-integration.js"></script>
+    <script src="assets/scripts/main.js"></script>
+
+  </body>
+</html>
