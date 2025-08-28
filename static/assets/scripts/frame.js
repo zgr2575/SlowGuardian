@@ -50,50 +50,50 @@ window.addEventListener("load", function() {
       console.error('URL decode error:', error);
       addressInput.value = GoUrl; // Show encoded URL as fallback
     }
-  } else if (!GoUrl && addressInput) {
-    addressInput.placeholder = "Search or enter a new URL...";
   }
 
-  // Manual URL decoder function
-  function manualUrlDecode(encodedUrl) {
-    try {
-      let decoded = encodedUrl;
-      
-      // First URL decode
-      decoded = decodeURIComponent(decoded);
-      
-      // Apply Ultraviolet character mappings
-      decoded = decoded
-        .replace(/hvtrs8%2F%2F/g, 'https://')
-        .replace(/hvtr8%2F%2F/g, 'http://')
-        .replace(/hvtrs8/g, 'https://')
-        .replace(/hvtr8/g, 'http://')
-        .replace(/%2F/g, '/')
-        .replace(/%2C/g, '.')
-        .replace(/-/g, '/')
-        .replace(/,/g, '.');
-      
-      // Apply specific character mappings for common patterns
-      decoded = decoded
-        .replace(/1t1/g, '1v1')
-        .replace(/lml/g, 'lol')
-        .replace(/gmogle/g, 'google')
-        .replace(/youtybe/g, 'youtube');
-      
-      // Clean up any extra slashes
-      decoded = decoded.replace(/([^:]\/)\/+/g, '$1');
-      
-      // Ensure proper protocol
-      if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
-        decoded = 'https://' + decoded;
+  // Handle iframe loading if URL exists
+  if (GoUrl) {
+    // Manual URL decoder function
+    function manualUrlDecode(encodedUrl) {
+      try {
+        let decoded = encodedUrl;
+        
+        // First URL decode
+        decoded = decodeURIComponent(decoded);
+        
+        // Apply Ultraviolet character mappings
+        decoded = decoded
+          .replace(/hvtrs8%2F%2F/g, 'https://')
+          .replace(/hvtr8%2F%2F/g, 'http://')
+          .replace(/hvtrs8/g, 'https://')
+          .replace(/hvtr8/g, 'http://')
+          .replace(/%2F/g, '/')
+          .replace(/%2C/g, '.')
+          .replace(/-/g, '/')
+          .replace(/,/g, '.');
+        
+        // Apply specific character mappings for common patterns
+        decoded = decoded
+          .replace(/1t1/g, '1v1')
+          .replace(/lml/g, 'lol')
+          .replace(/gmogle/g, 'google')
+          .replace(/youtybe/g, 'youtube');
+        
+        // Clean up any extra slashes
+        decoded = decoded.replace(/([^:]\/)\/+/g, '$1');
+        
+        // Ensure proper protocol
+        if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
+          decoded = 'https://' + decoded;
+        }
+        
+        return decoded;
+      } catch (error) {
+        console.warn('Manual decode failed:', error);
+        return encodedUrl;
       }
-      
-      return decoded;
-    } catch (error) {
-      console.warn('Manual decode failed:', error);
-      return encodedUrl;
     }
-  }
 
     if (!GoUrl.startsWith("/e/")) {
       if (dyValue === "true" || dyValue === "auto") {
@@ -369,12 +369,6 @@ function isUrl(val = "") {
     return true;
   return false;
 }
-      }
-    } catch (error) {
-      console.debug("Keyboard lock not available:", error);
-    }
-  });
-}
 
 // Enhanced iframe loading with error handling
 window.onload = function () {
@@ -429,321 +423,3 @@ window.onload = function () {
     console.error("Error during iframe initialization:", error);
   }
 };
-
-// Decode URL
-function decodeXor(input) {
-  if (!input) return input;
-  let [str, ...search] = input.split("?");
-
-  return (
-    decodeURIComponent(str)
-      .split("")
-      .map((char, ind) =>
-        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char
-      )
-      .join("") + (search.length ? "?" + search.join("?") : "")
-  );
-}
-
-function iframeLoad() {
-  try {
-    if (document.readyState === "complete") {
-      const addressInput = document.getElementById("is");
-      
-      if (!iframe || !iframe.contentWindow) {
-        console.warn("Iframe or contentWindow not available");
-        return;
-      }
-      
-      try {
-        const website = iframe.contentWindow.location.href.replace(
-          window.location.origin,
-          ""
-        );
-
-        if (website.includes("/a/")) {
-          const cleanWebsite = website.replace("/a/", "");
-          const decodedUrl = decodeXor(cleanWebsite);
-          
-          if (addressInput) {
-            addressInput.value = decodedUrl;
-          }
-          localStorage.setItem("decoded", decodedUrl);
-          
-          console.log("Decoded URL:", decodedUrl);
-        } else if (website.includes("/a/q/")) {
-          const cleanWebsite = website.replace("/a/q/", "");
-          const decodedUrl = decodeXor(cleanWebsite);
-          
-          if (addressInput) {
-            addressInput.value = decodedUrl;
-          }
-          localStorage.setItem("decoded", decodedUrl);
-          
-          console.log("Decoded URL (dynamic):", decodedUrl);
-        }
-      } catch (crossOriginError) {
-        // Cross-origin access is blocked, which is expected for proxied content
-        console.debug("Cross-origin access blocked (expected for proxied content)");
-        
-        // Try to get URL from session storage as fallback
-        const storedUrl = sessionStorage.getItem("GoUrl");
-        if (storedUrl && addressInput) {
-          try {
-            const decodedFromStorage = decodeXor(storedUrl);
-            addressInput.value = decodedFromStorage;
-          } catch (decodeError) {
-            console.debug("Could not decode stored URL");
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error in iframeLoad:", error);
-  }
-}
-
-// Enhanced reload function
-function reload() {
-  try {
-    if (iframe) {
-      // Store current URL before reload
-      const currentSrc = iframe.src;
-      iframe.src = "about:blank";
-      setTimeout(() => {
-        iframe.src = currentSrc;
-      }, 100);
-    }
-  } catch (error) {
-    console.error("Error reloading iframe:", error);
-  }
-}
-
-// Enhanced popout function with better error handling
-function popout() {
-  try {
-    if (!iframe || !iframe.src) {
-      console.warn("No content to pop out");
-      return;
-    }
-    
-    const newWindow = window.open("", "_blank", "width=1200,height=800");
-
-    if (newWindow) {
-      const name = localStorage.getItem("name") || "My Drive - Google Drive";
-      const icon =
-        localStorage.getItem("icon") ||
-        "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
-
-      newWindow.document.title = name;
-
-      // Create favicon
-      const link = newWindow.document.createElement("link");
-      link.rel = "icon";
-      link.href = encodeURI(icon);
-      newWindow.document.head.appendChild(link);
-
-      // Create iframe
-      const newIframe = newWindow.document.createElement("iframe");
-      const style = newIframe.style;
-      style.position = "fixed";
-      style.top = style.bottom = style.left = style.right = 0;
-      style.border = style.outline = "none";
-      style.width = style.height = "100%";
-
-      newIframe.src = iframe.src;
-      newWindow.document.body.appendChild(newIframe);
-      
-      console.log("Content popped out to new window");
-    } else {
-      console.warn("Failed to open new window (popup blocked?)");
-      alert("Popup was blocked. Please allow popups for this site and try again.");
-    }
-  } catch (error) {
-    console.error("Error opening popout window:", error);
-  }
-// Enhanced Eruda debugging support
-function erudaToggle() {
-  try {
-    if (!iframe) {
-      console.warn("No iframe available for Eruda");
-      return;
-    }
-
-    const erudaWindow = iframe.contentWindow;
-    const erudaDocument = iframe.contentDocument;
-
-    if (!erudaWindow || !erudaDocument) {
-      console.warn("Cannot access iframe content for Eruda");
-      return;
-    }
-
-    if (erudaWindow.eruda?._isInit) {
-      erudaWindow.eruda.destroy();
-      console.log("Eruda destroyed");
-    } else {
-      let script = erudaDocument.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/eruda";
-      script.onload = function () {
-        if (erudaWindow && erudaWindow.eruda) {
-          erudaWindow.eruda.init();
-          erudaWindow.eruda.show();
-          console.log("Eruda initialized and shown");
-        }
-      };
-      script.onerror = function() {
-        console.error("Failed to load Eruda");
-      };
-      erudaDocument.head.appendChild(script);
-    }
-  } catch (error) {
-    console.error("Error with Eruda:", error);
-  }
-}
-// Enhanced event listeners and initialization
-document.addEventListener('DOMContentLoaded', function() {
-  // Set up fullscreen button
-  const fullscreenButton = document.getElementById("fullscreen-button");
-  if (fullscreenButton) {
-    fullscreenButton.addEventListener("click", toggleFullscreen);
-  }
-
-  // Set up home button
-  const homeButton = document.getElementById("home-page");
-  if (homeButton) {
-    homeButton.addEventListener("click", function () {
-      window.location.href = "./";
-    });
-  }
-
-  // Apply saved tab cloaking settings
-  const savedTitle = localStorage.getItem("name") || localStorage.getItem("tabTitle");
-  const savedIcon = localStorage.getItem("icon") || localStorage.getItem("tabIcon");
-  
-  if (savedTitle) {
-    document.title = savedTitle;
-  }
-  
-  if (savedIcon) {
-    const link = document.querySelector('link[rel="shortcut icon"]') || 
-                 document.querySelector('link[rel="icon"]');
-    if (link) {
-      link.href = savedIcon;
-    }
-  }
-});
-
-// Enhanced fullscreen change handling
-document.addEventListener("fullscreenchange", function () {
-  const isFullscreen = Boolean(document.fullscreenElement);
-  document.body.classList.toggle("fullscreen", isFullscreen);
-  
-  // Update fullscreen button icon
-  const fullscreenButton = document.getElementById("fullscreen-button");
-  if (fullscreenButton) {
-    const icon = fullscreenButton.querySelector('.icon');
-    if (icon) {
-      icon.textContent = isFullscreen ? '⛗' : '⛶';
-    }
-  }
-});
-
-// Export enhanced functions for global access
-window.goBack = goBack;
-window.goForward = goForward;
-window.reload = reload;
-window.popout = popout;
-window.erudaToggle = erudaToggle;
-window.toggleFullscreen = toggleFullscreen;
-window.goHome = goHome;
-window.iframeLoad = iframeLoad;
-
-// Loading progress system with tips
-function showLoadingProgress() {
-  const loadingOverlay = document.querySelector('.loading-overlay');
-  const loadingBar = document.querySelector('.loading-bar');
-  const loadingSteps = document.getElementById('loading-steps');
-  const loadingTitle = document.querySelector('.loading-title');
-  const loadingTip = document.querySelector('.loading-tip');
-  
-  if (loadingOverlay) {
-    loadingOverlay.classList.add('active');
-  }
-  
-  if (loadingBar) {
-    loadingBar.classList.add('active');
-  }
-  
-  // Loading tips
-  const tips = [
-    "Establishing secure connection...",
-    "Encrypting your traffic...",
-    "Bypassing restrictions...",
-    "Loading content safely...",
-    "Almost ready!"
-  ];
-  
-  const steps = [
-    "Connecting to proxy",
-    "Validating security",
-    "Decoding URL",
-    "Loading content",
-    "Finalizing"
-  ];
-  
-  let currentStep = 0;
-  
-  function updateProgress() {
-    if (loadingTitle) {
-      loadingTitle.textContent = steps[currentStep] || "Loading...";
-    }
-    
-    if (loadingTip) {
-      loadingTip.textContent = tips[currentStep] || "Please wait...";
-    }
-    
-    if (loadingSteps) {
-      const stepElements = loadingSteps.querySelectorAll('.loading-step');
-      stepElements.forEach((step, index) => {
-        if (index <= currentStep) {
-          step.classList.add('active');
-        } else {
-          step.classList.remove('active');
-        }
-      });
-    }
-    
-    currentStep++;
-    
-    if (currentStep < steps.length) {
-      setTimeout(updateProgress, 600 + Math.random() * 400);
-    }
-  }
-  
-  updateProgress();
-  
-  // Auto-hide after 5 seconds
-  setTimeout(hideLoadingProgress, 5000);
-}
-
-function hideLoadingProgress() {
-  const loadingOverlay = document.querySelector('.loading-overlay');
-  const loadingBar = document.querySelector('.loading-bar');
-  
-  if (loadingOverlay) {
-    loadingOverlay.classList.remove('active');
-  }
-  
-  if (loadingBar) {
-    loadingBar.classList.remove('active');
-    // Reset the bar after animation
-    setTimeout(() => {
-      loadingBar.style.width = '0%';
-    }, 300);
-  }
-}
-
-window.showLoadingProgress = showLoadingProgress;
-window.hideLoadingProgress = hideLoadingProgress;
-
-
