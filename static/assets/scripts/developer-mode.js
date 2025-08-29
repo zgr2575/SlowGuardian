@@ -18,17 +18,17 @@ class DeveloperMode {
 
   setupEventListeners() {
     // Login form
-    const loginBtn = document.getElementById('admin-login-btn');
+    const loginBtn = document.getElementById("admin-login-btn");
     if (loginBtn) {
-      loginBtn.addEventListener('click', () => this.handleLogin());
+      loginBtn.addEventListener("click", () => this.handleLogin());
     }
 
     // Enter key for login
-    ['admin-username', 'admin-password'].forEach(id => {
+    ["admin-username", "admin-password"].forEach((id) => {
       const input = document.getElementById(id);
       if (input) {
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
             this.handleLogin();
           }
         });
@@ -36,15 +36,15 @@ class DeveloperMode {
     });
 
     // Logout
-    const logoutBtn = document.getElementById('admin-logout-btn');
+    const logoutBtn = document.getElementById("admin-logout-btn");
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => this.handleLogout());
+      logoutBtn.addEventListener("click", () => this.handleLogout());
     }
 
     // Stats refresh
-    const refreshBtn = document.getElementById('refresh-stats-btn');
+    const refreshBtn = document.getElementById("refresh-stats-btn");
     if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => this.refreshStats());
+      refreshBtn.addEventListener("click", () => this.refreshStats());
     }
 
     // Global controls
@@ -64,74 +64,76 @@ class DeveloperMode {
   }
 
   setupGlobalControls() {
-    const pauseBtn = document.getElementById('pause-site-btn');
-    const unpauseBtn = document.getElementById('unpause-site-btn');
-    const maintenanceBtn = document.getElementById('maintenance-mode-btn');
-    const emergencyBtn = document.getElementById('emergency-stop-btn');
+    const pauseBtn = document.getElementById("pause-site-btn");
+    const unpauseBtn = document.getElementById("unpause-site-btn");
+    const maintenanceBtn = document.getElementById("maintenance-mode-btn");
+    const emergencyBtn = document.getElementById("emergency-stop-btn");
 
     if (pauseBtn) {
-      pauseBtn.addEventListener('click', () => this.showPauseModal());
+      pauseBtn.addEventListener("click", () => this.showPauseModal());
     }
 
     if (unpauseBtn) {
-      unpauseBtn.addEventListener('click', () => this.unpauseSite());
+      unpauseBtn.addEventListener("click", () => this.unpauseSite());
     }
 
     if (maintenanceBtn) {
-      maintenanceBtn.addEventListener('click', () => this.toggleMaintenanceMode());
+      maintenanceBtn.addEventListener("click", () =>
+        this.toggleMaintenanceMode()
+      );
     }
 
     if (emergencyBtn) {
-      emergencyBtn.addEventListener('click', () => this.emergencyStop());
+      emergencyBtn.addEventListener("click", () => this.emergencyStop());
     }
 
     // Pause modal controls
-    const confirmPauseBtn = document.getElementById('confirm-pause-btn');
-    const cancelPauseBtn = document.getElementById('cancel-pause-btn');
-    const closePauseBtn = document.getElementById('close-pause-modal');
+    const confirmPauseBtn = document.getElementById("confirm-pause-btn");
+    const cancelPauseBtn = document.getElementById("cancel-pause-btn");
+    const closePauseBtn = document.getElementById("close-pause-modal");
 
     if (confirmPauseBtn) {
-      confirmPauseBtn.addEventListener('click', () => this.confirmPause());
+      confirmPauseBtn.addEventListener("click", () => this.confirmPause());
     }
 
     if (cancelPauseBtn) {
-      cancelPauseBtn.addEventListener('click', () => this.hidePauseModal());
+      cancelPauseBtn.addEventListener("click", () => this.hidePauseModal());
     }
 
     if (closePauseBtn) {
-      closePauseBtn.addEventListener('click', () => this.hidePauseModal());
+      closePauseBtn.addEventListener("click", () => this.hidePauseModal());
     }
   }
 
   setupUserManagement() {
-    const viewUsersBtn = document.getElementById('view-online-users-btn');
-    const sessionsBtn = document.getElementById('user-sessions-btn');
-    const blockUserBtn = document.getElementById('block-user-btn');
+    const viewUsersBtn = document.getElementById("view-online-users-btn");
+    const sessionsBtn = document.getElementById("user-sessions-btn");
+    const blockUserBtn = document.getElementById("block-user-btn");
 
     if (viewUsersBtn) {
-      viewUsersBtn.addEventListener('click', () => this.showUserManagement());
+      viewUsersBtn.addEventListener("click", () => this.showUserManagement());
     }
 
     if (sessionsBtn) {
-      sessionsBtn.addEventListener('click', () => this.showSessionManagement());
+      sessionsBtn.addEventListener("click", () => this.showSessionManagement());
     }
 
     if (blockUserBtn) {
-      blockUserBtn.addEventListener('click', () => this.showBlockUserDialog());
+      blockUserBtn.addEventListener("click", () => this.showBlockUserDialog());
     }
   }
 
   setupContentManagement() {
-    const addBlockBtn = document.getElementById('add-block-btn');
-    const blockDomainInput = document.getElementById('block-domain');
+    const addBlockBtn = document.getElementById("add-block-btn");
+    const blockDomainInput = document.getElementById("block-domain");
 
     if (addBlockBtn) {
-      addBlockBtn.addEventListener('click', () => this.addBlockedDomain());
+      addBlockBtn.addEventListener("click", () => this.addBlockedDomain());
     }
 
     if (blockDomainInput) {
-      blockDomainInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+      blockDomainInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
           this.addBlockedDomain();
         }
       });
@@ -139,60 +141,66 @@ class DeveloperMode {
   }
 
   setupFeatureControls() {
-    const screenshotProtection = document.getElementById('screenshot-protection-dev');
-    const debugMode = document.getElementById('debug-mode');
-    const performanceMonitoring = document.getElementById('performance-monitoring');
+    const screenshotProtection = document.getElementById(
+      "screenshot-protection-dev"
+    );
+    const debugMode = document.getElementById("debug-mode");
+    const performanceMonitoring = document.getElementById(
+      "performance-monitoring"
+    );
 
     if (screenshotProtection) {
-      screenshotProtection.addEventListener('change', (e) => {
+      screenshotProtection.addEventListener("change", (e) => {
         this.toggleScreenshotProtection(e.target.checked);
       });
     }
 
     if (debugMode) {
-      debugMode.addEventListener('change', (e) => {
+      debugMode.addEventListener("change", (e) => {
         this.toggleDebugMode(e.target.checked);
       });
     }
 
     if (performanceMonitoring) {
-      performanceMonitoring.addEventListener('change', (e) => {
+      performanceMonitoring.addEventListener("change", (e) => {
         this.togglePerformanceMonitoring(e.target.checked);
       });
     }
   }
 
   setupChatGPTSettings() {
-    const saveApiKeyBtn = document.getElementById('save-api-key-btn');
-    const testChatGPTBtn = document.getElementById('test-chatgpt-btn');
+    const saveApiKeyBtn = document.getElementById("save-api-key-btn");
+    const testChatGPTBtn = document.getElementById("test-chatgpt-btn");
 
     if (saveApiKeyBtn) {
-      saveApiKeyBtn.addEventListener('click', () => this.saveChatGPTSettings());
+      saveApiKeyBtn.addEventListener("click", () => this.saveChatGPTSettings());
     }
 
     if (testChatGPTBtn) {
-      testChatGPTBtn.addEventListener('click', () => this.testChatGPTConnection());
+      testChatGPTBtn.addEventListener("click", () =>
+        this.testChatGPTConnection()
+      );
     }
   }
 
   handleLogin() {
-    const username = document.getElementById('admin-username')?.value;
-    const password = document.getElementById('admin-password')?.value;
+    const username = document.getElementById("admin-username")?.value;
+    const password = document.getElementById("admin-password")?.value;
 
     if (!username || !password) {
-      this.showNotification('Please enter both username and password', 'error');
+      this.showNotification("Please enter both username and password", "error");
       return;
     }
 
     // Default credentials check
-    if (username === 'admin' && password === 'SlowGuardian2024!') {
+    if (username === "admin" && password === "SlowGuardian2024!") {
       this.isAuthenticated = true;
-      this.currentUser = { username, role: 'super_admin' };
+      this.currentUser = { username, role: "super_admin" };
       this.showDashboard();
       this.startAutoRefresh();
-      this.showNotification('Welcome to Developer Mode!', 'success');
+      this.showNotification("Welcome to Developer Mode!", "success");
     } else {
-      this.showNotification('Invalid credentials', 'error');
+      this.showNotification("Invalid credentials", "error");
     }
   }
 
@@ -202,84 +210,88 @@ class DeveloperMode {
     this.stopAutoRefresh();
     this.hideDashboard();
     this.clearInputs();
-    this.showNotification('Logged out successfully', 'info');
+    this.showNotification("Logged out successfully", "info");
   }
 
   checkAuthStatus() {
     // Check if user was previously authenticated
-    const savedAuth = localStorage.getItem('dev-mode-auth');
+    const savedAuth = localStorage.getItem("dev-mode-auth");
     if (savedAuth) {
       try {
         const authData = JSON.parse(savedAuth);
-        if (authData.timestamp && Date.now() - authData.timestamp < 3600000) { // 1 hour
+        if (authData.timestamp && Date.now() - authData.timestamp < 3600000) {
+          // 1 hour
           this.isAuthenticated = true;
           this.currentUser = authData.user;
           this.showDashboard();
           this.startAutoRefresh();
         }
       } catch (e) {
-        localStorage.removeItem('dev-mode-auth');
+        localStorage.removeItem("dev-mode-auth");
       }
     }
   }
 
   showDashboard() {
-    const authSection = document.getElementById('auth-section');
-    const dashboard = document.getElementById('developer-dashboard');
+    const authSection = document.getElementById("auth-section");
+    const dashboard = document.getElementById("developer-dashboard");
 
-    if (authSection) authSection.style.display = 'none';
-    if (dashboard) dashboard.style.display = 'block';
+    if (authSection) authSection.style.display = "none";
+    if (dashboard) dashboard.style.display = "block";
 
     // Save auth state
-    localStorage.setItem('dev-mode-auth', JSON.stringify({
-      user: this.currentUser,
-      timestamp: Date.now()
-    }));
+    localStorage.setItem(
+      "dev-mode-auth",
+      JSON.stringify({
+        user: this.currentUser,
+        timestamp: Date.now(),
+      })
+    );
 
     this.refreshStats();
     this.loadSettings();
   }
 
   hideDashboard() {
-    const authSection = document.getElementById('auth-section');
-    const dashboard = document.getElementById('developer-dashboard');
+    const authSection = document.getElementById("auth-section");
+    const dashboard = document.getElementById("developer-dashboard");
 
-    if (authSection) authSection.style.display = 'block';
-    if (dashboard) dashboard.style.display = 'none';
+    if (authSection) authSection.style.display = "block";
+    if (dashboard) dashboard.style.display = "none";
 
-    localStorage.removeItem('dev-mode-auth');
+    localStorage.removeItem("dev-mode-auth");
   }
 
   clearInputs() {
-    const username = document.getElementById('admin-username');
-    const password = document.getElementById('admin-password');
+    const username = document.getElementById("admin-username");
+    const password = document.getElementById("admin-password");
 
-    if (username) username.value = '';
-    if (password) password.value = '';
+    if (username) username.value = "";
+    if (password) password.value = "";
   }
 
   async refreshStats() {
     try {
       // Get real server statistics
-      const response = await fetch('/api/admin/stats');
+      const response = await fetch("/api/admin/stats");
       const stats = await response.json();
-      
+
       // Update with real data
-      this.updateStat('online-users-count', stats.onlineUsers || 0);
-      this.updateStat('uptime', this.formatUptime(stats.uptime || 0));
-      this.updateStat('active-sessions', stats.activeSessions || 0);
-      this.updateStat('blocked-users', stats.blockedUsers || 0);
-      
+      this.updateStat("online-users-count", stats.onlineUsers || 0);
+      this.updateStat("uptime", this.formatUptime(stats.uptime || 0));
+      this.updateStat("active-sessions", stats.activeSessions || 0);
+      this.updateStat("blocked-users", stats.blockedUsers || 0);
+
       // Additional real statistics
-      this.updateStat('memory-usage', `${stats.memoryUsageMB || 0}MB`);
-      this.updateStat('total-requests', stats.totalRequests || 0);
+      this.updateStat("memory-usage", `${stats.memoryUsageMB || 0}MB`);
+      this.updateStat("total-requests", stats.totalRequests || 0);
     } catch (error) {
-      console.error('Failed to fetch real stats:', error);
+      console.error("Failed to fetch real stats:", error);
       // Fallback to basic stats - at least show real uptime
-      this.updateStat('online-users-count', 1); // At least the admin
-      this.updateStat('uptime', this.formatUptime(Date.now() / 1000));
-      this.updateStat('active-sessions', 1);
-      this.updateStat('blocked-users', 0);
+      this.updateStat("online-users-count", 1); // At least the admin
+      this.updateStat("uptime", this.formatUptime(Date.now() / 1000));
+      this.updateStat("active-sessions", 1);
+      this.updateStat("blocked-users", 0);
     }
   }
 
@@ -314,158 +326,171 @@ class DeveloperMode {
   }
 
   showPauseModal() {
-    const modal = document.getElementById('pause-modal');
+    const modal = document.getElementById("pause-modal");
     if (modal) {
-      modal.style.display = 'flex';
+      modal.style.display = "flex";
     }
   }
 
   hidePauseModal() {
-    const modal = document.getElementById('pause-modal');
+    const modal = document.getElementById("pause-modal");
     if (modal) {
-      modal.style.display = 'none';
+      modal.style.display = "none";
     }
   }
 
   async confirmPause() {
-    const password = document.getElementById('pause-password')?.value;
+    const password = document.getElementById("pause-password")?.value;
     if (!password) {
-      this.showNotification('Please set a pause password', 'error');
+      this.showNotification("Please set a pause password", "error");
       return;
     }
 
     try {
       // Call server API to pause site globally
-      const response = await fetch('/api/admin/pause', {
-        method: 'POST',
+      const response = await fetch("/api/admin/pause", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('admin-token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
         },
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ password }),
       });
 
       const result = await response.json();
-      
+
       if (response.ok && result.success) {
         // Store pause password locally for UI
-        localStorage.setItem('pause-password', password);
-        localStorage.setItem('site-paused', 'true');
+        localStorage.setItem("pause-password", password);
+        localStorage.setItem("site-paused", "true");
 
         // Update UI
-        this.updateStat('site-status', 'Paused');
-        document.getElementById('pause-site-btn').style.display = 'none';
-        document.getElementById('unpause-site-btn').style.display = 'block';
+        this.updateStat("site-status", "Paused");
+        document.getElementById("pause-site-btn").style.display = "none";
+        document.getElementById("unpause-site-btn").style.display = "block";
 
         this.hidePauseModal();
-        this.showNotification('Site paused globally', 'warning');
+        this.showNotification("Site paused globally", "warning");
       } else {
-        this.showNotification(result.error || 'Failed to pause site', 'error');
+        this.showNotification(result.error || "Failed to pause site", "error");
       }
     } catch (error) {
-      console.error('Pause site error:', error);
-      this.showNotification('Network error occurred', 'error');
+      console.error("Pause site error:", error);
+      this.showNotification("Network error occurred", "error");
     }
   }
 
   async unpauseSite() {
-    const savedPassword = localStorage.getItem('pause-password');
+    const savedPassword = localStorage.getItem("pause-password");
     if (savedPassword) {
-      const password = prompt('Enter pause password to resume site:');
+      const password = prompt("Enter pause password to resume site:");
       if (password === savedPassword) {
         try {
           // Call server API to unpause site
-          const response = await fetch('/api/admin/unpause', {
-            method: 'POST',
+          const response = await fetch("/api/admin/unpause", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('admin-token')}`
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
             },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ password }),
           });
 
           const result = await response.json();
-          
+
           if (response.ok && result.success) {
-            localStorage.removeItem('site-paused');
-            localStorage.removeItem('pause-password');
-            
-            this.updateStat('site-status', 'Active');
-            document.getElementById('pause-site-btn').style.display = 'block';
-            document.getElementById('unpause-site-btn').style.display = 'none';
-            
-            this.showNotification('Site resumed successfully', 'success');
+            localStorage.removeItem("site-paused");
+            localStorage.removeItem("pause-password");
+
+            this.updateStat("site-status", "Active");
+            document.getElementById("pause-site-btn").style.display = "block";
+            document.getElementById("unpause-site-btn").style.display = "none";
+
+            this.showNotification("Site resumed successfully", "success");
           } else {
-            this.showNotification(result.error || 'Failed to resume site', 'error');
+            this.showNotification(
+              result.error || "Failed to resume site",
+              "error"
+            );
           }
         } catch (error) {
-          console.error('Unpause site error:', error);
-          this.showNotification('Network error occurred', 'error');
+          console.error("Unpause site error:", error);
+          this.showNotification("Network error occurred", "error");
         }
       } else {
-        this.showNotification('Incorrect password', 'error');
+        this.showNotification("Incorrect password", "error");
       }
     }
   }
 
   addBlockedDomain() {
-    const input = document.getElementById('block-domain');
+    const input = document.getElementById("block-domain");
     const domain = input?.value.trim();
 
     if (!domain) {
-      this.showNotification('Please enter a domain', 'error');
+      this.showNotification("Please enter a domain", "error");
       return;
     }
 
     // Get current blocked domains
-    const blockedDomains = JSON.parse(localStorage.getItem('blocked-domains') || '[]');
-    
+    const blockedDomains = JSON.parse(
+      localStorage.getItem("blocked-domains") || "[]"
+    );
+
     if (!blockedDomains.includes(domain)) {
       blockedDomains.push(domain);
-      localStorage.setItem('blocked-domains', JSON.stringify(blockedDomains));
-      
-      if (input) input.value = '';
+      localStorage.setItem("blocked-domains", JSON.stringify(blockedDomains));
+
+      if (input) input.value = "";
       this.updateBlockedDomainsList();
-      this.showNotification(`Domain ${domain} blocked`, 'success');
+      this.showNotification(`Domain ${domain} blocked`, "success");
     } else {
-      this.showNotification('Domain already blocked', 'warning');
+      this.showNotification("Domain already blocked", "warning");
     }
   }
 
   updateBlockedDomainsList() {
-    const blockedDomains = JSON.parse(localStorage.getItem('blocked-domains') || '[]');
-    const container = document.getElementById('domain-list');
-    
+    const blockedDomains = JSON.parse(
+      localStorage.getItem("blocked-domains") || "[]"
+    );
+    const container = document.getElementById("domain-list");
+
     if (!container) return;
 
     if (blockedDomains.length === 0) {
       container.innerHTML = '<div class="empty-state">No domains blocked</div>';
     } else {
-      container.innerHTML = blockedDomains.map(domain => `
+      container.innerHTML = blockedDomains
+        .map(
+          (domain) => `
         <div class="domain-item">
           <span class="domain-name">${domain}</span>
           <button class="btn btn-sm btn-danger" onclick="developerMode.removeDomain('${domain}')">
             Remove
           </button>
         </div>
-      `).join('');
+      `
+        )
+        .join("");
     }
   }
 
   removeDomain(domain) {
-    const blockedDomains = JSON.parse(localStorage.getItem('blocked-domains') || '[]');
+    const blockedDomains = JSON.parse(
+      localStorage.getItem("blocked-domains") || "[]"
+    );
     const index = blockedDomains.indexOf(domain);
-    
+
     if (index > -1) {
       blockedDomains.splice(index, 1);
-      localStorage.setItem('blocked-domains', JSON.stringify(blockedDomains));
+      localStorage.setItem("blocked-domains", JSON.stringify(blockedDomains));
       this.updateBlockedDomainsList();
-      this.showNotification(`Domain ${domain} unblocked`, 'success');
+      this.showNotification(`Domain ${domain} unblocked`, "success");
     }
   }
 
   toggleScreenshotProtection(enabled) {
-    localStorage.setItem('screenshot-protection-dev', enabled);
+    localStorage.setItem("screenshot-protection-dev", enabled);
     if (window.ScreenshotProtection) {
       if (enabled) {
         window.ScreenshotProtection.enable();
@@ -473,79 +498,99 @@ class DeveloperMode {
         window.ScreenshotProtection.disable();
       }
     }
-    this.showNotification(`Screenshot protection ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    this.showNotification(
+      `Screenshot protection ${enabled ? "enabled" : "disabled"}`,
+      "info"
+    );
   }
 
   toggleDebugMode(enabled) {
-    localStorage.setItem('debug-mode', enabled);
+    localStorage.setItem("debug-mode", enabled);
     if (enabled) {
-      console.log('🐛 Debug mode enabled');
+      console.log("🐛 Debug mode enabled");
       window.DEBUG = true;
     } else {
       window.DEBUG = false;
     }
-    this.showNotification(`Debug mode ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    this.showNotification(
+      `Debug mode ${enabled ? "enabled" : "disabled"}`,
+      "info"
+    );
   }
 
   togglePerformanceMonitoring(enabled) {
-    localStorage.setItem('performance-monitoring', enabled);
-    this.showNotification(`Performance monitoring ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    localStorage.setItem("performance-monitoring", enabled);
+    this.showNotification(
+      `Performance monitoring ${enabled ? "enabled" : "disabled"}`,
+      "info"
+    );
   }
 
   saveChatGPTSettings() {
-    const apiKey = document.getElementById('openai-api-key')?.value;
-    const model = document.getElementById('chatgpt-model')?.value;
+    const apiKey = document.getElementById("openai-api-key")?.value;
+    const model = document.getElementById("chatgpt-model")?.value;
 
     if (!apiKey) {
-      this.showNotification('Please enter an API key', 'error');
+      this.showNotification("Please enter an API key", "error");
       return;
     }
 
     // Save settings securely
-    localStorage.setItem('chatgpt-settings', JSON.stringify({
-      apiKey: btoa(apiKey), // Basic encoding (not secure for production)
-      model: model || 'gpt-3.5-turbo'
-    }));
+    localStorage.setItem(
+      "chatgpt-settings",
+      JSON.stringify({
+        apiKey: btoa(apiKey), // Basic encoding (not secure for production)
+        model: model || "gpt-3.5-turbo",
+      })
+    );
 
-    this.showNotification('ChatGPT settings saved', 'success');
+    this.showNotification("ChatGPT settings saved", "success");
   }
 
   async testChatGPTConnection() {
-    const settings = JSON.parse(localStorage.getItem('chatgpt-settings') || '{}');
-    
+    const settings = JSON.parse(
+      localStorage.getItem("chatgpt-settings") || "{}"
+    );
+
     if (!settings.apiKey) {
-      this.showNotification('Please save API key first', 'error');
+      this.showNotification("Please save API key first", "error");
       return;
     }
 
-    this.showNotification('Testing connection...', 'info');
+    this.showNotification("Testing connection...", "info");
 
     // Simulate API test (replace with actual OpenAI API call)
     setTimeout(() => {
-      this.showNotification('ChatGPT connection successful!', 'success');
+      this.showNotification("ChatGPT connection successful!", "success");
     }, 2000);
   }
 
   loadSettings() {
     // Load screenshot protection
-    const screenshotProtection = localStorage.getItem('screenshot-protection-dev') === 'true';
-    const screenshotToggle = document.getElementById('screenshot-protection-dev');
+    const screenshotProtection =
+      localStorage.getItem("screenshot-protection-dev") === "true";
+    const screenshotToggle = document.getElementById(
+      "screenshot-protection-dev"
+    );
     if (screenshotToggle) screenshotToggle.checked = screenshotProtection;
 
     // Load debug mode
-    const debugMode = localStorage.getItem('debug-mode') === 'true';
-    const debugToggle = document.getElementById('debug-mode');
+    const debugMode = localStorage.getItem("debug-mode") === "true";
+    const debugToggle = document.getElementById("debug-mode");
     if (debugToggle) debugToggle.checked = debugMode;
 
     // Load performance monitoring
-    const perfMonitoring = localStorage.getItem('performance-monitoring') === 'true';
-    const perfToggle = document.getElementById('performance-monitoring');
+    const perfMonitoring =
+      localStorage.getItem("performance-monitoring") === "true";
+    const perfToggle = document.getElementById("performance-monitoring");
     if (perfToggle) perfToggle.checked = perfMonitoring;
 
     // Load ChatGPT settings
-    const chatgptSettings = JSON.parse(localStorage.getItem('chatgpt-settings') || '{}');
+    const chatgptSettings = JSON.parse(
+      localStorage.getItem("chatgpt-settings") || "{}"
+    );
     if (chatgptSettings.model) {
-      const modelSelect = document.getElementById('chatgpt-model');
+      const modelSelect = document.getElementById("chatgpt-model");
       if (modelSelect) modelSelect.value = chatgptSettings.model;
     }
 
@@ -553,32 +598,49 @@ class DeveloperMode {
     this.updateBlockedDomainsList();
 
     // Check site status
-    const sitePaused = localStorage.getItem('site-paused') === 'true';
+    const sitePaused = localStorage.getItem("site-paused") === "true";
     if (sitePaused) {
-      this.updateStat('site-status', 'Paused');
-      document.getElementById('pause-site-btn').style.display = 'none';
-      document.getElementById('unpause-site-btn').style.display = 'block';
+      this.updateStat("site-status", "Paused");
+      document.getElementById("pause-site-btn").style.display = "none";
+      document.getElementById("unpause-site-btn").style.display = "block";
     }
   }
 
   showUserManagement() {
-    const modal = document.getElementById('user-management-modal');
+    const modal = document.getElementById("user-management-modal");
     if (modal) {
-      modal.style.display = 'flex';
-      
+      modal.style.display = "flex";
+
       // Load mock user data
-      const userList = document.getElementById('user-list');
-      const selectUser = document.getElementById('select-user');
-      
+      const userList = document.getElementById("user-list");
+      const selectUser = document.getElementById("select-user");
+
       if (userList && selectUser) {
         const mockUsers = [
-          { id: 'user001', ip: '192.168.1.100', location: 'New York, US', active: true },
-          { id: 'user002', ip: '192.168.1.101', location: 'London, UK', active: true },
-          { id: 'user003', ip: '192.168.1.102', location: 'Tokyo, JP', active: false }
+          {
+            id: "user001",
+            ip: "192.168.1.100",
+            location: "New York, US",
+            active: true,
+          },
+          {
+            id: "user002",
+            ip: "192.168.1.101",
+            location: "London, UK",
+            active: true,
+          },
+          {
+            id: "user003",
+            ip: "192.168.1.102",
+            location: "Tokyo, JP",
+            active: false,
+          },
         ];
-        
-        userList.innerHTML = mockUsers.map(user => `
-          <div class="user-item ${user.active ? 'active' : 'inactive'}">
+
+        userList.innerHTML = mockUsers
+          .map(
+            (user) => `
+          <div class="user-item ${user.active ? "active" : "inactive"}">
             <div class="user-info">
               <strong>${user.id}</strong>
               <small>${user.ip} - ${user.location}</small>
@@ -592,29 +654,37 @@ class DeveloperMode {
               </button>
             </div>
           </div>
-        `).join('');
-        
-        selectUser.innerHTML = '<option value="">Select a user...</option>' + 
-          mockUsers.map(user => `<option value="${user.id}">${user.id}</option>`).join('');
+        `
+          )
+          .join("");
+
+        selectUser.innerHTML =
+          '<option value="">Select a user...</option>' +
+          mockUsers
+            .map((user) => `<option value="${user.id}">${user.id}</option>`)
+            .join("");
       }
-      
+
       // Setup modal close handlers
-      const closeBtn = document.getElementById('close-user-modal');
-      const closeBtn2 = document.getElementById('close-user-management-btn');
-      const refreshBtn = document.getElementById('refresh-users-btn');
-      const blockSiteBtn = document.getElementById('block-site-user-btn');
-      
-      if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-      if (closeBtn2) closeBtn2.onclick = () => modal.style.display = 'none';
+      const closeBtn = document.getElementById("close-user-modal");
+      const closeBtn2 = document.getElementById("close-user-management-btn");
+      const refreshBtn = document.getElementById("refresh-users-btn");
+      const blockSiteBtn = document.getElementById("block-site-user-btn");
+
+      if (closeBtn) closeBtn.onclick = () => (modal.style.display = "none");
+      if (closeBtn2) closeBtn2.onclick = () => (modal.style.display = "none");
       if (refreshBtn) refreshBtn.onclick = () => this.showUserManagement();
       if (blockSiteBtn) {
         blockSiteBtn.onclick = () => {
-          const selectedUser = document.getElementById('select-user')?.value;
-          const domain = document.getElementById('block-domain-user')?.value;
+          const selectedUser = document.getElementById("select-user")?.value;
+          const domain = document.getElementById("block-domain-user")?.value;
           if (selectedUser && domain) {
             this.blockSiteForUser(selectedUser, domain);
           } else {
-            this.showNotification('Please select a user and enter a domain', 'error');
+            this.showNotification(
+              "Please select a user and enter a domain",
+              "error"
+            );
           }
         };
       }
@@ -623,62 +693,74 @@ class DeveloperMode {
 
   blockUser(userId) {
     // Add user to blocked list
-    const blockedUsers = JSON.parse(localStorage.getItem('blocked-users') || '[]');
+    const blockedUsers = JSON.parse(
+      localStorage.getItem("blocked-users") || "[]"
+    );
     if (!blockedUsers.includes(userId)) {
       blockedUsers.push(userId);
-      localStorage.setItem('blocked-users', JSON.stringify(blockedUsers));
-      this.showNotification(`User ${userId} blocked successfully`, 'success');
+      localStorage.setItem("blocked-users", JSON.stringify(blockedUsers));
+      this.showNotification(`User ${userId} blocked successfully`, "success");
       this.showUserManagement(); // Refresh the modal
     } else {
-      this.showNotification(`User ${userId} is already blocked`, 'warning');
+      this.showNotification(`User ${userId} is already blocked`, "warning");
     }
   }
 
   pauseUser(userId) {
     // Add user to paused list
-    const pausedUsers = JSON.parse(localStorage.getItem('paused-users') || '[]');
+    const pausedUsers = JSON.parse(
+      localStorage.getItem("paused-users") || "[]"
+    );
     if (!pausedUsers.includes(userId)) {
       pausedUsers.push(userId);
-      localStorage.setItem('paused-users', JSON.stringify(pausedUsers));
-      this.showNotification(`User ${userId} paused successfully`, 'warning');
+      localStorage.setItem("paused-users", JSON.stringify(pausedUsers));
+      this.showNotification(`User ${userId} paused successfully`, "warning");
       this.showUserManagement(); // Refresh the modal
     } else {
-      this.showNotification(`User ${userId} is already paused`, 'warning');
+      this.showNotification(`User ${userId} is already paused`, "warning");
     }
   }
 
   blockSiteForUser(userId, domain) {
     // Store per-user site blocks
-    const userBlocks = JSON.parse(localStorage.getItem('user-site-blocks') || '{}');
+    const userBlocks = JSON.parse(
+      localStorage.getItem("user-site-blocks") || "{}"
+    );
     if (!userBlocks[userId]) {
       userBlocks[userId] = [];
     }
-    
+
     if (!userBlocks[userId].includes(domain)) {
       userBlocks[userId].push(domain);
-      localStorage.setItem('user-site-blocks', JSON.stringify(userBlocks));
-      this.showNotification(`Domain ${domain} blocked for user ${userId}`, 'success');
-      
+      localStorage.setItem("user-site-blocks", JSON.stringify(userBlocks));
+      this.showNotification(
+        `Domain ${domain} blocked for user ${userId}`,
+        "success"
+      );
+
       // Clear inputs
-      const domainInput = document.getElementById('block-domain-user');
-      if (domainInput) domainInput.value = '';
+      const domainInput = document.getElementById("block-domain-user");
+      if (domainInput) domainInput.value = "";
     } else {
-      this.showNotification(`Domain ${domain} already blocked for user ${userId}`, 'warning');
+      this.showNotification(
+        `Domain ${domain} already blocked for user ${userId}`,
+        "warning"
+      );
     }
   }
 
   showSessionManagement() {
     // Create session management modal dynamically
-    const existingModal = document.getElementById('session-management-modal');
+    const existingModal = document.getElementById("session-management-modal");
     if (existingModal) {
       existingModal.remove();
     }
-    
-    const modal = document.createElement('div');
-    modal.id = 'session-management-modal';
-    modal.className = 'modal';
-    modal.style.display = 'flex';
-    
+
+    const modal = document.createElement("div");
+    modal.id = "session-management-modal";
+    modal.className = "modal";
+    modal.style.display = "flex";
+
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
@@ -721,20 +803,40 @@ class DeveloperMode {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     // Load mock session data
     setTimeout(() => {
-      const sessionContent = document.getElementById('session-list-content');
+      const sessionContent = document.getElementById("session-list-content");
       if (sessionContent) {
         const mockSessions = [
-          { id: 'sess001', userId: 'user001', started: '2024-01-10 14:30', duration: '25m', pages: 8 },
-          { id: 'sess002', userId: 'user002', started: '2024-01-10 15:15', duration: '12m', pages: 3 },
-          { id: 'sess003', userId: 'user003', started: '2024-01-10 15:45', duration: '8m', pages: 2 }
+          {
+            id: "sess001",
+            userId: "user001",
+            started: "2024-01-10 14:30",
+            duration: "25m",
+            pages: 8,
+          },
+          {
+            id: "sess002",
+            userId: "user002",
+            started: "2024-01-10 15:15",
+            duration: "12m",
+            pages: 3,
+          },
+          {
+            id: "sess003",
+            userId: "user003",
+            started: "2024-01-10 15:45",
+            duration: "8m",
+            pages: 2,
+          },
         ];
-        
-        sessionContent.innerHTML = mockSessions.map(session => `
+
+        sessionContent.innerHTML = mockSessions
+          .map(
+            (session) => `
           <div class="session-item">
             <div class="session-info">
               <strong>${session.id}</strong>
@@ -747,56 +849,68 @@ class DeveloperMode {
               </button>
             </div>
           </div>
-        `).join('');
+        `
+          )
+          .join("");
       }
     }, 500);
-    
+
     // Setup event handlers
-    document.getElementById('close-session-modal').onclick = () => modal.remove();
-    document.getElementById('close-session-management-btn').onclick = () => modal.remove();
-    document.getElementById('refresh-sessions-btn').onclick = () => this.showSessionManagement();
-    document.getElementById('clear-all-sessions-btn').onclick = () => {
-      if (confirm('Are you sure you want to clear all active sessions?')) {
-        this.showNotification('All sessions cleared', 'success');
+    document.getElementById("close-session-modal").onclick = () =>
+      modal.remove();
+    document.getElementById("close-session-management-btn").onclick = () =>
+      modal.remove();
+    document.getElementById("refresh-sessions-btn").onclick = () =>
+      this.showSessionManagement();
+    document.getElementById("clear-all-sessions-btn").onclick = () => {
+      if (confirm("Are you sure you want to clear all active sessions?")) {
+        this.showNotification("All sessions cleared", "success");
         modal.remove();
       }
     };
-    document.getElementById('export-sessions-btn').onclick = () => {
-      this.showNotification('Session data exported', 'success');
+    document.getElementById("export-sessions-btn").onclick = () => {
+      this.showNotification("Session data exported", "success");
     };
   }
 
   terminateSession(sessionId) {
-    this.showNotification(`Session ${sessionId} terminated`, 'warning');
+    this.showNotification(`Session ${sessionId} terminated`, "warning");
     this.showSessionManagement(); // Refresh
   }
 
   showBlockUserDialog() {
-    const userId = prompt('Enter user ID to block:');
+    const userId = prompt("Enter user ID to block:");
     if (userId) {
-      this.showNotification(`User ${userId} blocked`, 'warning');
+      this.showNotification(`User ${userId} blocked`, "warning");
     }
   }
 
   toggleMaintenanceMode() {
-    const maintenance = localStorage.getItem('maintenance-mode') === 'true';
-    localStorage.setItem('maintenance-mode', !maintenance);
-    this.showNotification(`Maintenance mode ${!maintenance ? 'enabled' : 'disabled'}`, 'info');
+    const maintenance = localStorage.getItem("maintenance-mode") === "true";
+    localStorage.setItem("maintenance-mode", !maintenance);
+    this.showNotification(
+      `Maintenance mode ${!maintenance ? "enabled" : "disabled"}`,
+      "info"
+    );
   }
 
   emergencyStop() {
-    if (confirm('Are you sure you want to emergency stop? This will immediately pause all services.')) {
-      localStorage.setItem('emergency-stop', 'true');
-      this.showNotification('Emergency stop activated!', 'error');
+    if (
+      confirm(
+        "Are you sure you want to emergency stop? This will immediately pause all services."
+      )
+    ) {
+      localStorage.setItem("emergency-stop", "true");
+      this.showNotification("Emergency stop activated!", "error");
     }
   }
 
-  showNotification(message, type = 'info') {
+  showNotification(message, type = "info") {
     if (window.showNotification) {
       window.showNotification(message, type);
     } else {
       // Fallback
-      const notification = document.createElement('div');
+      const notification = document.createElement("div");
       notification.className = `notification ${type}`;
       notification.textContent = message;
       notification.style.cssText = `
@@ -811,11 +925,11 @@ class DeveloperMode {
         z-index: 10000;
         transition: all 0.3s ease;
       `;
-      
+
       document.body.appendChild(notification);
-      
+
       setTimeout(() => {
-        notification.style.opacity = '0';
+        notification.style.opacity = "0";
         setTimeout(() => notification.remove(), 300);
       }, 3000);
     }

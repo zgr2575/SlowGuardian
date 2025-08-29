@@ -245,7 +245,7 @@
   border-radius: 8px;
   background: var(--input-bg, rgba(255, 255, 255, 0.05));
   color: var(--text-primary, #ffffff);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   line-height: 1.5;
   resize: vertical;
@@ -291,7 +291,8 @@
     max-height: 70vh;
   }
 
-  .modal-header, .modal-footer {
+  .modal-header,
+  .modal-footer {
     padding: 16px;
   }
 

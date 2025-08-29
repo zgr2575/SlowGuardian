@@ -116,9 +116,8 @@
         </div>
 
         <!-- Developer Dashboard -->
-        <div class="developer-dashboard" id="developer-dashboard" style="display: none;">
+        <div class="developer-dashboard" id="developer-dashboard" style="display: none">
           <div class="dashboard-grid">
-            
             <!-- Real-time Statistics -->
             <div class="card stats-card">
               <div class="card-header">
@@ -152,18 +151,12 @@
                 <p class="card-description">Emergency controls for site-wide management</p>
               </div>
               <div class="controls-grid">
-                <button id="pause-site-btn" class="btn btn-warning btn-block">
-                  ⏸️ Pause Site Globally
-                </button>
-                <button id="unpause-site-btn" class="btn btn-success btn-block" style="display: none;">
+                <button id="pause-site-btn" class="btn btn-warning btn-block">⏸️ Pause Site Globally</button>
+                <button id="unpause-site-btn" class="btn btn-success btn-block" style="display: none">
                   ▶️ Resume Site
                 </button>
-                <button id="maintenance-mode-btn" class="btn btn-info btn-block">
-                  🔧 Enable Maintenance Mode
-                </button>
-                <button id="emergency-stop-btn" class="btn btn-danger btn-block">
-                  🚨 Emergency Stop
-                </button>
+                <button id="maintenance-mode-btn" class="btn btn-info btn-block">🔧 Enable Maintenance Mode</button>
+                <button id="emergency-stop-btn" class="btn btn-danger btn-block">🚨 Emergency Stop</button>
               </div>
             </div>
 
@@ -174,15 +167,9 @@
                 <p class="card-description">Monitor and manage active users</p>
               </div>
               <div class="user-controls">
-                <button id="view-online-users-btn" class="btn btn-primary">
-                  👁️ View Online Users
-                </button>
-                <button id="user-sessions-btn" class="btn btn-secondary">
-                  📋 Session Management
-                </button>
-                <button id="block-user-btn" class="btn btn-warning">
-                  🚫 Block User
-                </button>
+                <button id="view-online-users-btn" class="btn btn-primary">👁️ View Online Users</button>
+                <button id="user-sessions-btn" class="btn btn-secondary">📋 Session Management</button>
+                <button id="block-user-btn" class="btn btn-warning">🚫 Block User</button>
               </div>
               <div class="user-stats">
                 <div class="user-stat">
@@ -224,15 +211,9 @@
                 <p class="card-description">Manage administrative accounts</p>
               </div>
               <div class="account-controls">
-                <button id="create-admin-btn" class="btn btn-primary">
-                  ➕ Create Admin Account
-                </button>
-                <button id="manage-accounts-btn" class="btn btn-secondary">
-                  📝 Manage Accounts
-                </button>
-                <button id="audit-logs-btn" class="btn btn-info">
-                  📋 View Audit Logs
-                </button>
+                <button id="create-admin-btn" class="btn btn-primary">➕ Create Admin Account</button>
+                <button id="manage-accounts-btn" class="btn btn-secondary">📝 Manage Accounts</button>
+                <button id="audit-logs-btn" class="btn btn-info">📋 View Audit Logs</button>
               </div>
             </div>
 
@@ -299,7 +280,6 @@
                 <button id="test-chatgpt-btn" class="btn btn-secondary">Test Connection</button>
               </div>
             </div>
-
           </div>
 
           <!-- Logout -->
@@ -309,7 +289,6 @@
             </div>
           </div>
         </div>
-
       </section>
     </main>
 
@@ -334,7 +313,7 @@
 
     <!-- Modals -->
     <!-- Global Pause Modal -->
-    <div id="pause-modal" class="modal" style="display: none;">
+    <div id="pause-modal" class="modal" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
           <h3>⏸️ Pause Site Globally</h3>
@@ -344,10 +323,17 @@
           <p>This will temporarily disable the site for all users with a maintenance-style message.</p>
           <div class="input-group">
             <label for="pause-password">Set Pause Password:</label>
-            <input type="password" id="pause-password" class="form-input" placeholder="Enter password to unpause later" required />
+            <input
+              type="password"
+              id="pause-password"
+              class="form-input"
+              placeholder="Enter password to unpause later"
+              required
+            />
           </div>
           <div class="warning-box">
-            <strong>⚠️ Warning:</strong> Users will see a "SlowGuardian is paused" message and won't be able to access the site until you unpause it with this password.
+            <strong>⚠️ Warning:</strong> Users will see a "SlowGuardian is paused" message and won't be able to access
+            the site until you unpause it with this password.
           </div>
         </div>
         <div class="modal-footer">
@@ -358,7 +344,7 @@
     </div>
 
     <!-- User Management Modal -->
-    <div id="user-management-modal" class="modal" style="display: none;">
+    <div id="user-management-modal" class="modal" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
           <h3>👥 Online Users</h3>
@@ -368,14 +354,19 @@
           <div class="user-list" id="user-list">
             <div class="loading-text">Loading users...</div>
           </div>
-          
-          <div class="user-actions" style="margin-top: 20px;">
+
+          <div class="user-actions" style="margin-top: 20px">
             <h4>Block Website for User</h4>
             <div class="input-group">
               <select id="select-user" class="form-select">
                 <option value="">Select a user...</option>
               </select>
-              <input type="text" id="block-domain-user" class="form-input" placeholder="Enter domain (e.g., youtube.com)" />
+              <input
+                type="text"
+                id="block-domain-user"
+                class="form-input"
+                placeholder="Enter domain (e.g., youtube.com)"
+              />
               <button id="block-site-user-btn" class="btn btn-warning">Block Site for User</button>
             </div>
           </div>
@@ -390,17 +381,16 @@
     <!-- Scripts -->
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
-    
+
     <script src="assets/scripts/v9/utils.js" type="module"></script>
     <script src="assets/scripts/v9/particles.js" type="module"></script>
     <script src="assets/scripts/admin.js"></script>
     <script src="assets/scripts/developer-mode.js"></script>
     <script src="assets/scripts/main.js"></script>
-    
+
     <!-- New v9 Systems -->
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
-
   </body>
 </html>

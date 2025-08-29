@@ -6,9 +6,11 @@
 /* Admin Panel Card */
 #admin-panel {
   border: 2px solid var(--accent-primary);
-  background: linear-gradient(135deg, 
-    rgba(var(--accent-primary-rgb), 0.1), 
-    rgba(var(--accent-primary-rgb), 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-primary-rgb), 0.1),
+    rgba(var(--accent-primary-rgb), 0.05)
+  );
 }
 
 #admin-panel .card-title {
@@ -69,7 +71,8 @@
 }
 
 /* User and Admin Cards */
-.user-card, .admin-card {
+.user-card,
+.admin-card {
   background: var(--surface-secondary);
   border: 1px solid var(--border-primary);
   border-radius: 8px;
@@ -80,11 +83,13 @@
   align-items: center;
 }
 
-.user-info, .admin-info {
+.user-info,
+.admin-info {
   flex: 1;
 }
 
-.user-info strong, .admin-info strong {
+.user-info strong,
+.admin-info strong {
   color: var(--text-primary);
   font-weight: 600;
 }
@@ -101,7 +106,8 @@
   color: var(--text-secondary);
 }
 
-.user-actions, .admin-actions {
+.user-actions,
+.admin-actions {
   display: flex;
   gap: 8px;
 }
@@ -257,27 +263,29 @@
   .admin-stats {
     grid-template-columns: 1fr;
   }
-  
-  .user-card, .admin-card {
+
+  .user-card,
+  .admin-card {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
-  .user-actions, .admin-actions {
+
+  .user-actions,
+  .admin-actions {
     width: 100%;
     justify-content: flex-end;
   }
-  
+
   .control-section {
     padding: 12px;
   }
-  
+
   .modal-content {
     margin: 10px;
     max-width: calc(100vw - 20px);
   }
-  
+
   /* Ensure admin modals are properly positioned */
   .modal-overlay {
     position: fixed !important;

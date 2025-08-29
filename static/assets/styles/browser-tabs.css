@@ -231,7 +231,11 @@
 
 .loading-progress {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
   width: 0%;
   transition: width 0.3s ease;
 }
@@ -241,8 +245,13 @@
 }
 
 @keyframes progressPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .browser-loading {
@@ -478,39 +487,39 @@
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .tab-controls,
   .tab-actions {
     width: 100%;
     justify-content: center;
   }
-  
+
   .browser-tab {
     min-width: 150px;
     max-width: 180px;
   }
-  
+
   .browser-controls {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
-  
+
   .navigation-controls,
   .page-controls {
     order: 2;
   }
-  
+
   .address-bar-container {
     order: 1;
     width: 100%;
     max-width: none;
   }
-  
+
   .chatgpt-content {
     width: 300px;
     height: 350px;
   }
-  
+
   .chatgpt-panel {
     right: 0.5rem;
     bottom: 0.5rem;
@@ -550,8 +559,12 @@
 
 /* Loading animation improvements */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-progress.indeterminate {
@@ -560,6 +573,10 @@
 }
 
 @keyframes progressMove {
-  0% { left: -30%; }
-  100% { left: 100%; }
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
 }

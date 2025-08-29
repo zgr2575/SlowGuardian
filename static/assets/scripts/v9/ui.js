@@ -47,19 +47,23 @@ class UIManager {
     on(themeToggle, "click", () => {
       const newTheme = theme.toggle();
       updateThemeIcon();
-      
+
       // Show notification about theme change
       const themeNames = {
-        "dark": "Dark",
-        "light": "Light", 
-        "catppuccinMocha": "Catppuccin Mocha",
-        "catppuccinMacchiato": "Catppuccin Macchiato",
-        "catppuccinFrappe": "Catppuccin Frappe",
-        "catppuccinLatte": "Catppuccin Latte"
+        dark: "Dark",
+        light: "Light",
+        catppuccinMocha: "Catppuccin Mocha",
+        catppuccinMacchiato: "Catppuccin Macchiato",
+        catppuccinFrappe: "Catppuccin Frappe",
+        catppuccinLatte: "Catppuccin Latte",
       };
-      
+
       if (window.showNotification) {
-        window.showNotification(`Switched to ${themeNames[newTheme] || newTheme} theme`, "success", 2000);
+        window.showNotification(
+          `Switched to ${themeNames[newTheme] || newTheme} theme`,
+          "success",
+          2000
+        );
       }
     });
   }

@@ -6,7 +6,7 @@ if (!iframe) {
 }
 
 // Load URL from sessionStorage when page loads
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
   let GoUrl = sessionStorage.getItem("GoUrl");
   let dyValue = localStorage.getItem("dy");
   const addressInput = document.getElementById("is");
@@ -16,18 +16,18 @@ window.addEventListener("load", function() {
     try {
       // Enhanced Ultraviolet URL decoder
       let decodedUrl = GoUrl;
-      
-      console.log('Original encoded URL:', GoUrl);
-      
+
+      console.log("Original encoded URL:", GoUrl);
+
       // Check if it's already decoded (starts with http)
-      if (!decodedUrl.startsWith('http') && !decodedUrl.startsWith('/e/')) {
+      if (!decodedUrl.startsWith("http") && !decodedUrl.startsWith("/e/")) {
         // Try Ultraviolet decoding
-        if (typeof __uv$config !== 'undefined' && __uv$config.decodeUrl) {
+        if (typeof __uv$config !== "undefined" && __uv$config.decodeUrl) {
           try {
             decodedUrl = __uv$config.decodeUrl(GoUrl);
-            console.log('UV decoded URL:', decodedUrl);
+            console.log("UV decoded URL:", decodedUrl);
           } catch (uvError) {
-            console.warn('UV decode failed, using manual decode:', uvError);
+            console.warn("UV decode failed, using manual decode:", uvError);
             // Fallback to manual decoding
             decodedUrl = manualUrlDecode(GoUrl);
           }
@@ -36,18 +36,21 @@ window.addEventListener("load", function() {
           decodedUrl = manualUrlDecode(GoUrl);
         }
       }
-      
+
       // Clean and display
-      if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
+      if (
+        decodedUrl.startsWith("http://") ||
+        decodedUrl.startsWith("https://")
+      ) {
         addressInput.value = decodedUrl;
-        addressInput.setAttribute('title', decodedUrl);
+        addressInput.setAttribute("title", decodedUrl);
       } else {
         addressInput.value = GoUrl; // Show encoded if decoding failed
       }
-      
-      console.log('Final displayed URL:', addressInput.value);
+
+      console.log("Final displayed URL:", addressInput.value);
     } catch (error) {
-      console.error('URL decode error:', error);
+      console.error("URL decode error:", error);
       addressInput.value = GoUrl; // Show encoded URL as fallback
     }
   }
@@ -58,39 +61,39 @@ window.addEventListener("load", function() {
     function manualUrlDecode(encodedUrl) {
       try {
         let decoded = encodedUrl;
-        
+
         // First URL decode
         decoded = decodeURIComponent(decoded);
-        
+
         // Apply Ultraviolet character mappings
         decoded = decoded
-          .replace(/hvtrs8%2F%2F/g, 'https://')
-          .replace(/hvtr8%2F%2F/g, 'http://')
-          .replace(/hvtrs8/g, 'https://')
-          .replace(/hvtr8/g, 'http://')
-          .replace(/%2F/g, '/')
-          .replace(/%2C/g, '.')
-          .replace(/-/g, '/')
-          .replace(/,/g, '.');
-        
+          .replace(/hvtrs8%2F%2F/g, "https://")
+          .replace(/hvtr8%2F%2F/g, "http://")
+          .replace(/hvtrs8/g, "https://")
+          .replace(/hvtr8/g, "http://")
+          .replace(/%2F/g, "/")
+          .replace(/%2C/g, ".")
+          .replace(/-/g, "/")
+          .replace(/,/g, ".");
+
         // Apply specific character mappings for common patterns
         decoded = decoded
-          .replace(/1t1/g, '1v1')
-          .replace(/lml/g, 'lol')
-          .replace(/gmogle/g, 'google')
-          .replace(/youtybe/g, 'youtube');
-        
+          .replace(/1t1/g, "1v1")
+          .replace(/lml/g, "lol")
+          .replace(/gmogle/g, "google")
+          .replace(/youtybe/g, "youtube");
+
         // Clean up any extra slashes
-        decoded = decoded.replace(/([^:]\/)\/+/g, '$1');
-        
+        decoded = decoded.replace(/([^:]\/)\/+/g, "$1");
+
         // Ensure proper protocol
-        if (!decoded.startsWith('http://') && !decoded.startsWith('https://')) {
-          decoded = 'https://' + decoded;
+        if (!decoded.startsWith("http://") && !decoded.startsWith("https://")) {
+          decoded = "https://" + decoded;
         }
-        
+
         return decoded;
       } catch (error) {
-        console.warn('Manual decode failed:', error);
+        console.warn("Manual decode failed:", error);
         return encodedUrl;
       }
     }
@@ -151,7 +154,7 @@ function decodeXor(input) {
     decodeURIComponent(str)
       .split("")
       .map((char, ind) =>
-        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char,
+        ind % 2 ? String.fromCharCode(char.charCodeAt(NaN) ^ 2) : char
       )
       .join("") + (search.length ? "?" + search.join("?") : "")
   );
@@ -159,55 +162,55 @@ function decodeXor(input) {
 
 // Loading progress indicator
 function showLoadingProgress() {
-  const loadingBar = document.getElementById('loading-bar');
-  const loadingOverlay = document.getElementById('loading-overlay');
-  
+  const loadingBar = document.getElementById("loading-bar");
+  const loadingOverlay = document.getElementById("loading-overlay");
+
   if (loadingBar) {
-    loadingBar.classList.add('active');
-    loadingBar.style.width = '0%';
-    
+    loadingBar.classList.add("active");
+    loadingBar.style.width = "0%";
+
     // Animate loading bar
     let progress = 0;
     const interval = setInterval(() => {
       progress += Math.random() * 15;
       if (progress > 95) progress = 95;
-      loadingBar.style.width = progress + '%';
-      
+      loadingBar.style.width = progress + "%";
+
       if (progress >= 95) {
         clearInterval(interval);
       }
     }, 200);
   }
-  
+
   if (loadingOverlay) {
-    loadingOverlay.classList.add('active');
+    loadingOverlay.classList.add("active");
   }
-  
+
   // Activate browserLoading if available
-  if (typeof browserLoading !== 'undefined') {
+  if (typeof browserLoading !== "undefined") {
     browserLoading.startLoading();
   }
 }
 
 // Hide loading indicators
 function hideLoadingProgress() {
-  const loadingBar = document.getElementById('loading-bar');
-  const loadingOverlay = document.getElementById('loading-overlay');
-  
+  const loadingBar = document.getElementById("loading-bar");
+  const loadingOverlay = document.getElementById("loading-overlay");
+
   if (loadingBar) {
-    loadingBar.style.width = '100%';
+    loadingBar.style.width = "100%";
     setTimeout(() => {
-      loadingBar.classList.remove('active');
-      loadingBar.style.width = '0%';
+      loadingBar.classList.remove("active");
+      loadingBar.style.width = "0%";
     }, 300);
   }
-  
+
   if (loadingOverlay) {
-    loadingOverlay.classList.remove('active');
+    loadingOverlay.classList.remove("active");
   }
-  
+
   // Stop browserLoading if available
-  if (typeof browserLoading !== 'undefined') {
+  if (typeof browserLoading !== "undefined") {
     browserLoading.stopLoading();
   }
 }
@@ -216,11 +219,11 @@ function hideLoadingProgress() {
 function iframeLoad() {
   // Hide loading indicators when page loads
   hideLoadingProgress();
-  
+
   if (document.readyState === "complete") {
     const website = iframe.contentWindow?.location.href.replace(
       window.location.origin,
-      "",
+      ""
     );
 
     if (website.includes("/a/")) {
@@ -316,7 +319,7 @@ function toggleFullscreen() {
       } else if (iframe.msRequestFullscreen) {
         iframe.msRequestFullscreen();
       }
-      document.body.classList.add('fullscreen');
+      document.body.classList.add("fullscreen");
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -325,7 +328,7 @@ function toggleFullscreen() {
       } else if (document.msExitFullscreen) {
         document.msExitFullscreen();
       }
-      document.body.classList.remove('fullscreen');
+      document.body.classList.remove("fullscreen");
     }
   } catch (error) {
     console.warn("Fullscreen operation failed:", error);
@@ -333,50 +336,56 @@ function toggleFullscreen() {
 }
 
 // Enhanced keyboard support and iframe focus
-document.addEventListener('keydown', function(e) {
+document.addEventListener("keydown", function (e) {
   // Ctrl+L to focus address bar
-  if (e.ctrlKey && e.key === 'l') {
+  if (e.ctrlKey && e.key === "l") {
     e.preventDefault();
-    const addressInput = document.getElementById('is');
+    const addressInput = document.getElementById("is");
     if (addressInput) {
       addressInput.focus();
       addressInput.select();
     }
   }
-  
+
   // F11 for fullscreen
-  if (e.key === 'F11') {
+  if (e.key === "F11") {
     e.preventDefault();
     toggleFullscreen();
   }
-  
+
   // Alt+Left for back navigation
-  if (e.altKey && e.key === 'ArrowLeft') {
+  if (e.altKey && e.key === "ArrowLeft") {
     e.preventDefault();
     goBack();
   }
-  
+
   // Alt+Right for forward navigation
-  if (e.altKey && e.key === 'ArrowRight') {
+  if (e.altKey && e.key === "ArrowRight") {
     e.preventDefault();
     goForward();
   }
-  
+
   // F5 for reload
-  if (e.key === 'F5') {
+  if (e.key === "F5") {
     e.preventDefault();
     reload();
   }
-  
+
   // Focus iframe for game input (when not typing in address bar)
-  const addressInput = document.getElementById('is');
-  const isTypingInAddressBar = addressInput && document.activeElement === addressInput;
-  
+  const addressInput = document.getElementById("is");
+  const isTypingInAddressBar =
+    addressInput && document.activeElement === addressInput;
+
   if (!isTypingInAddressBar && iframe && iframe.contentWindow) {
     // For game input, ensure iframe is focused for key events
     // This helps with games that need keyboard input
     try {
-      if (e.key.length === 1 || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.key)) {
+      if (
+        e.key.length === 1 ||
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(
+          e.key
+        )
+      ) {
         iframe.contentWindow.focus();
       }
     } catch (error) {
@@ -387,27 +396,27 @@ document.addEventListener('keydown', function(e) {
 
 // Improve iframe focus when clicked
 if (iframe) {
-  iframe.addEventListener('click', function() {
+  iframe.addEventListener("click", function () {
     try {
       iframe.contentWindow.focus();
-      console.log('Iframe focused for better keyboard input');
+      console.log("Iframe focused for better keyboard input");
     } catch (error) {
       // Ignore cross-origin errors
     }
   });
-  
+
   // Auto-focus iframe when page loads for game input
-  iframe.addEventListener('load', function() {
+  iframe.addEventListener("load", function () {
     setTimeout(() => {
       try {
         iframe.contentWindow.focus();
-        console.log('Iframe auto-focused after load');
+        console.log("Iframe auto-focused after load");
       } catch (error) {
         // Ignore cross-origin errors
       }
     }, 1000); // Wait a bit for the game to initialize
   });
-});
+}
 
 // Chrome keyboard lock for better fullscreen experience
 if (navigator.userAgent.includes("Chrome")) {
@@ -429,23 +438,23 @@ document.addEventListener("fullscreenchange", function () {
 });
 
 // Initialize form handling for the browser address bar
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("fs");
   const input = document.getElementById("is");
 
   if (form && input) {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      
+
       const value = input.value.trim();
       if (value) {
-        console.log('Processing URL from address bar:', value);
-        
+        console.log("Processing URL from address bar:", value);
+
         // Show loading indicator
-        if (typeof browserLoading !== 'undefined') {
+        if (typeof browserLoading !== "undefined") {
           browserLoading.startLoading(value);
         }
-        
+
         await processUrl(value, "/p");
       }
     });
@@ -466,21 +475,21 @@ async function processUrl(value, path) {
     }
 
     // Wait for service worker to be ready
-    if ('serviceWorker' in navigator) {
+    if ("serviceWorker" in navigator) {
       await navigator.serviceWorker.ready;
-      console.log('Service worker ready for proxy request');
+      console.log("Service worker ready for proxy request");
     }
 
     // Ensure UV config is available
-    if (typeof __uv$config !== 'undefined' && __uv$config.encodeUrl) {
+    if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
       const encodedUrl = __uv$config.encodeUrl(url);
-      console.log('Encoding URL:', url, '→', encodedUrl);
-      
+      console.log("Encoding URL:", url, "→", encodedUrl);
+
       sessionStorage.setItem("GoUrl", encodedUrl);
-      
+
       // Enhanced redirect logic
       const dy = localStorage.getItem("dy");
-      
+
       if (path) {
         location.href = path;
       } else if (dy === "true") {
@@ -489,13 +498,13 @@ async function processUrl(value, path) {
         window.location.href = "/a/" + encodedUrl;
       }
     } else {
-      console.error('Ultraviolet config not available');
+      console.error("Ultraviolet config not available");
       // Fallback: store raw URL and redirect
       sessionStorage.setItem("GoUrl", url);
       location.href = path || "/go";
     }
   } catch (error) {
-    console.error('Error processing URL:', error);
+    console.error("Error processing URL:", error);
     // Fallback handling
     sessionStorage.setItem("GoUrl", value);
     location.href = path || "/go";
@@ -524,35 +533,35 @@ window.onload = function () {
         GoUrl = "/a/" + GoUrl;
       }
     }
-    
+
     console.log("Loading URL:", GoUrl);
-    
+
     if (iframe && GoUrl) {
       // Show loading indicator
-      const overlay = document.querySelector('.overlay');
-      if (overlay && GoUrl.includes('now.gg')) {
-        overlay.style.display = 'flex';
+      const overlay = document.querySelector(".overlay");
+      if (overlay && GoUrl.includes("now.gg")) {
+        overlay.style.display = "flex";
       }
-      
+
       iframe.src = GoUrl;
-      
+
       // Set up iframe error handling
-      iframe.onerror = function() {
+      iframe.onerror = function () {
         console.error("Failed to load URL in iframe");
         // Could show user-friendly error message
       };
-      
+
       // Set up iframe load timeout
-      const loadTimeout = setTimeout(function() {
-        if (overlay && overlay.style.display === 'flex') {
-          overlay.style.display = 'none';
+      const loadTimeout = setTimeout(function () {
+        if (overlay && overlay.style.display === "flex") {
+          overlay.style.display = "none";
         }
       }, 30000); // 30 second timeout
-      
-      iframe.onload = function() {
+
+      iframe.onload = function () {
         clearTimeout(loadTimeout);
         if (overlay) {
-          overlay.style.display = 'none';
+          overlay.style.display = "none";
         }
         iframeLoad();
       };

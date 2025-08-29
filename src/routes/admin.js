@@ -14,7 +14,7 @@ const logger = new Logger("AdminAPI");
 router.post("/auth", (req, res) => {
   try {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
       return res.status(400).json({ error: "Username and password required" });
     }
@@ -25,15 +25,15 @@ router.post("/auth", (req, res) => {
     }
 
     // Create a basic auth token
-    const token = Buffer.from(`${username}:${password}`).toString('base64');
-    
+    const token = Buffer.from(`${username}:${password}`).toString("base64");
+
     res.json({
       success: true,
       token,
       admin: {
         id: admin.adminId,
-        role: admin.role
-      }
+        role: admin.role,
+      },
     });
   } catch (error) {
     logger.error("Admin auth error:", error);
@@ -45,17 +45,17 @@ router.post("/auth", (req, res) => {
 router.post("/pause", adminAuth, (req, res) => {
   try {
     const { password } = req.body;
-    
+
     if (!password) {
       return res.status(400).json({ error: "Pause password required" });
     }
 
     adminStore.pauseGlobally(password);
-    
+
     res.json({
       success: true,
       message: "Site globally paused",
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     logger.error("Global pause error:", error);
@@ -66,7 +66,7 @@ router.post("/pause", adminAuth, (req, res) => {
 router.post("/unpause", (req, res) => {
   try {
     const { password } = req.body;
-    
+
     if (!password) {
       return res.status(400).json({ error: "Password required" });
     }
@@ -76,9 +76,9 @@ router.post("/unpause", (req, res) => {
     }
 
     adminStore.unpauseGlobally();
-    
+
     // Redirect to home page after successful unpause
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
     logger.error("Global unpause error:", error);
     res.status(500).json({ error: "Failed to unpause site" });
@@ -88,7 +88,7 @@ router.post("/unpause", (req, res) => {
 router.get("/pause/status", adminAuth, (req, res) => {
   res.json({
     isPaused: adminStore.isGloballyPaused(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -96,12 +96,12 @@ router.get("/pause/status", adminAuth, (req, res) => {
 router.get("/sessions", adminAuth, (req, res) => {
   try {
     const onlineUsers = adminStore.getOnlineUsers();
-    
+
     res.json({
       success: true,
       users: onlineUsers,
       count: onlineUsers.length,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     logger.error("Get sessions error:", error);
@@ -114,14 +114,14 @@ router.post("/users/:userId/block", adminAuth, (req, res) => {
   try {
     const { userId } = req.params;
     const { reason } = req.body;
-    
+
     const success = adminStore.blockUser(userId, reason);
-    
+
     if (success) {
       res.json({
         success: true,
         message: `User ${userId} blocked`,
-        reason
+        reason,
       });
     } else {
       res.status(404).json({ error: "User not found" });
@@ -135,13 +135,13 @@ router.post("/users/:userId/block", adminAuth, (req, res) => {
 router.post("/users/:userId/unblock", adminAuth, (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     const success = adminStore.unblockUser(userId);
-    
+
     if (success) {
       res.json({
         success: true,
-        message: `User ${userId} unblocked`
+        message: `User ${userId} unblocked`,
       });
     } else {
       res.status(404).json({ error: "User not found" });
@@ -157,12 +157,12 @@ router.get("/users/:userId/blocked-sites", adminAuth, (req, res) => {
   try {
     const { userId } = req.params;
     const blockedSites = adminStore.getBlockedSitesForUser(userId);
-    
+
     res.json({
       success: true,
       userId,
       blockedSites,
-      count: blockedSites.length
+      count: blockedSites.length,
     });
   } catch (error) {
     logger.error("Get blocked sites error:", error);
@@ -174,18 +174,18 @@ router.post("/users/:userId/block-site", adminAuth, (req, res) => {
   try {
     const { userId } = req.params;
     const { domain } = req.body;
-    
+
     if (!domain) {
       return res.status(400).json({ error: "Domain required" });
     }
 
     adminStore.blockSiteForUser(userId, domain);
-    
+
     res.json({
       success: true,
       message: `Domain ${domain} blocked for user ${userId}`,
       userId,
-      domain
+      domain,
     });
   } catch (error) {
     logger.error("Block site error:", error);
@@ -197,18 +197,18 @@ router.post("/users/:userId/unblock-site", adminAuth, (req, res) => {
   try {
     const { userId } = req.params;
     const { domain } = req.body;
-    
+
     if (!domain) {
       return res.status(400).json({ error: "Domain required" });
     }
 
     adminStore.unblockSiteForUser(userId, domain);
-    
+
     res.json({
       success: true,
       message: `Domain ${domain} unblocked for user ${userId}`,
       userId,
-      domain
+      domain,
     });
   } catch (error) {
     logger.error("Unblock site error:", error);
@@ -220,11 +220,11 @@ router.post("/users/:userId/unblock-site", adminAuth, (req, res) => {
 router.get("/accounts", adminAuth, (req, res) => {
   try {
     const admins = adminStore.getAdmins();
-    
+
     res.json({
       success: true,
       admins,
-      count: admins.length
+      count: admins.length,
     });
   } catch (error) {
     logger.error("Get accounts error:", error);
@@ -235,24 +235,26 @@ router.get("/accounts", adminAuth, (req, res) => {
 router.post("/accounts", adminAuth, (req, res) => {
   try {
     const { username, password, role } = req.body;
-    
+
     if (!username || !password) {
       return res.status(400).json({ error: "Username and password required" });
     }
 
     // Check if requesting admin has super_admin role for creating admins
-    if (req.admin.role !== 'super_admin' && role === 'super_admin') {
-      return res.status(403).json({ error: "Insufficient permissions to create super admin" });
+    if (req.admin.role !== "super_admin" && role === "super_admin") {
+      return res
+        .status(403)
+        .json({ error: "Insufficient permissions to create super admin" });
     }
 
-    const adminId = adminStore.addAdmin(username, password, role || 'admin');
-    
+    const adminId = adminStore.addAdmin(username, password, role || "admin");
+
     res.json({
       success: true,
       message: "Admin account created",
       adminId,
       username,
-      role: role || 'admin'
+      role: role || "admin",
     });
   } catch (error) {
     logger.error("Create account error:", error);
@@ -263,24 +265,24 @@ router.post("/accounts", adminAuth, (req, res) => {
 router.delete("/accounts/:adminId", adminAuth, (req, res) => {
   try {
     const { adminId } = req.params;
-    
+
     // Prevent deleting own account
     if (adminId === req.admin.adminId) {
       return res.status(400).json({ error: "Cannot delete your own account" });
     }
 
     // Check permissions for super admin deletion
-    if (req.admin.role !== 'super_admin') {
+    if (req.admin.role !== "super_admin") {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
 
     const success = adminStore.removeAdmin(adminId);
-    
+
     if (success) {
       res.json({
         success: true,
         message: "Admin account deleted",
-        adminId
+        adminId,
       });
     } else {
       res.status(404).json({ error: "Admin account not found" });
@@ -297,7 +299,7 @@ router.get("/stats", adminAuth, (req, res) => {
     const onlineUsers = adminStore.getOnlineUsers();
     const admins = adminStore.getAdmins();
     const memoryUsage = process.memoryUsage();
-    
+
     res.json({
       success: true,
       onlineUsers: onlineUsers.length,
@@ -308,7 +310,7 @@ router.get("/stats", adminAuth, (req, res) => {
       totalRequests: adminStore.getTotalRequests?.() || 0,
       totalAdmins: admins.length,
       isPaused: adminStore.isGloballyPaused(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     logger.error("Get stats error:", error);

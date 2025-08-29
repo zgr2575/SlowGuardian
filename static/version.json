@@ -1,17 +1,17 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "55bf4c8-1756431132858",
-  "buildDate": "2025-08-29T01:32:12.858Z",
-  "buildTimestamp": 1756431132858,
+  "buildId": "055effe-1756450826692",
+  "buildDate": "2025-08-29T07:00:26.692Z",
+  "buildTimestamp": 1756450826692,
   "git": {
-    "commit": "55bf4c83b1e4bf4bfb904598b547f60fb7da4de9",
-    "commitShort": "55bf4c8",
+    "commit": "055effe742c754b7d9d33e1269d18e23aec11c61",
+    "commitShort": "055effe",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-28T21:26:02Z",
-    "commitMessage": "🔧 Fix malformed JavaScript text below footer - completely resolved template literal parsing issues"
+    "commitDate": "2025-08-29T01:33:44Z",
+    "commitMessage": "🔧 Fix critical about:blank infinite loop, CSP violations, and missing navigation functions"
   },
-  "environment": "development",
+  "environment": "production",
   "nodeVersion": "v20.19.4",
   "platform": "linux",
   "arch": "x64"

@@ -16,10 +16,10 @@ const config = {
   // KeyAuth API Configuration - NEW AUTHENTICATION SYSTEM
   keyauth: {
     enabled: false, // Set to true to enable KeyAuth authentication
-    name: process.env.KEYAUTH_NAME || 'SlowGuardian', // Your KeyAuth application name
-    ownerId: process.env.KEYAUTH_OWNER_ID || '', // Your KeyAuth owner ID
-    secret: process.env.KEYAUTH_SECRET || '', // Your KeyAuth application secret
-    version: '1.0', // Your application version in KeyAuth
+    name: process.env.KEYAUTH_NAME || "SlowGuardian", // Your KeyAuth application name
+    ownerId: process.env.KEYAUTH_OWNER_ID || "", // Your KeyAuth owner ID
+    secret: process.env.KEYAUTH_SECRET || "", // Your KeyAuth application secret
+    version: "1.0", // Your application version in KeyAuth
     requireLicense: false, // Set to true if users need license keys
     allowRegistration: true, // Allow new user registrations
     sessionTimeout: 24 * 60 * 60 * 1000, // Session timeout in milliseconds (24 hours)
@@ -29,15 +29,15 @@ const config = {
   developerMode: {
     enabled: true, // Enable developer/admin features
     defaultAdminCredentials: {
-      username: 'admin',
-      password: 'SlowGuardian2024!' // CHANGE THIS IN PRODUCTION!
+      username: "admin",
+      password: "SlowGuardian2024!", // CHANGE THIS IN PRODUCTION!
     },
     features: {
       userTracking: true, // Track online users and sessions
       siteBlocking: true, // Enable per-user website blocking
       globalPause: true, // Enable global site pausing
-      adminPanel: true // Enable admin control panel
-    }
+      adminPanel: true, // Enable admin control panel
+    },
   },
 
   // Feature Flags

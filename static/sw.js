@@ -21,7 +21,7 @@ self.addEventListener("fetch", (event) => {
     (async function () {
       try {
         const url = new URL(event.request.url);
-        
+
         // Handle Dynamic proxy requests (/a/q/)
         if (await dynamic.route(event)) {
           console.log("Routing through Dynamic:", event.request.url);
@@ -44,15 +44,15 @@ self.addEventListener("fetch", (event) => {
         return await fetch(event.request);
       } catch (error) {
         console.error("Service worker fetch error:", error);
-        
+
         // Fallback for failed requests
-        if (event.request.mode === 'navigate') {
-          return Response.redirect('/', 302);
+        if (event.request.mode === "navigate") {
+          return Response.redirect("/", 302);
         }
-        
-        return new Response('Service Worker Error', { 
-          status: 500, 
-          statusText: 'Internal Server Error' 
+
+        return new Response("Service Worker Error", {
+          status: 500,
+          statusText: "Internal Server Error",
         });
       }
     })()
@@ -75,7 +75,7 @@ self.addEventListener("activate", (event) => {
 
 // Message event handler for communication with main thread
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });

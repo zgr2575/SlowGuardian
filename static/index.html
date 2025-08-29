@@ -246,7 +246,7 @@
     <!-- Global notification system -->
     <script>
       // Global notification system
-      window.showNotification = function(message, type = "info", duration = 5000) {
+      window.showNotification = function (message, type = "info", duration = 5000) {
         const notification = document.createElement("div");
         notification.style.cssText = `
           position: fixed;
@@ -263,10 +263,10 @@
           max-width: 300px;
         `;
         notification.textContent = message;
-        
-        if (!document.getElementById('notification-styles')) {
-          const style = document.createElement('style');
-          style.id = 'notification-styles';
+
+        if (!document.getElementById("notification-styles")) {
+          const style = document.createElement("style");
+          style.id = "notification-styles";
           style.textContent = `
             @keyframes slideIn {
               from { transform: translateX(100%); opacity: 0; }
@@ -279,11 +279,11 @@
           `;
           document.head.appendChild(style);
         }
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
-          notification.style.animation = 'slideOut 0.3s ease-in forwards';
+          notification.style.animation = "slideOut 0.3s ease-in forwards";
           setTimeout(() => {
             if (notification.parentNode) {
               notification.parentNode.removeChild(notification);
@@ -293,7 +293,7 @@
       };
 
       // Global proxy handler functions for legacy compatibility
-      window.go = function(url) {
+      window.go = function (url) {
         if (window.SlowGuardian?.handleProxyRequest) {
           window.SlowGuardian.handleProxyRequest(url);
         } else {
@@ -303,26 +303,29 @@
         }
       };
 
-      window.blank = function(url) {
+      window.blank = function (url) {
         if (window.SlowGuardian?.handleProxyRequest) {
           window.SlowGuardian.handleProxyRequest(url, true);
         } else {
           // Fallback for about:blank popup
           const win = window.open("about:blank");
           if (win) {
-            const htmlContent = `<html><head><title>My Drive - Google Drive</title></head><body><sc` + `ript>sessionStorage.setItem("GoUrl","${__uv$config.encodeUrl(url)}");window.location.href="/go";</sc` + `ript></body></html>`;
+            const htmlContent =
+              `<html><head><title>My Drive - Google Drive</title></head><body><sc` +
+              `ript>sessionStorage.setItem("GoUrl","${__uv$config.encodeUrl(url)}");window.location.href="/go";</sc` +
+              `ript></body></html>`;
             win.document.write(htmlContent);
           }
         }
       };
 
-      window.dy = function(url) {
+      window.dy = function (url) {
         sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
         window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
       };
 
       // About:blank popup function
-      window.AB = function() {
+      window.AB = function () {
         const popup = window.open("about:blank", "_blank");
         if (popup) {
           popup.document.title = "My Drive - Google Drive";
@@ -349,21 +352,21 @@
     <script src="assets/scripts/auth.js?v=1"></script>
     <script src="assets/scripts/onboarding.js?v=1"></script>
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
-    
+
     <!-- New v9 Systems -->
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
-    
+
     <!-- Legacy Theme Support & Auto-Actions -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Quick Access event listeners
-        document.querySelectorAll('.quick-item[data-url]').forEach(item => {
-          item.addEventListener('click', function(e) {
+        document.querySelectorAll(".quick-item[data-url]").forEach((item) => {
+          item.addEventListener("click", function (e) {
             e.preventDefault();
-            const url = this.getAttribute('data-url');
-            if (url && typeof window.go === 'function') {
+            const url = this.getAttribute("data-url");
+            if (url && typeof window.go === "function") {
               window.go(url);
             }
           });
@@ -374,11 +377,14 @@
         if (abEnabled === "true") {
           // Only auto-popup on main pages to avoid interference
           // Prevent infinite loops when page is loaded in iframe
-          if (!window.location.pathname.includes("/settings") && 
-              !window.location.pathname.includes("/go") &&
-              window.top === window.self) {  // Not in iframe
+          if (
+            !window.location.pathname.includes("/settings") &&
+            !window.location.pathname.includes("/go") &&
+            window.top === window.self
+          ) {
+            // Not in iframe
             setTimeout(() => {
-              if (typeof AB === 'function') {
+              if (typeof AB === "function") {
                 AB();
               }
             }, 1500); // Delay to ensure page is fully loaded
@@ -386,10 +392,10 @@
         }
 
         // Quick focus on search with / key
-        document.addEventListener('keydown', (e) => {
-          if (e.key === '/' && e.target === document.body && !e.ctrlKey && !e.metaKey) {
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "/" && e.target === document.body && !e.ctrlKey && !e.metaKey) {
             e.preventDefault();
-            const searchInput = document.getElementById('is') || document.getElementById('url-input');
+            const searchInput = document.getElementById("is") || document.getElementById("url-input");
             if (searchInput) {
               searchInput.focus();
             }
@@ -399,29 +405,29 @@
         // Initialize legacy theme system with enhanced loading
         function initThemes() {
           const themeid = localStorage.getItem("theme");
-          if (themeid && themeid !== 'default') {
+          if (themeid && themeid !== "default") {
             const themeEle = document.createElement("link");
             themeEle.rel = "stylesheet";
-            
+
             // Modern themes
             const themeMap = {
-              'catppuccinMocha': '/assets/styles/themes/catppuccin/mocha.css?v=1',
-              'catppuccinMacchiato': '/assets/styles/themes/catppuccin/macchiato.css?v=1',
-              'catppuccinFrappe': '/assets/styles/themes/catppuccin/frappe.css?v=1',
-              'catppuccinLatte': '/assets/styles/themes/catppuccin/latte.css?v=1',
-              'cyberpunk': '/assets/styles/themes/cyberpunk.css?v=1',
-              'ocean': '/assets/styles/themes/ocean.css?v=1',
-              'sunset': '/assets/styles/themes/sunset.css?v=1'
+              catppuccinMocha: "/assets/styles/themes/catppuccin/mocha.css?v=1",
+              catppuccinMacchiato: "/assets/styles/themes/catppuccin/macchiato.css?v=1",
+              catppuccinFrappe: "/assets/styles/themes/catppuccin/frappe.css?v=1",
+              catppuccinLatte: "/assets/styles/themes/catppuccin/latte.css?v=1",
+              cyberpunk: "/assets/styles/themes/cyberpunk.css?v=1",
+              ocean: "/assets/styles/themes/ocean.css?v=1",
+              sunset: "/assets/styles/themes/sunset.css?v=1",
             };
-            
+
             if (themeMap[themeid]) {
               themeEle.href = themeMap[themeid];
               document.head.appendChild(themeEle);
             }
           }
         }
-        
-        // Initialize tab cloaking 
+
+        // Initialize tab cloaking
         function initTabCloaking() {
           const icon = document.getElementById("tab-favicon");
           const title = document.getElementById("tab-title");
@@ -439,11 +445,11 @@
           }
 
           const cloakOptions = {
-            "Google": ["Google", "https://www.google.com/favicon.ico"],
-            "Drive": ["My Drive - Google Drive", "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"],
-            "Classroom": ["Home", "https://ssl.gstatic.com/classroom/favicon.png"],
-            "Gmail": ["Gmail", "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"],
-            "Netflix": ["Netflix", "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico"]
+            Google: ["Google", "https://www.google.com/favicon.ico"],
+            Drive: ["My Drive - Google Drive", "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"],
+            Classroom: ["Home", "https://ssl.gstatic.com/classroom/favicon.png"],
+            Gmail: ["Gmail", "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"],
+            Netflix: ["Netflix", "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico"],
           };
 
           if (selectedValue && cloakOptions[selectedValue]) {
@@ -455,32 +461,38 @@
         // Initialize all legacy systems
         initThemes();
         initTabCloaking();
-        
+
         // Motivational quotes rotation
         const quotes = [
           { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
           { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
-          { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+          {
+            text: "The future belongs to those who believe in the beauty of their dreams.",
+            author: "Eleanor Roosevelt",
+          },
           { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
           { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
           { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
-          { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+          {
+            text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            author: "Winston Churchill",
+          },
           { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
           { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
-          { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" }
+          { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" },
         ];
-        
+
         const dailyQuote = quotes[new Date().getDate() % quotes.length];
-        const quoteText = document.querySelector('.quote-text');
-        const quoteAuthor = document.querySelector('.quote-author');
-        
+        const quoteText = document.querySelector(".quote-text");
+        const quoteAuthor = document.querySelector(".quote-author");
+
         if (quoteText && quoteAuthor) {
           quoteText.textContent = `"${dailyQuote.text}"`;
           quoteAuthor.textContent = `- ${dailyQuote.author}`;
         }
       });
     </script>
-    
+
     <!-- First Boot Setup System -->
     <script src="assets/scripts/first-boot-setup.js?v=1"></script>
   </body>

@@ -5,39 +5,45 @@
 
 class NotesManagerPlugin {
   constructor() {
-    this.name = 'Notes Manager';
-    this.version = '1.0.0';
-    this.notes = JSON.parse(getCookie('user-notes') || localStorage.getItem('user-notes') || '[]');
+    this.name = "Notes Manager";
+    this.version = "1.0.0";
+    this.notes = JSON.parse(
+      getCookie("user-notes") || localStorage.getItem("user-notes") || "[]"
+    );
     this.isOpen = false;
     this.notePanel = null;
   }
 
   init() {
-    console.log('📝 Notes Manager Plugin initialized');
+    console.log("📝 Notes Manager Plugin initialized");
     this.createNotesPanel();
     this.registerHooks();
   }
 
   enable() {
-    console.log('📝 Notes Manager Plugin enabled');
+    console.log("📝 Notes Manager Plugin enabled");
     if (this.notePanel) {
-      this.notePanel.style.display = 'block';
+      this.notePanel.style.display = "block";
     }
   }
 
   disable() {
-    console.log('📝 Notes Manager Plugin disabled');
+    console.log("📝 Notes Manager Plugin disabled");
     if (this.notePanel) {
-      this.notePanel.style.display = 'none';
+      this.notePanel.style.display = "none";
     }
     this.isOpen = false;
   }
 
   registerHooks() {
     if (window.pluginSystem) {
-      window.pluginSystem.addHook('page_load', (data) => {
-        this.onPageLoad(data);
-      }, 'notes-manager');
+      window.pluginSystem.addHook(
+        "page_load",
+        (data) => {
+          this.onPageLoad(data);
+        },
+        "notes-manager"
+      );
     }
   }
 
@@ -47,7 +53,7 @@ class NotesManagerPlugin {
   }
 
   createNotesPanel() {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .notes-panel {
         position: fixed;
@@ -187,8 +193,8 @@ class NotesManagerPlugin {
     `;
     document.head.appendChild(style);
 
-    this.notePanel = document.createElement('div');
-    this.notePanel.className = 'notes-panel';
+    this.notePanel = document.createElement("div");
+    this.notePanel.className = "notes-panel";
     this.notePanel.innerHTML = `
       <div class="notes-toggle" onclick="window.notesManager.toggle()">📝</div>
       
@@ -223,16 +229,16 @@ class NotesManagerPlugin {
     `;
 
     document.body.appendChild(this.notePanel);
-    
+
     this.loadNotes();
     this.currentNote = null;
-    this.currentTab = 'list';
+    this.currentTab = "list";
   }
 
   toggle() {
     this.isOpen = !this.isOpen;
-    this.notePanel.classList.toggle('open', this.isOpen);
-    
+    this.notePanel.classList.toggle("open", this.isOpen);
+
     if (this.isOpen) {
       this.loadNotes();
     }
@@ -240,28 +246,28 @@ class NotesManagerPlugin {
 
   showTab(tabName) {
     // Update tab buttons
-    const tabs = this.notePanel.querySelectorAll('.notes-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    tabs[tabName === 'list' ? 0 : 1].classList.add('active');
-    
+    const tabs = this.notePanel.querySelectorAll(".notes-tab");
+    tabs.forEach((tab) => tab.classList.remove("active"));
+    tabs[tabName === "list" ? 0 : 1].classList.add("active");
+
     // Show appropriate content
-    const notesList = this.notePanel.querySelector('#notes-list');
-    const noteEditor = this.notePanel.querySelector('#note-editor');
-    
-    if (tabName === 'list') {
-      notesList.style.display = 'block';
-      noteEditor.style.display = 'none';
+    const notesList = this.notePanel.querySelector("#notes-list");
+    const noteEditor = this.notePanel.querySelector("#note-editor");
+
+    if (tabName === "list") {
+      notesList.style.display = "block";
+      noteEditor.style.display = "none";
     } else {
-      notesList.style.display = 'none';
-      noteEditor.style.display = 'flex';
+      notesList.style.display = "none";
+      noteEditor.style.display = "flex";
     }
-    
+
     this.currentTab = tabName;
   }
 
   loadNotes() {
-    const notesList = this.notePanel.querySelector('#notes-list');
-    
+    const notesList = this.notePanel.querySelector("#notes-list");
+
     if (this.notes.length === 0) {
       notesList.innerHTML = `
         <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 20px;">
@@ -270,68 +276,72 @@ class NotesManagerPlugin {
       `;
       return;
     }
-    
-    notesList.innerHTML = this.notes.map((note, index) => `
+
+    notesList.innerHTML = this.notes
+      .map(
+        (note, index) => `
       <div class="note-item" onclick="window.notesManager.loadNote(${index})">
-        <div style="font-weight: bold; margin-bottom: 4px;">${note.title || 'Untitled'}</div>
+        <div style="font-weight: bold; margin-bottom: 4px;">${note.title || "Untitled"}</div>
         <div style="color: var(--text-secondary); font-size: 10px;">${this.formatDate(note.date)}</div>
         <div style="color: var(--text-secondary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          ${note.content.substring(0, 50)}${note.content.length > 50 ? '...' : ''}
+          ${note.content.substring(0, 50)}${note.content.length > 50 ? "..." : ""}
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join("");
   }
 
   loadNote(index) {
     this.currentNote = index;
     const note = this.notes[index];
-    
+
     // Switch to editor tab
-    this.showTab('editor');
-    
+    this.showTab("editor");
+
     // Load note data
-    this.notePanel.querySelector('#note-title').value = note.title || '';
-    this.notePanel.querySelector('#note-content').value = note.content || '';
-    
+    this.notePanel.querySelector("#note-title").value = note.title || "";
+    this.notePanel.querySelector("#note-content").value = note.content || "";
+
     // Highlight the note in the list
-    const noteItems = this.notePanel.querySelectorAll('.note-item');
+    const noteItems = this.notePanel.querySelectorAll(".note-item");
     noteItems.forEach((item, i) => {
-      item.classList.toggle('active', i === index);
+      item.classList.toggle("active", i === index);
     });
   }
 
   newNote() {
     this.currentNote = null;
-    this.showTab('editor');
-    
+    this.showTab("editor");
+
     // Clear editor
-    this.notePanel.querySelector('#note-title').value = '';
-    this.notePanel.querySelector('#note-content').value = '';
-    
+    this.notePanel.querySelector("#note-title").value = "";
+    this.notePanel.querySelector("#note-content").value = "";
+
     // Remove active highlighting
-    this.notePanel.querySelectorAll('.note-item').forEach(item => {
-      item.classList.remove('active');
+    this.notePanel.querySelectorAll(".note-item").forEach((item) => {
+      item.classList.remove("active");
     });
   }
 
   saveNote() {
-    const title = this.notePanel.querySelector('#note-title').value.trim();
-    const content = this.notePanel.querySelector('#note-content').value.trim();
-    
+    const title = this.notePanel.querySelector("#note-title").value.trim();
+    const content = this.notePanel.querySelector("#note-content").value.trim();
+
     if (!title && !content) {
       if (window.showNotification) {
-        window.showNotification('Note is empty', 'warning');
+        window.showNotification("Note is empty", "warning");
       }
       return;
     }
-    
+
     const note = {
-      title: title || 'Untitled',
+      title: title || "Untitled",
       content: content,
       date: new Date().toISOString(),
-      url: window.location.href
+      url: window.location.href,
     };
-    
+
     if (this.currentNote !== null) {
       // Update existing note
       this.notes[this.currentNote] = note;
@@ -339,40 +349,42 @@ class NotesManagerPlugin {
       // Add new note
       this.notes.unshift(note);
     }
-    
+
     this.saveNotes();
     this.loadNotes();
-    
+
     if (window.showNotification) {
-      window.showNotification('Note saved', 'success');
+      window.showNotification("Note saved", "success");
     }
   }
 
   deleteNote() {
     if (this.currentNote !== null) {
-      if (confirm('Delete this note?')) {
+      if (confirm("Delete this note?")) {
         this.notes.splice(this.currentNote, 1);
         this.saveNotes();
         this.loadNotes();
         this.newNote();
-        
+
         if (window.showNotification) {
-          window.showNotification('Note deleted', 'success');
+          window.showNotification("Note deleted", "success");
         }
       }
     }
   }
 
   saveNotes() {
-    setCookie('user-notes', JSON.stringify(this.notes));
-    localStorage.setItem('user-notes', JSON.stringify(this.notes));
+    setCookie("user-notes", JSON.stringify(this.notes));
+    localStorage.setItem("user-notes", JSON.stringify(this.notes));
   }
 
   autoSave() {
-    if (this.currentTab === 'editor' && this.currentNote !== null) {
-      const title = this.notePanel.querySelector('#note-title')?.value.trim();
-      const content = this.notePanel.querySelector('#note-content')?.value.trim();
-      
+    if (this.currentTab === "editor" && this.currentNote !== null) {
+      const title = this.notePanel.querySelector("#note-title")?.value.trim();
+      const content = this.notePanel
+        .querySelector("#note-content")
+        ?.value.trim();
+
       if (title || content) {
         this.saveNote();
       }
@@ -381,7 +393,11 @@ class NotesManagerPlugin {
 
   formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return (
+      date.toLocaleDateString() +
+      " " +
+      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    );
   }
 }
 
@@ -390,13 +406,13 @@ const notesManager = new NotesManagerPlugin();
 window.notesManager = notesManager;
 
 if (window.pluginSystem) {
-  window.pluginSystem.registerPlugin('notes-manager', notesManager);
+  window.pluginSystem.registerPlugin("notes-manager", notesManager);
 } else {
   // Wait for plugin system to load
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       if (window.pluginSystem) {
-        window.pluginSystem.registerPlugin('notes-manager', notesManager);
+        window.pluginSystem.registerPlugin("notes-manager", notesManager);
       }
     }, 100);
   });

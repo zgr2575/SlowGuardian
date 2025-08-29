@@ -56,7 +56,7 @@ function setupApiRoutes(app, config) {
     try {
       const fs = await import("fs");
       const versionData = fs.readFileSync(
-        join(__dirname, "../../static/version.json"), 
+        join(__dirname, "../../static/version.json"),
         "utf8"
       );
       const versionInfo = JSON.parse(versionData);
@@ -72,9 +72,9 @@ function setupApiRoutes(app, config) {
           commit: "unknown",
           commitShort: "unknown",
           branch: "unknown",
-          commitMessage: "unknown"
+          commitMessage: "unknown",
         },
-        environment: config.debug ? "development" : "production"
+        environment: config.debug ? "development" : "production",
       });
     }
   });
@@ -84,7 +84,7 @@ function setupApiRoutes(app, config) {
     try {
       const fs = await import("fs");
       const versionData = fs.readFileSync(
-        join(__dirname, "../../static/version.json"), 
+        join(__dirname, "../../static/version.json"),
         "utf8"
       );
       const versionInfo = JSON.parse(versionData);
@@ -198,17 +198,20 @@ function setupFrontendRoutes(app) {
   routes.forEach((route) => {
     app.get(route.path, (req, res) => {
       const filePath = join(staticDir, route.file);
-      
+
       res.sendFile(filePath, (err) => {
         if (err) {
           logger.error(`Error serving ${route.file} for ${route.path}:`, err);
-          
+
           // Try fallback to index.html for main routes
           if (route.path === "/" && route.file !== "index.html") {
             const fallbackPath = join(staticDir, "index.html");
             res.sendFile(fallbackPath, (fallbackErr) => {
               if (fallbackErr) {
-                logger.error(`Fallback also failed for ${route.path}:`, fallbackErr);
+                logger.error(
+                  `Fallback also failed for ${route.path}:`,
+                  fallbackErr
+                );
                 res.status(404).send("Page not found");
               }
             });
@@ -221,7 +224,7 @@ function setupFrontendRoutes(app) {
   });
 
   // Wildcard routes for proxy URLs (must come after exact routes)
-  app.get('/p/*', (req, res) => {
+  app.get("/p/*", (req, res) => {
     const filePath = join(staticDir, "go.html");
     res.sendFile(filePath, (err) => {
       if (err) {
@@ -231,7 +234,7 @@ function setupFrontendRoutes(app) {
     });
   });
 
-  app.get('/proxy/*', (req, res) => {
+  app.get("/proxy/*", (req, res) => {
     const filePath = join(staticDir, "go.html");
     res.sendFile(filePath, (err) => {
       if (err) {
@@ -241,7 +244,7 @@ function setupFrontendRoutes(app) {
     });
   });
 
-  app.get('/go/*', (req, res) => {
+  app.get("/go/*", (req, res) => {
     const filePath = join(staticDir, "go.html");
     res.sendFile(filePath, (err) => {
       if (err) {
@@ -259,21 +262,21 @@ function setupCustomEndpoints(app, config) {
   // URL verification endpoint
   app.get("/api/check-url", async (req, res) => {
     const { url } = req.query;
-    
+
     if (!url) {
       return res.status(400).json({ error: "URL parameter is required" });
     }
 
     try {
       const { default: fetch } = await import("node-fetch");
-      
+
       // Basic URL validation
       new URL(url);
-      
+
       // Try to fetch the URL with a timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+
       const response = await fetch(url, {
         method: "HEAD",
         signal: controller.signal,
@@ -281,9 +284,9 @@ function setupCustomEndpoints(app, config) {
           "User-Agent": "SlowGuardian/9.0.0",
         },
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       res.json({
         accessible: response.ok,
         status: response.status,

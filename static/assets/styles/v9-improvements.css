@@ -64,7 +64,11 @@
 
 /* Developer Mode Access */
 .developer-access {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(79, 70, 229, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    rgba(79, 70, 229, 0.05) 100%
+  );
   border: 2px solid var(--accent-primary);
 }
 
@@ -151,8 +155,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile Responsive Updates */
@@ -160,15 +168,15 @@
   .feature-stats {
     grid-template-columns: 1fr;
   }
-  
+
   .feature-categories-preview {
     grid-template-columns: 1fr;
   }
-  
+
   .developer-features {
     grid-template-columns: 1fr;
   }
-  
+
   .category-preview {
     flex-direction: column;
     gap: 0.25rem;
@@ -184,7 +192,11 @@
 }
 
 .btn-primary {
-  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary, #7c3aed));
+  background: linear-gradient(
+    45deg,
+    var(--accent-primary),
+    var(--accent-secondary, #7c3aed)
+  );
   border: none;
   color: white;
   font-weight: 600;

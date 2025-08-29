@@ -5,7 +5,9 @@
 
 class PerformanceMode {
   constructor() {
-    this.isPerformanceMode = getCookie('performance-mode') === 'true' || localStorage.getItem('performance-mode') === 'true';
+    this.isPerformanceMode =
+      getCookie("performance-mode") === "true" ||
+      localStorage.getItem("performance-mode") === "true";
     this.performanceCSS = null;
     this.init();
   }
@@ -14,47 +16,47 @@ class PerformanceMode {
     if (this.isPerformanceMode) {
       this.enablePerformanceMode();
     }
-    
+
     // Add performance mode toggle to settings
     this.addPerformanceModeToggle();
   }
 
   enablePerformanceMode() {
-    console.log('🚀 Enabling Performance Mode...');
-    
+    console.log("🚀 Enabling Performance Mode...");
+
     // Apply performance optimizations
     this.removeHeavyAnimations();
     this.optimizeParticles();
     this.reduceVisualEffects();
     this.optimizeLayout();
-    
+
     // Store preference
-    setCookie('performance-mode', 'true', 365);
-    localStorage.setItem('performance-mode', 'true');
-    
-    console.log('✅ Performance Mode enabled');
+    setCookie("performance-mode", "true", 365);
+    localStorage.setItem("performance-mode", "true");
+
+    console.log("✅ Performance Mode enabled");
   }
 
   disablePerformanceMode() {
-    console.log('🔄 Disabling Performance Mode...');
-    
+    console.log("🔄 Disabling Performance Mode...");
+
     // Restore full visual effects
     this.restoreAnimations();
     this.restoreParticles();
     this.restoreVisualEffects();
     this.restoreLayout();
-    
+
     // Store preference
-    setCookie('performance-mode', 'false', 365);
-    localStorage.setItem('performance-mode', 'false');
-    
-    console.log('✅ Performance Mode disabled');
+    setCookie("performance-mode", "false", 365);
+    localStorage.setItem("performance-mode", "false");
+
+    console.log("✅ Performance Mode disabled");
   }
 
   removeHeavyAnimations() {
     // Disable heavy CSS animations for better performance
-    const style = document.createElement('style');
-    style.id = 'performance-mode-animations';
+    const style = document.createElement("style");
+    style.id = "performance-mode-animations";
     style.textContent = `
       /* Performance Mode - Reduced Animations */
       *, *::before, *::after {
@@ -82,14 +84,14 @@ class PerformanceMode {
 
   optimizeParticles() {
     // Disable particles for better performance
-    const particlesContainer = document.querySelector('#particles');
+    const particlesContainer = document.querySelector("#particles");
     if (particlesContainer) {
-      particlesContainer.style.display = 'none';
+      particlesContainer.style.display = "none";
     }
-    
+
     // Disable any particle.js instances
     if (window.pJSDom && window.pJSDom.length > 0) {
-      window.pJSDom.forEach(pjs => {
+      window.pJSDom.forEach((pjs) => {
         if (pjs.pJS.fn.vendors.destroypJS) {
           pjs.pJS.fn.vendors.destroypJS();
         }
@@ -100,8 +102,8 @@ class PerformanceMode {
   reduceVisualEffects() {
     // Apply performance-focused styles
     if (!this.performanceCSS) {
-      this.performanceCSS = document.createElement('style');
-      this.performanceCSS.id = 'performance-mode-styles';
+      this.performanceCSS = document.createElement("style");
+      this.performanceCSS.id = "performance-mode-styles";
       this.performanceCSS.textContent = `
         /* Performance Mode Optimizations */
         
@@ -141,25 +143,25 @@ class PerformanceMode {
 
   optimizeLayout() {
     // Add performance class to body
-    document.body.classList.add('performance-mode');
-    
+    document.body.classList.add("performance-mode");
+
     // Reduce DOM updates
-    document.documentElement.style.setProperty('--animation-speed', '0');
+    document.documentElement.style.setProperty("--animation-speed", "0");
   }
 
   restoreAnimations() {
-    const style = document.getElementById('performance-mode-animations');
+    const style = document.getElementById("performance-mode-animations");
     if (style) style.remove();
   }
 
   restoreParticles() {
-    const particlesContainer = document.querySelector('#particles');
+    const particlesContainer = document.querySelector("#particles");
     if (particlesContainer) {
-      particlesContainer.style.display = '';
+      particlesContainer.style.display = "";
     }
-    
+
     // Reinitialize particles if available
-    if (typeof initParticles === 'function') {
+    if (typeof initParticles === "function") {
       initParticles();
     }
   }
@@ -172,10 +174,15 @@ class PerformanceMode {
   }
 
   restoreLayout() {
-    document.body.classList.remove('performance-mode');
-    document.documentElement.style.removeProperty('--animation-speed');
+    document.body.classList.remove("performance-mode");
+    document.documentElement.style.removeProperty("--animation-speed");
   }
-        
+
+  applyLegacyStyles() {
+    if (!this.legacyCSS) {
+      this.legacyCSS = document.createElement("style");
+      this.legacyCSS.id = "legacy-ui-styles";
+      this.legacyCSS.textContent = `
         .btn {
           background: var(--legacy-accent) !important;
           color: white !important;
@@ -332,7 +339,7 @@ class PerformanceMode {
           }
         }
       `;
-      
+
       document.head.appendChild(this.legacyCSS);
     }
   }
@@ -347,12 +354,12 @@ class PerformanceMode {
   restoreModernStyles() {
     // Re-enable modern CSS files
     const modernStyles = [
-      'assets/styles/v9/main.css',
-      'assets/styles/v9/components.css',
-      'assets/styles/v9/animations.css'
+      "assets/styles/v9/main.css",
+      "assets/styles/v9/components.css",
+      "assets/styles/v9/animations.css",
     ];
-    
-    modernStyles.forEach(href => {
+
+    modernStyles.forEach((href) => {
       const link = document.querySelector(`link[href*="${href}"]`);
       if (link) {
         link.disabled = false;
@@ -362,9 +369,9 @@ class PerformanceMode {
 
   modifyLayout() {
     // Add legacy mode indicator
-    const indicator = document.createElement('div');
-    indicator.id = 'legacy-mode-indicator';
-    indicator.innerHTML = '📜 Legacy UI Mode';
+    const indicator = document.createElement("div");
+    indicator.id = "legacy-mode-indicator";
+    indicator.innerHTML = "📜 Legacy UI Mode";
     indicator.style.cssText = `
       position: fixed;
       bottom: 20px;
@@ -378,27 +385,31 @@ class PerformanceMode {
       opacity: 0.8;
     `;
     document.body.appendChild(indicator);
-    
+
     // Remove modern layout elements
-    const modernElements = document.querySelectorAll('.hero-decoration, .floating-icons');
-    modernElements.forEach(el => el.style.display = 'none');
+    const modernElements = document.querySelectorAll(
+      ".hero-decoration, .floating-icons"
+    );
+    modernElements.forEach((el) => (el.style.display = "none"));
   }
 
   restoreLayout() {
     // Remove legacy mode indicator
-    const indicator = document.getElementById('legacy-mode-indicator');
+    const indicator = document.getElementById("legacy-mode-indicator");
     if (indicator) {
       indicator.remove();
     }
-    
+
     // Restore modern layout elements
-    const modernElements = document.querySelectorAll('.hero-decoration, .floating-icons');
-    modernElements.forEach(el => el.style.display = '');
+    const modernElements = document.querySelectorAll(
+      ".hero-decoration, .floating-icons"
+    );
+    modernElements.forEach((el) => (el.style.display = ""));
   }
 
   addLegacyModeToggle() {
     // Add toggle to settings page when it loads
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         this.insertLegacyToggle();
       }, 1000);
@@ -407,12 +418,14 @@ class PerformanceMode {
 
   insertLegacyToggle() {
     // Find settings container
-    const settingsContainer = document.querySelector('.settings-grid, .dashboard-grid');
+    const settingsContainer = document.querySelector(
+      ".settings-grid, .dashboard-grid"
+    );
     if (!settingsContainer) return;
-    
+
     // Create legacy UI card
-    const legacyCard = document.createElement('div');
-    legacyCard.className = 'card settings-card';
+    const legacyCard = document.createElement("div");
+    legacyCard.className = "card settings-card";
     legacyCard.innerHTML = `
       <div class="card-header">
         <h3 class="card-title">📜 Legacy UI Mode</h3>
@@ -426,13 +439,13 @@ class PerformanceMode {
           </div>
           <div class="setting-control">
             <label class="switch">
-              <input type="checkbox" id="legacy-ui-toggle" ${this.isLegacyMode ? 'checked' : ''}>
+              <input type="checkbox" id="legacy-ui-toggle" ${this.isLegacyMode ? "checked" : ""}>
               <span class="switch-slider"></span>
             </label>
           </div>
         </div>
         
-        <div class="legacy-ui-info" style="margin-top: 15px; padding: 10px; background: rgba(233, 69, 96, 0.1); border-radius: 6px; ${this.isLegacyMode ? '' : 'display: none;'}">
+        <div class="legacy-ui-info" style="margin-top: 15px; padding: 10px; background: rgba(233, 69, 96, 0.1); border-radius: 6px; ${this.isLegacyMode ? "" : "display: none;"}">
           <small style="color: var(--accent-primary);">
             <strong>Legacy Mode Active:</strong> You're using the classic SlowGuardian interface. 
             Some modern features may be limited in this mode.
@@ -440,30 +453,33 @@ class PerformanceMode {
         </div>
       </div>
     `;
-    
+
     // Insert at the beginning of settings
     settingsContainer.insertBefore(legacyCard, settingsContainer.firstChild);
-    
+
     // Add event listener
-    const toggle = document.getElementById('legacy-ui-toggle');
+    const toggle = document.getElementById("legacy-ui-toggle");
     if (toggle) {
-      toggle.addEventListener('change', (e) => {
+      toggle.addEventListener("change", (e) => {
         if (e.target.checked) {
           this.enableLegacyMode();
         } else {
           this.disableLegacyMode();
         }
-        
+
         // Show/hide info
-        const info = legacyCard.querySelector('.legacy-ui-info');
+        const info = legacyCard.querySelector(".legacy-ui-info");
         if (info) {
-          info.style.display = e.target.checked ? 'block' : 'none';
+          info.style.display = e.target.checked ? "block" : "none";
         }
-        
+
         // Reload page to apply changes fully
         setTimeout(() => {
           if (window.showNotification) {
-            window.showNotification('UI mode changed. Refreshing page...', 'info');
+            window.showNotification(
+              "UI mode changed. Refreshing page...",
+              "info"
+            );
           }
           setTimeout(() => window.location.reload(), 1000);
         }, 500);
@@ -487,6 +503,6 @@ const legacyUIMode = new LegacyUIMode();
 window.legacyUIMode = legacyUIMode;
 
 // Export for modules
-if (typeof module !== 'undefined') {
+if (typeof module !== "undefined") {
   module.exports = LegacyUIMode;
 }

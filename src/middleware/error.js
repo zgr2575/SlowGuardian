@@ -21,9 +21,10 @@ export function setupErrorHandling(app) {
     logger.warn(`404 - Not found: ${req.method} ${req.originalUrl}`);
 
     // Check if this is an API request or explicitly requesting JSON
-    const isApiRequest = req.path.startsWith('/api/') || 
-                        req.get('Content-Type') === 'application/json' ||
-                        (req.accepts(['html', 'json']) === 'json' && !req.accepts('html'));
+    const isApiRequest =
+      req.path.startsWith("/api/") ||
+      req.get("Content-Type") === "application/json" ||
+      (req.accepts(["html", "json"]) === "json" && !req.accepts("html"));
 
     if (isApiRequest) {
       res.status(404).json({

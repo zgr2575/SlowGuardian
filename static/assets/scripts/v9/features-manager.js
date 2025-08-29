@@ -6,13 +6,13 @@
 class FeaturesManager {
   constructor() {
     this.features = new Map();
-    this.currentCategory = 'all';
-    this.searchQuery = '';
+    this.currentCategory = "all";
+    this.searchQuery = "";
     this.initialize();
   }
 
   initialize() {
-    console.log('🎛️ Initializing Features Manager...');
+    console.log("🎛️ Initializing Features Manager...");
     this.createFeaturesInterface();
     this.loadFeatures();
     this.setupEventListeners();
@@ -20,11 +20,14 @@ class FeaturesManager {
 
   createFeaturesInterface() {
     // Create features management section in settings
-    const settingsContainer = document.querySelector('.settings-container') || document.querySelector('main') || document.body;
-    
-    const featuresSection = document.createElement('div');
-    featuresSection.id = 'features-management';
-    featuresSection.className = 'settings-section';
+    const settingsContainer =
+      document.querySelector(".settings-container") ||
+      document.querySelector("main") ||
+      document.body;
+
+    const featuresSection = document.createElement("div");
+    featuresSection.id = "features-management";
+    featuresSection.className = "settings-section";
     featuresSection.innerHTML = `
       <div class="section-header">
         <h2>🚀 Features Manager</h2>
@@ -81,14 +84,14 @@ class FeaturesManager {
 
     // Add CSS styles for features management
     this.addFeaturesStyles();
-    
+
     // Insert into settings page
     settingsContainer.appendChild(featuresSection);
   }
 
   addFeaturesStyles() {
-    const styles = document.createElement('style');
-    styles.id = 'features-management-styles';
+    const styles = document.createElement("style");
+    styles.id = "features-management-styles";
     styles.textContent = `
       .features-controls {
         display: flex;
@@ -350,7 +353,7 @@ class FeaturesManager {
 
   loadFeatures() {
     // Wait for features system to be ready
-    if (typeof window.sgFeatures !== 'undefined') {
+    if (typeof window.sgFeatures !== "undefined") {
       this.features = window.sgFeatures.features;
       this.renderFeatures();
       this.updateStats();
@@ -361,13 +364,13 @@ class FeaturesManager {
   }
 
   renderFeatures() {
-    const grid = document.getElementById('features-grid');
+    const grid = document.getElementById("features-grid");
     if (!grid) return;
 
     const filteredFeatures = this.getFilteredFeatures();
-    
-    grid.innerHTML = '';
-    
+
+    grid.innerHTML = "";
+
     filteredFeatures.forEach(([id, feature]) => {
       const card = this.createFeatureCard(id, feature);
       grid.appendChild(card);
@@ -384,17 +387,17 @@ class FeaturesManager {
   }
 
   createFeatureCard(id, feature) {
-    const card = document.createElement('div');
-    card.className = `feature-card ${feature.enabled ? 'enabled' : ''}`;
+    const card = document.createElement("div");
+    card.className = `feature-card ${feature.enabled ? "enabled" : ""}`;
     card.dataset.featureId = id;
-    
+
     const performanceClass = this.getPerformanceClass(feature);
     const categoryDisplay = this.formatCategoryName(feature.category);
-    
+
     card.innerHTML = `
       <div class="feature-header">
         <h3 class="feature-title">${feature.name}</h3>
-        <button class="feature-toggle ${feature.enabled ? 'enabled' : ''}" data-feature-id="${id}"></button>
+        <button class="feature-toggle ${feature.enabled ? "enabled" : ""}" data-feature-id="${id}"></button>
       </div>
       
       <p class="feature-description">${feature.description}</p>
@@ -407,136 +410,153 @@ class FeaturesManager {
         </div>
       </div>
     `;
-    
+
     // Add toggle event listener
-    const toggle = card.querySelector('.feature-toggle');
-    toggle.addEventListener('click', (e) => {
+    const toggle = card.querySelector(".feature-toggle");
+    toggle.addEventListener("click", (e) => {
       e.stopPropagation();
       this.toggleFeature(id);
     });
-    
+
     return card;
   }
 
   getFilteredFeatures() {
     const features = Array.from(this.features.entries());
-    
+
     return features.filter(([id, feature]) => {
       // Category filter
-      if (this.currentCategory !== 'all' && feature.category !== this.currentCategory) {
+      if (
+        this.currentCategory !== "all" &&
+        feature.category !== this.currentCategory
+      ) {
         return false;
       }
-      
+
       // Search filter
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
-        return feature.name.toLowerCase().includes(query) ||
-               feature.description.toLowerCase().includes(query) ||
-               id.toLowerCase().includes(query);
+        return (
+          feature.name.toLowerCase().includes(query) ||
+          feature.description.toLowerCase().includes(query) ||
+          id.toLowerCase().includes(query)
+        );
       }
-      
+
       return true;
     });
   }
 
   toggleFeature(featureId) {
     if (!window.sgFeatures) return;
-    
+
     const feature = this.features.get(featureId);
     if (!feature) return;
-    
+
     if (feature.enabled) {
       window.sgFeatures.disableFeature(featureId);
     } else {
       window.sgFeatures.enableFeature(featureId);
     }
-    
+
     // Update UI
     this.renderFeatures();
     this.updateStats();
     this.updatePerformanceIndicator();
-    
+
     // Show notification
     this.showNotification(
-      feature.enabled ? 
-      `✅ ${feature.name} enabled` : 
-      `❌ ${feature.name} disabled`
+      feature.enabled
+        ? `✅ ${feature.name} enabled`
+        : `❌ ${feature.name} disabled`
     );
   }
 
   updateStats() {
-    const enabledFeatures = Array.from(this.features.values()).filter(f => f.enabled);
+    const enabledFeatures = Array.from(this.features.values()).filter(
+      (f) => f.enabled
+    );
     const totalFeatures = this.features.size;
-    
-    document.getElementById('enabled-count').textContent = enabledFeatures.length;
-    document.getElementById('disabled-count').textContent = totalFeatures - enabledFeatures.length;
-    document.getElementById('total-count').textContent = totalFeatures;
+
+    document.getElementById("enabled-count").textContent =
+      enabledFeatures.length;
+    document.getElementById("disabled-count").textContent =
+      totalFeatures - enabledFeatures.length;
+    document.getElementById("total-count").textContent = totalFeatures;
   }
 
   updatePerformanceIndicator() {
-    const enabledFeatures = Array.from(this.features.values()).filter(f => f.enabled);
-    const performanceImpact = Math.min(enabledFeatures.length / 100 * 100, 100);
-    
-    const fill = document.getElementById('performance-fill');
-    const text = document.getElementById('performance-text');
-    
+    const enabledFeatures = Array.from(this.features.values()).filter(
+      (f) => f.enabled
+    );
+    const performanceImpact = Math.min(
+      (enabledFeatures.length / 100) * 100,
+      100
+    );
+
+    const fill = document.getElementById("performance-fill");
+    const text = document.getElementById("performance-text");
+
     if (fill) {
       fill.style.width = `${performanceImpact}%`;
     }
-    
+
     if (text) {
       if (performanceImpact < 30) {
-        text.textContent = 'Low impact - Excellent performance';
+        text.textContent = "Low impact - Excellent performance";
       } else if (performanceImpact < 60) {
-        text.textContent = 'Medium impact - Good performance';
+        text.textContent = "Medium impact - Good performance";
       } else if (performanceImpact < 80) {
-        text.textContent = 'High impact - May affect performance';
+        text.textContent = "High impact - May affect performance";
       } else {
-        text.textContent = 'Very high impact - Consider disabling some features';
+        text.textContent =
+          "Very high impact - Consider disabling some features";
       }
     }
   }
 
   setupEventListeners() {
     // Search functionality
-    const searchInput = document.getElementById('features-search');
+    const searchInput = document.getElementById("features-search");
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
+      searchInput.addEventListener("input", (e) => {
         this.searchQuery = e.target.value;
         this.renderFeatures();
       });
     }
-    
+
     // Category filtering
-    document.querySelectorAll('.category-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    document.querySelectorAll(".category-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
         // Update active category
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        
+        document
+          .querySelectorAll(".category-btn")
+          .forEach((b) => b.classList.remove("active"));
+        e.target.classList.add("active");
+
         this.currentCategory = e.target.dataset.category;
         this.renderFeatures();
       });
     });
-    
+
     // Bulk actions
-    const enableAllBtn = document.getElementById('enable-all-btn');
+    const enableAllBtn = document.getElementById("enable-all-btn");
     if (enableAllBtn) {
-      enableAllBtn.addEventListener('click', () => {
+      enableAllBtn.addEventListener("click", () => {
         this.enableAllFeatures();
       });
     }
-    
-    const disableAllBtn = document.getElementById('disable-all-btn');
+
+    const disableAllBtn = document.getElementById("disable-all-btn");
     if (disableAllBtn) {
-      disableAllBtn.addEventListener('click', () => {
+      disableAllBtn.addEventListener("click", () => {
         this.disableAllFeatures();
       });
     }
-    
-    const resetBtn = document.getElementById('reset-features-btn');
+
+    const resetBtn = document.getElementById("reset-features-btn");
     if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
+      resetBtn.addEventListener("click", () => {
         this.resetToDefaults();
       });
     }
@@ -544,7 +564,7 @@ class FeaturesManager {
 
   enableAllFeatures() {
     if (!window.sgFeatures) return;
-    
+
     let count = 0;
     this.features.forEach((feature, id) => {
       if (!feature.enabled) {
@@ -552,7 +572,7 @@ class FeaturesManager {
         count++;
       }
     });
-    
+
     this.renderFeatures();
     this.updateStats();
     this.updatePerformanceIndicator();
@@ -561,7 +581,7 @@ class FeaturesManager {
 
   disableAllFeatures() {
     if (!window.sgFeatures) return;
-    
+
     let count = 0;
     this.features.forEach((feature, id) => {
       if (feature.enabled) {
@@ -569,7 +589,7 @@ class FeaturesManager {
         count++;
       }
     });
-    
+
     this.renderFeatures();
     this.updateStats();
     this.updatePerformanceIndicator();
@@ -577,43 +597,49 @@ class FeaturesManager {
   }
 
   resetToDefaults() {
-    if (!confirm('Reset all features to default settings? This cannot be undone.')) {
+    if (
+      !confirm("Reset all features to default settings? This cannot be undone.")
+    ) {
       return;
     }
-    
-    localStorage.removeItem('feature_states');
+
+    localStorage.removeItem("feature_states");
     location.reload();
   }
 
   getPerformanceClass(feature) {
     // Determine performance impact based on feature category and type
-    if (feature.category === 'advanced') return 'performance-high';
-    if (feature.category === 'productivity') return 'performance-medium';
-    return 'performance-low';
+    if (feature.category === "advanced") return "performance-high";
+    if (feature.category === "productivity") return "performance-medium";
+    return "performance-low";
   }
 
   getPerformanceText(feature) {
     const className = this.getPerformanceClass(feature);
     switch (className) {
-      case 'performance-low': return 'Low';
-      case 'performance-medium': return 'Medium';
-      case 'performance-high': return 'High';
-      default: return 'Low';
+      case "performance-low":
+        return "Low";
+      case "performance-medium":
+        return "Medium";
+      case "performance-high":
+        return "High";
+      default:
+        return "Low";
     }
   }
 
   formatCategoryName(category) {
     const names = {
-      'ux': 'UX',
-      'productivity': 'Productivity',
-      'customization': 'Customization',
-      'advanced': 'Advanced'
+      ux: "UX",
+      productivity: "Productivity",
+      customization: "Customization",
+      advanced: "Advanced",
     };
     return names[category] || category;
   }
 
   showNotification(message) {
-    const notification = document.createElement('div');
+    const notification = document.createElement("div");
     notification.style.cssText = `
       position: fixed;
       top: 20px;
@@ -628,11 +654,11 @@ class FeaturesManager {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     `;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
-      notification.style.animation = 'slideOut 0.3s ease-in forwards';
+      notification.style.animation = "slideOut 0.3s ease-in forwards";
       setTimeout(() => {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
@@ -643,7 +669,7 @@ class FeaturesManager {
 }
 
 // Initialize features manager when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Wait a bit for the main features system to load
   setTimeout(() => {
     window.featuresManager = new FeaturesManager();
@@ -651,6 +677,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = FeaturesManager;
 }

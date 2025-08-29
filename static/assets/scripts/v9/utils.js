@@ -267,7 +267,7 @@ export const theme = {
     const legacyTheme = localStorage.getItem("theme");
     const customTheme = localStorage.getItem("sg-custom-theme");
     const savedTheme = storage.get("theme");
-    
+
     // Priority: Custom > Legacy > V9 > Default
     if (customTheme) {
       return JSON.parse(customTheme).name || "custom";
@@ -283,10 +283,10 @@ export const theme = {
 
   set: (themeName) => {
     console.log(`Setting theme to: ${themeName}`);
-    
+
     // Remove all existing theme links first
     theme.removeAllThemes();
-    
+
     // Handle different theme types
     if (["dark", "light", "high-contrast"].includes(themeName)) {
       // V9 core theme
@@ -315,18 +315,24 @@ export const theme = {
         theme.applyCustomTheme(JSON.parse(customTheme));
       }
     }
-    
+
     // Trigger theme change event
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: themeName }));
+    window.dispatchEvent(
+      new CustomEvent("themeChanged", { detail: themeName })
+    );
   },
 
   removeAllThemes: () => {
     // Remove existing theme links and attributes
-    const existingThemeLinks = document.querySelectorAll('link[href*="/assets/styles/themes/"], link[data-theme-link="true"]');
-    existingThemeLinks.forEach(link => link.remove());
-    
-    const existingStyles = document.querySelectorAll('style[data-theme-style="true"]');
-    existingStyles.forEach(style => style.remove());
+    const existingThemeLinks = document.querySelectorAll(
+      'link[href*="/assets/styles/themes/"], link[data-theme-link="true"]'
+    );
+    existingThemeLinks.forEach((link) => link.remove());
+
+    const existingStyles = document.querySelectorAll(
+      'style[data-theme-style="true"]'
+    );
+    existingStyles.forEach((style) => style.remove());
   },
 
   applyLegacyTheme: (themeName) => {
@@ -334,13 +340,14 @@ export const theme = {
       const themeElement = document.createElement("link");
       themeElement.rel = "stylesheet";
       themeElement.setAttribute("data-theme-link", "true");
-      
-      switch(themeName) {
+
+      switch (themeName) {
         case "catppuccinMocha":
           themeElement.href = "/assets/styles/themes/catppuccin/mocha.css?v=2";
           break;
         case "catppuccinMacchiato":
-          themeElement.href = "/assets/styles/themes/catppuccin/macchiato.css?v=2";
+          themeElement.href =
+            "/assets/styles/themes/catppuccin/macchiato.css?v=2";
           break;
         case "catppuccinFrappe":
           themeElement.href = "/assets/styles/themes/catppuccin/frappe.css?v=2";
@@ -349,13 +356,13 @@ export const theme = {
           themeElement.href = "/assets/styles/themes/catppuccin/latte.css?v=2";
           break;
       }
-      
+
       if (themeElement.href) {
         document.head.appendChild(themeElement);
       }
     }
   },
-  
+
   applyModernTheme: (themeName) => {
     if (themeName) {
       const themeElement = document.createElement("link");
@@ -365,21 +372,21 @@ export const theme = {
       document.head.appendChild(themeElement);
     }
   },
-  
+
   applyCustomTheme: (customTheme) => {
     if (!customTheme) return;
-    
+
     const styleElement = document.createElement("style");
     styleElement.setAttribute("data-theme-style", "true");
     styleElement.innerHTML = `
       :root {
-        --primary-bg: ${customTheme.primaryBg || '#1a1a2e'};
-        --secondary-bg: ${customTheme.secondaryBg || '#16213e'};
-        --accent-color: ${customTheme.accentColor || '#0f3460'};
-        --text-primary: ${customTheme.textPrimary || '#e94560'};
-        --text-secondary: ${customTheme.textSecondary || '#ffffff'};
-        --gradient-start: ${customTheme.gradientStart || '#1a1a2e'};
-        --gradient-end: ${customTheme.gradientEnd || '#16213e'};
+        --primary-bg: ${customTheme.primaryBg || "#1a1a2e"};
+        --secondary-bg: ${customTheme.secondaryBg || "#16213e"};
+        --accent-color: ${customTheme.accentColor || "#0f3460"};
+        --text-primary: ${customTheme.textPrimary || "#e94560"};
+        --text-secondary: ${customTheme.textSecondary || "#ffffff"};
+        --gradient-start: ${customTheme.gradientStart || "#1a1a2e"};
+        --gradient-end: ${customTheme.gradientEnd || "#16213e"};
       }
       
       .bg-gradient {
@@ -387,7 +394,7 @@ export const theme = {
       }
       
       .navbar {
-        background: rgba(${theme.hexToRgb(customTheme.primaryBg || '#1a1a2e')}, 0.95) !important;
+        background: rgba(${theme.hexToRgb(customTheme.primaryBg || "#1a1a2e")}, 0.95) !important;
       }
       
       .card {
@@ -397,20 +404,24 @@ export const theme = {
     `;
     document.head.appendChild(styleElement);
   },
-  
+
   hexToRgb: (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? 
-      parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16)
-      : '26,26,46';
+    return result
+      ? parseInt(result[1], 16) +
+          "," +
+          parseInt(result[2], 16) +
+          "," +
+          parseInt(result[3], 16)
+      : "26,26,46";
   },
 
   toggle: () => {
     const current = theme.current();
     let next;
-    
+
     // Cycle through available themes: dark -> light -> cyberpunk -> ocean -> sunset -> catppuccinMocha -> dark
-    switch(current) {
+    switch (current) {
       case "dark":
         next = "light";
         break;
@@ -438,66 +449,73 @@ export const theme = {
       default:
         next = "dark";
     }
-    
+
     theme.set(next);
     return next;
   },
 
   init: () => {
     console.log("Initializing theme system...");
-    
+
     // Check for custom theme first
     const customTheme = localStorage.getItem("sg-custom-theme");
     if (customTheme) {
       theme.set("custom");
       return;
     }
-    
+
     // Check for legacy theme
     const legacyTheme = localStorage.getItem("theme");
     if (legacyTheme && legacyTheme !== "d") {
       theme.set(legacyTheme);
       return;
     }
-    
+
     // Check for saved v9 theme
     const savedV9Theme = storage.get("theme");
     if (savedV9Theme) {
       theme.set(savedV9Theme);
       return;
     }
-    
+
     // Default to system preference or dark
     const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
     theme.set(preferred);
   },
-  
+
   // Save custom theme
   saveCustomTheme: (themeData) => {
     localStorage.setItem("sg-custom-theme", JSON.stringify(themeData));
     theme.set("custom");
-    
+
     if (window.showNotification) {
-      window.showNotification(`Custom theme "${themeData.name}" saved successfully!`, 'success');
+      window.showNotification(
+        `Custom theme "${themeData.name}" saved successfully!`,
+        "success"
+      );
     }
   },
-  
+
   // Get all available themes
   getAvailableThemes: () => {
     return [
-      { id: 'dark', name: 'Dark', type: 'v9' },
-      { id: 'light', name: 'Light', type: 'v9' },
-      { id: 'cyberpunk', name: 'Cyberpunk 🔮', type: 'modern' },
-      { id: 'ocean', name: 'Ocean 🌊', type: 'modern' },
-      { id: 'sunset', name: 'Sunset 🌅', type: 'modern' },
-      { id: 'catppuccinMocha', name: 'Catppuccin Mocha', type: 'catppuccin' },
-      { id: 'catppuccinMacchiato', name: 'Catppuccin Macchiato', type: 'catppuccin' },
-      { id: 'catppuccinFrappe', name: 'Catppuccin Frappe', type: 'catppuccin' },
-      { id: 'catppuccinLatte', name: 'Catppuccin Latte', type: 'catppuccin' }
+      { id: "dark", name: "Dark", type: "v9" },
+      { id: "light", name: "Light", type: "v9" },
+      { id: "cyberpunk", name: "Cyberpunk 🔮", type: "modern" },
+      { id: "ocean", name: "Ocean 🌊", type: "modern" },
+      { id: "sunset", name: "Sunset 🌅", type: "modern" },
+      { id: "catppuccinMocha", name: "Catppuccin Mocha", type: "catppuccin" },
+      {
+        id: "catppuccinMacchiato",
+        name: "Catppuccin Macchiato",
+        type: "catppuccin",
+      },
+      { id: "catppuccinFrappe", name: "Catppuccin Frappe", type: "catppuccin" },
+      { id: "catppuccinLatte", name: "Catppuccin Latte", type: "catppuccin" },
     ];
-  }
+  },
 };
 
 // Device utilities

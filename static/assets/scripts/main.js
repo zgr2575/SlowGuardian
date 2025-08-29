@@ -2,13 +2,13 @@
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) return parts.pop().split(";").shift();
   return null;
 }
 
 function setCookie(name, value, days = 365) {
   const expires = new Date();
-  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
 }
 
@@ -38,50 +38,59 @@ document.addEventListener("DOMContentLoaded", function () {
   const abEnabled = getCookie("ab") || localStorage.getItem("ab");
   if (abEnabled === "true") {
     // Only auto-popup on pages that aren't settings to avoid interference
-    if (!window.location.pathname.includes("/settings") && !window.location.pathname.includes("/developer")) {
+    if (
+      !window.location.pathname.includes("/settings") &&
+      !window.location.pathname.includes("/developer")
+    ) {
       setTimeout(() => {
-        if (typeof AB === 'function') {
+        if (typeof AB === "function") {
           AB();
-        } else if (typeof window.AB === 'function') {
+        } else if (typeof window.AB === "function") {
           window.AB();
         } else {
           // Fallback AB function implementation
-          window.AB = function() {
+          window.AB = function () {
             let inFrame;
             try {
               inFrame = window !== top;
             } catch (e) {
               inFrame = true;
             }
-            
+
             if (!inFrame && !navigator.userAgent.includes("Firefox")) {
               const popup = open("about:blank", "_blank");
               if (!popup || popup.closed) {
                 console.log("Popup blocked - please allow popups");
                 return;
               }
-              
+
               const doc = popup.document;
               const iframe = doc.createElement("iframe");
               const style = iframe.style;
               const link = doc.createElement("link");
-              
-              const name = getCookie("name") || localStorage.getItem("name") || "My Drive - Google Drive";
-              const icon = getCookie("icon") || localStorage.getItem("icon") || "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
-              
+
+              const name =
+                getCookie("name") ||
+                localStorage.getItem("name") ||
+                "My Drive - Google Drive";
+              const icon =
+                getCookie("icon") ||
+                localStorage.getItem("icon") ||
+                "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
               doc.title = name;
               link.rel = "icon";
               link.href = icon;
-              
+
               iframe.src = location.href;
               style.position = "fixed";
               style.top = style.bottom = style.left = style.right = 0;
               style.border = style.outline = "none";
               style.width = style.height = "100%";
-              
+
               doc.head.appendChild(link);
               doc.body.appendChild(iframe);
-              
+
               // Close original window
               window.location.replace("about:blank");
             }
@@ -94,33 +103,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add unsaved changes warning
   let hasUnsavedChanges = false;
-  
+
   // Track changes to settings and mark as unsaved
   function markUnsavedChanges() {
     hasUnsavedChanges = true;
   }
-  
+
   // Listen for setting changes
-  const settingsElements = document.querySelectorAll('input[type="checkbox"], input[type="text"], select');
-  settingsElements.forEach(element => {
-    element.addEventListener('change', markUnsavedChanges);
+  const settingsElements = document.querySelectorAll(
+    'input[type="checkbox"], input[type="text"], select'
+  );
+  settingsElements.forEach((element) => {
+    element.addEventListener("change", markUnsavedChanges);
   });
-  
+
   // Prevent page close if there are unsaved changes
-  window.addEventListener('beforeunload', function (e) {
+  window.addEventListener("beforeunload", function (e) {
     if (hasUnsavedChanges) {
-      const confirmationMessage = 'You have unsaved changes. If you leave now, your changes may be lost.';
+      const confirmationMessage =
+        "You have unsaved changes. If you leave now, your changes may be lost.";
       e.preventDefault();
       e.returnValue = confirmationMessage;
       return confirmationMessage;
     }
   });
-  
+
   // Clear unsaved changes flag when settings are saved
-  window.clearUnsavedChanges = function() {
+  window.clearUnsavedChanges = function () {
     hasUnsavedChanges = false;
   };
-  
+
   window.markUnsavedChanges = markUnsavedChanges;
 });
 
@@ -174,92 +186,103 @@ if (themeEle.href) {
   document.body.appendChild(themeEle);
 }
 // Global proxy navigation functions
-window.go = function(url) {
+window.go = function (url) {
   sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
   window.location.href = "/p/" + __uv$config.encodeUrl(url);
 };
 
-window.dy = function(url) {
+window.dy = function (url) {
   sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
   window.location.href = "/a/" + __uv$config.encodeUrl(url);
 };
 
 // Global theme switching function
-window.changeTheme = function(themeId) {
-  localStorage.setItem('theme', themeId);
-  setCookie('theme', themeId);
-  
+window.changeTheme = function (themeId) {
+  localStorage.setItem("theme", themeId);
+  setCookie("theme", themeId);
+
   // Remove existing theme links
-  const existingThemeLinks = document.querySelectorAll('link[href*="/themes/"]');
-  existingThemeLinks.forEach(link => link.remove());
-  
+  const existingThemeLinks = document.querySelectorAll(
+    'link[href*="/themes/"]'
+  );
+  existingThemeLinks.forEach((link) => link.remove());
+
   // Apply new theme if not default
-  if (themeId !== 'default') {
-    const themeLink = document.createElement('link');
-    themeLink.rel = 'stylesheet';
-    
-    if (themeId.startsWith('catppuccin')) {
-      const variant = themeId.replace('catppuccin', '').toLowerCase();
+  if (themeId !== "default") {
+    const themeLink = document.createElement("link");
+    themeLink.rel = "stylesheet";
+
+    if (themeId.startsWith("catppuccin")) {
+      const variant = themeId.replace("catppuccin", "").toLowerCase();
       themeLink.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
     } else {
       themeLink.href = `/assets/styles/themes/${themeId}.css?v=1`;
     }
-    
+
     document.head.appendChild(themeLink);
   }
-  
+
   if (window.showNotification) {
-    window.showNotification(`Theme changed to ${themeId}`, 'success');
+    window.showNotification(`Theme changed to ${themeId}`, "success");
   }
 };
 
 // Global about:blank toggle function
-window.toggleAboutBlank = function(enabled) {
-  localStorage.setItem('ab', enabled ? 'true' : 'false');
-  setCookie('ab', enabled ? 'true' : 'false');
-  
+window.toggleAboutBlank = function (enabled) {
+  localStorage.setItem("ab", enabled ? "true" : "false");
+  setCookie("ab", enabled ? "true" : "false");
+
   if (window.showNotification) {
-    window.showNotification(`About:blank ${enabled ? 'enabled' : 'disabled'}`, 'info');
+    window.showNotification(
+      `About:blank ${enabled ? "enabled" : "disabled"}`,
+      "info"
+    );
   }
 };
 
 // About:blank popup function
-window.AB = function() {
+window.AB = function () {
   let inFrame;
   try {
     inFrame = window !== top;
   } catch (e) {
     inFrame = true;
   }
-  
+
   if (!inFrame && !navigator.userAgent.includes("Firefox")) {
     const popup = open("about:blank", "_blank");
     if (!popup || popup.closed) {
       console.log("Popup blocked - please allow popups");
       return;
     }
-    
+
     const doc = popup.document;
     const iframe = doc.createElement("iframe");
     const style = iframe.style;
     const link = doc.createElement("link");
-    
-    const name = getCookie("name") || localStorage.getItem("name") || "My Drive - Google Drive";
-    const icon = getCookie("icon") || localStorage.getItem("icon") || "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
-    
+
+    const name =
+      getCookie("name") ||
+      localStorage.getItem("name") ||
+      "My Drive - Google Drive";
+    const icon =
+      getCookie("icon") ||
+      localStorage.getItem("icon") ||
+      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
     doc.title = name;
     link.rel = "icon";
     link.href = icon;
-    
+
     iframe.src = location.href;
     style.position = "fixed";
     style.top = style.bottom = style.left = style.right = 0;
     style.border = style.outline = "none";
     style.width = style.height = "100%";
-    
+
     doc.head.appendChild(link);
     doc.body.appendChild(iframe);
-    
+
     // Close original window
     window.location.replace("about:blank");
   }

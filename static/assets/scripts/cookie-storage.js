@@ -5,7 +5,7 @@
 
 class CookieStorage {
   constructor() {
-    this.prefix = 'sg_';
+    this.prefix = "sg_";
     this.defaultExpireDays = 365; // 1 year
   }
 
@@ -18,22 +18,23 @@ class CookieStorage {
   setItem(key, value, days = this.defaultExpireDays) {
     try {
       const expireDate = new Date();
-      expireDate.setTime(expireDate.getTime() + (days * 24 * 60 * 60 * 1000));
+      expireDate.setTime(expireDate.getTime() + days * 24 * 60 * 60 * 1000);
       const expires = "expires=" + expireDate.toUTCString();
-      
-      const cookieValue = typeof value === 'string' ? value : JSON.stringify(value);
+
+      const cookieValue =
+        typeof value === "string" ? value : JSON.stringify(value);
       document.cookie = `${this.prefix}${key}=${encodeURIComponent(cookieValue)};${expires};path=/;SameSite=Lax`;
-      
+
       // Also set in localStorage as backup
       try {
         localStorage.setItem(key, cookieValue);
       } catch (e) {
-        console.warn('localStorage not available, using cookies only');
+        console.warn("localStorage not available, using cookies only");
       }
-      
+
       return true;
     } catch (error) {
-      console.error('Error setting cookie:', error);
+      console.error("Error setting cookie:", error);
       return false;
     }
   }
@@ -48,12 +49,12 @@ class CookieStorage {
     try {
       // First try cookies
       const cookieKey = this.prefix + key;
-      const cookies = document.cookie.split(';');
-      
+      const cookies = document.cookie.split(";");
+
       for (let cookie of cookies) {
-        let [cookieName, cookieValue] = cookie.split('=');
+        let [cookieName, cookieValue] = cookie.split("=");
         cookieName = cookieName.trim();
-        
+
         if (cookieName === cookieKey) {
           try {
             const decodedValue = decodeURIComponent(cookieValue);
@@ -64,11 +65,11 @@ class CookieStorage {
               return decodedValue;
             }
           } catch (error) {
-            console.warn('Error parsing cookie value:', error);
+            console.warn("Error parsing cookie value:", error);
           }
         }
       }
-      
+
       // Fallback to localStorage
       try {
         const localValue = localStorage.getItem(key);
@@ -82,12 +83,12 @@ class CookieStorage {
           }
         }
       } catch (e) {
-        console.warn('localStorage not available');
+        console.warn("localStorage not available");
       }
-      
+
       return defaultValue;
     } catch (error) {
-      console.error('Error getting cookie:', error);
+      console.error("Error getting cookie:", error);
       return defaultValue;
     }
   }
@@ -100,17 +101,17 @@ class CookieStorage {
     try {
       // Remove from cookies
       document.cookie = `${this.prefix}${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-      
+
       // Remove from localStorage backup
       try {
         localStorage.removeItem(key);
       } catch (e) {
-        console.warn('localStorage not available');
+        console.warn("localStorage not available");
       }
-      
+
       return true;
     } catch (error) {
-      console.error('Error removing cookie:', error);
+      console.error("Error removing cookie:", error);
       return false;
     }
   }
@@ -120,30 +121,30 @@ class CookieStorage {
    */
   clear() {
     try {
-      const cookies = document.cookie.split(';');
-      
+      const cookies = document.cookie.split(";");
+
       for (let cookie of cookies) {
-        const cookieName = cookie.split('=')[0].trim();
+        const cookieName = cookie.split("=")[0].trim();
         if (cookieName.startsWith(this.prefix)) {
           const key = cookieName.substring(this.prefix.length);
           this.removeItem(key);
         }
       }
-      
+
       // Also clear localStorage
       try {
-        Object.keys(localStorage).forEach(key => {
+        Object.keys(localStorage).forEach((key) => {
           if (this.shouldManageKey(key)) {
             localStorage.removeItem(key);
           }
         });
       } catch (e) {
-        console.warn('localStorage not available');
+        console.warn("localStorage not available");
       }
-      
+
       return true;
     } catch (error) {
-      console.error('Error clearing cookies:', error);
+      console.error("Error clearing cookies:", error);
       return false;
     }
   }
@@ -155,9 +156,19 @@ class CookieStorage {
    */
   shouldManageKey(key) {
     const managedKeys = [
-      'theme', 'ab', 'selectedOption', 'CustomName', 'CustomIcon',
-      'engine', 'dy', 'Particles', 'ad', 'Gcustom', 'Gpinned',
-      'screenshotProtection', 'onboardingComplete'
+      "theme",
+      "ab",
+      "selectedOption",
+      "CustomName",
+      "CustomIcon",
+      "engine",
+      "dy",
+      "Particles",
+      "ad",
+      "Gcustom",
+      "Gpinned",
+      "screenshotProtection",
+      "onboardingComplete",
     ];
     return managedKeys.includes(key);
   }
@@ -167,7 +178,7 @@ class CookieStorage {
    */
   migrate() {
     try {
-      Object.keys(localStorage).forEach(key => {
+      Object.keys(localStorage).forEach((key) => {
         if (this.shouldManageKey(key)) {
           const value = localStorage.getItem(key);
           if (value !== null) {
@@ -175,9 +186,9 @@ class CookieStorage {
           }
         }
       });
-      console.log('Successfully migrated localStorage to cookies');
+      console.log("Successfully migrated localStorage to cookies");
     } catch (error) {
-      console.error('Error migrating to cookies:', error);
+      console.error("Error migrating to cookies:", error);
     }
   }
 
@@ -187,18 +198,18 @@ class CookieStorage {
    */
   getAllSettings() {
     const settings = {};
-    const cookies = document.cookie.split(';');
-    
+    const cookies = document.cookie.split(";");
+
     for (let cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
+      const [cookieName, cookieValue] = cookie.split("=");
       const trimmedName = cookieName.trim();
-      
+
       if (trimmedName.startsWith(this.prefix)) {
         const key = trimmedName.substring(this.prefix.length);
         settings[key] = this.getItem(key);
       }
     }
-    
+
     return settings;
   }
 
@@ -215,7 +226,7 @@ class CookieStorage {
       });
       return true;
     } catch (error) {
-      console.error('Error importing settings:', error);
+      console.error("Error importing settings:", error);
       return false;
     }
   }
@@ -225,15 +236,15 @@ class CookieStorage {
 window.cookieStorage = new CookieStorage();
 
 // Auto-migrate on first load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Only migrate if we haven't done it before
-  if (!window.cookieStorage.getItem('migrated')) {
+  if (!window.cookieStorage.getItem("migrated")) {
     window.cookieStorage.migrate();
-    window.cookieStorage.setItem('migrated', true);
+    window.cookieStorage.setItem("migrated", true);
   }
 });
 
 // Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = CookieStorage;
 }

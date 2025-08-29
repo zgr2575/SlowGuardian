@@ -21,7 +21,7 @@ class OnboardingSystem {
             <p><strong>Press / to quickly focus the search bar.</strong></p>
           </div>
         `,
-        buttons: ["Get Started"]
+        buttons: ["Get Started"],
       },
       {
         title: "Choose Your Theme 🎨",
@@ -52,7 +52,7 @@ class OnboardingSystem {
             </div>
           </div>
         `,
-        buttons: ["Previous", "Continue"]
+        buttons: ["Previous", "Continue"],
       },
       {
         title: "Privacy & Security Settings 🔒",
@@ -88,7 +88,7 @@ class OnboardingSystem {
             </div>
           </div>
         `,
-        buttons: ["Previous", "Continue"]
+        buttons: ["Previous", "Continue"],
       },
       {
         title: "All Set! 🎉",
@@ -109,55 +109,57 @@ class OnboardingSystem {
             <p><strong>Enjoy your enhanced browsing experience!</strong></p>
           </div>
         `,
-        buttons: ["Finish"]
-      }
+        buttons: ["Finish"],
+      },
     ];
-    
+
     this.init();
   }
 
   init() {
     // Check if onboarding was already completed or if first-boot setup is running
-    if (localStorage.getItem('sg-onboarding-completed') === 'true' || 
-        localStorage.getItem('setup-completed') === 'true' ||
-        getCookie('setup-completed') === 'true') {
-      console.log('Onboarding skipped - already completed or setup exists');
+    if (
+      localStorage.getItem("sg-onboarding-completed") === "true" ||
+      localStorage.getItem("setup-completed") === "true" ||
+      getCookie("setup-completed") === "true"
+    ) {
+      console.log("Onboarding skipped - already completed or setup exists");
       return;
     }
 
     // Don't run onboarding on developer page (first-boot setup handles it)
-    if (window.location.pathname.includes('/developer')) {
-      console.log('Onboarding skipped - on developer page');
+    if (window.location.pathname.includes("/developer")) {
+      console.log("Onboarding skipped - on developer page");
       return;
     }
 
     // Wait a bit for the page to load properly and ensure no other modals are present
     setTimeout(() => {
       // Double-check no setup modal is present
-      if (!document.getElementById('first-boot-setup')) {
-        console.log('Starting onboarding system...');
+      if (!document.getElementById("first-boot-setup")) {
+        console.log("Starting onboarding system...");
         this.createOnboardingModal();
-        
+
         // Small delay to ensure DOM is ready
         setTimeout(() => {
           this.showStep(0);
         }, 100);
       } else {
-        console.log('First-boot setup detected, skipping onboarding');
+        console.log("First-boot setup detected, skipping onboarding");
       }
     }, 1500);
   }
 
   createOnboardingModal() {
     // Remove any existing onboarding modal
-    const existingModal = document.getElementById('onboarding-modal');
+    const existingModal = document.getElementById("onboarding-modal");
     if (existingModal) {
       existingModal.remove();
     }
-    
-    const modal = document.createElement('div');
-    modal.id = 'onboarding-modal';
-    modal.className = 'onboarding-modal';
+
+    const modal = document.createElement("div");
+    modal.id = "onboarding-modal";
+    modal.className = "onboarding-modal";
     modal.innerHTML = `
       <div class="onboarding-overlay"></div>
       <div class="onboarding-container">
@@ -185,9 +187,9 @@ class OnboardingSystem {
 
     document.body.appendChild(modal);
     this.setupEventListeners();
-    
-    console.log('Onboarding modal created and added to DOM');
-    
+
+    console.log("Onboarding modal created and added to DOM");
+
     // Ensure modal is visible with better z-index handling and height management
     modal.style.cssText = `
       display: flex !important;
@@ -202,9 +204,9 @@ class OnboardingSystem {
       padding: 20px !important;
       box-sizing: border-box !important;
     `;
-    
+
     // Set proper container height constraints
-    const container = modal.querySelector('.onboarding-container');
+    const container = modal.querySelector(".onboarding-container");
     if (container) {
       container.style.cssText = `
         max-height: calc(100vh - 40px) !important;
@@ -214,9 +216,9 @@ class OnboardingSystem {
         flex-direction: column !important;
       `;
     }
-    
+
     // Ensure footer is always visible
-    const footer = modal.querySelector('.onboarding-footer');
+    const footer = modal.querySelector(".onboarding-footer");
     if (footer) {
       footer.style.cssText = `
         flex-shrink: 0 !important;
@@ -224,36 +226,36 @@ class OnboardingSystem {
         margin-top: auto !important;
       `;
     }
-    
+
     // Add debugging info
     setTimeout(() => {
       const debugInfo = {
         modalHeight: modal.offsetHeight,
-        containerHeight: container ? container.offsetHeight : 'N/A',
-        footerHeight: footer ? footer.offsetHeight : 'N/A',
-        viewportHeight: window.innerHeight
+        containerHeight: container ? container.offsetHeight : "N/A",
+        footerHeight: footer ? footer.offsetHeight : "N/A",
+        viewportHeight: window.innerHeight,
       };
-      console.log('Onboarding modal debug info:', debugInfo);
+      console.log("Onboarding modal debug info:", debugInfo);
     }, 100);
   }
 
   setupEventListeners() {
     // Theme selection
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.theme-option')) {
-        const themeOption = e.target.closest('.theme-option');
+    document.addEventListener("click", (e) => {
+      if (e.target.closest(".theme-option")) {
+        const themeOption = e.target.closest(".theme-option");
         const theme = themeOption.dataset.theme;
-        
+
         // Remove active class from all theme options
-        document.querySelectorAll('.theme-option').forEach(option => {
-          option.classList.remove('active');
+        document.querySelectorAll(".theme-option").forEach((option) => {
+          option.classList.remove("active");
         });
-        
+
         // Add active class to selected theme
-        themeOption.classList.add('active');
-        
+        themeOption.classList.add("active");
+
         // Apply theme
-        localStorage.setItem('theme', theme);
+        localStorage.setItem("theme", theme);
         this.applyTheme(theme);
       }
     });
@@ -262,51 +264,57 @@ class OnboardingSystem {
   showStep(stepIndex) {
     this.currentStep = stepIndex;
     const step = this.steps[stepIndex];
-    
+
     console.log(`Showing onboarding step ${stepIndex}:`, step.title);
-    
+
     // Update content
-    const titleElement = document.getElementById('onboarding-title');
-    const contentElement = document.getElementById('onboarding-content');
-    
+    const titleElement = document.getElementById("onboarding-title");
+    const contentElement = document.getElementById("onboarding-content");
+
     if (titleElement) {
       titleElement.textContent = step.title;
     } else {
-      console.error('Title element not found');
+      console.error("Title element not found");
     }
-    
+
     if (contentElement) {
       contentElement.innerHTML = step.content;
     } else {
-      console.error('Content element not found');
+      console.error("Content element not found");
     }
-    
+
     // Update progress
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
-    
+    const progressFill = document.getElementById("progress-fill");
+    const progressText = document.getElementById("progress-text");
+
     if (progressFill && progressText) {
       const progress = ((stepIndex + 1) / this.steps.length) * 100;
-      progressFill.style.width = progress + '%';
+      progressFill.style.width = progress + "%";
       progressText.textContent = `${stepIndex + 1} of ${this.steps.length}`;
     }
-    
+
     // Update buttons
     this.updateButtons(step.buttons);
   }
 
   updateButtons(buttons) {
-    const buttonContainer = document.getElementById('onboarding-buttons');
+    const buttonContainer = document.getElementById("onboarding-buttons");
     if (!buttonContainer) {
-      console.error('Button container not found');
+      console.error("Button container not found");
       return;
     }
-    
-    buttonContainer.innerHTML = '';
-    
-    buttons.forEach(buttonText => {
-      const button = document.createElement('button');
-      button.className = 'btn ' + (buttonText === 'Finish' || buttonText === 'Get Started' || buttonText === 'Continue' ? 'btn-primary' : 'btn-secondary');
+
+    buttonContainer.innerHTML = "";
+
+    buttons.forEach((buttonText) => {
+      const button = document.createElement("button");
+      button.className =
+        "btn " +
+        (buttonText === "Finish" ||
+        buttonText === "Get Started" ||
+        buttonText === "Continue"
+          ? "btn-primary"
+          : "btn-secondary");
       button.textContent = buttonText;
       button.style.cssText = `
         padding: 12px 24px !important;
@@ -321,20 +329,23 @@ class OnboardingSystem {
         text-align: center !important;
         white-space: nowrap !important;
       `;
-      
-      if (button.classList.contains('btn-primary')) {
-        button.style.background = 'var(--accent-primary, #4f46e5) !important';
-        button.style.color = 'white !important';
+
+      if (button.classList.contains("btn-primary")) {
+        button.style.background = "var(--accent-primary, #4f46e5) !important";
+        button.style.color = "white !important";
       } else {
-        button.style.background = 'var(--bg-quaternary, #374151) !important';
-        button.style.color = 'var(--text-secondary, #9ca3af) !important';
-        button.style.border = '1px solid var(--border-primary, #4b5563) !important';
+        button.style.background = "var(--bg-quaternary, #374151) !important";
+        button.style.color = "var(--text-secondary, #9ca3af) !important";
+        button.style.border =
+          "1px solid var(--border-primary, #4b5563) !important";
       }
-      
-      button.addEventListener('click', () => this.handleButtonClick(buttonText));
+
+      button.addEventListener("click", () =>
+        this.handleButtonClick(buttonText)
+      );
       buttonContainer.appendChild(button);
     });
-    
+
     // Ensure button container is visible
     buttonContainer.style.cssText = `
       display: flex !important;
@@ -342,26 +353,26 @@ class OnboardingSystem {
       justify-content: flex-end !important;
       margin-top: auto !important;
     `;
-    
+
     console.log(`Created ${buttons.length} buttons:`, buttons);
-    console.log('Button container height:', buttonContainer.offsetHeight);
-    console.log('Button container visible:', buttonContainer.offsetHeight > 0);
+    console.log("Button container height:", buttonContainer.offsetHeight);
+    console.log("Button container visible:", buttonContainer.offsetHeight > 0);
   }
 
   handleButtonClick(buttonText) {
     switch (buttonText) {
-      case 'Get Started':
-      case 'Continue':
+      case "Get Started":
+      case "Continue":
         if (this.currentStep === 2) {
           // Save privacy settings
           this.savePrivacySettings();
         }
         this.nextStep();
         break;
-      case 'Previous':
+      case "Previous":
         this.previousStep();
         break;
-      case 'Finish':
+      case "Finish":
         this.completeOnboarding();
         break;
     }
@@ -380,13 +391,13 @@ class OnboardingSystem {
   }
 
   savePrivacySettings() {
-    const abCloak = document.getElementById('onboard-ab-cloak').checked;
-    const tabCloak = document.getElementById('onboard-tab-cloak').checked;
-    const particles = document.getElementById('onboard-particles').checked;
-    
-    localStorage.setItem('ab', abCloak.toString());
-    localStorage.setItem('tab-cloak-enabled', tabCloak.toString());
-    localStorage.setItem('Particles', particles.toString());
+    const abCloak = document.getElementById("onboard-ab-cloak").checked;
+    const tabCloak = document.getElementById("onboard-tab-cloak").checked;
+    const particles = document.getElementById("onboard-particles").checked;
+
+    localStorage.setItem("ab", abCloak.toString());
+    localStorage.setItem("tab-cloak-enabled", tabCloak.toString());
+    localStorage.setItem("Particles", particles.toString());
   }
 
   applyTheme(theme) {
@@ -396,48 +407,51 @@ class OnboardingSystem {
       existingTheme.remove();
     }
 
-    if (theme && theme !== 'default') {
+    if (theme && theme !== "default") {
       const themeEle = document.createElement("link");
       themeEle.rel = "stylesheet";
-      
-      if (theme.startsWith('catppuccin')) {
-        const variant = theme.replace('catppuccin', '').toLowerCase();
+
+      if (theme.startsWith("catppuccin")) {
+        const variant = theme.replace("catppuccin", "").toLowerCase();
         themeEle.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
       } else {
         themeEle.href = `/assets/styles/themes/${theme}.css?v=1`;
       }
-      
+
       document.head.appendChild(themeEle);
     }
   }
 
   completeOnboarding() {
-    localStorage.setItem('sg-onboarding-completed', 'true');
-    
+    localStorage.setItem("sg-onboarding-completed", "true");
+
     // Remove modal
-    const modal = document.getElementById('onboarding-modal');
-    modal.style.opacity = '0';
+    const modal = document.getElementById("onboarding-modal");
+    modal.style.opacity = "0";
     setTimeout(() => {
       modal.remove();
     }, 300);
 
     // Show success notification
     if (window.showNotification) {
-      window.showNotification('Welcome to SlowGuardian v9! Setup complete.', 'success');
+      window.showNotification(
+        "Welcome to SlowGuardian v9! Setup complete.",
+        "success"
+      );
     }
   }
 }
 
 // Initialize onboarding when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   new OnboardingSystem();
 });
 
 // Helper function to get cookies (if not already defined)
-if (typeof getCookie === 'undefined') {
-  window.getCookie = function(name) {
+if (typeof getCookie === "undefined") {
+  window.getCookie = function (name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
   };
 }

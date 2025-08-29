@@ -16,7 +16,12 @@ import config from "./config.js";
 import { setupSecurity } from "./src/middleware/security.js";
 import { setupAuth } from "./src/middleware/auth.js";
 import { setupLogging } from "./src/middleware/logging.js";
-import { sessionTracker, blockingEnforcer, pauseEnforcer, websiteBlockingEnforcer } from "./src/middleware/admin.js";
+import {
+  sessionTracker,
+  blockingEnforcer,
+  pauseEnforcer,
+  websiteBlockingEnforcer,
+} from "./src/middleware/admin.js";
 import { setupRoutes } from "./src/routes/index.js";
 import { setupErrorHandling } from "./src/middleware/error.js";
 import { PluginManager } from "./src/plugins/manager.js";
@@ -86,7 +91,7 @@ async function createSlowGuardianServer() {
   setupLogging(app);
   setupSecurity(app, config);
   setupAuth(app, config);
-  
+
   // Admin middleware for developer mode features
   app.use(sessionTracker);
   app.use(pauseEnforcer);

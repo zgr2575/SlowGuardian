@@ -1,6 +1,7 @@
 # SlowGuardian v9
 
-> **🚀 The Ultimate Web Proxy Platform with Advanced Features, Developer Tools & Comprehensive User Experience**
+> **🚀 The Ultimate Web Proxy Platform with Advanced Features, Developer Tools & Comprehensive User
+> Experience**
 
 [![Version](https://img.shields.io/badge/version-9.0.0-blue.svg)](https://github.com/zgr2575/SlowGuardian)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
@@ -8,13 +9,16 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
 
-SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning modern interface, comprehensive developer tools, advanced user management, and an extensible plugin architecture. Built from the ground up for performance, security, and customization.
+SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning modern interface,
+comprehensive developer tools, advanced user management, and an extensible plugin architecture.
+Built from the ground up for performance, security, and customization.
 
 ![SlowGuardian v9 Homepage](https://github.com/user-attachments/assets/06b275b9-1ded-49c3-8f2d-d2a1797b5b7f)
 
 ## ✨ Major Features & Capabilities
 
 ### 🎨 **Modern User Interface**
+
 - **Breathtaking v9 Design**: Completely redesigned with glass morphism and smooth animations
 - **Multi-Tab Browser System**: Advanced tabbed browsing with session management
 - **Performance Mode**: Optimized interface for older hardware with reduced visual effects
@@ -23,6 +27,7 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 - **Mobile-First Design**: Perfect experience across all devices and screen sizes
 
 ### 🛠️ **Developer Mode & Administration**
+
 - **Comprehensive Admin Panel**: Full control over users, content, and site functionality
 - **Real-Time User Monitoring**: Live session tracking and management
 - **Per-User Website Blocking**: Block specific domains for individual users
@@ -31,6 +36,7 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 - **User Session Control**: Pause, block, or ban users through the admin interface
 
 ### 🔌 **Advanced Plugin System**
+
 - **100+ Built-in Features**: Comprehensive plugin collection covering all use cases
 - **Plugin Categories**: User Experience, Productivity Tools, Customization, and Advanced Features
 - **Real-Time Management**: Enable/disable plugins with instant effect
@@ -39,6 +45,7 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 - **Developer API**: Full plugin development framework with documentation
 
 ### 🛡️ **Security & Privacy**
+
 - **About:Blank Auto-Cloaking**: Automatic popup disguise system
 - **Advanced Screenshot Protection**: Multi-layer screenshot detection and prevention
 - **Tab Disguising**: Intelligent favicon and title masking
@@ -47,13 +54,16 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 - **Secure Proxy Technology**: Enhanced Ultraviolet proxy with automatic redirects
 
 ### 🎮 **Entertainment & Apps**
+
 - **Extensive Game Library**: 50+ popular unblocked games across all genres
-- **Modern App Collection**: TikTok, LinkedIn, Canva, Figma, Notion, Duolingo, Khan Academy, Coursera, Codecademy, Replit, and more
+- **Modern App Collection**: TikTok, LinkedIn, Canva, Figma, Notion, Duolingo, Khan Academy,
+  Coursera, Codecademy, Replit, and more
 - **Cloud Gaming Support**: GeForce NOW and Now.gg compatibility
 - **Search & Filtering**: Advanced search with category-based filtering
 - **Favorites System**: Bookmark your most-used games and apps
 
 ### 🚀 **First-Boot Setup & Onboarding**
+
 - **6-Step Setup Wizard**: Comprehensive initial configuration for new installations
 - **Hardware Optimization**: Automatic performance tuning based on device capabilities
 - **4-Step User Onboarding**: Guided tour for new users with interactive tutorials
@@ -61,6 +71,7 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 - **Developer Quick Start**: Streamlined setup for administrators and developers
 
 ### ⚡ **Performance & Technical Excellence**
+
 - **Ultraviolet Proxy Engine**: Fast, reliable proxy technology with enhanced compatibility
 - **Smart Caching**: Intelligent asset caching for lightning-fast load times
 - **Resource Optimization**: CPU and memory usage optimization with performance monitoring
@@ -70,24 +81,29 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 ## 🆕 What's New in v9
 
 ### **🎯 User Experience Revolution**
-- **Fixed Onboarding System**: Resolved critical modal positioning issues with guaranteed button visibility
+
+- **Fixed Onboarding System**: Resolved critical modal positioning issues with guaranteed button
+  visibility
 - **Performance Mode**: Optimized interface for less powerful devices with reduced animations
 - **First-Boot Setup**: Comprehensive wizard for optimal initial configuration
 - **Enhanced Mobile Support**: Touch gestures, responsive design, and mobile-optimized controls
 
 ### **🛠️ Developer Experience Enhancement**
+
 - **Advanced Developer Mode**: Complete administrative control with real-time monitoring
 - **Plugin Architecture**: 100+ features converted to modular plugin system
 - **API Integration**: ChatGPT integration with custom API key support
 - **Comprehensive Documentation**: Plugin development guides and API references
 
 ### **🔧 Technical Improvements**
+
 - **Fixed Modal Systems**: Resolved conflicts between setup and onboarding modals
 - **Enhanced Proxy System**: Improved URL handling and automatic redirect management
 - **Cookie-Based Persistence**: Robust settings storage with localStorage fallback
 - **Error Recovery**: Comprehensive error handling and automatic recovery systems
 
 ### **📱 Expanded Functionality**
+
 - **Browser Tabs System**: Multi-tab browsing with session saving and keyboard shortcuts
 - **Custom 404 Page**: Beautiful error page with navigation options
 - **Feature Management**: Complete interface for enabling/disabling features
@@ -96,6 +112,7 @@ SlowGuardian v9 is a revolutionary web proxy platform featuring a stunning moder
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** ≥ 18.0.0
 - **npm** ≥ 7.0.0 or **yarn** ≥ 1.22.0
 
@@ -113,7 +130,8 @@ npm install
 npm start
 ```
 
-The server will start on `http://localhost:8080`. On first visit, you'll be guided through the setup wizard.
+The server will start on `http://localhost:8080`. On first visit, you'll be guided through the setup
+wizard.
 
 ### Development Mode
 
@@ -136,6 +154,7 @@ npm run build
 ```
 
 ### Default Admin Access
+
 - **URL**: `http://localhost:8080/developer`
 - **Username**: `admin`
 - **Password**: `SlowGuardian2024!`
@@ -202,9 +221,9 @@ export default {
   onLoad(api) {
     // Plugin initialization
     console.log("Example plugin loaded!");
-    
+
     // Register event listeners
-    api.events.on('pageLoad', this.handlePageLoad.bind(this));
+    api.events.on("pageLoad", this.handlePageLoad.bind(this));
   },
 
   onUnload() {
@@ -219,66 +238,75 @@ export default {
 
   // Plugin routes
   routes: {
-    '/plugin/example': {
-      method: 'GET',
+    "/plugin/example": {
+      method: "GET",
       handler: (req, res) => {
         res.json({ message: "Hello from plugin!" });
-      }
-    }
+      },
+    },
   },
 
   // Settings interface
   settings: {
     enabled: {
-      type: 'boolean',
+      type: "boolean",
       default: true,
-      label: 'Enable Example Feature'
+      label: "Enable Example Feature",
     },
     apiKey: {
-      type: 'string',
-      default: '',
-      label: 'API Key',
-      secure: true
-    }
-  }
+      type: "string",
+      default: "",
+      label: "API Key",
+      secure: true,
+    },
+  },
 };
 ```
 
 ### Plugin Categories
 
 #### **User Experience (25 Features)**
-- Smart search suggestions, gesture navigation, quick access toolbar, auto-complete, bookmarks system
 
-#### **Productivity Tools (25 Features)**  
+- Smart search suggestions, gesture navigation, quick access toolbar, auto-complete, bookmarks
+  system
+
+#### **Productivity Tools (25 Features)**
+
 - Built-in note taking, advanced screenshot tools, PDF reader, download manager, password manager
 
 #### **Customization & Themes (25 Features)**
+
 - Advanced theme builder, CSS injection, layout customizer, icon packs, animation controls
 
 #### **Advanced Features (25 Features)**
+
 - AI assistant foundation, VPN integration prep, blockchain wallet structure, automation scripts
 
 ## 🎛️ Developer Mode Features
 
 ### **User Management**
+
 - Real-time online user monitoring
 - Session tracking and analytics
 - User blocking and banning
 - Activity logging and reporting
 
 ### **Content Control**
+
 - Per-user website blocking
 - Global site pause functionality
 - Emergency controls with password protection
 - Content filtering and management
 
 ### **System Administration**
+
 - Performance monitoring and analytics
 - Plugin management and deployment
 - Theme customization and distribution
 - Security settings and authentication
 
 ### **API Integration**
+
 - ChatGPT integration with custom API keys
 - Multiple AI model support (GPT-3.5, GPT-4, GPT-4 Turbo)
 - Context-aware responses
@@ -287,24 +315,28 @@ export default {
 ## 📱 User Features
 
 ### **Browser Experience**
+
 - Multi-tab browsing with session management
 - Keyboard shortcuts (Ctrl+T, Ctrl+W, Ctrl+Shift+T)
 - Tab duplication and context menus
 - Loading animations with helpful tips
 
 ### **Privacy & Security**
+
 - About:blank automatic popup cloaking
 - Screenshot protection with multiple detection methods
 - Tab disguising with dynamic titles and favicons
 - Secure cookie-based settings persistence
 
 ### **Customization**
+
 - 5 built-in themes with live preview
 - Custom theme creator with CSS injection
 - Moveable sidebar buttons and layout customization
 - Performance mode for older hardware
 
 ### **Apps & Games**
+
 - 50+ carefully curated games across all genres
 - 25+ modern web applications and productivity tools
 - Advanced search and filtering capabilities
@@ -313,6 +345,7 @@ export default {
 ## 🛠️ Development Roadmap
 
 ### **Phase 1: Core Functionality** ✅ **COMPLETE**
+
 - [x] Navigation system fixes
 - [x] Game and app launching
 - [x] About:blank popup functionality
@@ -321,6 +354,7 @@ export default {
 - [x] Proxy system enhancements
 
 ### **Phase 2: Enhanced Features** ✅ **COMPLETE**
+
 - [x] Screenshot protection system
 - [x] Browser URL display improvements
 - [x] Comprehensive settings interface
@@ -328,6 +362,7 @@ export default {
 - [x] Custom theme creation tools
 
 ### **Phase 3: Advanced Systems** ✅ **COMPLETE**
+
 - [x] Developer mode with admin panel
 - [x] User management and monitoring
 - [x] Plugin system architecture
@@ -335,6 +370,7 @@ export default {
 - [x] First-boot setup wizard
 
 ### **Phase 4: Future Enhancements** 🔄 **IN PROGRESS**
+
 - [ ] Advanced analytics dashboard
 - [ ] Plugin marketplace
 - [ ] Multi-language support
@@ -344,6 +380,7 @@ export default {
 ## 📖 Documentation
 
 ### **User Guides**
+
 - [Getting Started Guide](docs/user/getting-started.md)
 - [Feature Overview](docs/user/features.md)
 - [Theme Customization](docs/user/themes.md)
@@ -351,6 +388,7 @@ export default {
 - [Troubleshooting](docs/user/troubleshooting.md)
 
 ### **Developer Documentation**
+
 - [Development Setup](docs/developer/setup.md)
 - [Architecture Overview](docs/developer/architecture.md)
 - [Plugin Development Guide](docs/developer/plugins.md)
@@ -358,12 +396,14 @@ export default {
 - [Contributing Guidelines](docs/developer/contributing.md)
 
 ### **Administration**
+
 - [Developer Mode Guide](docs/admin/developer-mode.md)
 - [User Management](docs/admin/user-management.md)
 - [Security Configuration](docs/admin/security.md)
 - [Performance Monitoring](docs/admin/monitoring.md)
 
 ### **Deployment**
+
 - [Self-Hosting Guide](docs/deployment/self-hosting.md)
 - [Cloud Deployment](docs/deployment/cloud.md)
 - [Docker Setup](docs/deployment/docker.md)
@@ -431,7 +471,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 📄 License
 
-This project is licensed under the **GPL-3.0 License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GPL-3.0 License** - see the [LICENSE](LICENSE) file for
+details.
 
 ## 🙏 Acknowledgments
 
@@ -464,8 +505,10 @@ This project is licensed under the **GPL-3.0 License** - see the [LICENSE](LICEN
   
 ### 🌟 **Star SlowGuardian v9 to show your support!** 🌟
 
-**[⭐ Star on GitHub](https://github.com/zgr2575/SlowGuardian) • [🍴 Fork](https://github.com/zgr2575/SlowGuardian/fork) • [📖 Docs](docs/) • [🐛 Issues](https://github.com/zgr2575/SlowGuardian/issues)**
+**[⭐ Star on GitHub](https://github.com/zgr2575/SlowGuardian) •
+[🍴 Fork](https://github.com/zgr2575/SlowGuardian/fork) • [📖 Docs](docs/) •
+[🐛 Issues](https://github.com/zgr2575/SlowGuardian/issues)**
 
-*Made with ❤️ by the SlowGuardian Community*
+_Made with ❤️ by the SlowGuardian Community_
 
 </div>

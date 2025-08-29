@@ -9,15 +9,15 @@ class ScreenshotProtection {
     this.originalContent = null;
     this.spoofContent = null;
     this.isProtectionActive = false;
-    this.tabTitle = '';
-    this.tabIcon = '';
+    this.tabTitle = "";
+    this.tabIcon = "";
     this.init();
   }
 
   init() {
     // Load settings
-    this.enabled = localStorage.getItem('screenshot-protection') === 'true';
-    
+    this.enabled = localStorage.getItem("screenshot-protection") === "true";
+
     if (this.enabled) {
       this.setupProtection();
     }
@@ -25,21 +25,21 @@ class ScreenshotProtection {
 
   enable() {
     this.enabled = true;
-    localStorage.setItem('screenshot-protection', 'true');
+    localStorage.setItem("screenshot-protection", "true");
     this.setupProtection();
-    
+
     if (window.showNotification) {
-      window.showNotification('Screenshot protection enabled', 'success');
+      window.showNotification("Screenshot protection enabled", "success");
     }
   }
 
   disable() {
     this.enabled = false;
-    localStorage.setItem('screenshot-protection', 'false');
+    localStorage.setItem("screenshot-protection", "false");
     this.removeProtection();
-    
+
     if (window.showNotification) {
-      window.showNotification('Screenshot protection disabled', 'info');
+      window.showNotification("Screenshot protection disabled", "info");
     }
   }
 
@@ -55,20 +55,26 @@ class ScreenshotProtection {
   test() {
     if (!this.enabled) {
       if (window.showNotification) {
-        window.showNotification('Screenshot protection is disabled. Enable it first.', 'warning');
+        window.showNotification(
+          "Screenshot protection is disabled. Enable it first.",
+          "warning"
+        );
       }
       return;
     }
-    
+
     if (window.showNotification) {
-      window.showNotification('Testing screenshot protection...', 'info');
+      window.showNotification("Testing screenshot protection...", "info");
     }
-    
+
     this.activateProtection();
     setTimeout(() => {
       this.deactivateProtection();
       if (window.showNotification) {
-        window.showNotification('Screenshot protection test complete!', 'success');
+        window.showNotification(
+          "Screenshot protection test complete!",
+          "success"
+        );
       }
     }, 3000);
   }
@@ -88,42 +94,44 @@ class ScreenshotProtection {
 
   updateSpoofSettings() {
     // Get current tab cloaking settings
-    this.tabTitle = localStorage.getItem('name') || 'My Drive - Google Drive';
-    this.tabIcon = localStorage.getItem('icon') || 'https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png';
-    
+    this.tabTitle = localStorage.getItem("name") || "My Drive - Google Drive";
+    this.tabIcon =
+      localStorage.getItem("icon") ||
+      "https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png";
+
     // Create spoof content based on current cloak settings
     this.createSpoofContent();
   }
 
   createSpoofContent() {
     // Generate spoof content based on the current tab cloak
-    const selectedOption = localStorage.getItem('selectedOption') || 'gDrive';
-    
-    let spoofHTML = '';
-    
-    switch(selectedOption) {
-      case 'gDrive':
+    const selectedOption = localStorage.getItem("selectedOption") || "gDrive";
+
+    let spoofHTML = "";
+
+    switch (selectedOption) {
+      case "gDrive":
         spoofHTML = this.createGoogleDriveSpoof();
         break;
-      case 'gClass':
+      case "gClass":
         spoofHTML = this.createGoogleClassroomSpoof();
         break;
-      case 'gMail':
+      case "gMail":
         spoofHTML = this.createGmailSpoof();
         break;
-      case 'gMeet':
+      case "gMeet":
         spoofHTML = this.createGoogleMeetSpoof();
         break;
-      case 'netflix':
+      case "netflix":
         spoofHTML = this.createNetflixSpoof();
         break;
-      case 'spotify':
+      case "spotify":
         spoofHTML = this.createSpotifySpoof();
         break;
-      case 'youtube':
+      case "youtube":
         spoofHTML = this.createYouTubeSpoof();
         break;
-      case 'canvas':
+      case "canvas":
         spoofHTML = this.createCanvasSpoof();
         break;
       default:
@@ -132,8 +140,8 @@ class ScreenshotProtection {
 
     // Create spoof overlay
     if (!this.spoofContent) {
-      this.spoofContent = document.createElement('div');
-      this.spoofContent.id = 'spoof-overlay';
+      this.spoofContent = document.createElement("div");
+      this.spoofContent.id = "spoof-overlay";
       this.spoofContent.style.cssText = `
         position: fixed;
         top: 0;
@@ -146,7 +154,7 @@ class ScreenshotProtection {
         overflow: hidden;
       `;
     }
-    
+
     this.spoofContent.innerHTML = spoofHTML;
   }
 
@@ -238,7 +246,7 @@ class ScreenshotProtection {
   }
 
   createGenericSpoof() {
-    const customName = localStorage.getItem('CustomName') || this.tabTitle;
+    const customName = localStorage.getItem("CustomName") || this.tabTitle;
     return `
       <div style="background: white; height: 100vh; font-family: Arial, sans-serif; display: flex; align-items: center; justify-content: center;">
         <div style="text-align: center;">
@@ -251,7 +259,7 @@ class ScreenshotProtection {
 
   setupVisibilityDetection() {
     // Detect when page becomes hidden (potential screenshot)
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener("visibilitychange", () => {
       if (document.hidden && this.enabled) {
         this.activateProtection();
         // Revert after a short delay
@@ -261,7 +269,7 @@ class ScreenshotProtection {
 
     // Detect window blur (potential alt-tab to screenshot tool)
     let blurTimeout;
-    window.addEventListener('blur', () => {
+    window.addEventListener("blur", () => {
       if (this.enabled) {
         blurTimeout = setTimeout(() => {
           this.activateProtection();
@@ -269,14 +277,14 @@ class ScreenshotProtection {
       }
     });
 
-    window.addEventListener('focus', () => {
+    window.addEventListener("focus", () => {
       clearTimeout(blurTimeout);
       this.deactivateProtection();
     });
 
     // Additional detection for window resize (common during screenshots)
     let resizeTimeout;
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       if (this.enabled) {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
@@ -287,7 +295,7 @@ class ScreenshotProtection {
     });
 
     // Detect context menu (right-click) which might indicate screenshot attempts
-    document.addEventListener('contextmenu', (e) => {
+    document.addEventListener("contextmenu", (e) => {
       if (this.enabled) {
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 1500);
@@ -297,13 +305,13 @@ class ScreenshotProtection {
 
   setupPrintDetection() {
     // Detect print attempts
-    window.addEventListener('beforeprint', () => {
+    window.addEventListener("beforeprint", () => {
       if (this.enabled) {
         this.activateProtection();
       }
     });
 
-    window.addEventListener('afterprint', () => {
+    window.addEventListener("afterprint", () => {
       this.deactivateProtection();
     });
   }
@@ -311,11 +319,13 @@ class ScreenshotProtection {
   setupDevToolsDetection() {
     // Basic devtools detection
     let devtools = { open: false };
-    
+
     setInterval(() => {
-      if (this.enabled && 
-          (window.outerHeight - window.innerHeight > 200 || 
-           window.outerWidth - window.innerWidth > 200)) {
+      if (
+        this.enabled &&
+        (window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200)
+      ) {
         if (!devtools.open) {
           devtools.open = true;
           this.activateProtection();
@@ -331,39 +341,39 @@ class ScreenshotProtection {
 
   setupKeyboardDetection() {
     // Detect common screenshot key combinations
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener("keydown", (e) => {
       if (!this.enabled) return;
 
       // Print Screen key
-      if (e.key === 'PrintScreen') {
+      if (e.key === "PrintScreen") {
         e.preventDefault(); // Try to prevent the screenshot
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
       }
 
       // Windows + Shift + S (Windows Snipping Tool)
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'S') {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "S") {
         e.preventDefault();
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
       }
 
       // Cmd + Shift + 3/4/5 (macOS screenshots)
-      if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) {
+      if (e.metaKey && e.shiftKey && ["3", "4", "5"].includes(e.key)) {
         e.preventDefault();
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
       }
 
       // Alt + Print Screen (Windows active window screenshot)
-      if (e.altKey && e.key === 'PrintScreen') {
+      if (e.altKey && e.key === "PrintScreen") {
         e.preventDefault();
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
       }
 
       // Ctrl + Print Screen (some applications)
-      if (e.ctrlKey && e.key === 'PrintScreen') {
+      if (e.ctrlKey && e.key === "PrintScreen") {
         e.preventDefault();
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
@@ -371,10 +381,10 @@ class ScreenshotProtection {
     });
 
     // Also detect key combinations that might not trigger keydown
-    document.addEventListener('keyup', (e) => {
+    document.addEventListener("keyup", (e) => {
       if (!this.enabled) return;
-      
-      if (e.key === 'PrintScreen') {
+
+      if (e.key === "PrintScreen") {
         this.activateProtection();
         setTimeout(() => this.deactivateProtection(), 2000);
       }
@@ -385,31 +395,31 @@ class ScreenshotProtection {
     if (this.isProtectionActive || !this.enabled) return;
 
     this.isProtectionActive = true;
-    
+
     // Update spoof content with current settings
     this.updateSpoofSettings();
-    
+
     // Store original content
     this.originalContent = document.body.style.cssText;
-    
+
     // Add spoof overlay to page
-    if (!document.getElementById('spoof-overlay')) {
+    if (!document.getElementById("spoof-overlay")) {
       document.body.appendChild(this.spoofContent);
     }
-    
+
     // Show spoof content
-    this.spoofContent.style.display = 'block';
-    
+    this.spoofContent.style.display = "block";
+
     // Update title and favicon
     const originalTitle = document.title;
     const originalIcon = document.querySelector('link[rel*="icon"]')?.href;
-    
+
     document.title = this.tabTitle;
     const favicon = document.querySelector('link[rel*="icon"]');
     if (favicon) {
       favicon.href = this.tabIcon;
     }
-    
+
     // Store originals for restoration
     this.originalTitle = originalTitle;
     this.originalIcon = originalIcon;
@@ -419,17 +429,17 @@ class ScreenshotProtection {
     if (!this.isProtectionActive) return;
 
     this.isProtectionActive = false;
-    
+
     // Hide spoof content
     if (this.spoofContent) {
-      this.spoofContent.style.display = 'none';
+      this.spoofContent.style.display = "none";
     }
-    
+
     // Restore original title and icon
     if (this.originalTitle) {
       document.title = this.originalTitle;
     }
-    
+
     if (this.originalIcon) {
       const favicon = document.querySelector('link[rel*="icon"]');
       if (favicon) {
@@ -440,7 +450,7 @@ class ScreenshotProtection {
 
   removeProtection() {
     this.deactivateProtection();
-    
+
     if (this.spoofContent && this.spoofContent.parentNode) {
       this.spoofContent.parentNode.removeChild(this.spoofContent);
     }

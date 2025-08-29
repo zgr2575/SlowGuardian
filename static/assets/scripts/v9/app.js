@@ -33,7 +33,9 @@ class SlowGuardianApp {
       console.log(`🔨 Build: ${this.buildInfo.buildId}`);
       console.log(`📅 Built: ${this.buildInfo.buildDate}`);
       console.log(`🌿 Branch: ${this.buildInfo.git.branch}`);
-      console.log(`🔗 Commit: ${this.buildInfo.git.commitShort} - ${this.buildInfo.git.commitMessage}`);
+      console.log(
+        `🔗 Commit: ${this.buildInfo.git.commitShort} - ${this.buildInfo.git.commitMessage}`
+      );
     }
 
     try {
@@ -86,47 +88,49 @@ class SlowGuardianApp {
 
   async loadVersionInfo() {
     try {
-      const response = await fetch('/version.json');
+      const response = await fetch("/version.json");
       if (response.ok) {
         this.buildInfo = await response.json();
         this.version = this.buildInfo.version;
-        
+
         // Update page title with version if needed
-        if (document.title.includes('v9')) {
-          document.title = document.title.replace('v9', `v${this.version}`);
+        if (document.title.includes("v9")) {
+          document.title = document.title.replace("v9", `v${this.version}`);
         }
-        
+
         // Update footer version info
         this.updateFooterVersion();
-        
+
         // Add version info to console for debugging
-        console.log(`%c🛡️ SlowGuardian v${this.version}`, 'color: #7c3aed; font-weight: bold; font-size: 16px;');
-        
+        console.log(
+          `%c🛡️ SlowGuardian v${this.version}`,
+          "color: #7c3aed; font-weight: bold; font-size: 16px;"
+        );
+
         // Make version info globally available
         window.SlowGuardianVersion = this.buildInfo;
-        
       } else {
-        console.warn('Could not load version information');
+        console.warn("Could not load version information");
       }
     } catch (error) {
-      console.warn('Failed to load version info:', error);
+      console.warn("Failed to load version info:", error);
     }
   }
 
   updateFooterVersion() {
-    const footerVersionText = document.getElementById('footer-version-text');
-    const footerBuildInfo = document.getElementById('footer-build-info');
-    
+    const footerVersionText = document.getElementById("footer-version-text");
+    const footerBuildInfo = document.getElementById("footer-build-info");
+
     if (footerVersionText && this.buildInfo) {
       footerVersionText.textContent = `v${this.buildInfo.version}`;
     }
-    
+
     if (footerBuildInfo && this.buildInfo) {
       const buildDate = new Date(this.buildInfo.buildDate);
       const timeAgo = this.getTimeAgo(buildDate);
-      
+
       footerBuildInfo.textContent = `Build ${this.buildInfo.git.commitShort} (${timeAgo})`;
-      footerBuildInfo.className = 'build-info loaded';
+      footerBuildInfo.className = "build-info loaded";
       footerBuildInfo.title = `
 Full Build Info:
 Build ID: ${this.buildInfo.buildId}
@@ -135,9 +139,9 @@ Branch: ${this.buildInfo.git.branch}
 Built: ${this.buildInfo.buildDate}
 Environment: ${this.buildInfo.environment}
       `.trim();
-      
+
       // Make build info clickable to copy version details
-      footerBuildInfo.addEventListener('click', () => {
+      footerBuildInfo.addEventListener("click", () => {
         this.copyVersionToClipboard();
       });
     }
@@ -149,7 +153,7 @@ Environment: ${this.buildInfo.environment}
     const diffMins = Math.floor(diffMs / (1000 * 60));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
+
     if (diffMins < 60) {
       return `${diffMins}m ago`;
     } else if (diffHours < 24) {
@@ -161,14 +165,17 @@ Environment: ${this.buildInfo.environment}
 
   copyVersionToClipboard() {
     if (!this.buildInfo) return;
-    
+
     const versionText = `SlowGuardian v${this.buildInfo.version} - Build ${this.buildInfo.git.commitShort}`;
-    
-    navigator.clipboard.writeText(versionText).then(() => {
-      console.log('Version info copied to clipboard:', versionText);
-    }).catch(err => {
-      console.warn('Failed to copy version info:', err);
-    });
+
+    navigator.clipboard
+      .writeText(versionText)
+      .then(() => {
+        console.log("Version info copied to clipboard:", versionText);
+      })
+      .catch((err) => {
+        console.warn("Failed to copy version info:", err);
+      });
   }
 
   async initializeUI() {
@@ -220,11 +227,14 @@ Environment: ${this.buildInfo.environment}
     if (particlesContainer && !window.location.pathname.includes("/go")) {
       try {
         // Skip particles on browser page to avoid conflicts
-        if (window.location.pathname === "/go" || window.location.pathname === "/p") {
+        if (
+          window.location.pathname === "/go" ||
+          window.location.pathname === "/p"
+        ) {
           return;
         }
 
-        // Determine particle type based on device capabilities  
+        // Determine particle type based on device capabilities
         let particleType = "floating";
 
         if (device.isDesktop() && !device.isLowEndDevice?.()) {
@@ -232,7 +242,7 @@ Environment: ${this.buildInfo.environment}
         }
 
         this.particleSystem = initParticles(particlesContainer, particleType);
-        
+
         // Ensure particles are visible
         particlesContainer.style.position = "fixed";
         particlesContainer.style.top = "0";
@@ -241,7 +251,7 @@ Environment: ${this.buildInfo.environment}
         particlesContainer.style.height = "100%";
         particlesContainer.style.pointerEvents = "none";
         particlesContainer.style.zIndex = "1";
-        
+
         console.log(`✨ Particle system initialized: ${particleType}`);
       } catch (error) {
         console.warn("Failed to initialize particle system:", error);
@@ -268,7 +278,7 @@ Environment: ${this.buildInfo.environment}
       `;
       container.appendChild(particle);
     }
-    
+
     // Add CSS keyframes if not already added
     if (!document.getElementById("simple-particles-css")) {
       const style = document.createElement("style");
@@ -392,7 +402,8 @@ Environment: ${this.buildInfo.environment}
       // Focus search on '/' key
       if (e.key === "/" && !e.target.matches("input, textarea")) {
         e.preventDefault();
-        const searchInput = document.getElementById("is") || document.getElementById("url-input");
+        const searchInput =
+          document.getElementById("is") || document.getElementById("url-input");
         if (searchInput) {
           searchInput.focus();
         }
@@ -430,10 +441,10 @@ Environment: ${this.buildInfo.environment}
         const searchInput = document.getElementById("is");
         if (searchInput && searchInput.value.trim()) {
           // Use the global go function if available
-          if (typeof go === 'function') {
+          if (typeof go === "function") {
             go(searchInput.value.trim());
-          } else if (typeof processUrl === 'function') {
-            processUrl(searchInput.value.trim(), '/p');
+          } else if (typeof processUrl === "function") {
+            processUrl(searchInput.value.trim(), "/p");
           }
         }
       });
@@ -443,7 +454,7 @@ Environment: ${this.buildInfo.environment}
       if (searchBtn) {
         searchBtn.addEventListener("click", (e) => {
           e.preventDefault();
-          searchForm.dispatchEvent(new Event('submit'));
+          searchForm.dispatchEvent(new Event("submit"));
         });
       }
     }
@@ -756,12 +767,12 @@ Environment: ${this.buildInfo.environment}
   loadPreferences() {
     try {
       // Use the unified storage interface
-      const preferences = window.storage ? 
-        window.storage.getItem("sg_preferences", {}) :
-        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
-      
+      const preferences = window.storage
+        ? window.storage.getItem("sg_preferences", {})
+        : JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+
       this.features = { ...this.features, ...preferences };
-      
+
       // Migrate old localStorage data to new storage system
       this.migrateOldSettings();
     } catch (error) {
@@ -771,18 +782,18 @@ Environment: ${this.buildInfo.environment}
 
   savePreference(key, value) {
     try {
-      const currentPrefs = window.storage ?
-        window.storage.getItem("sg_preferences", {}) :
-        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
-      
+      const currentPrefs = window.storage
+        ? window.storage.getItem("sg_preferences", {})
+        : JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+
       currentPrefs[key] = value;
-      
+
       if (window.storage) {
         window.storage.setItem("sg_preferences", currentPrefs);
       } else {
         localStorage.setItem("sg_preferences", JSON.stringify(currentPrefs));
       }
-      
+
       // Update features
       this.features[key] = value;
     } catch (error) {
@@ -792,10 +803,10 @@ Environment: ${this.buildInfo.environment}
 
   getPreference(key, defaultValue = null) {
     try {
-      const preferences = window.storage ?
-        window.storage.getItem("sg_preferences", {}) :
-        JSON.parse(localStorage.getItem("sg_preferences") || "{}");
-      
+      const preferences = window.storage
+        ? window.storage.getItem("sg_preferences", {})
+        : JSON.parse(localStorage.getItem("sg_preferences") || "{}");
+
       return preferences[key] !== undefined ? preferences[key] : defaultValue;
     } catch (error) {
       console.warn("Failed to get preference:", error);
@@ -806,10 +817,16 @@ Environment: ${this.buildInfo.environment}
   migrateOldSettings() {
     // Migrate common settings from localStorage to unified storage
     const settingsToMigrate = [
-      'theme', 'selectedOption', 'ab', 'dy', 'engine', 'Gcustom', 'Gpinned'
+      "theme",
+      "selectedOption",
+      "ab",
+      "dy",
+      "engine",
+      "Gcustom",
+      "Gpinned",
     ];
-    
-    settingsToMigrate.forEach(key => {
+
+    settingsToMigrate.forEach((key) => {
       const oldValue = localStorage.getItem(key);
       if (oldValue && window.storage && !window.storage.getItem(key)) {
         try {
@@ -824,12 +841,12 @@ Environment: ${this.buildInfo.environment}
 
   showVersionModal() {
     if (!this.buildInfo) {
-      console.log('Version info not loaded yet');
+      console.log("Version info not loaded yet");
       return;
     }
 
-    const modal = document.createElement('div');
-    modal.className = 'modal version-modal';
+    const modal = document.createElement("div");
+    modal.className = "modal version-modal";
     modal.style.cssText = `
       position: fixed;
       top: 0;
@@ -845,7 +862,7 @@ Environment: ${this.buildInfo.environment}
     `;
 
     const buildDate = new Date(this.buildInfo.buildDate);
-    
+
     modal.innerHTML = `
       <div class="modal-content" style="
         background: var(--bg-primary);
@@ -902,16 +919,16 @@ Environment: ${this.buildInfo.environment}
     `;
 
     // Add event listeners
-    const closeButtons = modal.querySelectorAll('.close-btn');
-    const copyButton = modal.querySelector('.copy-btn');
-    
-    closeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
+    const closeButtons = modal.querySelectorAll(".close-btn");
+    const copyButton = modal.querySelector(".copy-btn");
+
+    closeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
         modal.remove();
       });
     });
-    
-    copyButton.addEventListener('click', () => {
+
+    copyButton.addEventListener("click", () => {
       const versionText = [
         `SlowGuardian v${this.buildInfo.version}`,
         `Build ID: ${this.buildInfo.buildId}`,
@@ -920,19 +937,19 @@ Environment: ${this.buildInfo.environment}
         `Built: ${this.buildInfo.buildDate}`,
         `Environment: ${this.buildInfo.environment}`,
         `Platform: ${this.buildInfo.platform} ${this.buildInfo.arch}`,
-        `Node.js: ${this.buildInfo.nodeVersion}`
-      ].join('\n');
-      
+        `Node.js: ${this.buildInfo.nodeVersion}`,
+      ].join("\n");
+
       navigator.clipboard.writeText(versionText).then(() => {
-        copyButton.textContent = '✅ Copied!';
+        copyButton.textContent = "✅ Copied!";
         setTimeout(() => {
-          copyButton.textContent = '📋 Copy Info';
+          copyButton.textContent = "📋 Copy Info";
         }, 2000);
       });
     });
 
     // Close on backdrop click
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.remove();
       }
@@ -940,12 +957,12 @@ Environment: ${this.buildInfo.environment}
 
     // Close on Escape key
     const handleEscape = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         modal.remove();
-        document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener("keydown", handleEscape);
       }
     };
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
 
     document.body.appendChild(modal);
   }
@@ -978,65 +995,65 @@ Environment: ${this.buildInfo.environment}
     const quotes = [
       {
         text: "The way to get started is to quit talking and begin doing.",
-        author: "Walt Disney"
+        author: "Walt Disney",
       },
       {
         text: "Don't be afraid to give up the good to go for the great.",
-        author: "John D. Rockefeller"
+        author: "John D. Rockefeller",
       },
       {
         text: "Innovation distinguishes between a leader and a follower.",
-        author: "Steve Jobs"
+        author: "Steve Jobs",
       },
       {
         text: "The future belongs to those who believe in the beauty of their dreams.",
-        author: "Eleanor Roosevelt"
+        author: "Eleanor Roosevelt",
       },
       {
         text: "Your limitation—it's only your imagination.",
-        author: "Unknown"
+        author: "Unknown",
       },
       {
         text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-        author: "Winston Churchill"
+        author: "Winston Churchill",
       },
       {
         text: "The only way to do great work is to love what you do.",
-        author: "Steve Jobs"
+        author: "Steve Jobs",
       },
       {
         text: "Life is what happens to you while you're busy making other plans.",
-        author: "John Lennon"
+        author: "John Lennon",
       },
       {
         text: "Believe you can and you're halfway there.",
-        author: "Theodore Roosevelt"
+        author: "Theodore Roosevelt",
       },
       {
         text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-        author: "Chinese Proverb"
-      }
+        author: "Chinese Proverb",
+      },
     ];
 
-    const quoteElement = document.querySelector('.quote-text');
-    const authorElement = document.querySelector('.quote-author');
-    
+    const quoteElement = document.querySelector(".quote-text");
+    const authorElement = document.querySelector(".quote-author");
+
     if (quoteElement && authorElement) {
       // Get random quote
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      
+
       // Set the quote
       quoteElement.textContent = `"${randomQuote.text}"`;
       authorElement.textContent = `- ${randomQuote.author}`;
-      
+
       // Save the selected quote for the day
       const today = new Date().toDateString();
-      const savedQuote = this.getPreference('dailyQuote');
-      
+      const savedQuote = this.getPreference("dailyQuote");
+
       if (!savedQuote || savedQuote.date !== today) {
-        this.savePreference('dailyQuote', {
+        this.savePreference("dailyQuote", {
           date: today,
-          quote: randomQuote
+          quote: randomQuote,
         });
       } else {
         // Use saved quote for today

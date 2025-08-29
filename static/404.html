@@ -173,12 +173,15 @@
           text-shadow: 0 0 20px var(--accent-primary);
         }
         to {
-          text-shadow: 0 0 30px var(--accent-primary), 0 0 40px var(--accent-secondary);
+          text-shadow:
+            0 0 30px var(--accent-primary),
+            0 0 40px var(--accent-secondary);
         }
       }
 
       @keyframes float {
-        0%, 100% {
+        0%,
+        100% {
           transform: translateY(0px) rotate(0deg);
         }
         50% {
@@ -226,34 +229,54 @@
         <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:var(--accent-primary);stop-opacity:0.8" />
-              <stop offset="100%" style="stop-color:var(--accent-secondary);stop-opacity:0.8" />
+              <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 0.8" />
+              <stop offset="100%" style="stop-color: var(--accent-secondary); stop-opacity: 0.8" />
             </linearGradient>
           </defs>
-          
+
           <!-- Broken computer screen -->
-          <rect x="50" y="40" width="200" height="120" rx="8" fill="url(#gradient)" opacity="0.3"/>
-          <rect x="60" y="50" width="180" height="90" rx="4" fill="var(--bg-primary)" stroke="url(#gradient)" stroke-width="2"/>
-          
+          <rect x="50" y="40" width="200" height="120" rx="8" fill="url(#gradient)" opacity="0.3" />
+          <rect
+            x="60"
+            y="50"
+            width="180"
+            height="90"
+            rx="4"
+            fill="var(--bg-primary)"
+            stroke="url(#gradient)"
+            stroke-width="2"
+          />
+
           <!-- Crack in screen -->
-          <path d="M 100 70 L 150 100 L 200 80 L 160 120" stroke="url(#gradient)" stroke-width="3" fill="none" opacity="0.8"/>
-          <path d="M 120 60 L 180 110" stroke="url(#gradient)" stroke-width="2" fill="none" opacity="0.6"/>
-          
+          <path
+            d="M 100 70 L 150 100 L 200 80 L 160 120"
+            stroke="url(#gradient)"
+            stroke-width="3"
+            fill="none"
+            opacity="0.8"
+          />
+          <path d="M 120 60 L 180 110" stroke="url(#gradient)" stroke-width="2" fill="none" opacity="0.6" />
+
           <!-- Stand -->
-          <rect x="130" y="160" width="40" height="20" rx="4" fill="url(#gradient)" opacity="0.6"/>
-          <rect x="110" y="175" width="80" height="8" rx="4" fill="url(#gradient)" opacity="0.4"/>
-          
+          <rect x="130" y="160" width="40" height="20" rx="4" fill="url(#gradient)" opacity="0.6" />
+          <rect x="110" y="175" width="80" height="8" rx="4" fill="url(#gradient)" opacity="0.4" />
+
           <!-- Warning symbol -->
-          <circle cx="150" cy="95" r="25" fill="var(--bg-primary)" stroke="url(#gradient)" stroke-width="2"/>
-          <path d="M 150 85 L 150 100 M 150 105 L 150 108" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="95" r="25" fill="var(--bg-primary)" stroke="url(#gradient)" stroke-width="2" />
+          <path
+            d="M 150 85 L 150 100 M 150 105 L 150 108"
+            stroke="url(#gradient)"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
         </svg>
       </div>
 
       <div class="error-code">404</div>
       <h1 class="error-title">Page Not Found</h1>
       <p class="error-message">
-        The page you're looking for seems to have vanished into the digital void. 
-        Don't worry though - our navigation system is still working perfectly!
+        The page you're looking for seems to have vanished into the digital void. Don't worry though - our navigation
+        system is still working perfectly!
       </p>
 
       <div class="error-actions">
@@ -285,25 +308,25 @@
     <!-- Theme System -->
     <script src="assets/js/themes.js"></script>
     <script src="assets/js/settings.js"></script>
-    
+
     <script>
       // Initialize theme system
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         try {
-          if (typeof initializeThemes === 'function') {
+          if (typeof initializeThemes === "function") {
             initializeThemes();
           }
-          if (typeof loadSettings === 'function') {
+          if (typeof loadSettings === "function") {
             loadSettings();
           }
         } catch (error) {
-          console.log('Theme system not available');
+          console.log("Theme system not available");
         }
       });
 
       // Add some interactivity
-      document.addEventListener('mousemove', function(e) {
-        const shapes = document.querySelectorAll('.shape');
+      document.addEventListener("mousemove", function (e) {
+        const shapes = document.querySelectorAll(".shape");
         const x = e.clientX / window.innerWidth;
         const y = e.clientY / window.innerHeight;
 
@@ -311,7 +334,7 @@
           const speed = (index + 1) * 0.5;
           const xOffset = (x - 0.5) * speed * 20;
           const yOffset = (y - 0.5) * speed * 20;
-          
+
           shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
         });
       });

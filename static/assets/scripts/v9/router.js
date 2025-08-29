@@ -33,7 +33,7 @@ class Router {
       if (link && link.href) {
         const url = new URL(link.href);
         const path = url.pathname;
-        
+
         // Only handle SPA routes, let external links work normally
         if (this.routes.has(path)) {
           e.preventDefault();
@@ -615,10 +615,10 @@ class SettingsController extends PageController {
   }
 
   createThemeCreatorModal() {
-    const modal = document.createElement('div');
-    modal.id = 'theme-creator-modal';
-    modal.className = 'theme-creator-modal';
-    modal.style.display = 'none';
+    const modal = document.createElement("div");
+    modal.id = "theme-creator-modal";
+    modal.className = "theme-creator-modal";
+    modal.style.display = "none";
     modal.innerHTML = `
       <div class="modal-overlay"></div>
       <div class="modal-container">
@@ -691,7 +691,7 @@ class SettingsController extends PageController {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(modal);
   }
 
@@ -699,19 +699,19 @@ class SettingsController extends PageController {
     // Theme selector
     const themeSelect = $("#theme-select");
     if (themeSelect) {
-      themeSelect.value = localStorage.getItem('theme') || 'default';
-      themeSelect.addEventListener('change', (e) => {
+      themeSelect.value = localStorage.getItem("theme") || "default";
+      themeSelect.addEventListener("change", (e) => {
         const theme = e.target.value;
         this.applyTheme(theme);
-        localStorage.setItem('theme', theme);
+        localStorage.setItem("theme", theme);
       });
     }
 
     // Create theme button
     const createThemeBtn = $("#create-theme-btn");
     if (createThemeBtn) {
-      createThemeBtn.addEventListener('click', () => {
-        document.getElementById('theme-creator-modal').style.display = 'flex';
+      createThemeBtn.addEventListener("click", () => {
+        document.getElementById("theme-creator-modal").style.display = "flex";
       });
     }
 
@@ -721,25 +721,27 @@ class SettingsController extends PageController {
     // Privacy settings
     const abCloakToggle = $("#ab-cloak-toggle");
     if (abCloakToggle) {
-      abCloakToggle.checked = localStorage.getItem('ab') === 'true';
-      abCloakToggle.addEventListener('change', (e) => {
-        localStorage.setItem('ab', e.target.checked.toString());
+      abCloakToggle.checked = localStorage.getItem("ab") === "true";
+      abCloakToggle.addEventListener("change", (e) => {
+        localStorage.setItem("ab", e.target.checked.toString());
       });
     }
 
     const tabCloakToggle = $("#tab-cloak-toggle");
     if (tabCloakToggle) {
-      tabCloakToggle.checked = localStorage.getItem('tab-cloak-enabled') === 'true';
-      tabCloakToggle.addEventListener('change', (e) => {
-        localStorage.setItem('tab-cloak-enabled', e.target.checked.toString());
+      tabCloakToggle.checked =
+        localStorage.getItem("tab-cloak-enabled") === "true";
+      tabCloakToggle.addEventListener("change", (e) => {
+        localStorage.setItem("tab-cloak-enabled", e.target.checked.toString());
       });
     }
 
     // Screenshot protection settings
     const screenshotProtectionToggle = $("#screenshot-protection-toggle");
     if (screenshotProtectionToggle) {
-      screenshotProtectionToggle.checked = localStorage.getItem('screenshot-protection') === 'true';
-      screenshotProtectionToggle.addEventListener('change', (e) => {
+      screenshotProtectionToggle.checked =
+        localStorage.getItem("screenshot-protection") === "true";
+      screenshotProtectionToggle.addEventListener("change", (e) => {
         if (window.ScreenshotProtection) {
           if (e.target.checked) {
             window.ScreenshotProtection.enable();
@@ -747,19 +749,25 @@ class SettingsController extends PageController {
             window.ScreenshotProtection.disable();
           }
         } else {
-          localStorage.setItem('screenshot-protection', e.target.checked.toString());
+          localStorage.setItem(
+            "screenshot-protection",
+            e.target.checked.toString()
+          );
         }
       });
     }
 
     const testScreenshotProtection = $("#test-screenshot-protection");
     if (testScreenshotProtection) {
-      testScreenshotProtection.addEventListener('click', () => {
+      testScreenshotProtection.addEventListener("click", () => {
         if (window.ScreenshotProtection) {
           window.ScreenshotProtection.test();
         } else {
           if (window.showNotification) {
-            window.showNotification('Screenshot protection not available', 'error');
+            window.showNotification(
+              "Screenshot protection not available",
+              "error"
+            );
           }
         }
       });
@@ -768,46 +776,59 @@ class SettingsController extends PageController {
     // Performance settings
     const particlesToggle = $("#particles-toggle");
     if (particlesToggle) {
-      particlesToggle.checked = localStorage.getItem('Particles') !== 'false';
-      particlesToggle.addEventListener('change', (e) => {
-        localStorage.setItem('Particles', e.target.checked.toString());
+      particlesToggle.checked = localStorage.getItem("Particles") !== "false";
+      particlesToggle.addEventListener("change", (e) => {
+        localStorage.setItem("Particles", e.target.checked.toString());
         if (window.showNotification) {
-          window.showNotification('Reload the page to see particle changes', 'info');
+          window.showNotification(
+            "Reload the page to see particle changes",
+            "info"
+          );
         }
       });
     }
 
     const animationsToggle = $("#animations-toggle");
     if (animationsToggle) {
-      animationsToggle.checked = localStorage.getItem('animations') !== 'false';
-      animationsToggle.addEventListener('change', (e) => {
-        localStorage.setItem('animations', e.target.checked.toString());
-        document.documentElement.classList.toggle('no-animations', !e.target.checked);
+      animationsToggle.checked = localStorage.getItem("animations") !== "false";
+      animationsToggle.addEventListener("change", (e) => {
+        localStorage.setItem("animations", e.target.checked.toString());
+        document.documentElement.classList.toggle(
+          "no-animations",
+          !e.target.checked
+        );
       });
     }
 
     // Search and proxy settings
     const searchEngineSelect = $("#search-engine-select");
     if (searchEngineSelect) {
-      searchEngineSelect.value = localStorage.getItem('search-engine') || 'https://www.google.com/search?q=';
-      searchEngineSelect.addEventListener('change', (e) => {
-        localStorage.setItem('search-engine', e.target.value);
+      searchEngineSelect.value =
+        localStorage.getItem("search-engine") ||
+        "https://www.google.com/search?q=";
+      searchEngineSelect.addEventListener("change", (e) => {
+        localStorage.setItem("search-engine", e.target.value);
       });
     }
 
     const proxySelect = $("#proxy-select");
     if (proxySelect) {
-      proxySelect.value = localStorage.getItem('proxy-service') || 'ultraviolet';
-      proxySelect.addEventListener('change', (e) => {
-        localStorage.setItem('proxy-service', e.target.value);
+      proxySelect.value =
+        localStorage.getItem("proxy-service") || "ultraviolet";
+      proxySelect.addEventListener("change", (e) => {
+        localStorage.setItem("proxy-service", e.target.value);
       });
     }
 
     // Data management
     const resetBtn = $("#reset-settings-btn");
     if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset all settings? This cannot be undone.')) {
+      resetBtn.addEventListener("click", () => {
+        if (
+          confirm(
+            "Are you sure you want to reset all settings? This cannot be undone."
+          )
+        ) {
           localStorage.clear();
           sessionStorage.clear();
           location.reload();
@@ -817,14 +838,14 @@ class SettingsController extends PageController {
 
     const exportBtn = $("#export-settings-btn");
     if (exportBtn) {
-      exportBtn.addEventListener('click', () => {
+      exportBtn.addEventListener("click", () => {
         this.exportSettings();
       });
     }
 
     const importBtn = $("#import-settings-btn");
     if (importBtn) {
-      importBtn.addEventListener('click', () => {
+      importBtn.addEventListener("click", () => {
         this.importSettings();
       });
     }
@@ -834,31 +855,39 @@ class SettingsController extends PageController {
     // Close modal events
     const closeBtn = $("#close-theme-creator");
     const cancelBtn = $("#cancel-theme");
-    const modal = document.getElementById('theme-creator-modal');
-    
-    [closeBtn, cancelBtn].forEach(btn => {
+    const modal = document.getElementById("theme-creator-modal");
+
+    [closeBtn, cancelBtn].forEach((btn) => {
       if (btn) {
-        btn.addEventListener('click', () => {
-          modal.style.display = 'none';
+        btn.addEventListener("click", () => {
+          modal.style.display = "none";
         });
       }
     });
 
     // Close on overlay click
     if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal-overlay')) {
-          modal.style.display = 'none';
+      modal.addEventListener("click", (e) => {
+        if (e.target.classList.contains("modal-overlay")) {
+          modal.style.display = "none";
         }
       });
     }
 
     // Color input events for live preview
-    const colorInputs = ['bg-primary', 'bg-secondary', 'bg-card', 'text-primary', 'text-secondary', 'accent-primary', 'accent-secondary'];
-    colorInputs.forEach(inputId => {
+    const colorInputs = [
+      "bg-primary",
+      "bg-secondary",
+      "bg-card",
+      "text-primary",
+      "text-secondary",
+      "accent-primary",
+      "accent-secondary",
+    ];
+    colorInputs.forEach((inputId) => {
       const input = document.getElementById(inputId);
       if (input) {
-        input.addEventListener('input', () => {
+        input.addEventListener("input", () => {
           this.updateThemePreview();
         });
       }
@@ -867,77 +896,89 @@ class SettingsController extends PageController {
     // Save theme button
     const saveBtn = $("#save-theme");
     if (saveBtn) {
-      saveBtn.addEventListener('click', () => {
+      saveBtn.addEventListener("click", () => {
         this.saveCustomTheme();
       });
     }
   }
 
   updateThemePreview() {
-    const preview = document.getElementById('theme-preview');
+    const preview = document.getElementById("theme-preview");
     if (!preview) return;
 
     const colors = {
-      bgPrimary: document.getElementById('bg-primary')?.value || '#0a0a0f',
-      bgSecondary: document.getElementById('bg-secondary')?.value || '#1a1a2e',
-      bgCard: document.getElementById('bg-card')?.value || '#16213e',
-      textPrimary: document.getElementById('text-primary')?.value || '#ffffff',
-      textSecondary: document.getElementById('text-secondary')?.value || '#a0a0a0',
-      accentPrimary: document.getElementById('accent-primary')?.value || '#4f46e5',
-      accentSecondary: document.getElementById('accent-secondary')?.value || '#7c3aed',
+      bgPrimary: document.getElementById("bg-primary")?.value || "#0a0a0f",
+      bgSecondary: document.getElementById("bg-secondary")?.value || "#1a1a2e",
+      bgCard: document.getElementById("bg-card")?.value || "#16213e",
+      textPrimary: document.getElementById("text-primary")?.value || "#ffffff",
+      textSecondary:
+        document.getElementById("text-secondary")?.value || "#a0a0a0",
+      accentPrimary:
+        document.getElementById("accent-primary")?.value || "#4f46e5",
+      accentSecondary:
+        document.getElementById("accent-secondary")?.value || "#7c3aed",
     };
 
     preview.style.background = colors.bgPrimary;
-    const card = preview.querySelector('.preview-card');
+    const card = preview.querySelector(".preview-card");
     if (card) {
       card.style.background = colors.bgCard;
       card.style.color = colors.textPrimary;
       card.style.border = `1px solid ${colors.accentPrimary}`;
-      
-      const title = card.querySelector('h5');
+
+      const title = card.querySelector("h5");
       if (title) title.style.color = colors.textPrimary;
-      
-      const text = card.querySelector('p');
+
+      const text = card.querySelector("p");
       if (text) text.style.color = colors.textSecondary;
-      
-      const btn = card.querySelector('.preview-btn');
+
+      const btn = card.querySelector(".preview-btn");
       if (btn) {
         btn.style.background = `linear-gradient(45deg, ${colors.accentPrimary}, ${colors.accentSecondary})`;
-        btn.style.color = '#ffffff';
+        btn.style.color = "#ffffff";
         btn.style.border = `1px solid ${colors.accentPrimary}`;
       }
     }
   }
 
   saveCustomTheme() {
-    const themeName = document.getElementById('theme-name')?.value || 'Custom Theme';
-    
+    const themeName =
+      document.getElementById("theme-name")?.value || "Custom Theme";
+
     const customTheme = {
       name: themeName,
       colors: {
-        bgPrimary: document.getElementById('bg-primary')?.value || '#0a0a0f',
-        bgSecondary: document.getElementById('bg-secondary')?.value || '#1a1a2e',
-        bgCard: document.getElementById('bg-card')?.value || '#16213e',
-        textPrimary: document.getElementById('text-primary')?.value || '#ffffff',
-        textSecondary: document.getElementById('text-secondary')?.value || '#a0a0a0',
-        accentPrimary: document.getElementById('accent-primary')?.value || '#4f46e5',
-        accentSecondary: document.getElementById('accent-secondary')?.value || '#7c3aed',
-      }
+        bgPrimary: document.getElementById("bg-primary")?.value || "#0a0a0f",
+        bgSecondary:
+          document.getElementById("bg-secondary")?.value || "#1a1a2e",
+        bgCard: document.getElementById("bg-card")?.value || "#16213e",
+        textPrimary:
+          document.getElementById("text-primary")?.value || "#ffffff",
+        textSecondary:
+          document.getElementById("text-secondary")?.value || "#a0a0a0",
+        accentPrimary:
+          document.getElementById("accent-primary")?.value || "#4f46e5",
+        accentSecondary:
+          document.getElementById("accent-secondary")?.value || "#7c3aed",
+      },
     };
 
     // Save to localStorage
-    localStorage.setItem('custom-theme', JSON.stringify(customTheme));
-    
+    localStorage.setItem("custom-theme", JSON.stringify(customTheme));
+
     // Apply the theme
     this.applyCustomTheme(customTheme);
-    localStorage.setItem('theme', 'custom');
-    
+    localStorage.setItem("theme", "custom");
+
     // Close modal and update selector
-    document.getElementById('theme-creator-modal').style.display = 'none';
-    document.getElementById('theme-select').value = 'custom';
-    
+    document.getElementById("theme-creator-modal").style.display = "none";
+    document.getElementById("theme-select").value = "custom";
+
     if (window.showNotification) {
-      window.showNotification(`Custom theme "${themeName}" saved successfully!`, 'success');
+      window.showNotification(
+        `Custom theme "${themeName}" saved successfully!`,
+        "success"
+      );
     }
   }
 
@@ -955,16 +996,16 @@ class SettingsController extends PageController {
         --gradient-primary: linear-gradient(45deg, ${theme.colors.accentPrimary}, ${theme.colors.accentSecondary});
       }
     `;
-    
+
     // Remove existing custom theme
-    const existingCustom = document.getElementById('custom-theme-style');
+    const existingCustom = document.getElementById("custom-theme-style");
     if (existingCustom) {
       existingCustom.remove();
     }
-    
+
     // Add new custom theme
-    const style = document.createElement('style');
-    style.id = 'custom-theme-style';
+    const style = document.createElement("style");
+    style.id = "custom-theme-style";
     style.textContent = css;
     document.head.appendChild(style);
   }
@@ -975,121 +1016,128 @@ class SettingsController extends PageController {
     if (existingTheme) {
       existingTheme.remove();
     }
-    
-    const existingCustom = document.getElementById('custom-theme-style');
+
+    const existingCustom = document.getElementById("custom-theme-style");
     if (existingCustom) {
       existingCustom.remove();
     }
 
-    if (theme === 'custom') {
-      const customTheme = JSON.parse(localStorage.getItem('custom-theme') || '{}');
+    if (theme === "custom") {
+      const customTheme = JSON.parse(
+        localStorage.getItem("custom-theme") || "{}"
+      );
       if (customTheme.colors) {
         this.applyCustomTheme(customTheme);
       }
-    } else if (theme && theme !== 'default') {
+    } else if (theme && theme !== "default") {
       const themeEle = document.createElement("link");
       themeEle.rel = "stylesheet";
-      
-      if (theme.startsWith('catppuccin')) {
-        const variant = theme.replace('catppuccin', '').toLowerCase();
+
+      if (theme.startsWith("catppuccin")) {
+        const variant = theme.replace("catppuccin", "").toLowerCase();
         themeEle.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
       } else {
         themeEle.href = `/assets/styles/themes/${theme}.css?v=1`;
       }
-      
+
       document.head.appendChild(themeEle);
     }
   }
 
   loadCurrentSettings() {
     // Load and apply current theme
-    const currentTheme = localStorage.getItem('theme') || 'default';
+    const currentTheme = localStorage.getItem("theme") || "default";
     this.applyTheme(currentTheme);
   }
 
   exportSettings() {
     const settings = {
-      theme: localStorage.getItem('theme'),
-      customTheme: localStorage.getItem('custom-theme'),
-      particles: localStorage.getItem('Particles'),
-      animations: localStorage.getItem('animations'),
-      abCloak: localStorage.getItem('ab'),
-      tabCloak: localStorage.getItem('tab-cloak-enabled'),
-      searchEngine: localStorage.getItem('search-engine'),
-      proxyService: localStorage.getItem('proxy-service'),
+      theme: localStorage.getItem("theme"),
+      customTheme: localStorage.getItem("custom-theme"),
+      particles: localStorage.getItem("Particles"),
+      animations: localStorage.getItem("animations"),
+      abCloak: localStorage.getItem("ab"),
+      tabCloak: localStorage.getItem("tab-cloak-enabled"),
+      searchEngine: localStorage.getItem("search-engine"),
+      proxyService: localStorage.getItem("proxy-service"),
     };
 
     const dataStr = JSON.stringify(settings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.href = url;
-    link.download = 'slowguardian-settings.json';
+    link.download = "slowguardian-settings.json";
     link.click();
-    
+
     URL.revokeObjectURL(url);
-    
+
     if (window.showNotification) {
-      window.showNotification('Settings exported successfully!', 'success');
+      window.showNotification("Settings exported successfully!", "success");
     }
   }
 
   importSettings() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+
     input.onchange = (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
           const settings = JSON.parse(e.target.result);
-          
+
           // Apply imported settings
           Object.entries(settings).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
-              if (key === 'customTheme') {
-                localStorage.setItem('custom-theme', value);
+              if (key === "customTheme") {
+                localStorage.setItem("custom-theme", value);
               } else {
                 const storageKey = {
-                  theme: 'theme',
-                  particles: 'Particles',
-                  animations: 'animations',
-                  abCloak: 'ab',
-                  tabCloak: 'tab-cloak-enabled',
-                  searchEngine: 'search-engine',
-                  proxyService: 'proxy-service'
+                  theme: "theme",
+                  particles: "Particles",
+                  animations: "animations",
+                  abCloak: "ab",
+                  tabCloak: "tab-cloak-enabled",
+                  searchEngine: "search-engine",
+                  proxyService: "proxy-service",
                 }[key];
-                
+
                 if (storageKey) {
                   localStorage.setItem(storageKey, value);
                 }
               }
             }
           });
-          
+
           if (window.showNotification) {
-            window.showNotification('Settings imported successfully! Reloading page...', 'success');
+            window.showNotification(
+              "Settings imported successfully! Reloading page...",
+              "success"
+            );
           }
-          
+
           setTimeout(() => {
             location.reload();
           }, 1500);
-          
         } catch (error) {
           if (window.showNotification) {
-            window.showNotification('Failed to import settings. Invalid file format.', 'error');
+            window.showNotification(
+              "Failed to import settings. Invalid file format.",
+              "error"
+            );
           }
         }
       };
-      
+
       reader.readAsText(file);
     };
-    
+
     input.click();
   }
 }

@@ -16,26 +16,31 @@ class AdminStore {
     this.globalPause = false;
     this.globalPausePassword = null;
     this.adminCredentials = new Map(); // adminId -> { username, password }
-    
+
     // Initialize with default admin if none exists
     this.initializeDefaultAdmin();
   }
 
   initializeDefaultAdmin() {
     // Use config settings for default admin if available
-    if (global.config && global.config.developerMode && global.config.developerMode.defaultAdminCredentials) {
-      const { username, password } = global.config.developerMode.defaultAdminCredentials;
-      this.adminCredentials.set('admin', {
+    if (
+      global.config &&
+      global.config.developerMode &&
+      global.config.developerMode.defaultAdminCredentials
+    ) {
+      const { username, password } =
+        global.config.developerMode.defaultAdminCredentials;
+      this.adminCredentials.set("admin", {
         username,
         password,
-        role: 'super_admin'
+        role: "super_admin",
       });
     } else {
       // Fallback default admin account (should be changed in production)
-      this.adminCredentials.set('admin', {
-        username: 'admin',
-        password: 'SlowGuardian2024!', // Change this in production
-        role: 'super_admin'
+      this.adminCredentials.set("admin", {
+        username: "admin",
+        password: "SlowGuardian2024!", // Change this in production
+        role: "super_admin",
       });
     }
   }
@@ -45,9 +50,9 @@ class AdminStore {
     this.sessions.set(sessionId, {
       ...userData,
       lastSeen: new Date(),
-      isOnline: true
+      isOnline: true,
     });
-    
+
     // Also store user data
     this.users.set(userData.userId, userData);
     logger.info(`User session added: ${userData.userId}`);
@@ -73,15 +78,19 @@ class AdminStore {
   getOnlineUsers() {
     const onlineUsers = [];
     for (const [sessionId, session] of this.sessions) {
-      if (session.isOnline && Date.now() - session.lastSeen.getTime() < 5 * 60 * 1000) { // 5 minutes timeout
+      if (
+        session.isOnline &&
+        Date.now() - session.lastSeen.getTime() < 5 * 60 * 1000
+      ) {
+        // 5 minutes timeout
         onlineUsers.push({
           sessionId,
           userId: session.userId,
-          username: session.username || 'Anonymous',
+          username: session.username || "Anonymous",
           ip: session.ip,
           userAgent: session.userAgent,
           lastSeen: session.lastSeen,
-          joinedAt: session.joinedAt
+          joinedAt: session.joinedAt,
         });
       }
     }
@@ -89,7 +98,7 @@ class AdminStore {
   }
 
   // User Management
-  blockUser(userId, reason = 'Blocked by admin') {
+  blockUser(userId, reason = "Blocked by admin") {
     const user = this.users.get(userId);
     if (user) {
       user.isBlocked = true;
@@ -142,20 +151,22 @@ class AdminStore {
   }
 
   getBlockedSitesForUser(userId) {
-    return this.blockedSites.get(userId) ? Array.from(this.blockedSites.get(userId)) : [];
+    return this.blockedSites.get(userId)
+      ? Array.from(this.blockedSites.get(userId))
+      : [];
   }
 
   // Global Pause
   pauseGlobally(password) {
     this.globalPause = true;
     this.globalPausePassword = password;
-    logger.info('Global pause activated');
+    logger.info("Global pause activated");
   }
 
   unpauseGlobally() {
     this.globalPause = false;
     this.globalPausePassword = null;
-    logger.info('Global pause deactivated');
+    logger.info("Global pause deactivated");
   }
 
   isGloballyPaused() {
@@ -176,7 +187,7 @@ class AdminStore {
     return null;
   }
 
-  addAdmin(username, password, role = 'admin') {
+  addAdmin(username, password, role = "admin") {
     const adminId = `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     this.adminCredentials.set(adminId, { username, password, role });
     logger.info(`Admin account created: ${username}`);
@@ -197,7 +208,7 @@ class AdminStore {
       admins.push({
         adminId,
         username: creds.username,
-        role: creds.role
+        role: creds.role,
       });
     }
     return admins;
@@ -212,24 +223,26 @@ const adminStore = new AdminStore();
  */
 export function sessionTracker(req, res, next) {
   // Generate or get session ID
-  let sessionId = req.headers['x-session-id'] || req.ip + '_' + (req.headers['user-agent'] || '').slice(0, 50);
-  
+  let sessionId =
+    req.headers["x-session-id"] ||
+    req.ip + "_" + (req.headers["user-agent"] || "").slice(0, 50);
+
   // Update session
   const userData = {
     userId: sessionId,
     ip: req.ip,
-    userAgent: req.headers['user-agent'],
-    joinedAt: new Date()
+    userAgent: req.headers["user-agent"],
+    joinedAt: new Date(),
   };
 
   adminStore.addSession(sessionId, userData);
-  
+
   // Add session ID to response headers
-  res.setHeader('X-Session-ID', sessionId);
-  
+  res.setHeader("X-Session-ID", sessionId);
+
   req.sessionId = sessionId;
   req.adminStore = adminStore;
-  
+
   next();
 }
 
@@ -239,9 +252,9 @@ export function sessionTracker(req, res, next) {
 export function blockingEnforcer(req, res, next) {
   if (req.sessionId && adminStore.isUserBlocked(req.sessionId)) {
     return res.status(403).json({
-      error: 'Access Denied',
-      message: 'Your access has been restricted by an administrator.',
-      type: 'user_blocked'
+      error: "Access Denied",
+      message: "Your access has been restricted by an administrator.",
+      type: "user_blocked",
     });
   }
   next();
@@ -252,7 +265,7 @@ export function blockingEnforcer(req, res, next) {
  */
 export function pauseEnforcer(req, res, next) {
   // Skip pause for admin endpoints
-  if (req.path.startsWith('/api/admin')) {
+  if (req.path.startsWith("/api/admin")) {
     return next();
   }
 
@@ -345,25 +358,27 @@ export function pauseEnforcer(req, res, next) {
  * Middleware to check website blocking for specific users
  */
 export function websiteBlockingEnforcer(req, res, next) {
-  if (req.sessionId && req.path.startsWith('/a/')) {
+  if (req.sessionId && req.path.startsWith("/a/")) {
     // Extract domain from proxy URL
     const encodedUrl = req.path.substring(3); // Remove '/a/'
     try {
       // Decode the UV-encoded URL to get the actual domain
       const decodedUrl = decodeURIComponent(encodedUrl);
       const domain = new URL(decodedUrl).hostname;
-      
+
       if (adminStore.isSiteBlockedForUser(req.sessionId, domain)) {
         return res.status(403).json({
-          error: 'Website Blocked',
+          error: "Website Blocked",
           message: `Access to ${domain} has been restricted for your account.`,
-          type: 'site_blocked',
-          domain
+          type: "site_blocked",
+          domain,
         });
       }
     } catch (error) {
       // If URL parsing fails, continue (don't block due to parsing errors)
-      logger.warn(`Failed to parse proxy URL for blocking check: ${encodedUrl}`);
+      logger.warn(
+        `Failed to parse proxy URL for blocking check: ${encodedUrl}`
+      );
     }
   }
   next();
@@ -374,26 +389,26 @@ export function websiteBlockingEnforcer(req, res, next) {
  */
 export function adminAuth(req, res, next) {
   const authHeader = req.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Admin authentication required' });
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Admin authentication required" });
   }
 
   try {
     const token = authHeader.substring(7); // Remove 'Bearer '
-    const decoded = Buffer.from(token, 'base64').toString();
-    const [username, password] = decoded.split(':');
-    
+    const decoded = Buffer.from(token, "base64").toString();
+    const [username, password] = decoded.split(":");
+
     const admin = adminStore.verifyAdmin(username, password);
     if (!admin) {
-      return res.status(401).json({ error: 'Invalid admin credentials' });
+      return res.status(401).json({ error: "Invalid admin credentials" });
     }
 
     req.admin = admin;
     req.adminStore = adminStore;
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Invalid authentication token' });
+    return res.status(401).json({ error: "Invalid authentication token" });
   }
 }
 

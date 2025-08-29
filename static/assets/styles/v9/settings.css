@@ -440,7 +440,7 @@
   .version-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .version-actions {
     flex-direction: column;
   }

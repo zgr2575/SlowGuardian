@@ -37,79 +37,88 @@ document.addEventListener("DOMContentLoaded", function () {
   const authToggle = document.getElementById("auth-toggle");
   const authCredentials = document.getElementById("auth-credentials");
   const saveAuthBtn = document.getElementById("save-auth-btn");
-  
+
   if (authToggle) {
     // Set initial state
-    authToggle.checked = localStorage.getItem('sg-auth-enabled') === 'true';
+    authToggle.checked = localStorage.getItem("sg-auth-enabled") === "true";
     if (authToggle.checked) {
-      authCredentials.style.display = 'block';
+      authCredentials.style.display = "block";
       // Load existing credentials if any
-      const existingUsername = localStorage.getItem('sg-auth-username');
+      const existingUsername = localStorage.getItem("sg-auth-username");
       if (existingUsername) {
-        document.getElementById('auth-username-setting').value = existingUsername;
+        document.getElementById("auth-username-setting").value =
+          existingUsername;
       }
     }
-    
-    authToggle.addEventListener("change", function() {
+
+    authToggle.addEventListener("change", function () {
       if (this.checked) {
-        authCredentials.style.display = 'block';
+        authCredentials.style.display = "block";
       } else {
-        authCredentials.style.display = 'none';
+        authCredentials.style.display = "none";
         // Disable auth
         AuthSystem.disable();
       }
     });
   }
-  
+
   if (saveAuthBtn) {
-    saveAuthBtn.addEventListener("click", function() {
-      const username = document.getElementById('auth-username-setting').value.trim();
-      const password = document.getElementById('auth-password-setting').value;
-      
+    saveAuthBtn.addEventListener("click", function () {
+      const username = document
+        .getElementById("auth-username-setting")
+        .value.trim();
+      const password = document.getElementById("auth-password-setting").value;
+
       if (username && password) {
         AuthSystem.enable(username, password);
         // Clear password field for security
-        document.getElementById('auth-password-setting').value = '';
+        document.getElementById("auth-password-setting").value = "";
       } else {
         if (window.showNotification) {
-          window.showNotification('Please enter both username and password', 'error');
+          window.showNotification(
+            "Please enter both username and password",
+            "error"
+          );
         }
       }
     });
   }
 
   // Add proper event listeners to replace inline handlers
-  
+
   // About:Blank functionality
   const abSwitch = document.getElementById("ab-settings-switch");
   const abPopupBtn = document.getElementById("ab-popup-btn");
-  
+
   if (abSwitch) {
     // Set initial state - default to false for safety to prevent tab loops
     const abEnabled = localStorage.getItem("ab");
     abSwitch.checked = abEnabled === "true";
-    
+
     // Set default to false if not set to prevent runaway tabs
     if (abEnabled === null) {
       localStorage.setItem("ab", "false");
     }
-    
+
     abSwitch.addEventListener("change", toggleAB);
   }
-  
+
   if (abPopupBtn) {
     abPopupBtn.addEventListener("click", AB);
   }
 
   // Screenshot Protection functionality
-  const screenshotProtectionSwitch = document.getElementById("screenshot-protection-switch");
+  const screenshotProtectionSwitch = document.getElementById(
+    "screenshot-protection-switch"
+  );
   const testProtectionBtn = document.getElementById("test-protection-btn");
-  
+
   if (screenshotProtectionSwitch) {
     // Set initial state
-    screenshotProtectionSwitch.checked = localStorage.getItem('screenshot-protection') === 'true';
-    
-    screenshotProtectionSwitch.addEventListener("change", function() {
+    screenshotProtectionSwitch.checked =
+      localStorage.getItem("screenshot-protection") === "true";
+
+    screenshotProtectionSwitch.addEventListener("change", function () {
       if (this.checked) {
         window.ScreenshotProtection.enable();
       } else {
@@ -117,15 +126,18 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  
+
   if (testProtectionBtn) {
-    testProtectionBtn.addEventListener("click", function() {
+    testProtectionBtn.addEventListener("click", function () {
       if (window.ScreenshotProtection) {
         window.ScreenshotProtection.activateProtection();
         setTimeout(() => {
           window.ScreenshotProtection.deactivateProtection();
           if (window.showNotification) {
-            window.showNotification('Screenshot protection test completed', 'info');
+            window.showNotification(
+              "Screenshot protection test completed",
+              "info"
+            );
           }
         }, 3000);
       }
@@ -142,24 +154,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const dropdown = document.getElementById("dropdown");
   const saveTabCloakBtn = document.getElementById("save-tab-cloak-btn");
   const resetTabCloakBtn = document.getElementById("reset-tab-cloak-btn");
-  
+
   if (dropdown) {
-    dropdown.addEventListener("change", function() {
+    dropdown.addEventListener("change", function () {
       handleDropdownChange(this);
     });
   }
-  
+
   if (saveTabCloakBtn) {
-    saveTabCloakBtn.addEventListener("click", function() {
-      CustomIcon(); 
-      CustomName(); 
+    saveTabCloakBtn.addEventListener("click", function () {
+      CustomIcon();
+      CustomName();
       redirectToMainDomain();
     });
   }
-  
+
   if (resetTabCloakBtn) {
-    resetTabCloakBtn.addEventListener("click", function() {
-      ResetCustomCloak(); 
+    resetTabCloakBtn.addEventListener("click", function () {
+      ResetCustomCloak();
       redirectToMainDomain();
     });
   }
@@ -167,13 +179,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Search engine
   const engineSelect = document.getElementById("engine");
   const saveEngineBtn = document.getElementById("save-engine-btn");
-  
+
   if (engineSelect) {
-    engineSelect.addEventListener("change", function() {
+    engineSelect.addEventListener("change", function () {
       EngineChange(this);
     });
   }
-  
+
   if (saveEngineBtn) {
     saveEngineBtn.addEventListener("click", SaveEngine);
   }
@@ -181,27 +193,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // Advertisements
   const adTypeSelect = document.getElementById("adType");
   if (adTypeSelect) {
-    adTypeSelect.addEventListener("change", function() {
+    adTypeSelect.addEventListener("change", function () {
       adChange(this);
     });
   }
 
   // Enhanced Themes functionality with Custom Theme Creator
   const themeDropdown = document.getElementById("theme-dropdown");
-  const createCustomThemeBtn = document.getElementById("create-custom-theme-btn");
+  const createCustomThemeBtn = document.getElementById(
+    "create-custom-theme-btn"
+  );
   const exportThemeBtn = document.getElementById("export-theme-btn");
   const importThemeBtn = document.getElementById("import-theme-btn");
-  
+
   if (themeDropdown) {
     // Set current theme value
     const currentTheme = localStorage.getItem("theme") || "d";
     themeDropdown.value = currentTheme;
-    
+
     // Add change listener
     themeDropdown.addEventListener("change", function () {
       const selectedTheme = this.value;
       localStorage.setItem("theme", selectedTheme);
-      
+
       // Apply theme immediately via utils
       if (window.theme && window.theme.set) {
         window.theme.set(selectedTheme);
@@ -209,149 +223,161 @@ document.addEventListener("DOMContentLoaded", function () {
         // Fallback to legacy method
         applyTheme(selectedTheme);
       }
-      
+
       // Show notification
       if (window.showNotification) {
-        window.showNotification(`Theme changed to ${this.options[this.selectedIndex].text}`, 'success');
+        window.showNotification(
+          `Theme changed to ${this.options[this.selectedIndex].text}`,
+          "success"
+        );
       }
     });
   }
-  
+
   // Custom Theme Creator
   if (createCustomThemeBtn) {
-    createCustomThemeBtn.addEventListener("click", function() {
+    createCustomThemeBtn.addEventListener("click", function () {
       openCustomThemeModal();
     });
   }
-  
+
   if (exportThemeBtn) {
-    exportThemeBtn.addEventListener("click", function() {
+    exportThemeBtn.addEventListener("click", function () {
       exportCurrentTheme();
     });
   }
-  
+
   if (importThemeBtn) {
-    importThemeBtn.addEventListener("click", function() {
+    importThemeBtn.addEventListener("click", function () {
       openImportThemeModal();
     });
   }
-  
+
   // Theme Creator Modal Functions
   function openCustomThemeModal() {
-    const modal = document.getElementById('custom-theme-modal');
+    const modal = document.getElementById("custom-theme-modal");
     if (modal) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('show'), 10);
-      
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("show"), 10);
+
       // Initialize with current theme colors or defaults
       initializeThemeCreator();
       updateThemePreview();
     }
   }
-  
+
   function closeCustomThemeModal() {
-    const modal = document.getElementById('custom-theme-modal');
+    const modal = document.getElementById("custom-theme-modal");
     if (modal) {
-      modal.classList.remove('show');
-      setTimeout(() => modal.style.display = 'none', 300);
+      modal.classList.remove("show");
+      setTimeout(() => (modal.style.display = "none"), 300);
     }
   }
-  
+
   function initializeThemeCreator() {
     // Set default values for theme creator
     const defaults = {
-      'theme-name': 'My Custom Theme',
-      'primary-bg-color': '#1a1a2e',
-      'secondary-bg-color': '#16213e',
-      'accent-color': '#3b82f6',
-      'text-primary-color': '#ffffff',
-      'text-secondary-color': '#b8bcc8',
-      'gradient-start-color': '#1a1a2e',
-      'gradient-end-color': '#16213e'
+      "theme-name": "My Custom Theme",
+      "primary-bg-color": "#1a1a2e",
+      "secondary-bg-color": "#16213e",
+      "accent-color": "#3b82f6",
+      "text-primary-color": "#ffffff",
+      "text-secondary-color": "#b8bcc8",
+      "gradient-start-color": "#1a1a2e",
+      "gradient-end-color": "#16213e",
     };
-    
+
     Object.entries(defaults).forEach(([id, value]) => {
       const element = document.getElementById(id);
       if (element) {
         element.value = value;
       }
     });
-    
+
     // Add event listeners for live preview
-    Object.keys(defaults).forEach(id => {
+    Object.keys(defaults).forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        element.addEventListener('input', updateThemePreview);
+        element.addEventListener("input", updateThemePreview);
       }
     });
   }
-  
+
   function updateThemePreview() {
-    const previewContainer = document.getElementById('theme-preview-container');
+    const previewContainer = document.getElementById("theme-preview-container");
     if (!previewContainer) return;
-    
+
     // Get color values safely
-    const primaryBg = document.getElementById('primary-bg-color')?.value || '#1a1a2e';
-    const secondaryBg = document.getElementById('secondary-bg-color')?.value || '#16213e';
-    const accentColor = document.getElementById('accent-color')?.value || '#3b82f6';
-    const textPrimary = document.getElementById('text-primary-color')?.value || '#ffffff';
-    const textSecondary = document.getElementById('text-secondary-color')?.value || '#b8bcc8';
-    const gradientStart = document.getElementById('gradient-start-color')?.value || '#1a1a2e';
-    const gradientEnd = document.getElementById('gradient-end-color')?.value || '#16213e';
-    
+    const primaryBg =
+      document.getElementById("primary-bg-color")?.value || "#1a1a2e";
+    const secondaryBg =
+      document.getElementById("secondary-bg-color")?.value || "#16213e";
+    const accentColor =
+      document.getElementById("accent-color")?.value || "#3b82f6";
+    const textPrimary =
+      document.getElementById("text-primary-color")?.value || "#ffffff";
+    const textSecondary =
+      document.getElementById("text-secondary-color")?.value || "#b8bcc8";
+    const gradientStart =
+      document.getElementById("gradient-start-color")?.value || "#1a1a2e";
+    const gradientEnd =
+      document.getElementById("gradient-end-color")?.value || "#16213e";
+
     // Apply preview styles with smooth transitions
-    previewContainer.style.transition = 'all 0.3s ease';
+    previewContainer.style.transition = "all 0.3s ease";
     previewContainer.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
-    
-    const navbar = previewContainer.querySelector('.preview-navbar');
+
+    const navbar = previewContainer.querySelector(".preview-navbar");
     if (navbar) {
-      navbar.style.transition = 'all 0.3s ease';
+      navbar.style.transition = "all 0.3s ease";
       navbar.style.background = `rgba(${hexToRgb(primaryBg)}, 0.95)`;
       navbar.style.borderBottomColor = accentColor;
     }
-    
-    const content = previewContainer.querySelector('.preview-content');
+
+    const content = previewContainer.querySelector(".preview-content");
     if (content) {
-      content.style.transition = 'all 0.3s ease';
+      content.style.transition = "all 0.3s ease";
       content.style.background = `linear-gradient(135deg, ${gradientStart}, ${gradientEnd})`;
     }
-    
-    const card = previewContainer.querySelector('.preview-card');
+
+    const card = previewContainer.querySelector(".preview-card");
     if (card) {
-      card.style.transition = 'all 0.3s ease';
+      card.style.transition = "all 0.3s ease";
       card.style.background = secondaryBg;
       card.style.borderColor = accentColor;
       card.style.boxShadow = `0 4px 12px rgba(${hexToRgb(accentColor)}, 0.2)`;
     }
-    
+
     // Update text colors with smooth transitions
-    const h2 = previewContainer.querySelector('h2');
-    const h3 = previewContainer.querySelector('h3');
-    const paragraphs = previewContainer.querySelectorAll('p');
-    const brandElement = previewContainer.querySelector('.preview-brand');
-    
+    const h2 = previewContainer.querySelector("h2");
+    const h3 = previewContainer.querySelector("h3");
+    const paragraphs = previewContainer.querySelectorAll("p");
+    const brandElement = previewContainer.querySelector(".preview-brand");
+
     if (h2) {
-      h2.style.transition = 'color 0.3s ease';
+      h2.style.transition = "color 0.3s ease";
       h2.style.color = textPrimary;
     }
     if (h3) {
-      h3.style.transition = 'color 0.3s ease';
+      h3.style.transition = "color 0.3s ease";
       h3.style.color = textPrimary;
     }
     if (brandElement) {
-      brandElement.style.transition = 'color 0.3s ease';
+      brandElement.style.transition = "color 0.3s ease";
       brandElement.style.color = textPrimary;
     }
-    
-    paragraphs.forEach(p => {
-      p.style.transition = 'color 0.3s ease';
+
+    paragraphs.forEach((p) => {
+      p.style.transition = "color 0.3s ease";
       p.style.color = textSecondary;
     });
-    
+
     // Update navigation link styles
-    const navLinks = previewContainer.querySelectorAll('.preview-nav-links span');
+    const navLinks = previewContainer.querySelectorAll(
+      ".preview-nav-links span"
+    );
     navLinks.forEach((link, index) => {
-      link.style.transition = 'all 0.3s ease';
+      link.style.transition = "all 0.3s ease";
       if (index === 0) {
         // Active link
         link.style.background = accentColor;
@@ -361,147 +387,188 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  
+
   function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? 
-      parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16)
-      : '26,26,46';
+    return result
+      ? parseInt(result[1], 16) +
+          "," +
+          parseInt(result[2], 16) +
+          "," +
+          parseInt(result[3], 16)
+      : "26,26,46";
   }
-  
+
   function saveCustomTheme() {
     const themeData = {
-      name: document.getElementById('theme-name').value || 'Custom Theme',
-      primaryBg: document.getElementById('primary-bg-color').value,
-      secondaryBg: document.getElementById('secondary-bg-color').value,
-      accentColor: document.getElementById('accent-color').value,
-      textPrimary: document.getElementById('text-primary-color').value,
-      textSecondary: document.getElementById('text-secondary-color').value,
-      gradientStart: document.getElementById('gradient-start-color').value,
-      gradientEnd: document.getElementById('gradient-end-color').value,
-      created: new Date().toISOString()
+      name: document.getElementById("theme-name").value || "Custom Theme",
+      primaryBg: document.getElementById("primary-bg-color").value,
+      secondaryBg: document.getElementById("secondary-bg-color").value,
+      accentColor: document.getElementById("accent-color").value,
+      textPrimary: document.getElementById("text-primary-color").value,
+      textSecondary: document.getElementById("text-secondary-color").value,
+      gradientStart: document.getElementById("gradient-start-color").value,
+      gradientEnd: document.getElementById("gradient-end-color").value,
+      created: new Date().toISOString(),
     };
-    
-    localStorage.setItem('sg-custom-theme', JSON.stringify(themeData));
-    
+
+    localStorage.setItem("sg-custom-theme", JSON.stringify(themeData));
+
     // Apply the theme immediately
     if (window.theme && window.theme.set) {
-      window.theme.set('custom');
+      window.theme.set("custom");
     }
-    
+
     closeCustomThemeModal();
-    
+
     if (window.showNotification) {
-      window.showNotification(`Custom theme "${themeData.name}" saved and applied!`, 'success');
+      window.showNotification(
+        `Custom theme "${themeData.name}" saved and applied!`,
+        "success"
+      );
     }
   }
-  
+
   function exportCurrentTheme() {
-    const customTheme = localStorage.getItem('sg-custom-theme');
+    const customTheme = localStorage.getItem("sg-custom-theme");
     if (!customTheme) {
       if (window.showNotification) {
-        window.showNotification('No custom theme to export. Create one first!', 'warning');
+        window.showNotification(
+          "No custom theme to export. Create one first!",
+          "warning"
+        );
       }
       return;
     }
-    
-    const blob = new Blob([customTheme], { type: 'application/json' });
+
+    const blob = new Blob([customTheme], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'slowguardian-theme.json';
+    a.download = "slowguardian-theme.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     if (window.showNotification) {
-      window.showNotification('Theme exported successfully!', 'success');
+      window.showNotification("Theme exported successfully!", "success");
     }
   }
-  
+
   function openImportThemeModal() {
-    const modal = document.getElementById('import-theme-modal');
+    const modal = document.getElementById("import-theme-modal");
     if (modal) {
-      modal.style.display = 'flex';
-      setTimeout(() => modal.classList.add('show'), 10);
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("show"), 10);
     }
   }
-  
+
   function closeImportThemeModal() {
-    const modal = document.getElementById('import-theme-modal');
+    const modal = document.getElementById("import-theme-modal");
     if (modal) {
-      modal.classList.remove('show');
-      setTimeout(() => modal.style.display = 'none', 300);
+      modal.classList.remove("show");
+      setTimeout(() => (modal.style.display = "none"), 300);
     }
   }
-  
+
   function importTheme() {
-    const importData = document.getElementById('theme-import-data').value.trim();
+    const importData = document
+      .getElementById("theme-import-data")
+      .value.trim();
     if (!importData) {
       if (window.showNotification) {
-        window.showNotification('Please paste theme data to import', 'warning');
+        window.showNotification("Please paste theme data to import", "warning");
       }
       return;
     }
-    
+
     try {
       const themeData = JSON.parse(importData);
-      
+
       // Validate theme data
-      const requiredFields = ['name', 'primaryBg', 'secondaryBg', 'accentColor', 'textPrimary', 'textSecondary'];
-      const isValid = requiredFields.every(field => themeData.hasOwnProperty(field));
-      
+      const requiredFields = [
+        "name",
+        "primaryBg",
+        "secondaryBg",
+        "accentColor",
+        "textPrimary",
+        "textSecondary",
+      ];
+      const isValid = requiredFields.every((field) =>
+        themeData.hasOwnProperty(field)
+      );
+
       if (!isValid) {
-        throw new Error('Invalid theme format');
+        throw new Error("Invalid theme format");
       }
-      
-      localStorage.setItem('sg-custom-theme', JSON.stringify(themeData));
-      
+
+      localStorage.setItem("sg-custom-theme", JSON.stringify(themeData));
+
       if (window.theme && window.theme.set) {
-        window.theme.set('custom');
+        window.theme.set("custom");
       }
-      
+
       closeImportThemeModal();
-      document.getElementById('theme-import-data').value = '';
-      
+      document.getElementById("theme-import-data").value = "";
+
       if (window.showNotification) {
-        window.showNotification(`Theme "${themeData.name}" imported and applied!`, 'success');
+        window.showNotification(
+          `Theme "${themeData.name}" imported and applied!`,
+          "success"
+        );
       }
     } catch (error) {
       if (window.showNotification) {
-        window.showNotification('Invalid theme data format. Please check your JSON.', 'error');
+        window.showNotification(
+          "Invalid theme data format. Please check your JSON.",
+          "error"
+        );
       }
     }
   }
-  
+
   // Modal event listeners
-  const customThemeModal = document.getElementById('custom-theme-modal');
-  const importThemeModal = document.getElementById('import-theme-modal');
-  
+  const customThemeModal = document.getElementById("custom-theme-modal");
+  const importThemeModal = document.getElementById("import-theme-modal");
+
   // Custom Theme Modal
   if (customThemeModal) {
-    document.getElementById('close-theme-modal')?.addEventListener('click', closeCustomThemeModal);
-    document.getElementById('save-custom-theme-btn')?.addEventListener('click', saveCustomTheme);
-    document.getElementById('apply-theme-preview-btn')?.addEventListener('click', updateThemePreview);
-    document.getElementById('cancel-theme-btn')?.addEventListener('click', closeCustomThemeModal);
-    
+    document
+      .getElementById("close-theme-modal")
+      ?.addEventListener("click", closeCustomThemeModal);
+    document
+      .getElementById("save-custom-theme-btn")
+      ?.addEventListener("click", saveCustomTheme);
+    document
+      .getElementById("apply-theme-preview-btn")
+      ?.addEventListener("click", updateThemePreview);
+    document
+      .getElementById("cancel-theme-btn")
+      ?.addEventListener("click", closeCustomThemeModal);
+
     // Close on outside click
-    customThemeModal.addEventListener('click', function(e) {
+    customThemeModal.addEventListener("click", function (e) {
       if (e.target === this) {
         closeCustomThemeModal();
       }
     });
   }
-  
+
   // Import Theme Modal
   if (importThemeModal) {
-    document.getElementById('close-import-modal')?.addEventListener('click', closeImportThemeModal);
-    document.getElementById('import-theme-confirm-btn')?.addEventListener('click', importTheme);
-    document.getElementById('cancel-import-btn')?.addEventListener('click', closeImportThemeModal);
-    
+    document
+      .getElementById("close-import-modal")
+      ?.addEventListener("click", closeImportThemeModal);
+    document
+      .getElementById("import-theme-confirm-btn")
+      ?.addEventListener("click", importTheme);
+    document
+      .getElementById("cancel-import-btn")
+      ?.addEventListener("click", closeImportThemeModal);
+
     // Close on outside click
-    importThemeModal.addEventListener('click', function(e) {
+    importThemeModal.addEventListener("click", function (e) {
       if (e.target === this) {
         closeImportThemeModal();
       }
@@ -511,7 +578,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Proxy selection
   const proxySelect = document.getElementById("pChange");
   if (proxySelect) {
-    proxySelect.addEventListener("change", function() {
+    proxySelect.addEventListener("change", function () {
       pChange(this.value);
     });
   }
@@ -722,23 +789,26 @@ switches.addEventListener("change", (event) => {
 // Themes
 document.addEventListener("DOMContentLoaded", function () {
   const themeDropdown = document.getElementById("theme-dropdown");
-  
+
   if (themeDropdown) {
     // Set current theme value
     const currentTheme = localStorage.getItem("theme") || "d";
     themeDropdown.value = currentTheme;
-    
+
     // Add change listener
     themeDropdown.addEventListener("change", function () {
       const selectedTheme = this.value;
       localStorage.setItem("theme", selectedTheme);
-      
+
       // Apply theme immediately
       applyTheme(selectedTheme);
-      
+
       // Show notification
       if (window.showNotification) {
-        window.showNotification(`Theme changed to ${this.options[this.selectedIndex].text}`, 'success');
+        window.showNotification(
+          `Theme changed to ${this.options[this.selectedIndex].text}`,
+          "success"
+        );
       }
     });
   }
@@ -751,19 +821,19 @@ function applyTheme(theme) {
     existingTheme.remove();
   }
 
-  if (theme && theme !== 'd' && theme !== 'default') {
+  if (theme && theme !== "d" && theme !== "default") {
     const themeEle = document.createElement("link");
     themeEle.rel = "stylesheet";
-    
+
     // Handle catppuccin themes
-    if (theme.startsWith('catppuccin')) {
-      const variant = theme.replace('catppuccin', '').toLowerCase();
+    if (theme.startsWith("catppuccin")) {
+      const variant = theme.replace("catppuccin", "").toLowerCase();
       themeEle.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
     } else {
       // Handle new modern themes
       themeEle.href = `/assets/styles/themes/${theme}.css?v=1`;
     }
-    
+
     document.head.appendChild(themeEle);
   }
 }
@@ -833,7 +903,7 @@ function toggleAB() {
     // Auto-open popup when enabled (only if not in iframe to prevent loops)
     if (window.top === window.self) {
       setTimeout(() => {
-        if (typeof AB === 'function') {
+        if (typeof AB === "function") {
           AB();
         }
       }, 1000); // Increased delay for better reliability
@@ -842,15 +912,15 @@ function toggleAB() {
 }
 
 // Check for auto-popup on page load
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const abEnabled = localStorage.getItem("ab");
   const abSwitch = document.getElementById("ab-settings-switch");
-  
+
   if (abSwitch) {
     abSwitch.checked = abEnabled === "true";
     abSwitch.addEventListener("change", toggleAB);
   }
-  
+
   // Auto-popup if enabled and not in iframe
   if (abEnabled === "true" && window.self === window.top) {
     // Add a small delay to ensure page is fully loaded
@@ -904,7 +974,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Update features preview
   updateFeaturesPreview();
-  
+
   // Auto-update features preview every 5 seconds
   setInterval(updateFeaturesPreview, 5000);
 });
@@ -912,13 +982,13 @@ document.addEventListener("DOMContentLoaded", function () {
 // Features Management Functions
 function openFeaturesManager() {
   // Create features manager modal
-  if (!document.getElementById('features-manager-modal')) {
+  if (!document.getElementById("features-manager-modal")) {
     createFeaturesManagerModal();
   }
-  
-  const modal = document.getElementById('features-manager-modal');
-  modal.classList.add('active');
-  
+
+  const modal = document.getElementById("features-manager-modal");
+  modal.classList.add("active");
+
   // Initialize features manager if not already done
   if (!window.featuresManagerInitialized) {
     initializeFeaturesManager();
@@ -927,9 +997,9 @@ function openFeaturesManager() {
 }
 
 function createFeaturesManagerModal() {
-  const modal = document.createElement('div');
-  modal.id = 'features-manager-modal';
-  modal.className = 'features-modal';
+  const modal = document.createElement("div");
+  modal.id = "features-manager-modal";
+  modal.className = "features-modal";
   modal.innerHTML = `
     <div class="features-modal-content">
       <div class="features-modal-header">
@@ -941,11 +1011,11 @@ function createFeaturesManagerModal() {
       </div>
     </div>
   `;
-  
+
   document.body.appendChild(modal);
-  
+
   // Close on outside click
-  modal.addEventListener('click', (e) => {
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       closeFeaturesManager();
     }
@@ -953,30 +1023,30 @@ function createFeaturesManagerModal() {
 }
 
 function closeFeaturesManager() {
-  const modal = document.getElementById('features-manager-modal');
+  const modal = document.getElementById("features-manager-modal");
   if (modal) {
-    modal.classList.remove('active');
+    modal.classList.remove("active");
   }
 }
 
 function initializeFeaturesManager() {
-  const container = document.getElementById('features-manager-container');
+  const container = document.getElementById("features-manager-container");
   if (!container) return;
-  
+
   // Create a temporary features manager instance
   const featuresManager = new FeaturesManager();
-  featuresManager.createFeaturesInterface = function() {
+  featuresManager.createFeaturesInterface = function () {
     // Override to inject into modal instead
-    const featuresSection = document.createElement('div');
+    const featuresSection = document.createElement("div");
     featuresSection.innerHTML = this.getFeaturesHTML();
     container.appendChild(featuresSection);
-    
+
     // Setup event listeners
     this.setupEventListeners();
     this.loadFeatures();
   };
-  
-  featuresManager.getFeaturesHTML = function() {
+
+  featuresManager.getFeaturesHTML = function () {
     return `
       <div class="features-controls">
         <div class="features-search">
@@ -1026,7 +1096,7 @@ function initializeFeaturesManager() {
       </div>
     `;
   };
-  
+
   featuresManager.createFeaturesInterface();
 }
 
@@ -1035,19 +1105,22 @@ function updateFeaturesPreview() {
   const enabledFeatures = getEnabledFeaturesCount();
   const totalFeatures = 100;
   const disabledFeatures = totalFeatures - enabledFeatures;
-  
+
   // Update preview counts
-  const enabledElement = document.getElementById('preview-enabled-count');
-  const disabledElement = document.getElementById('preview-disabled-count');
-  
+  const enabledElement = document.getElementById("preview-enabled-count");
+  const disabledElement = document.getElementById("preview-disabled-count");
+
   if (enabledElement) enabledElement.textContent = enabledFeatures;
   if (disabledElement) disabledElement.textContent = disabledFeatures;
-  
+
   // Update category counts (simulate for now)
-  updateCategoryCount('ux-count', Math.floor(enabledFeatures * 0.25));
-  updateCategoryCount('productivity-count', Math.floor(enabledFeatures * 0.25));
-  updateCategoryCount('customization-count', Math.floor(enabledFeatures * 0.25));
-  updateCategoryCount('advanced-count', Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount("ux-count", Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount("productivity-count", Math.floor(enabledFeatures * 0.25));
+  updateCategoryCount(
+    "customization-count",
+    Math.floor(enabledFeatures * 0.25)
+  );
+  updateCategoryCount("advanced-count", Math.floor(enabledFeatures * 0.25));
 }
 
 function updateCategoryCount(elementId, enabled) {
@@ -1060,32 +1133,36 @@ function updateCategoryCount(elementId, enabled) {
 function getEnabledFeaturesCount() {
   // Get from features manager if available, otherwise simulate
   if (window.sgFeatures && window.sgFeatures.features) {
-    return Array.from(window.sgFeatures.features.values()).filter(f => f.enabled).length;
+    return Array.from(window.sgFeatures.features.values()).filter(
+      (f) => f.enabled
+    ).length;
   }
-  
+
   // Simulate based on localStorage or default
-  const savedStates = JSON.parse(localStorage.getItem('feature_states') || '{}');
-  return Object.values(savedStates).filter(state => state).length || 25; // Default to 25 enabled
+  const savedStates = JSON.parse(
+    localStorage.getItem("feature_states") || "{}"
+  );
+  return Object.values(savedStates).filter((state) => state).length || 25; // Default to 25 enabled
 }
 
 // Version Information System
 async function loadVersionInfo() {
-  const versionContainer = document.getElementById('version-info-content');
-  const copyBtn = document.getElementById('copy-version-btn');
-  const checkUpdatesBtn = document.getElementById('check-updates-btn');
-  
+  const versionContainer = document.getElementById("version-info-content");
+  const copyBtn = document.getElementById("copy-version-btn");
+  const checkUpdatesBtn = document.getElementById("check-updates-btn");
+
   if (!versionContainer) return;
-  
+
   try {
-    const response = await fetch('/api/version');
-    if (!response.ok) throw new Error('Failed to fetch version info');
-    
+    const response = await fetch("/api/version");
+    if (!response.ok) throw new Error("Failed to fetch version info");
+
     const versionInfo = await response.json();
-    
+
     // Format build date
     const buildDate = new Date(versionInfo.buildDate);
     const formattedDate = buildDate.toLocaleString();
-    
+
     // Create version display
     versionContainer.innerHTML = `
       <div class="version-grid">
@@ -1112,7 +1189,7 @@ async function loadVersionInfo() {
         <div class="version-item">
           <span class="label">Environment</span>
           <span class="value">${versionInfo.environment}
-            ${versionInfo.environment === 'development' ? '<span class="version-badge">🚧 DEV</span>' : ''}
+            ${versionInfo.environment === "development" ? '<span class="version-badge">🚧 DEV</span>' : ""}
           </span>
         </div>
         <div class="version-item">
@@ -1125,27 +1202,26 @@ async function loadVersionInfo() {
         </div>
       </div>
     `;
-    
+
     // Show copy button
-    if (copyBtn) copyBtn.style.display = 'inline-block';
-    
+    if (copyBtn) copyBtn.style.display = "inline-block";
+
     // Setup copy functionality
     if (copyBtn) {
       copyBtn.onclick = () => copyVersionInfo(versionInfo);
     }
-    
+
     // Setup update check
     if (checkUpdatesBtn) {
       checkUpdatesBtn.onclick = () => checkForUpdates(versionInfo);
     }
-    
   } catch (error) {
     versionContainer.innerHTML = `
       <div class="version-loading" style="color: var(--color-error);">
         Failed to load version information: ${error.message}
       </div>
     `;
-    console.error('Failed to load version info:', error);
+    console.error("Failed to load version info:", error);
   }
 }
 
@@ -1158,45 +1234,51 @@ function copyVersionInfo(versionInfo) {
     `Built: ${versionInfo.buildDate}`,
     `Environment: ${versionInfo.environment}`,
     `Platform: ${versionInfo.platform} ${versionInfo.arch}`,
-    `Node.js: ${versionInfo.nodeVersion}`
-  ].join('\n');
-  
-  navigator.clipboard.writeText(versionText).then(() => {
-    // Show success notification
-    if (window.showNotification) {
-      window.showNotification('Version info copied to clipboard!', 'success');
-    } else {
-      alert('Version info copied to clipboard!');
-    }
-  }).catch(err => {
-    console.error('Failed to copy:', err);
-    // Fallback: create temporary text area
-    const textArea = document.createElement('textarea');
-    textArea.value = versionText;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    
-    if (window.showNotification) {
-      window.showNotification('Version info copied to clipboard!', 'success');
-    } else {
-      alert('Version info copied to clipboard!');
-    }
-  });
+    `Node.js: ${versionInfo.nodeVersion}`,
+  ].join("\n");
+
+  navigator.clipboard
+    .writeText(versionText)
+    .then(() => {
+      // Show success notification
+      if (window.showNotification) {
+        window.showNotification("Version info copied to clipboard!", "success");
+      } else {
+        alert("Version info copied to clipboard!");
+      }
+    })
+    .catch((err) => {
+      console.error("Failed to copy:", err);
+      // Fallback: create temporary text area
+      const textArea = document.createElement("textarea");
+      textArea.value = versionText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+
+      if (window.showNotification) {
+        window.showNotification("Version info copied to clipboard!", "success");
+      } else {
+        alert("Version info copied to clipboard!");
+      }
+    });
 }
 
 function checkForUpdates(currentVersion) {
   // Simulate update checking (in a real implementation, this would check GitHub releases)
   if (window.showNotification) {
-    window.showNotification('Update check complete. You have the latest version!', 'success');
+    window.showNotification(
+      "Update check complete. You have the latest version!",
+      "success"
+    );
   } else {
-    alert('Update check complete. You have the latest version!');
+    alert("Update check complete. You have the latest version!");
   }
 }
 
 // Load version info when page loads
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Load version info after a short delay to ensure page is ready
   setTimeout(loadVersionInfo, 500);
 });

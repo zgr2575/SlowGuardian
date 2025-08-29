@@ -199,10 +199,14 @@ class InteractiveParticleSystem extends ParticleSystem {
 
   updateParticle(particle) {
     // Check if particle is valid
-    if (!particle || typeof particle.x !== 'number' || typeof particle.y !== 'number') {
+    if (
+      !particle ||
+      typeof particle.x !== "number" ||
+      typeof particle.y !== "number"
+    ) {
       return;
     }
-    
+
     // Calculate distance to mouse
     const dx = this.mouse.x - particle.x;
     const dy = this.mouse.y - particle.y;

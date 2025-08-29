@@ -4,16 +4,17 @@
 
 class AuthSystem {
   constructor() {
-    this.isAuthenticated = sessionStorage.getItem('sg-authenticated') === 'true';
+    this.isAuthenticated =
+      sessionStorage.getItem("sg-authenticated") === "true";
     this.config = null;
-    
+
     this.init();
   }
 
   async init() {
     // Fetch auth config from server
     await this.loadConfig();
-    
+
     // Only show login if auth is enabled and user is not authenticated
     if (this.config?.challenge && !this.isAuthenticated) {
       this.showLoginScreen();
@@ -22,18 +23,18 @@ class AuthSystem {
 
   async loadConfig() {
     try {
-      const response = await fetch('/api/config');
+      const response = await fetch("/api/config");
       this.config = await response.json();
     } catch (error) {
-      console.warn('Failed to load auth config:', error);
+      console.warn("Failed to load auth config:", error);
       this.config = { challenge: false, users: {} };
     }
   }
 
   showLoginScreen() {
-    const loginOverlay = document.createElement('div');
-    loginOverlay.id = 'auth-overlay';
-    loginOverlay.className = 'auth-overlay';
+    const loginOverlay = document.createElement("div");
+    loginOverlay.id = "auth-overlay";
+    loginOverlay.className = "auth-overlay";
     loginOverlay.innerHTML = `
       <div class="auth-container">
         <div class="auth-header">
@@ -97,32 +98,32 @@ class AuthSystem {
 
     document.body.appendChild(loginOverlay);
     this.setupAuthListeners();
-    
+
     // Focus username field
     setTimeout(() => {
-      document.getElementById('auth-username').focus();
+      document.getElementById("auth-username").focus();
     }, 100);
   }
 
   setupAuthListeners() {
-    const form = document.getElementById('auth-form');
-    const errorDiv = document.getElementById('auth-error');
-    const submitBtn = form.querySelector('.auth-submit');
-    const submitText = submitBtn.querySelector('.auth-submit-text');
-    const submitLoading = submitBtn.querySelector('.auth-submit-loading');
+    const form = document.getElementById("auth-form");
+    const errorDiv = document.getElementById("auth-error");
+    const submitBtn = form.querySelector(".auth-submit");
+    const submitText = submitBtn.querySelector(".auth-submit-text");
+    const submitLoading = submitBtn.querySelector(".auth-submit-loading");
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      
-      const username = document.getElementById('auth-username').value.trim();
-      const password = document.getElementById('auth-password').value;
-      
+
+      const username = document.getElementById("auth-username").value.trim();
+      const password = document.getElementById("auth-password").value;
+
       // Show loading state
-      submitText.style.display = 'none';
-      submitLoading.style.display = 'flex';
+      submitText.style.display = "none";
+      submitLoading.style.display = "flex";
       submitBtn.disabled = true;
-      errorDiv.style.display = 'none';
-      
+      errorDiv.style.display = "none";
+
       // Simulate authentication delay
       setTimeout(() => {
         if (this.authenticate(username, password)) {
@@ -130,18 +131,18 @@ class AuthSystem {
         } else {
           this.onAuthFailure();
         }
-        
+
         // Reset button state
-        submitText.style.display = 'block';
-        submitLoading.style.display = 'none';
+        submitText.style.display = "block";
+        submitLoading.style.display = "none";
         submitBtn.disabled = false;
       }, 1000);
     });
 
     // Enter key handling
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.getElementById('auth-overlay')) {
-        form.dispatchEvent(new Event('submit'));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && document.getElementById("auth-overlay")) {
+        form.dispatchEvent(new Event("submit"));
       }
     });
   }
@@ -153,13 +154,13 @@ class AuthSystem {
 
   onAuthSuccess() {
     // Mark as authenticated for this session
-    sessionStorage.setItem('sg-authenticated', 'true');
-    
+    sessionStorage.setItem("sg-authenticated", "true");
+
     // Remove auth overlay with animation
-    const overlay = document.getElementById('auth-overlay');
-    overlay.style.opacity = '0';
-    overlay.style.transform = 'scale(0.95)';
-    
+    const overlay = document.getElementById("auth-overlay");
+    overlay.style.opacity = "0";
+    overlay.style.transform = "scale(0.95)";
+
     setTimeout(() => {
       overlay.remove();
     }, 300);
@@ -167,51 +168,54 @@ class AuthSystem {
     // Show success notification
     setTimeout(() => {
       if (window.showNotification) {
-        window.showNotification('Welcome back! You have been authenticated.', 'success');
+        window.showNotification(
+          "Welcome back! You have been authenticated.",
+          "success"
+        );
       }
     }, 400);
   }
 
   onAuthFailure() {
-    const errorDiv = document.getElementById('auth-error');
-    const usernameField = document.getElementById('auth-username');
-    const passwordField = document.getElementById('auth-password');
-    
+    const errorDiv = document.getElementById("auth-error");
+    const usernameField = document.getElementById("auth-username");
+    const passwordField = document.getElementById("auth-password");
+
     // Show error
-    errorDiv.style.display = 'block';
-    
+    errorDiv.style.display = "block";
+
     // Add error classes
-    usernameField.classList.add('error');
-    passwordField.classList.add('error');
-    
+    usernameField.classList.add("error");
+    passwordField.classList.add("error");
+
     // Clear password field
-    passwordField.value = '';
-    
+    passwordField.value = "";
+
     // Focus username field
     usernameField.focus();
     usernameField.select();
-    
+
     // Remove error classes after a delay
     setTimeout(() => {
-      usernameField.classList.remove('error');
-      passwordField.classList.remove('error');
+      usernameField.classList.remove("error");
+      passwordField.classList.remove("error");
     }, 3000);
   }
 
   // Method to check if user is authenticated
   static isAuthenticated() {
-    return sessionStorage.getItem('sg-authenticated') === 'true';
+    return sessionStorage.getItem("sg-authenticated") === "true";
   }
 
   // Method to logout
   static logout() {
-    sessionStorage.removeItem('sg-authenticated');
+    sessionStorage.removeItem("sg-authenticated");
     window.location.reload();
   }
 }
 
 // Initialize authentication system
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   new AuthSystem();
 });
 

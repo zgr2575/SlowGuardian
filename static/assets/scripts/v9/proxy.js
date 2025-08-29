@@ -55,17 +55,18 @@ class ProxyManager {
         // Store the encoded URL in sessionStorage for the browser page
         const encodedUrl = __uv$config.encodeUrl(url);
         sessionStorage.setItem("GoUrl", encodedUrl);
-        
+
         // Check about:blank setting
-        const abEnabled = localStorage.getItem("ab") === "true" || useBlankPopup;
-        
+        const abEnabled =
+          localStorage.getItem("ab") === "true" || useBlankPopup;
+
         if (abEnabled) {
           // Open in about:blank popup
           this.openBlankPopup(encodedUrl);
         } else {
           // Check if dynamic proxy should be used
           const dy = localStorage.getItem("dy");
-          
+
           if (dy === "true") {
             window.location.href = "/a/q/" + encodedUrl;
           } else {
@@ -94,24 +95,31 @@ class ProxyManager {
     if (popup) {
       popup.document.title = "My Drive - Google Drive";
       popup.document.write(
-        '<!DOCTYPE html>' +
-        '<html>' +
-        '<head>' +
-        '<title>My Drive - Google Drive</title>' +
-        '<link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">' +
-        '<meta charset="UTF-8">' +
-        '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
-        '</head>' +
-        '<body style="margin:0;padding:0;overflow:hidden;">' +
-        '<script>' +
-        'sessionStorage.setItem("GoUrl", ' + JSON.stringify(url) + ');' +
-        'window.location.href = ' + JSON.stringify(window.location.origin + '/go') + ';' +
-        '</script>' +
-        '</body>' +
-        '</html>'
+        "<!DOCTYPE html>" +
+          "<html>" +
+          "<head>" +
+          "<title>My Drive - Google Drive</title>" +
+          '<link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">' +
+          '<meta charset="UTF-8">' +
+          '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+          "</head>" +
+          '<body style="margin:0;padding:0;overflow:hidden;">' +
+          "<script>" +
+          'sessionStorage.setItem("GoUrl", ' +
+          JSON.stringify(url) +
+          ");" +
+          "window.location.href = " +
+          JSON.stringify(window.location.origin + "/go") +
+          ";" +
+          "</script>" +
+          "</body>" +
+          "</html>"
       );
     } else {
-      showNotification("Popup blocked. Please allow popups for this site.", "warning");
+      showNotification(
+        "Popup blocked. Please allow popups for this site.",
+        "warning"
+      );
       // Fallback to direct navigation
       window.location.href = "/go";
     }
@@ -129,7 +137,9 @@ class ProxyManager {
         if (typeof __uv$config !== "undefined") {
           resolve();
         } else if (Date.now() - startTime > maxWait) {
-          console.warn("UV config not loaded within timeout, proceeding anyway");
+          console.warn(
+            "UV config not loaded within timeout, proceeding anyway"
+          );
           resolve();
         } else {
           setTimeout(checkConfig, 100);
@@ -199,20 +209,22 @@ class ProxyManager {
 
     if (popup) {
       popup.document.write(
-        '<!DOCTYPE html>' +
-        '<html>' +
-        '<head>' +
-        '<title>SlowGuardian</title>' +
-        '<link rel="icon" href="/favicon.png">' +
-        '<style>' +
-        'body { margin: 0; padding: 0; overflow: hidden; }' +
-        'iframe { width: 100vw; height: 100vh; border: none; }' +
-        '</style>' +
-        '</head>' +
-        '<body>' +
-        '<iframe src="' + window.location.href + '"></iframe>' +
-        '</body>' +
-        '</html>'
+        "<!DOCTYPE html>" +
+          "<html>" +
+          "<head>" +
+          "<title>SlowGuardian</title>" +
+          '<link rel="icon" href="/favicon.png">' +
+          "<style>" +
+          "body { margin: 0; padding: 0; overflow: hidden; }" +
+          "iframe { width: 100vw; height: 100vh; border: none; }" +
+          "</style>" +
+          "</head>" +
+          "<body>" +
+          '<iframe src="' +
+          window.location.href +
+          '"></iframe>' +
+          "</body>" +
+          "</html>"
       );
 
       // Close current window
@@ -524,7 +536,7 @@ export const setupProxyFeatures = () => {
 };
 
 // Legacy compatibility functions for apps and games
-window.processUrl = function(value, path) {
+window.processUrl = function (value, path) {
   let url = value.trim();
   const engine = localStorage.getItem("engine");
   const searchUrl = engine ? engine : "https://www.google.com/search?q=";
@@ -549,26 +561,26 @@ window.processUrl = function(value, path) {
   }
 };
 
-window.go = function(value) {
+window.go = function (value) {
   processUrl(value, "/p");
 };
 
-window.blank = function(value) {
+window.blank = function (value) {
   processUrl(value);
 };
 
-window.dy = function(value) {
+window.dy = function (value) {
   if (typeof __uv$config !== "undefined") {
     processUrl(value, "/a/q/" + __uv$config.encodeUrl(value));
   }
 };
 
-window.now = function(value) {
+window.now = function (value) {
   // Handle now.gg links
   processUrl(value);
 };
 
-window.isUrl = function(val = "") {
+window.isUrl = function (val = "") {
   if (
     /^http(s?):\/\//.test(val) ||
     (val.includes(".") && val.substr(0, 1) !== " ")

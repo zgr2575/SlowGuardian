@@ -103,7 +103,7 @@
 }
 
 .dropdown-option.selected::after {
-  content: '✓';
+  content: "✓";
   margin-left: auto;
   font-weight: bold;
 }
@@ -198,13 +198,18 @@
 }
 
 .dropdown-option::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(79, 70, 229, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -223,8 +228,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Input groups for auth settings */

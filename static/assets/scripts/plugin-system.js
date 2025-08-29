@@ -7,40 +7,44 @@ class PluginSystem {
   constructor() {
     this.plugins = new Map();
     this.hooks = new Map();
-    this.pluginDirectory = '/plugins/';
-    this.enabledPlugins = JSON.parse(getCookie('enabled-plugins') || localStorage.getItem('enabled-plugins') || '[]');
+    this.pluginDirectory = "/plugins/";
+    this.enabledPlugins = JSON.parse(
+      getCookie("enabled-plugins") ||
+        localStorage.getItem("enabled-plugins") ||
+        "[]"
+    );
     this.pluginStore = new Map();
     this.init();
   }
 
   async init() {
-    console.log('🔌 Initializing Plugin System...');
+    console.log("🔌 Initializing Plugin System...");
     this.registerCoreHooks();
     await this.loadCorePlugins();
     await this.loadUserPlugins();
     this.createPluginManager();
-    console.log('✅ Plugin System initialized');
+    console.log("✅ Plugin System initialized");
   }
 
   registerCoreHooks() {
     // Core hooks for plugin integration
-    this.hooks.set('page_load', []);
-    this.hooks.set('before_navigation', []);
-    this.hooks.set('after_navigation', []);
-    this.hooks.set('proxy_request', []);
-    this.hooks.set('settings_change', []);
-    this.hooks.set('theme_change', []);
-    this.hooks.set('user_action', []);
+    this.hooks.set("page_load", []);
+    this.hooks.set("before_navigation", []);
+    this.hooks.set("after_navigation", []);
+    this.hooks.set("proxy_request", []);
+    this.hooks.set("settings_change", []);
+    this.hooks.set("theme_change", []);
+    this.hooks.set("user_action", []);
   }
 
   async loadCorePlugins() {
     // Load essential plugins that come with SlowGuardian - all disabled by default
     const corePlugins = [
-      'notes-manager',
-      'bookmark-system',
-      'password-manager',
-      'download-manager',
-      'theme-creator'
+      "notes-manager",
+      "bookmark-system",
+      "password-manager",
+      "download-manager",
+      "theme-creator",
     ];
 
     // Only load core plugins if they are explicitly enabled
@@ -68,23 +72,25 @@ class PluginSystem {
 
   async loadPlugin(pluginId, isCore = false) {
     try {
-      const pluginPath = isCore ? `/assets/plugins/${pluginId}/` : `${this.pluginDirectory}${pluginId}/`;
-      
+      const pluginPath = isCore
+        ? `/assets/plugins/${pluginId}/`
+        : `${this.pluginDirectory}${pluginId}/`;
+
       // Load plugin manifest
       const manifestResponse = await fetch(`${pluginPath}manifest.json`);
       if (!manifestResponse.ok) {
         throw new Error(`Plugin manifest not found: ${pluginId}`);
       }
-      
+
       const manifest = await manifestResponse.json();
-      
+
       // Validate plugin
       if (!this.validatePlugin(manifest)) {
         throw new Error(`Invalid plugin manifest: ${pluginId}`);
       }
-      
+
       // Load plugin script
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = `${pluginPath}plugin.js`;
       script.onload = () => {
         console.log(`✅ Plugin loaded: ${manifest.name} v${manifest.version}`);
@@ -92,17 +98,17 @@ class PluginSystem {
       script.onerror = () => {
         throw new Error(`Failed to load plugin script: ${pluginId}`);
       };
-      
+
       document.head.appendChild(script);
-      
+
       // Store plugin info
       this.plugins.set(pluginId, {
         manifest,
         isCore,
         loaded: true,
-        enabled: isCore || this.enabledPlugins.includes(pluginId)
+        enabled: isCore || this.enabledPlugins.includes(pluginId),
       });
-      
+
       return manifest;
     } catch (error) {
       console.error(`Error loading plugin ${pluginId}:`, error);
@@ -111,20 +117,20 @@ class PluginSystem {
   }
 
   validatePlugin(manifest) {
-    const required = ['id', 'name', 'version', 'description', 'author'];
-    return required.every(field => manifest[field]);
+    const required = ["id", "name", "version", "description", "author"];
+    return required.every((field) => manifest[field]);
   }
 
   registerPlugin(pluginId, pluginInstance) {
     if (this.plugins.has(pluginId)) {
       const plugin = this.plugins.get(pluginId);
       plugin.instance = pluginInstance;
-      
+
       // Initialize plugin if it's enabled
       if (plugin.enabled && pluginInstance.init) {
         pluginInstance.init();
       }
-      
+
       console.log(`🔌 Plugin registered: ${pluginId}`);
     }
   }
@@ -133,17 +139,17 @@ class PluginSystem {
     const plugin = this.plugins.get(pluginId);
     if (plugin) {
       plugin.enabled = true;
-      
+
       if (!this.enabledPlugins.includes(pluginId)) {
         this.enabledPlugins.push(pluginId);
         this.saveEnabledPlugins();
       }
-      
+
       if (plugin.instance && plugin.instance.enable) {
         plugin.instance.enable();
       }
-      
-      this.runHook('plugin_enabled', { pluginId, plugin });
+
+      this.runHook("plugin_enabled", { pluginId, plugin });
     }
   }
 
@@ -151,37 +157,40 @@ class PluginSystem {
     const plugin = this.plugins.get(pluginId);
     if (plugin && !plugin.isCore) {
       plugin.enabled = false;
-      
+
       const index = this.enabledPlugins.indexOf(pluginId);
       if (index > -1) {
         this.enabledPlugins.splice(index, 1);
         this.saveEnabledPlugins();
       }
-      
+
       if (plugin.instance && plugin.instance.disable) {
         plugin.instance.disable();
       }
-      
-      this.runHook('plugin_disabled', { pluginId, plugin });
+
+      this.runHook("plugin_disabled", { pluginId, plugin });
     }
   }
 
   saveEnabledPlugins() {
-    setCookie('enabled-plugins', JSON.stringify(this.enabledPlugins));
-    localStorage.setItem('enabled-plugins', JSON.stringify(this.enabledPlugins));
+    setCookie("enabled-plugins", JSON.stringify(this.enabledPlugins));
+    localStorage.setItem(
+      "enabled-plugins",
+      JSON.stringify(this.enabledPlugins)
+    );
   }
 
   addHook(hookName, callback, pluginId) {
     if (!this.hooks.has(hookName)) {
       this.hooks.set(hookName, []);
     }
-    
+
     this.hooks.get(hookName).push({ callback, pluginId });
   }
 
   runHook(hookName, data = {}) {
     const hooks = this.hooks.get(hookName) || [];
-    
+
     hooks.forEach(({ callback, pluginId }) => {
       try {
         const plugin = this.plugins.get(pluginId);
@@ -189,14 +198,17 @@ class PluginSystem {
           callback(data);
         }
       } catch (error) {
-        console.error(`Error in hook ${hookName} for plugin ${pluginId}:`, error);
+        console.error(
+          `Error in hook ${hookName} for plugin ${pluginId}:`,
+          error
+        );
       }
     });
   }
 
   createPluginManager() {
     // Create plugin management interface
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .plugin-manager {
         position: fixed;
@@ -279,15 +291,15 @@ class PluginSystem {
   }
 
   showPluginManager() {
-    let manager = document.getElementById('plugin-manager');
-    
+    let manager = document.getElementById("plugin-manager");
+
     if (!manager) {
-      manager = document.createElement('div');
-      manager.id = 'plugin-manager';
-      manager.className = 'plugin-manager';
+      manager = document.createElement("div");
+      manager.id = "plugin-manager";
+      manager.className = "plugin-manager";
       document.body.appendChild(manager);
     }
-    
+
     manager.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h3 style="margin: 0; color: var(--text-primary);">🔌 Plugin Manager</h3>
@@ -295,7 +307,9 @@ class PluginSystem {
       </div>
       
       <div class="plugin-list">
-        ${Array.from(this.plugins.entries()).map(([id, plugin]) => `
+        ${Array.from(this.plugins.entries())
+          .map(
+            ([id, plugin]) => `
           <div class="plugin-item">
             <div class="plugin-info">
               <h4>${plugin.manifest.name}</h4>
@@ -303,13 +317,15 @@ class PluginSystem {
               <br><small>${plugin.manifest.description}</small>
             </div>
             <label class="plugin-toggle">
-              <input type="checkbox" ${plugin.enabled ? 'checked' : ''} 
+              <input type="checkbox" ${plugin.enabled ? "checked" : ""} 
                      onchange="window.pluginSystem.togglePlugin('${id}', this.checked)"
-                     ${plugin.isCore ? 'disabled' : ''}>
+                     ${plugin.isCore ? "disabled" : ""}>
               <span class="plugin-slider"></span>
             </label>
           </div>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
       
       <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-secondary);">
@@ -321,14 +337,14 @@ class PluginSystem {
         </button>
       </div>
     `;
-    
-    manager.style.display = 'block';
+
+    manager.style.display = "block";
   }
 
   hidePluginManager() {
-    const manager = document.getElementById('plugin-manager');
+    const manager = document.getElementById("plugin-manager");
     if (manager) {
-      manager.style.display = 'none';
+      manager.style.display = "none";
     }
   }
 
@@ -342,12 +358,12 @@ class PluginSystem {
 
   showPluginStore() {
     // Plugin store implementation
-    this.showNotification('Plugin Store - Coming soon!', 'info');
+    this.showNotification("Plugin Store - Coming soon!", "info");
   }
 
   showPluginDocs() {
     // Open plugin development documentation
-    const docs = window.open('', '_blank');
+    const docs = window.open("", "_blank");
     docs.document.write(`
       <!DOCTYPE html>
       <html>
@@ -467,7 +483,7 @@ window.pluginSystem.registerPlugin('your-plugin-name', new YourPlugin());
     `);
   }
 
-  showNotification(message, type = 'info') {
+  showNotification(message, type = "info") {
     if (window.showNotification) {
       window.showNotification(message, type);
     } else {
@@ -477,10 +493,10 @@ window.pluginSystem.registerPlugin('your-plugin-name', new YourPlugin());
 }
 
 // Initialize plugin system after DOM is loaded and cookie utilities are available
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Ensure cookie utilities are available
-  if (typeof getCookie !== 'function') {
-    console.error('Cookie utilities not loaded! Waiting...');
+  if (typeof getCookie !== "function") {
+    console.error("Cookie utilities not loaded! Waiting...");
     setTimeout(() => {
       const pluginSystem = new PluginSystem();
       window.pluginSystem = pluginSystem;
@@ -492,6 +508,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for modules
-if (typeof module !== 'undefined') {
+if (typeof module !== "undefined") {
   module.exports = PluginSystem;
 }

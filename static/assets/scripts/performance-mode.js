@@ -5,7 +5,9 @@
 
 class PerformanceMode {
   constructor() {
-    this.isPerformanceMode = getCookie('performance-mode') === 'true' || localStorage.getItem('performance-mode') === 'true';
+    this.isPerformanceMode =
+      getCookie("performance-mode") === "true" ||
+      localStorage.getItem("performance-mode") === "true";
     this.performanceCSS = null;
     this.init();
   }
@@ -14,47 +16,47 @@ class PerformanceMode {
     if (this.isPerformanceMode) {
       this.enablePerformanceMode();
     }
-    
+
     // Add performance mode toggle to settings
     this.addPerformanceModeToggle();
   }
 
   enablePerformanceMode() {
-    console.log('🚀 Enabling Performance Mode...');
-    
+    console.log("🚀 Enabling Performance Mode...");
+
     // Apply performance optimizations
     this.removeHeavyAnimations();
     this.optimizeParticles();
     this.reduceVisualEffects();
     this.optimizeLayout();
-    
+
     // Store preference
-    setCookie('performance-mode', 'true', 365);
-    localStorage.setItem('performance-mode', 'true');
-    
-    console.log('✅ Performance Mode enabled');
+    setCookie("performance-mode", "true", 365);
+    localStorage.setItem("performance-mode", "true");
+
+    console.log("✅ Performance Mode enabled");
   }
 
   disablePerformanceMode() {
-    console.log('🔄 Disabling Performance Mode...');
-    
+    console.log("🔄 Disabling Performance Mode...");
+
     // Restore full visual effects
     this.restoreAnimations();
     this.restoreParticles();
     this.restoreVisualEffects();
     this.restoreLayout();
-    
+
     // Store preference
-    setCookie('performance-mode', 'false', 365);
-    localStorage.setItem('performance-mode', 'false');
-    
-    console.log('✅ Performance Mode disabled');
+    setCookie("performance-mode", "false", 365);
+    localStorage.setItem("performance-mode", "false");
+
+    console.log("✅ Performance Mode disabled");
   }
 
   removeHeavyAnimations() {
     // Disable heavy CSS animations for better performance
-    const style = document.createElement('style');
-    style.id = 'performance-mode-animations';
+    const style = document.createElement("style");
+    style.id = "performance-mode-animations";
     style.textContent = `
       /* Performance Mode - Reduced Animations */
       *, *::before, *::after {
@@ -82,14 +84,14 @@ class PerformanceMode {
 
   optimizeParticles() {
     // Disable particles for better performance
-    const particlesContainer = document.querySelector('#particles');
+    const particlesContainer = document.querySelector("#particles");
     if (particlesContainer) {
-      particlesContainer.style.display = 'none';
+      particlesContainer.style.display = "none";
     }
-    
+
     // Disable any particle.js instances
     if (window.pJSDom && window.pJSDom.length > 0) {
-      window.pJSDom.forEach(pjs => {
+      window.pJSDom.forEach((pjs) => {
         if (pjs.pJS.fn.vendors.destroypJS) {
           pjs.pJS.fn.vendors.destroypJS();
         }
@@ -100,8 +102,8 @@ class PerformanceMode {
   reduceVisualEffects() {
     // Apply performance-focused styles
     if (!this.performanceCSS) {
-      this.performanceCSS = document.createElement('style');
-      this.performanceCSS.id = 'performance-mode-styles';
+      this.performanceCSS = document.createElement("style");
+      this.performanceCSS.id = "performance-mode-styles";
       this.performanceCSS.textContent = `
         /* Performance Mode Optimizations */
         
@@ -141,25 +143,25 @@ class PerformanceMode {
 
   optimizeLayout() {
     // Add performance class to body
-    document.body.classList.add('performance-mode');
-    
+    document.body.classList.add("performance-mode");
+
     // Reduce DOM updates
-    document.documentElement.style.setProperty('--animation-speed', '0');
+    document.documentElement.style.setProperty("--animation-speed", "0");
   }
 
   restoreAnimations() {
-    const style = document.getElementById('performance-mode-animations');
+    const style = document.getElementById("performance-mode-animations");
     if (style) style.remove();
   }
 
   restoreParticles() {
-    const particlesContainer = document.querySelector('#particles');
+    const particlesContainer = document.querySelector("#particles");
     if (particlesContainer) {
-      particlesContainer.style.display = '';
+      particlesContainer.style.display = "";
     }
-    
+
     // Reinitialize particles if available
-    if (typeof initParticles === 'function') {
+    if (typeof initParticles === "function") {
       initParticles();
     }
   }
@@ -172,34 +174,40 @@ class PerformanceMode {
   }
 
   restoreLayout() {
-    document.body.classList.remove('performance-mode');
-    document.documentElement.style.removeProperty('--animation-speed');
+    document.body.classList.remove("performance-mode");
+    document.documentElement.style.removeProperty("--animation-speed");
   }
 
   addPerformanceModeToggle() {
     // Only add the toggle on the settings page
-    if (!window.location.pathname.includes('/settings') && 
-        !window.location.pathname.includes('/s') &&
-        !document.querySelector('.settings-container')) {
+    if (
+      !window.location.pathname.includes("/settings") &&
+      !window.location.pathname.includes("/s") &&
+      !document.querySelector(".settings-container")
+    ) {
       return; // Don't add performance mode toggle on non-settings pages
     }
-    
+
     // Add toggle to settings page when it loads
     const addToggleToSettings = () => {
-      const settingsContainer = document.querySelector('.settings-container');
-      
+      const settingsContainer = document.querySelector(".settings-container");
+
       if (!settingsContainer) {
-        console.log('Settings container not found, skipping performance mode toggle');
+        console.log(
+          "Settings container not found, skipping performance mode toggle"
+        );
         return;
       }
-      
+
       // Remove existing toggle
-      const existingToggle = document.getElementById('performance-mode-section');
+      const existingToggle = document.getElementById(
+        "performance-mode-section"
+      );
       if (existingToggle) existingToggle.remove();
-      
-      const toggleSection = document.createElement('div');
-      toggleSection.id = 'performance-mode-section';
-      toggleSection.className = 'settings-section';
+
+      const toggleSection = document.createElement("div");
+      toggleSection.id = "performance-mode-section";
+      toggleSection.className = "settings-section";
       toggleSection.innerHTML = `
         <div class="section-header">
           <h2>⚡ Performance Mode</h2>
@@ -213,7 +221,7 @@ class PerformanceMode {
           </div>
           <div class="setting-control">
             <label class="switch">
-              <input type="checkbox" id="performance-mode-toggle" ${this.isPerformanceMode ? 'checked' : ''}>
+              <input type="checkbox" id="performance-mode-toggle" ${this.isPerformanceMode ? "checked" : ""}>
               <span class="slider"></span>
             </label>
           </div>
@@ -230,35 +238,35 @@ class PerformanceMode {
           </ul>
         </div>
       `;
-      
+
       settingsContainer.appendChild(toggleSection);
-      
+
       this.setupToggleListener();
     };
-    
+
     // Add immediately if settings page is loaded, otherwise wait
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', addToggleToSettings);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", addToggleToSettings);
     } else {
       addToggleToSettings();
     }
   }
 
   setupToggleListener() {
-    const toggle = document.getElementById('performance-mode-toggle');
+    const toggle = document.getElementById("performance-mode-toggle");
     if (toggle) {
-      toggle.addEventListener('change', (e) => {
+      toggle.addEventListener("change", (e) => {
         if (e.target.checked) {
           this.enablePerformanceMode();
         } else {
           this.disablePerformanceMode();
         }
-        
+
         // Show notification
         this.showNotification(
-          e.target.checked ? 
-          '⚡ Performance Mode enabled - Optimizing interface...' : 
-          '🎨 Performance Mode disabled - Restoring full visual effects...'
+          e.target.checked
+            ? "⚡ Performance Mode enabled - Optimizing interface..."
+            : "🎨 Performance Mode disabled - Restoring full visual effects..."
         );
       });
     }
@@ -266,8 +274,8 @@ class PerformanceMode {
 
   showNotification(message) {
     // Create a simple notification
-    const notification = document.createElement('div');
-    notification.className = 'performance-notification';
+    const notification = document.createElement("div");
+    notification.className = "performance-notification";
     notification.textContent = message;
     notification.style.cssText = `
       position: fixed;
@@ -280,11 +288,11 @@ class PerformanceMode {
       z-index: 10000;
       animation: slideIn 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
-      notification.style.animation = 'slideOut 0.3s ease';
+      notification.style.animation = "slideOut 0.3s ease";
       setTimeout(() => notification.remove(), 300);
     }, 3000);
   }
@@ -301,10 +309,10 @@ class PerformanceMode {
 }
 
 // Initialize Performance Mode after DOM is loaded and cookie utilities are available
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Ensure cookie utilities are available
-  if (typeof getCookie !== 'function') {
-    console.error('Cookie utilities not loaded! Waiting...');
+  if (typeof getCookie !== "function") {
+    console.error("Cookie utilities not loaded! Waiting...");
     setTimeout(() => {
       const performanceMode = new PerformanceMode();
       window.performanceMode = performanceMode;
@@ -316,6 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for modules
-if (typeof module !== 'undefined') {
+if (typeof module !== "undefined") {
   module.exports = PerformanceMode;
 }

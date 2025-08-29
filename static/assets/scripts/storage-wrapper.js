@@ -5,21 +5,24 @@
 
 // Create a unified storage interface
 window.storage = {
-  setItem: function(key, value) {
+  setItem: function (key, value) {
     if (window.cookieStorage) {
       return window.cookieStorage.setItem(key, value);
     } else {
       try {
-        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+        localStorage.setItem(
+          key,
+          typeof value === "string" ? value : JSON.stringify(value)
+        );
         return true;
       } catch (error) {
-        console.error('Storage error:', error);
+        console.error("Storage error:", error);
         return false;
       }
     }
   },
 
-  getItem: function(key, defaultValue = null) {
+  getItem: function (key, defaultValue = null) {
     if (window.cookieStorage) {
       return window.cookieStorage.getItem(key, defaultValue);
     } else {
@@ -32,13 +35,13 @@ window.storage = {
           return value;
         }
       } catch (error) {
-        console.error('Storage error:', error);
+        console.error("Storage error:", error);
         return defaultValue;
       }
     }
   },
 
-  removeItem: function(key) {
+  removeItem: function (key) {
     if (window.cookieStorage) {
       return window.cookieStorage.removeItem(key);
     } else {
@@ -46,13 +49,13 @@ window.storage = {
         localStorage.removeItem(key);
         return true;
       } catch (error) {
-        console.error('Storage error:', error);
+        console.error("Storage error:", error);
         return false;
       }
     }
   },
 
-  clear: function() {
+  clear: function () {
     if (window.cookieStorage) {
       return window.cookieStorage.clear();
     } else {
@@ -60,39 +63,39 @@ window.storage = {
         localStorage.clear();
         return true;
       } catch (error) {
-        console.error('Storage error:', error);
+        console.error("Storage error:", error);
         return false;
       }
     }
-  }
+  },
 };
 
 // Backward compatibility: override localStorage methods for existing code
 if (window.cookieStorage) {
   // Create a proxy for localStorage that uses cookies
   const originalLocalStorage = window.localStorage;
-  
+
   window.localStorage = new Proxy(originalLocalStorage, {
-    get: function(target, prop) {
-      if (prop === 'setItem') {
-        return function(key, value) {
+    get: function (target, prop) {
+      if (prop === "setItem") {
+        return function (key, value) {
           window.storage.setItem(key, value);
         };
-      } else if (prop === 'getItem') {
-        return function(key) {
+      } else if (prop === "getItem") {
+        return function (key) {
           return window.storage.getItem(key);
         };
-      } else if (prop === 'removeItem') {
-        return function(key) {
+      } else if (prop === "removeItem") {
+        return function (key) {
           window.storage.removeItem(key);
         };
-      } else if (prop === 'clear') {
-        return function() {
+      } else if (prop === "clear") {
+        return function () {
           window.storage.clear();
         };
       } else {
         return target[prop];
       }
-    }
+    },
   });
 }

@@ -83,7 +83,11 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary, #4f46e5), var(--accent-secondary, #06b6d4));
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary, #4f46e5),
+    var(--accent-secondary, #06b6d4)
+  );
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -350,37 +354,37 @@
   .onboarding-modal {
     padding: 10px;
   }
-  
+
   .onboarding-container {
     width: calc(100% - 20px);
     max-height: calc(100vh - 20px);
     min-height: 300px;
     height: auto;
   }
-  
+
   .onboarding-header {
     padding: 16px 16px 12px;
   }
-  
+
   .onboarding-content {
     padding: 16px;
     max-height: calc(100vh - 150px);
   }
-  
+
   .onboarding-footer {
     padding: 12px 16px 16px;
   }
-  
+
   .theme-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  
+
   .onboarding-buttons {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .onboarding-buttons .btn {
     width: 100%;
     padding: 14px;
@@ -393,16 +397,16 @@
     min-height: 250px;
     height: auto;
   }
-  
+
   .onboarding-content {
     padding: 12px 24px;
     max-height: calc(100vh - 120px);
   }
-  
+
   .onboarding-header {
     padding: 12px 24px 8px;
   }
-  
+
   .onboarding-footer {
     padding: 8px 24px 12px;
   }

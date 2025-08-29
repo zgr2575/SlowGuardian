@@ -2171,7 +2171,9 @@
               (this.pendingScript = null),
               this.options.sourceCodeLocationInfo && c.install(this, o),
               this.options.onParseError &&
-                c.install(this, s, { onParseError: this.options.onParseError });
+                c.install(this, s, {
+                  onParseError: this.options.onParseError,
+                });
           }
           parse(e) {
             const t = this.treeAdapter.createDocument();

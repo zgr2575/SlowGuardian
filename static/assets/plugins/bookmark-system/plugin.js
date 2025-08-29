@@ -5,45 +5,61 @@
 
 class BookmarkSystemPlugin {
   constructor() {
-    this.name = 'Bookmark Manager';
-    this.version = '1.0.0';
-    this.bookmarks = JSON.parse(getCookie('user-bookmarks') || localStorage.getItem('user-bookmarks') || '[]');
-    this.categories = JSON.parse(getCookie('bookmark-categories') || localStorage.getItem('bookmark-categories') || '["General", "Work", "Entertainment", "Social"]');
+    this.name = "Bookmark Manager";
+    this.version = "1.0.0";
+    this.bookmarks = JSON.parse(
+      getCookie("user-bookmarks") ||
+        localStorage.getItem("user-bookmarks") ||
+        "[]"
+    );
+    this.categories = JSON.parse(
+      getCookie("bookmark-categories") ||
+        localStorage.getItem("bookmark-categories") ||
+        '["General", "Work", "Entertainment", "Social"]'
+    );
     this.isOpen = false;
     this.bookmarkPanel = null;
   }
 
   init() {
-    console.log('🔖 Bookmark System Plugin initialized');
+    console.log("🔖 Bookmark System Plugin initialized");
     this.createBookmarkPanel();
     this.registerHooks();
     this.addBookmarkButton();
   }
 
   enable() {
-    console.log('🔖 Bookmark System Plugin enabled');
+    console.log("🔖 Bookmark System Plugin enabled");
     if (this.bookmarkPanel) {
-      this.bookmarkPanel.style.display = 'block';
+      this.bookmarkPanel.style.display = "block";
     }
   }
 
   disable() {
-    console.log('🔖 Bookmark System Plugin disabled');
+    console.log("🔖 Bookmark System Plugin disabled");
     if (this.bookmarkPanel) {
-      this.bookmarkPanel.style.display = 'none';
+      this.bookmarkPanel.style.display = "none";
     }
     this.isOpen = false;
   }
 
   registerHooks() {
     if (window.pluginSystem) {
-      window.pluginSystem.addHook('page_load', (data) => {
-        this.onPageLoad(data);
-      }, 'bookmark-system');
-      
-      window.pluginSystem.addHook('proxy_request', (data) => {
-        this.onProxyRequest(data);
-      }, 'bookmark-system');
+      window.pluginSystem.addHook(
+        "page_load",
+        (data) => {
+          this.onPageLoad(data);
+        },
+        "bookmark-system"
+      );
+
+      window.pluginSystem.addHook(
+        "proxy_request",
+        (data) => {
+          this.onProxyRequest(data);
+        },
+        "bookmark-system"
+      );
     }
   }
 
@@ -58,7 +74,7 @@ class BookmarkSystemPlugin {
   }
 
   createBookmarkPanel() {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .bookmark-panel {
         position: fixed;
@@ -246,8 +262,8 @@ class BookmarkSystemPlugin {
     `;
     document.head.appendChild(style);
 
-    this.bookmarkPanel = document.createElement('div');
-    this.bookmarkPanel.className = 'bookmark-panel';
+    this.bookmarkPanel = document.createElement("div");
+    this.bookmarkPanel.className = "bookmark-panel";
     this.bookmarkPanel.innerHTML = `
       <div class="bookmark-toggle" onclick="window.bookmarkSystem.toggle()">🔖</div>
       
@@ -283,7 +299,7 @@ class BookmarkSystemPlugin {
           <div class="form-group">
             <label>Category:</label>
             <select id="bookmark-category">
-              ${this.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+              ${this.categories.map((cat) => `<option value="${cat}">${cat}</option>`).join("")}
             </select>
           </div>
           <div class="form-group">
@@ -314,16 +330,16 @@ class BookmarkSystemPlugin {
     `;
 
     document.body.appendChild(this.bookmarkPanel);
-    
+
     this.loadBookmarks();
-    this.currentTab = 'list';
+    this.currentTab = "list";
   }
 
   addBookmarkButton() {
     // Add quick bookmark button to current page
-    const quickBookmark = document.createElement('button');
-    quickBookmark.id = 'quick-bookmark-btn';
-    quickBookmark.innerHTML = '⭐';
+    const quickBookmark = document.createElement("button");
+    quickBookmark.id = "quick-bookmark-btn";
+    quickBookmark.innerHTML = "⭐";
     quickBookmark.style.cssText = `
       position: fixed;
       top: 100px;
@@ -343,35 +359,37 @@ class BookmarkSystemPlugin {
       justify-content: center;
       transition: all 0.3s ease;
     `;
-    
+
     quickBookmark.onclick = () => this.quickBookmark();
     quickBookmark.onmouseenter = () => {
-      quickBookmark.style.transform = 'scale(1.1)';
-      quickBookmark.style.background = 'var(--accent-primary)';
+      quickBookmark.style.transform = "scale(1.1)";
+      quickBookmark.style.background = "var(--accent-primary)";
     };
     quickBookmark.onmouseleave = () => {
-      quickBookmark.style.transform = 'scale(1)';
-      quickBookmark.style.background = 'rgba(26, 26, 46, 0.9)';
+      quickBookmark.style.transform = "scale(1)";
+      quickBookmark.style.background = "rgba(26, 26, 46, 0.9)";
     };
-    
+
     document.body.appendChild(quickBookmark);
     this.updateBookmarkButton();
   }
 
   updateBookmarkButton() {
-    const btn = document.getElementById('quick-bookmark-btn');
+    const btn = document.getElementById("quick-bookmark-btn");
     if (btn) {
       const currentUrl = window.location.href;
-      const isBookmarked = this.bookmarks.some(bookmark => bookmark.url === currentUrl);
-      btn.innerHTML = isBookmarked ? '🌟' : '⭐';
-      btn.title = isBookmarked ? 'Remove bookmark' : 'Add bookmark';
+      const isBookmarked = this.bookmarks.some(
+        (bookmark) => bookmark.url === currentUrl
+      );
+      btn.innerHTML = isBookmarked ? "🌟" : "⭐";
+      btn.title = isBookmarked ? "Remove bookmark" : "Add bookmark";
     }
   }
 
   toggle() {
     this.isOpen = !this.isOpen;
-    this.bookmarkPanel.classList.toggle('open', this.isOpen);
-    
+    this.bookmarkPanel.classList.toggle("open", this.isOpen);
+
     if (this.isOpen) {
       this.loadBookmarks();
     }
@@ -379,54 +397,60 @@ class BookmarkSystemPlugin {
 
   showTab(tabName) {
     // Update tab buttons
-    const tabs = this.bookmarkPanel.querySelectorAll('.bookmark-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    
+    const tabs = this.bookmarkPanel.querySelectorAll(".bookmark-tab");
+    tabs.forEach((tab) => tab.classList.remove("active"));
+
     let activeIndex = 0;
-    switch(tabName) {
-      case 'list': activeIndex = 0; break;
-      case 'add': activeIndex = 1; break;
-      case 'manage': activeIndex = 2; break;
-    }
-    tabs[activeIndex].classList.add('active');
-    
-    // Show appropriate content
-    const searchDiv = this.bookmarkPanel.querySelector('#bookmark-search');
-    const listDiv = this.bookmarkPanel.querySelector('#bookmark-list');
-    const formDiv = this.bookmarkPanel.querySelector('#bookmark-form');
-    const manageDiv = this.bookmarkPanel.querySelector('#bookmark-manage');
-    const saveBtn = this.bookmarkPanel.querySelector('#save-bookmark-btn');
-    
-    // Hide all first
-    [searchDiv, listDiv, formDiv, manageDiv].forEach(div => {
-      if (div) div.style.display = 'none';
-    });
-    
-    // Show based on tab
-    switch(tabName) {
-      case 'list':
-        searchDiv.style.display = 'block';
-        listDiv.style.display = 'block';
-        saveBtn.style.display = 'none';
+    switch (tabName) {
+      case "list":
+        activeIndex = 0;
         break;
-      case 'add':
-        formDiv.style.display = 'block';
-        saveBtn.style.display = 'inline-block';
+      case "add":
+        activeIndex = 1;
+        break;
+      case "manage":
+        activeIndex = 2;
+        break;
+    }
+    tabs[activeIndex].classList.add("active");
+
+    // Show appropriate content
+    const searchDiv = this.bookmarkPanel.querySelector("#bookmark-search");
+    const listDiv = this.bookmarkPanel.querySelector("#bookmark-list");
+    const formDiv = this.bookmarkPanel.querySelector("#bookmark-form");
+    const manageDiv = this.bookmarkPanel.querySelector("#bookmark-manage");
+    const saveBtn = this.bookmarkPanel.querySelector("#save-bookmark-btn");
+
+    // Hide all first
+    [searchDiv, listDiv, formDiv, manageDiv].forEach((div) => {
+      if (div) div.style.display = "none";
+    });
+
+    // Show based on tab
+    switch (tabName) {
+      case "list":
+        searchDiv.style.display = "block";
+        listDiv.style.display = "block";
+        saveBtn.style.display = "none";
+        break;
+      case "add":
+        formDiv.style.display = "block";
+        saveBtn.style.display = "inline-block";
         this.prefillForm();
         break;
-      case 'manage':
-        manageDiv.style.display = 'block';
-        saveBtn.style.display = 'none';
+      case "manage":
+        manageDiv.style.display = "block";
+        saveBtn.style.display = "none";
         this.loadCategories();
         break;
     }
-    
+
     this.currentTab = tabName;
   }
 
   loadBookmarks() {
-    const bookmarkList = this.bookmarkPanel.querySelector('#bookmark-list');
-    
+    const bookmarkList = this.bookmarkPanel.querySelector("#bookmark-list");
+
     if (this.bookmarks.length === 0) {
       bookmarkList.innerHTML = `
         <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 20px;">
@@ -435,14 +459,18 @@ class BookmarkSystemPlugin {
       `;
       return;
     }
-    
+
     // Group by category
     const grouped = this.groupByCategory();
-    
-    bookmarkList.innerHTML = Object.entries(grouped).map(([category, bookmarks]) => `
+
+    bookmarkList.innerHTML = Object.entries(grouped)
+      .map(
+        ([category, bookmarks]) => `
       <div class="bookmark-category">
         <div class="category-header">${category} (${bookmarks.length})</div>
-        ${bookmarks.map((bookmark, index) => `
+        ${bookmarks
+          .map(
+            (bookmark, index) => `
           <div class="bookmark-item" onclick="window.bookmarkSystem.openBookmark('${bookmark.url}')">
             <div class="bookmark-title">${bookmark.title}</div>
             <div class="bookmark-url">${bookmark.url}</div>
@@ -454,15 +482,19 @@ class BookmarkSystemPlugin {
               </span>
             </div>
           </div>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
-    `).join('');
+    `
+      )
+      .join("");
   }
 
   groupByCategory() {
     const grouped = {};
-    this.bookmarks.forEach(bookmark => {
-      const category = bookmark.category || 'General';
+    this.bookmarks.forEach((bookmark) => {
+      const category = bookmark.category || "General";
       if (!grouped[category]) {
         grouped[category] = [];
       }
@@ -476,15 +508,17 @@ class BookmarkSystemPlugin {
       this.loadBookmarks();
       return;
     }
-    
-    const filtered = this.bookmarks.filter(bookmark => 
-      bookmark.title.toLowerCase().includes(query.toLowerCase()) ||
-      bookmark.url.toLowerCase().includes(query.toLowerCase()) ||
-      (bookmark.description && bookmark.description.toLowerCase().includes(query.toLowerCase()))
+
+    const filtered = this.bookmarks.filter(
+      (bookmark) =>
+        bookmark.title.toLowerCase().includes(query.toLowerCase()) ||
+        bookmark.url.toLowerCase().includes(query.toLowerCase()) ||
+        (bookmark.description &&
+          bookmark.description.toLowerCase().includes(query.toLowerCase()))
     );
-    
-    const bookmarkList = this.bookmarkPanel.querySelector('#bookmark-list');
-    
+
+    const bookmarkList = this.bookmarkPanel.querySelector("#bookmark-list");
+
     if (filtered.length === 0) {
       bookmarkList.innerHTML = `
         <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 20px;">
@@ -493,42 +527,48 @@ class BookmarkSystemPlugin {
       `;
       return;
     }
-    
+
     bookmarkList.innerHTML = `
       <div class="bookmark-category">
         <div class="category-header">Search Results (${filtered.length})</div>
-        ${filtered.map(bookmark => `
+        ${filtered
+          .map(
+            (bookmark) => `
           <div class="bookmark-item" onclick="window.bookmarkSystem.openBookmark('${bookmark.url}')">
             <div class="bookmark-title">${bookmark.title}</div>
             <div class="bookmark-url">${bookmark.url}</div>
             <div class="bookmark-meta">
-              <span>${bookmark.category || 'General'}</span>
+              <span>${bookmark.category || "General"}</span>
               <span>
                 <button onclick="event.stopPropagation(); window.bookmarkSystem.editBookmark(${bookmark.id})" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;">✏️</button>
                 <button onclick="event.stopPropagation(); window.bookmarkSystem.deleteBookmark(${bookmark.id})" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;">🗑️</button>
               </span>
             </div>
           </div>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
     `;
   }
 
   prefillForm() {
     // Prefill with current page info
-    const titleInput = this.bookmarkPanel.querySelector('#bookmark-title');
-    const urlInput = this.bookmarkPanel.querySelector('#bookmark-url');
-    
+    const titleInput = this.bookmarkPanel.querySelector("#bookmark-title");
+    const urlInput = this.bookmarkPanel.querySelector("#bookmark-url");
+
     if (titleInput && urlInput) {
-      titleInput.value = document.title || '';
-      urlInput.value = window.location.href || '';
+      titleInput.value = document.title || "";
+      urlInput.value = window.location.href || "";
     }
   }
 
   quickBookmark() {
     const currentUrl = window.location.href;
-    const existingBookmark = this.bookmarks.find(bookmark => bookmark.url === currentUrl);
-    
+    const existingBookmark = this.bookmarks.find(
+      (bookmark) => bookmark.url === currentUrl
+    );
+
     if (existingBookmark) {
       // Remove bookmark
       this.deleteBookmark(existingBookmark.id);
@@ -536,93 +576,98 @@ class BookmarkSystemPlugin {
       // Add bookmark
       const bookmark = {
         id: Date.now(),
-        title: document.title || 'Untitled',
+        title: document.title || "Untitled",
         url: currentUrl,
-        category: 'General',
-        description: '',
-        date: new Date().toISOString()
+        category: "General",
+        description: "",
+        date: new Date().toISOString(),
       };
-      
+
       this.bookmarks.unshift(bookmark);
       this.saveBookmarks();
       this.updateBookmarkButton();
-      
+
       if (window.showNotification) {
-        window.showNotification('Bookmark added!', 'success');
+        window.showNotification("Bookmark added!", "success");
       }
     }
   }
 
   saveBookmark() {
-    const title = this.bookmarkPanel.querySelector('#bookmark-title').value.trim();
-    const url = this.bookmarkPanel.querySelector('#bookmark-url').value.trim();
-    const category = this.bookmarkPanel.querySelector('#bookmark-category').value;
-    const description = this.bookmarkPanel.querySelector('#bookmark-description').value.trim();
-    
+    const title = this.bookmarkPanel
+      .querySelector("#bookmark-title")
+      .value.trim();
+    const url = this.bookmarkPanel.querySelector("#bookmark-url").value.trim();
+    const category =
+      this.bookmarkPanel.querySelector("#bookmark-category").value;
+    const description = this.bookmarkPanel
+      .querySelector("#bookmark-description")
+      .value.trim();
+
     if (!title || !url) {
       if (window.showNotification) {
-        window.showNotification('Title and URL are required', 'error');
+        window.showNotification("Title and URL are required", "error");
       }
       return;
     }
-    
+
     const bookmark = {
       id: Date.now(),
       title,
       url,
       category,
       description,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
     };
-    
+
     this.bookmarks.unshift(bookmark);
     this.saveBookmarks();
     this.loadBookmarks();
-    this.showTab('list');
-    
+    this.showTab("list");
+
     // Clear form
-    this.bookmarkPanel.querySelector('#bookmark-title').value = '';
-    this.bookmarkPanel.querySelector('#bookmark-url').value = '';
-    this.bookmarkPanel.querySelector('#bookmark-description').value = '';
-    
+    this.bookmarkPanel.querySelector("#bookmark-title").value = "";
+    this.bookmarkPanel.querySelector("#bookmark-url").value = "";
+    this.bookmarkPanel.querySelector("#bookmark-description").value = "";
+
     if (window.showNotification) {
-      window.showNotification('Bookmark saved!', 'success');
+      window.showNotification("Bookmark saved!", "success");
     }
   }
 
   deleteBookmark(id) {
-    if (confirm('Delete this bookmark?')) {
-      this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
+    if (confirm("Delete this bookmark?")) {
+      this.bookmarks = this.bookmarks.filter((bookmark) => bookmark.id !== id);
       this.saveBookmarks();
       this.loadBookmarks();
       this.updateBookmarkButton();
-      
+
       if (window.showNotification) {
-        window.showNotification('Bookmark deleted', 'success');
+        window.showNotification("Bookmark deleted", "success");
       }
     }
   }
 
   openBookmark(url) {
-    if (typeof window.dy === 'function') {
+    if (typeof window.dy === "function") {
       window.dy(url);
-    } else if (typeof window.go === 'function') {
+    } else if (typeof window.go === "function") {
       window.go(url);
     } else {
-      window.open(url, '_blank');
+      window.open(url, "_blank");
     }
   }
 
   saveBookmarks() {
-    setCookie('user-bookmarks', JSON.stringify(this.bookmarks));
-    localStorage.setItem('user-bookmarks', JSON.stringify(this.bookmarks));
+    setCookie("user-bookmarks", JSON.stringify(this.bookmarks));
+    localStorage.setItem("user-bookmarks", JSON.stringify(this.bookmarks));
   }
 
   trackVisit(url) {
     // Track visits for future bookmark suggestions
-    const visits = JSON.parse(localStorage.getItem('bookmark-visits') || '{}');
+    const visits = JSON.parse(localStorage.getItem("bookmark-visits") || "{}");
     visits[url] = (visits[url] || 0) + 1;
-    localStorage.setItem('bookmark-visits', JSON.stringify(visits));
+    localStorage.setItem("bookmark-visits", JSON.stringify(visits));
   }
 
   formatDate(dateString) {
@@ -631,50 +676,61 @@ class BookmarkSystemPlugin {
   }
 
   addCategory() {
-    const input = this.bookmarkPanel.querySelector('#new-category');
+    const input = this.bookmarkPanel.querySelector("#new-category");
     const name = input.value.trim();
-    
+
     if (name && !this.categories.includes(name)) {
       this.categories.push(name);
       this.saveCategories();
       this.loadCategories();
-      input.value = '';
-      
+      input.value = "";
+
       // Update category dropdown
-      const categorySelect = this.bookmarkPanel.querySelector('#bookmark-category');
-      categorySelect.innerHTML = this.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+      const categorySelect =
+        this.bookmarkPanel.querySelector("#bookmark-category");
+      categorySelect.innerHTML = this.categories
+        .map((cat) => `<option value="${cat}">${cat}</option>`)
+        .join("");
     }
   }
 
   loadCategories() {
-    const categoryList = this.bookmarkPanel.querySelector('#category-list');
-    categoryList.innerHTML = this.categories.map(category => `
+    const categoryList = this.bookmarkPanel.querySelector("#category-list");
+    categoryList.innerHTML = this.categories
+      .map(
+        (category) => `
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border-secondary);">
         <span style="color: var(--text-primary);">${category}</span>
         <button onclick="window.bookmarkSystem.deleteCategory('${category}')" style="background: none; border: none; color: var(--text-secondary); cursor: pointer;">🗑️</button>
       </div>
-    `).join('');
+    `
+      )
+      .join("");
   }
 
   deleteCategory(category) {
-    if (category === 'General') {
+    if (category === "General") {
       if (window.showNotification) {
-        window.showNotification('Cannot delete General category', 'error');
+        window.showNotification("Cannot delete General category", "error");
       }
       return;
     }
-    
-    if (confirm(`Delete category "${category}"? Bookmarks will be moved to General.`)) {
+
+    if (
+      confirm(
+        `Delete category "${category}"? Bookmarks will be moved to General.`
+      )
+    ) {
       // Move bookmarks to General
-      this.bookmarks.forEach(bookmark => {
+      this.bookmarks.forEach((bookmark) => {
         if (bookmark.category === category) {
-          bookmark.category = 'General';
+          bookmark.category = "General";
         }
       });
-      
+
       // Remove category
-      this.categories = this.categories.filter(cat => cat !== category);
-      
+      this.categories = this.categories.filter((cat) => cat !== category);
+
       this.saveBookmarks();
       this.saveCategories();
       this.loadCategories();
@@ -682,34 +738,39 @@ class BookmarkSystemPlugin {
   }
 
   saveCategories() {
-    setCookie('bookmark-categories', JSON.stringify(this.categories));
-    localStorage.setItem('bookmark-categories', JSON.stringify(this.categories));
+    setCookie("bookmark-categories", JSON.stringify(this.categories));
+    localStorage.setItem(
+      "bookmark-categories",
+      JSON.stringify(this.categories)
+    );
   }
 
   exportBookmarks() {
     const data = {
       bookmarks: this.bookmarks,
       categories: this.categories,
-      exported: new Date().toISOString()
+      exported: new Date().toISOString(),
     };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'slowguardian-bookmarks.json';
+    a.download = "slowguardian-bookmarks.json";
     a.click();
     URL.revokeObjectURL(url);
-    
+
     if (window.showNotification) {
-      window.showNotification('Bookmarks exported!', 'success');
+      window.showNotification("Bookmarks exported!", "success");
     }
   }
 
   importBookmarks() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
     input.onchange = (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -720,19 +781,24 @@ class BookmarkSystemPlugin {
             if (data.bookmarks && Array.isArray(data.bookmarks)) {
               this.bookmarks = [...this.bookmarks, ...data.bookmarks];
               if (data.categories) {
-                this.categories = [...new Set([...this.categories, ...data.categories])];
+                this.categories = [
+                  ...new Set([...this.categories, ...data.categories]),
+                ];
               }
               this.saveBookmarks();
               this.saveCategories();
               this.loadBookmarks();
-              
+
               if (window.showNotification) {
-                window.showNotification(`Imported ${data.bookmarks.length} bookmarks!`, 'success');
+                window.showNotification(
+                  `Imported ${data.bookmarks.length} bookmarks!`,
+                  "success"
+                );
               }
             }
           } catch (error) {
             if (window.showNotification) {
-              window.showNotification('Invalid bookmark file', 'error');
+              window.showNotification("Invalid bookmark file", "error");
             }
           }
         };
@@ -748,13 +814,13 @@ const bookmarkSystem = new BookmarkSystemPlugin();
 window.bookmarkSystem = bookmarkSystem;
 
 if (window.pluginSystem) {
-  window.pluginSystem.registerPlugin('bookmark-system', bookmarkSystem);
+  window.pluginSystem.registerPlugin("bookmark-system", bookmarkSystem);
 } else {
   // Wait for plugin system to load
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       if (window.pluginSystem) {
-        window.pluginSystem.registerPlugin('bookmark-system', bookmarkSystem);
+        window.pluginSystem.registerPlugin("bookmark-system", bookmarkSystem);
       }
     }, 200);
   });

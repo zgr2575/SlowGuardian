@@ -97,23 +97,13 @@
         <!-- Tab Management Bar -->
         <div class="tab-management-bar">
           <div class="tab-controls">
-            <button id="new-tab-btn" class="btn btn-primary">
-              ➕ New Tab
-            </button>
-            <button id="close-all-tabs-btn" class="btn btn-secondary">
-              ✖️ Close All
-            </button>
-            <button id="duplicate-tab-btn" class="btn btn-secondary">
-              📋 Duplicate Tab
-            </button>
+            <button id="new-tab-btn" class="btn btn-primary">➕ New Tab</button>
+            <button id="close-all-tabs-btn" class="btn btn-secondary">✖️ Close All</button>
+            <button id="duplicate-tab-btn" class="btn btn-secondary">📋 Duplicate Tab</button>
           </div>
           <div class="tab-actions">
-            <button id="save-session-btn" class="btn btn-info">
-              💾 Save Session
-            </button>
-            <button id="restore-session-btn" class="btn btn-info">
-              📂 Restore Session
-            </button>
+            <button id="save-session-btn" class="btn btn-info">💾 Save Session</button>
+            <button id="restore-session-btn" class="btn btn-info">📂 Restore Session</button>
           </div>
         </div>
 
@@ -131,22 +121,18 @@
 
         <!-- Browser Container -->
         <div class="browser-container" id="browser-container">
-          
           <!-- No Tabs State -->
           <div class="no-tabs-state" id="no-tabs-state">
             <div class="empty-state">
               <div class="empty-icon">🗂️</div>
               <h3>No tabs open</h3>
               <p>Click "New Tab" to start browsing</p>
-              <button id="new-tab-quick-btn" class="btn btn-primary">
-                ➕ Open New Tab
-              </button>
+              <button id="new-tab-quick-btn" class="btn btn-primary">➕ Open New Tab</button>
             </div>
           </div>
 
           <!-- Tab Content Area -->
-          <div class="tab-content-area" id="tab-content-area" style="display: none;">
-            
+          <div class="tab-content-area" id="tab-content-area" style="display: none">
             <!-- Browser Controls -->
             <div class="browser-controls">
               <div class="navigation-controls">
@@ -169,10 +155,10 @@
                   <div class="security-indicator" id="security-indicator">
                     <i class="icon">🔒</i>
                   </div>
-                  <input 
-                    type="text" 
-                    id="address-bar" 
-                    class="address-bar" 
+                  <input
+                    type="text"
+                    id="address-bar"
+                    class="address-bar"
                     placeholder="Enter URL or search term..."
                     autocomplete="off"
                   />
@@ -205,9 +191,7 @@
               <div class="loading-container">
                 <div class="loading-spinner"></div>
                 <div class="loading-text" id="loading-text">Loading...</div>
-                <div class="loading-tip" id="loading-tip">
-                  💡 Tip: Use Ctrl+T to open a new tab quickly
-                </div>
+                <div class="loading-tip" id="loading-tip">💡 Tip: Use Ctrl+T to open a new tab quickly</div>
                 <div class="loading-steps">
                   <div class="step" id="step-1">
                     <span class="step-icon">🔍</span>
@@ -233,12 +217,11 @@
             <div class="browser-frame-container" id="browser-frame-container">
               <!-- Active tab iframes will be inserted here -->
             </div>
-
           </div>
         </div>
 
         <!-- Tab Context Menu -->
-        <div class="context-menu" id="tab-context-menu" style="display: none;">
+        <div class="context-menu" id="tab-context-menu" style="display: none">
           <div class="context-item" data-action="refresh">
             <i class="icon">🔄</i>
             <span>Refresh Tab</span>
@@ -269,7 +252,7 @@
               <i class="icon">🤖</i>
             </button>
           </div>
-          <div class="chatgpt-content" id="chatgpt-content" style="display: none;">
+          <div class="chatgpt-content" id="chatgpt-content" style="display: none">
             <div class="chatgpt-header">
               <h4>🤖 ChatGPT Assistant</h4>
               <button id="chatgpt-close-btn" class="btn-icon">
@@ -279,18 +262,14 @@
             <div class="chatgpt-messages" id="chatgpt-messages">
               <div class="message assistant">
                 <div class="message-content">
-                  Hello! I'm your AI assistant. I can help you with web browsing, answer questions, or assist with any tasks. How can I help you today?
+                  Hello! I'm your AI assistant. I can help you with web browsing, answer questions, or assist with any
+                  tasks. How can I help you today?
                 </div>
               </div>
             </div>
             <div class="chatgpt-input">
               <form id="chatgpt-form">
-                <input 
-                  type="text" 
-                  id="chatgpt-input" 
-                  placeholder="Ask me anything..."
-                  autocomplete="off"
-                />
+                <input type="text" id="chatgpt-input" placeholder="Ask me anything..." autocomplete="off" />
                 <button type="submit" class="btn btn-primary">
                   <i class="icon">📤</i>
                 </button>
@@ -298,7 +277,6 @@
             </div>
           </div>
         </div>
-
       </section>
     </main>
 
@@ -316,7 +294,7 @@
     </footer>
 
     <!-- Session Management Modal -->
-    <div id="session-modal" class="modal" style="display: none;">
+    <div id="session-modal" class="modal" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
           <h3 id="session-modal-title">💾 Save Session</h3>
@@ -340,6 +318,5 @@
     <script src="assets/scripts/browser-tabs.js"></script>
     <script src="assets/scripts/chatgpt-integration.js"></script>
     <script src="assets/scripts/main.js"></script>
-
   </body>
 </html>

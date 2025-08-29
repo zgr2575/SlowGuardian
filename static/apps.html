@@ -98,7 +98,7 @@
               spellcheck="false"
             />
           </div>
-          
+
           <select id="category" name="category" class="filter-select">
             <option value="all">All Categories</option>
             <option value="android">Android Emulator</option>
@@ -170,46 +170,46 @@
     <!-- App Scripts -->
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
-    
+
     <!-- Legacy Apps Script -->
     <script src="assets/scripts/a.js?v=40"></script>
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
     <script src="assets/scripts/main.js?v=32"></script>
     <script src="assets/scripts/particles.js?v=1"></script>
-    
+
     <!-- New v9 Systems -->
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
-    
+
     <script>
       // Update search function to work with new styling
       function search_bar() {
-        const searchInput = document.getElementById('searchbarbottom');
+        const searchInput = document.getElementById("searchbarbottom");
         const searchTerm = searchInput.value.toLowerCase();
-        const apps = document.querySelectorAll('.container-apps .app-item, .container-apps > div');
-        
-        apps.forEach(app => {
+        const apps = document.querySelectorAll(".container-apps .app-item, .container-apps > div");
+
+        apps.forEach((app) => {
           const appName = app.textContent.toLowerCase();
           if (appName.includes(searchTerm)) {
-            app.style.display = '';
+            app.style.display = "";
           } else {
-            app.style.display = 'none';
+            app.style.display = "none";
           }
         });
       }
-      
+
       // Add event listener for search
-      document.addEventListener('DOMContentLoaded', () => {
-        const searchInput = document.getElementById('searchbarbottom');
+      document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("searchbarbottom");
         if (searchInput) {
-          searchInput.addEventListener('input', search_bar);
+          searchInput.addEventListener("input", search_bar);
         }
 
         // Add event listener for category filter
-        const categorySelect = document.getElementById('category');
+        const categorySelect = document.getElementById("category");
         if (categorySelect) {
-          categorySelect.addEventListener('change', show_category);
+          categorySelect.addEventListener("change", show_category);
         }
       });
     </script>
