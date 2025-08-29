@@ -737,6 +737,15 @@ class MoveableButtons {
 
 // Initialize Moveable Buttons System after DOM is loaded and cookie utilities are available
 document.addEventListener("DOMContentLoaded", () => {
+  // Check if moveable buttons feature is enabled
+  const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
+                                  localStorage.getItem("feature-moveable-buttons") === "true";
+  
+  if (!moveableButtonsEnabled) {
+    console.log("⏸️ Moveable Buttons disabled by user preference");
+    return;
+  }
+  
   // Ensure cookie utilities are available
   if (typeof getCookie !== "function") {
     console.error("Cookie utilities not loaded! Waiting...");

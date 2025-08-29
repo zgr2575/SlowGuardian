@@ -30,6 +30,78 @@
     <meta name="theme-color" content="#1a1a2e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Enhanced Modal Styling -->
+    <style>
+      /* Enhanced modal positioning and z-index */
+      .modal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10001 !important;
+        backdrop-filter: blur(5px) !important;
+      }
+      
+      .modal-content {
+        background: var(--bg-secondary) !important;
+        border-radius: var(--radius-lg) !important;
+        border: 1px solid var(--border-primary) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        max-width: 600px !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        position: relative !important;
+        z-index: 10002 !important;
+        margin: 20px !important;
+      }
+      
+      .modal-header {
+        padding: var(--space-4) !important;
+        border-bottom: 1px solid var(--border-primary) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+      
+      .modal-body {
+        padding: var(--space-4) !important;
+      }
+      
+      .modal-footer {
+        padding: var(--space-4) !important;
+        border-top: 1px solid var(--border-primary) !important;
+        display: flex !important;
+        gap: var(--space-2) !important;
+        justify-content: flex-end !important;
+      }
+      
+      .modal-close {
+        background: none !important;
+        border: none !important;
+        color: var(--text-secondary) !important;
+        font-size: 24px !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        transition: all var(--transition-base) !important;
+      }
+      
+      .modal-close:hover {
+        background: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+      }
+    </style>
   </head>
   <body>
     <!-- Background -->
@@ -68,10 +140,6 @@
           <a href="/settings" class="nav-link" data-page="settings">
             <i class="icon">⚙️</i>
             <span>Settings</span>
-          </a>
-          <a href="/developer" class="nav-link active" data-page="developer">
-            <i class="icon">🛠️</i>
-            <span>Developer</span>
           </a>
         </div>
 
