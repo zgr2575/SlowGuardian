@@ -476,9 +476,20 @@ window.pluginSystem.registerPlugin('your-plugin-name', new YourPlugin());
   }
 }
 
-// Initialize plugin system
-const pluginSystem = new PluginSystem();
-window.pluginSystem = pluginSystem;
+// Initialize plugin system after DOM is loaded and cookie utilities are available
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure cookie utilities are available
+  if (typeof getCookie !== 'function') {
+    console.error('Cookie utilities not loaded! Waiting...');
+    setTimeout(() => {
+      const pluginSystem = new PluginSystem();
+      window.pluginSystem = pluginSystem;
+    }, 100);
+  } else {
+    const pluginSystem = new PluginSystem();
+    window.pluginSystem = pluginSystem;
+  }
+});
 
 // Export for modules
 if (typeof module !== 'undefined') {

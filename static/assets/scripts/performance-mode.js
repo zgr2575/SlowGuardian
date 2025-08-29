@@ -300,9 +300,20 @@ class PerformanceMode {
   }
 }
 
-// Initialize Performance Mode
-const performanceMode = new PerformanceMode();
-window.performanceMode = performanceMode;
+// Initialize Performance Mode after DOM is loaded and cookie utilities are available
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure cookie utilities are available
+  if (typeof getCookie !== 'function') {
+    console.error('Cookie utilities not loaded! Waiting...');
+    setTimeout(() => {
+      const performanceMode = new PerformanceMode();
+      window.performanceMode = performanceMode;
+    }, 100);
+  } else {
+    const performanceMode = new PerformanceMode();
+    window.performanceMode = performanceMode;
+  }
+});
 
 // Export for modules
 if (typeof module !== 'undefined') {

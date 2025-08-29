@@ -696,9 +696,20 @@ class MoveableButtons {
   }
 }
 
-// Initialize Moveable Buttons System
-const moveableButtons = new MoveableButtons();
-window.moveableButtons = moveableButtons;
+// Initialize Moveable Buttons System after DOM is loaded and cookie utilities are available
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure cookie utilities are available
+  if (typeof getCookie !== 'function') {
+    console.error('Cookie utilities not loaded! Waiting...');
+    setTimeout(() => {
+      const moveableButtons = new MoveableButtons();
+      window.moveableButtons = moveableButtons;
+    }, 100);
+  } else {
+    const moveableButtons = new MoveableButtons();
+    window.moveableButtons = moveableButtons;
+  }
+});
 
 // Export for modules
 if (typeof module !== 'undefined') {

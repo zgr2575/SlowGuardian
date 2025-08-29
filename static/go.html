@@ -662,6 +662,34 @@
         window.location.href = "./";
       }
 
+      // Enhanced back function for the browser
+      function goBack() {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          goHome();
+        }
+      }
+
+      // Enhanced forward function for the browser
+      function goForward() {
+        window.history.forward();
+      }
+
+      // Toggle fullscreen function for the browser
+      function toggleFullscreen() {
+        const iframe = document.getElementById('ifra');
+        if (iframe) {
+          if (!document.fullscreenElement) {
+            iframe.requestFullscreen().catch(err => {
+              console.warn('Could not enable fullscreen mode:', err.message);
+            });
+          } else {
+            document.exitFullscreen();
+          }
+        }
+      }
+
       // Mobile navigation toggle
       document.addEventListener('DOMContentLoaded', function() {
         const mobileToggle = document.querySelector('.nav-mobile-toggle');

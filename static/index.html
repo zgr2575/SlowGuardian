@@ -137,15 +137,15 @@
             <div class="quick-access">
               <div class="quick-title">Quick Access</div>
               <div class="quick-grid">
-                <a href="#" class="quick-item" onclick="go('https://google.com'); return false;">
+                <a href="#" class="quick-item" data-url="https://google.com">
                   <div class="quick-icon">🔍</div>
                   <div class="quick-label">Google</div>
                 </a>
-                <a href="#" class="quick-item" onclick="go('https://youtube.com'); return false;">
+                <a href="#" class="quick-item" data-url="https://youtube.com">
                   <div class="quick-icon">📺</div>
                   <div class="quick-label">YouTube</div>
                 </a>
-                <a href="#" class="quick-item" onclick="go('https://github.com'); return false;">
+                <a href="#" class="quick-item" data-url="https://github.com">
                   <div class="quick-icon">🐙</div>
                   <div class="quick-label">GitHub</div>
                 </a>
@@ -358,11 +358,25 @@
     <!-- Legacy Theme Support & Auto-Actions -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
+        // Quick Access event listeners
+        document.querySelectorAll('.quick-item[data-url]').forEach(item => {
+          item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            if (url && typeof window.go === 'function') {
+              window.go(url);
+            }
+          });
+        });
+
         // Auto About:Blank Popup on page load if enabled
         const abEnabled = localStorage.getItem("ab");
         if (abEnabled === "true") {
           // Only auto-popup on main pages to avoid interference
-          if (!window.location.pathname.includes("/settings") && !window.location.pathname.includes("/go")) {
+          // Prevent infinite loops when page is loaded in iframe
+          if (!window.location.pathname.includes("/settings") && 
+              !window.location.pathname.includes("/go") &&
+              window.top === window.self) {  // Not in iframe
             setTimeout(() => {
               if (typeof AB === 'function') {
                 AB();

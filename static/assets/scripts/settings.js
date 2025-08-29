@@ -85,9 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const abPopupBtn = document.getElementById("ab-popup-btn");
   
   if (abSwitch) {
-    // Set initial state
+    // Set initial state - default to false for safety to prevent tab loops
     const abEnabled = localStorage.getItem("ab");
     abSwitch.checked = abEnabled === "true";
+    
+    // Set default to false if not set to prevent runaway tabs
+    if (abEnabled === null) {
+      localStorage.setItem("ab", "false");
+    }
     
     abSwitch.addEventListener("change", toggleAB);
   }
@@ -825,10 +830,14 @@ function toggleAB() {
     localStorage.setItem("ab", "false");
   } else {
     localStorage.setItem("ab", "true");
-    // Auto-open popup when enabled
-    setTimeout(() => {
-      AB();
-    }, 1000); // Increased delay for better reliability
+    // Auto-open popup when enabled (only if not in iframe to prevent loops)
+    if (window.top === window.self) {
+      setTimeout(() => {
+        if (typeof AB === 'function') {
+          AB();
+        }
+      }, 1000); // Increased delay for better reliability
+    }
   }
 }
 

@@ -64,7 +64,7 @@ class SlowGuardianFeatures {
       description: 'Smart URL completion based on history',
       category: 'ux',
       enabled: false,
-      init: () => this.initAutoComplete()
+      init: this.initAutoComplete.bind(this)
     });
 
     // Feature 6: Recently Visited
