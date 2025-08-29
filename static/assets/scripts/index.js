@@ -53,6 +53,25 @@ async function processUrl(value, path) {
       url = "https://" + url;
     }
 
+    // Check for performance mode setting
+    const performanceMode = getCookie("performance-mode") === "true" || 
+                            localStorage.getItem("performance-mode") === "true";
+    
+    // For games and apps, determine if we should use browser mode or direct mode
+    const isFromGamesOrApps = window.location.pathname.includes('/games') || 
+                              window.location.pathname.includes('/apps');
+    
+    // If performance mode is enabled and launching from games/apps, skip browser interface
+    if (performanceMode && isFromGamesOrApps && !path) {
+      console.log("Performance mode: Direct proxy navigation");
+      // Skip browser interface and go directly to proxy
+      path = null; // This will go directly to the encoded URL
+    } else if (isFromGamesOrApps && !performanceMode) {
+      console.log("Browser mode: Using browser interface");
+      // Force browser interface for games/apps unless performance mode is on
+      path = path || "/go";
+    }
+
     // Wait for service worker to be ready
     if ("serviceWorker" in navigator) {
       await navigator.serviceWorker.ready;
