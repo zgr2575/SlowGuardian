@@ -34,72 +34,9 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("The adv div has been removed.");
   }
 
-  // Auto About:Blank Popup on page load if enabled
-  const abEnabled = getCookie("ab") || localStorage.getItem("ab");
-  if (abEnabled === "true") {
-    // Only auto-popup on pages that aren't settings to avoid interference
-    if (
-      !window.location.pathname.includes("/settings") &&
-      !window.location.pathname.includes("/developer")
-    ) {
-      setTimeout(() => {
-        if (typeof AB === "function") {
-          AB();
-        } else if (typeof window.AB === "function") {
-          window.AB();
-        } else {
-          // Fallback AB function implementation
-          window.AB = function () {
-            let inFrame;
-            try {
-              inFrame = window !== top;
-            } catch (e) {
-              inFrame = true;
-            }
-
-            if (!inFrame && !navigator.userAgent.includes("Firefox")) {
-              const popup = open("about:blank", "_blank");
-              if (!popup || popup.closed) {
-                console.log("Popup blocked - please allow popups");
-                return;
-              }
-
-              const doc = popup.document;
-              const iframe = doc.createElement("iframe");
-              const style = iframe.style;
-              const link = doc.createElement("link");
-
-              const name =
-                getCookie("name") ||
-                localStorage.getItem("name") ||
-                "My Drive - Google Drive";
-              const icon =
-                getCookie("icon") ||
-                localStorage.getItem("icon") ||
-                "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
-
-              doc.title = name;
-              link.rel = "icon";
-              link.href = icon;
-
-              iframe.src = location.href;
-              style.position = "fixed";
-              style.top = style.bottom = style.left = style.right = 0;
-              style.border = style.outline = "none";
-              style.width = style.height = "100%";
-
-              doc.head.appendChild(link);
-              doc.body.appendChild(iframe);
-
-              // Close original window
-              window.location.replace("about:blank");
-            }
-          };
-          window.AB();
-        }
-      }, 2000); // Increased delay for better reliability
-    }
-  }
+  // DISABLED: Auto About:Blank Popup to prevent spam
+  // About:blank is now manual only - users can enable it through settings
+  // This prevents the infinite loop of about:blank windows being created automatically
 
   // Add unsaved changes warning
   let hasUnsavedChanges = false;
@@ -240,7 +177,7 @@ window.toggleAboutBlank = function (enabled) {
   }
 };
 
-// About:blank popup function
+// Enhanced about:blank popup function - Manual only, no auto-popup
 window.AB = function () {
   let inFrame;
   try {
@@ -249,42 +186,64 @@ window.AB = function () {
     inFrame = true;
   }
 
+  // Only allow manual activation, never auto-popup
   if (!inFrame && !navigator.userAgent.includes("Firefox")) {
-    const popup = open("about:blank", "_blank");
-    if (!popup || popup.closed) {
-      console.log("Popup blocked - please allow popups");
+    // Create popup window with better error handling
+    let popup;
+    try {
+      popup = window.open("about:blank", "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to create popup:", error);
+      showNotification("Popup blocked. Please allow popups for this site.", "error");
       return;
     }
 
-    const doc = popup.document;
-    const iframe = doc.createElement("iframe");
-    const style = iframe.style;
-    const link = doc.createElement("link");
+    if (!popup || popup.closed) {
+      console.log("Popup blocked - please allow popups");
+      showNotification("Popup blocked. Please allow popups to use about:blank mode.", "warning");
+      return;
+    }
 
-    const name =
-      getCookie("name") ||
-      localStorage.getItem("name") ||
-      "My Drive - Google Drive";
-    const icon =
-      getCookie("icon") ||
-      localStorage.getItem("icon") ||
-      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+    // Wait for popup to be ready
+    setTimeout(() => {
+      try {
+        const doc = popup.document;
+        const iframe = doc.createElement("iframe");
+        const style = iframe.style;
+        const link = doc.createElement("link");
 
-    doc.title = name;
-    link.rel = "icon";
-    link.href = icon;
+        const name =
+          getCookie("name") ||
+          localStorage.getItem("name") ||
+          "My Drive - Google Drive";
+        const icon =
+          getCookie("icon") ||
+          localStorage.getItem("icon") ||
+          "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
 
-    iframe.src = location.href;
-    style.position = "fixed";
-    style.top = style.bottom = style.left = style.right = 0;
-    style.border = style.outline = "none";
-    style.width = style.height = "100%";
+        doc.title = name;
+        link.rel = "icon";
+        link.href = icon;
 
-    doc.head.appendChild(link);
-    doc.body.appendChild(iframe);
+        iframe.src = location.href;
+        style.position = "fixed";
+        style.top = style.bottom = style.left = style.right = 0;
+        style.border = style.outline = "none";
+        style.width = style.height = "100%";
 
-    // Close original window
-    window.location.replace("about:blank");
+        doc.head.appendChild(link);
+        doc.body.appendChild(iframe);
+
+        // Only close original window after popup is confirmed working
+        setTimeout(() => {
+          window.location.replace("about:blank");
+        }, 500);
+      } catch (error) {
+        console.error("Error setting up about:blank popup:", error);
+        popup.close();
+        showNotification("Failed to setup about:blank mode", "error");
+      }
+    }, 100);
   }
 };
 

@@ -133,6 +133,77 @@
         0%, 100% { opacity: 1; }
         50% { opacity: 0.5; }
       }
+
+      /* Enhanced Settings Layout */
+      .settings-grid-footer {
+        margin-top: var(--space-8);
+        padding: var(--space-6);
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .footer-note {
+        color: var(--text-secondary);
+        font-size: var(--font-size-sm);
+        margin: 0;
+      }
+
+      .site-info-details {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--space-2) 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+      }
+
+      .info-value {
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      /* Search Container Improvements */
+      .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .search-clear {
+        position: absolute;
+        right: var(--space-3);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: var(--space-1);
+        border-radius: var(--radius-sm);
+        transition: all var(--transition-base);
+      }
+
+      .search-clear:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
     </style>
 
     <!-- Progressive Web App -->
@@ -696,7 +767,30 @@
                   Policy.
                 </a>
               </div>
+              <div class="settings-controls">
+                <div class="site-info-details">
+                  <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value">🟢 Active</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Environment:</span>
+                    <span class="info-value">Production</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">License:</span>
+                    <span class="info-value">GPL-3.0</span>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Proper spacing and end of grid -->
+          <div class="settings-grid-footer">
+            <p class="footer-note">
+              💡 <strong>Tip:</strong> Hover over feature cards for more information. All settings are automatically saved.
+            </p>
           </div>
         </div>
       </section>

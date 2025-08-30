@@ -2,27 +2,41 @@ window.addEventListener("load", async () => {
   try {
     // Enhanced service worker registration with comprehensive error handling
     if ("serviceWorker" in navigator) {
-      console.log("Registering service worker...");
+      console.log("Registering service workers...");
 
-      const registration = await navigator.serviceWorker.register("/sw.js", {
-        scope: "/",
-      });
+      // Register Ultraviolet service worker for proxy functionality
+      try {
+        const uvRegistration = await navigator.serviceWorker.register("/m/sw.js", {
+          scope: "/a/",
+        });
+        console.log("✅ Ultraviolet service worker registered successfully:", uvRegistration);
+      } catch (uvError) {
+        console.error("❌ Failed to register Ultraviolet service worker:", uvError);
+      }
 
-      console.log("Service worker registered successfully:", registration);
+      // Register main service worker for general functionality
+      try {
+        const mainRegistration = await navigator.serviceWorker.register("/sw.js", {
+          scope: "/",
+        });
+        console.log("✅ Main service worker registered successfully:", mainRegistration);
+      } catch (swError) {
+        console.warn("⚠️ Main service worker registration failed (non-critical):", swError);
+      }
 
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;
-      console.log("Service worker is ready");
+      console.log("✅ Service workers are ready");
 
       // Handle service worker updates
-      registration.addEventListener("updatefound", () => {
-        console.log("Service worker update found");
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        console.log("Service worker controller changed");
       });
     } else {
-      console.warn("Service worker not supported");
+      console.warn("⚠️ Service worker not supported");
     }
   } catch (error) {
-    console.error("Service worker registration failed:", error);
+    console.error("❌ Service worker setup failed:", error);
   }
 });
 
@@ -53,6 +67,8 @@ async function processUrl(value, path) {
       url = "https://" + url;
     }
 
+    console.log("Processing URL:", url, "with path:", path);
+
     // Check for performance mode setting
     const performanceMode = getCookie("performance-mode") === "true" || 
                             localStorage.getItem("performance-mode") === "true";
@@ -72,32 +88,50 @@ async function processUrl(value, path) {
       path = path || "/go";
     }
 
-    // Wait for service worker to be ready
-    if ("serviceWorker" in navigator) {
-      await navigator.serviceWorker.ready;
-      console.log("Service worker ready for proxy request");
+    // Ensure UV config is available before proceeding
+    let retryCount = 0;
+    const maxRetries = 10;
+    
+    while (retryCount < maxRetries) {
+      if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
+        break;
+      }
+      console.log(`Waiting for UV config... (${retryCount + 1}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      retryCount++;
     }
 
-    // Ensure UV config is available
-    if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
-      const encodedUrl = __uv$config.encodeUrl(url);
-      console.log("Encoding URL:", url, "→", encodedUrl);
+    if (typeof __uv$config === "undefined" || !__uv$config.encodeUrl) {
+      console.error("Ultraviolet config not available after retries");
+      // Fallback: try to load without encoding
+      sessionStorage.setItem("GoUrl", url);
+      location.href = path || "/go";
+      return;
+    }
 
-      sessionStorage.setItem("GoUrl", encodedUrl);
-
-      const dy = localStorage.getItem("dy");
-
-      if (path) {
-        location.href = path;
-      } else if (dy === "true") {
-        window.location.href = "/a/q/" + encodedUrl;
-      } else {
-        window.location.href = "/a/" + encodedUrl;
+    // Wait for service worker to be ready
+    if ("serviceWorker" in navigator) {
+      try {
+        await navigator.serviceWorker.ready;
+        console.log("Service worker ready for proxy request");
+      } catch (swError) {
+        console.warn("Service worker not ready, proceeding anyway:", swError);
       }
+    }
+
+    const encodedUrl = __uv$config.encodeUrl(url);
+    console.log("Encoding URL:", url, "→", encodedUrl);
+
+    sessionStorage.setItem("GoUrl", encodedUrl);
+
+    const dy = localStorage.getItem("dy");
+
+    if (path) {
+      location.href = path;
+    } else if (dy === "true") {
+      window.location.href = "/a/q/" + encodedUrl;
     } else {
-      console.error("Ultraviolet config not available, waiting...");
-      // Wait a bit for config to load
-      setTimeout(() => processUrl(value, path), 100);
+      window.location.href = "/a/" + encodedUrl;
     }
   } catch (error) {
     console.error("Error processing URL:", error);
