@@ -450,6 +450,9 @@
     </div>
 
     <!-- Scripts -->
+    <!-- Script Loader (Load first for dependency management) -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+    
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
     
@@ -684,7 +687,20 @@
       }
 
       // Mobile navigation toggle
-      document.addEventListener("DOMContentLoaded", function () {
+      // Use enhanced initialization with dependency checking
+      if (typeof window.whenReady === 'function') {
+        window.whenReady(function () {
+          initializeTabs();
+        }, ['cookie-utils', 'main']); // Wait for cookie utilities and main navigation functions
+      } else {
+        // Fallback to DOMContentLoaded if whenReady is not available
+        document.addEventListener("DOMContentLoaded", function () {
+          console.warn("whenReady not available, using DOMContentLoaded fallback");
+          initializeTabs();
+        });
+      }
+
+      function initializeTabs() {
         const mobileToggle = document.querySelector(".nav-mobile-toggle");
         const navLinks = document.querySelector(".nav-links");
 
@@ -751,9 +767,9 @@
           fullscreenButton.addEventListener("click", toggleFullscreen);
         }
 
+        // Setup iframe loading indicator
         if (iframe) {
           iframe.addEventListener("load", function () {
-            // Stop loading when iframe loads
             browserLoading.stopLoading();
 
             if (typeof iframeLoad === "function") {
@@ -776,8 +792,8 @@
         // Enhanced keyboard navigation
         const addressInput = document.getElementById("is");
         if (addressInput) {
-          // Focus address bar with Ctrl+L or Cmd+L
           document.addEventListener("keydown", function (e) {
+            // Ctrl+L or Cmd+L to focus address bar
             if ((e.ctrlKey || e.metaKey) && e.key === "l") {
               e.preventDefault();
               addressInput.focus();
@@ -794,20 +810,21 @@
         // Responsive iframe handling
         function updateIframeHeight() {
           const toolbar = document.querySelector(".browser-toolbar");
-          const navbar = document.querySelector(".navbar");
-
-          if (iframe && toolbar && navbar) {
+          if (toolbar && iframe) {
             const toolbarHeight = toolbar.offsetHeight;
-            const navbarHeight = navbar.offsetHeight;
-            const availableHeight = window.innerHeight - toolbarHeight - navbarHeight;
-            iframe.style.height = availableHeight + "px";
+            const navbarHeight = 64; // Approximate navbar height
+            const availableHeight = window.innerHeight - navbarHeight - toolbarHeight;
+            iframe.style.height = `${availableHeight}px`;
           }
         }
 
         // Update iframe height on load and resize
         updateIframeHeight();
         window.addEventListener("resize", updateIframeHeight);
-      });
+      }
+
+      // Call initialization function immediately
+      initializeTabs();
 
       // Enhanced error handling
       window.addEventListener("error", function (e) {

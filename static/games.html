@@ -60,6 +60,10 @@
             <i class="icon">🎮</i>
             <span>Games</span>
           </a>
+          <a href="/tabs" class="nav-link" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
           <a href="/settings" class="nav-link" data-page="settings">
             <i class="icon">⚙️</i>
             <span>Settings</span>
@@ -200,8 +204,20 @@
         });
       }
 
-      // Add event listener for search
-      document.addEventListener("DOMContentLoaded", () => {
+      // Enhanced initialization for games page
+      if (typeof window.whenReady === 'function') {
+        window.whenReady(() => {
+          initGamesPage();
+        }, ['cookie-utils']); // Wait for cookie utilities
+      } else {
+        // Fallback to DOMContentLoaded if whenReady is not available
+        document.addEventListener("DOMContentLoaded", () => {
+          console.warn("whenReady not available, using DOMContentLoaded fallback");
+          initGamesPage();
+        });
+      }
+
+      function initGamesPage() {
         const searchInput = document.getElementById("searchbarbottom");
         if (searchInput) {
           searchInput.addEventListener("input", search_bar);
@@ -212,7 +228,10 @@
         if (categorySelect) {
           categorySelect.addEventListener("change", show_category);
         }
-      });
+      }
+
+      // Call initialization function immediately
+      initGamesPage();
     </script>
 
     <div id="adv"></div>
