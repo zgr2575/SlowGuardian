@@ -24,19 +24,16 @@ self.addEventListener("fetch", (event) => {
 
         // Handle Dynamic proxy requests (/a/q/)
         if (await dynamic.route(event)) {
-          console.log("Routing through Dynamic:", event.request.url);
           return await dynamic.fetch(event);
         }
 
         // Handle Ultraviolet proxy requests (/a/)
         if (event.request.url.startsWith(location.origin + "/a/")) {
-          console.log("Routing through Ultraviolet:", event.request.url);
           return await uv.fetch(event);
         }
 
         // Handle bare server requests (/o/)
         if (event.request.url.startsWith(location.origin + "/o/")) {
-          console.log("Routing to bare server:", event.request.url);
           return await fetch(event.request);
         }
 
