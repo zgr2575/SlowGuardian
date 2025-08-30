@@ -560,17 +560,20 @@
             <!-- Advertisement -->
             <div class="card settings-card">
               <div class="card-header">
-                <h3 class="card-title">Advertisement</h3>
+                <h3 class="card-title">Advertisement <span class="feature-badge disabled">Developer Only</span></h3>
                 <p class="card-description">
                   Advertisements are crucial in order to keep the site running. Please consider donating or hosting your
-                  own links to go ad-free. If not, you can still disable them below.
+                  own links to go ad-free. Only developers can disable advertisements.
                 </p>
               </div>
               <div class="settings-controls">
                 <select id="adType" class="form-select">
                   <option value="default">Default</option>
-                  <option value="off">Off</option>
+                  <option value="off">Off (Developer Only)</option>
                 </select>
+                <div id="legacy-ads-notice" style="display: none; margin-top: 10px; padding: 10px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 6px; color: #ffc107; font-size: 14px;">
+                  🔒 <strong>Developer Only:</strong> This legacy ad control is restricted to authorized developers.
+                </div>
               </div>
             </div>
 
@@ -1078,6 +1081,28 @@
         initAdsManagement();
       });
 
+      // Check if current user is a developer/admin
+      function isDeveloper() {
+        // Check if admin panel is logged in
+        if (window.adminPanel && window.adminPanel.isLoggedIn) {
+          return true;
+        }
+        
+        // Check for admin token in sessionStorage
+        const adminToken = sessionStorage.getItem('admin-token');
+        if (adminToken) {
+          return true;
+        }
+        
+        // Check for developer mode cookie
+        const devMode = getCookie('developer-mode');
+        if (devMode === 'true') {
+          return true;
+        }
+        
+        return false;
+      }
+
       function initAdsManagement() {
         const adsEnabledSwitch = document.getElementById('ads-enabled-switch');
         const adsStatusDot = document.getElementById('ads-status-dot');
@@ -1086,30 +1111,80 @@
         const displayAdsStatus = document.getElementById('display-ads-status');
         const testVideoAdBtn = document.getElementById('test-video-ad-btn');
         const upgradePremiumBtn = document.getElementById('upgrade-premium-btn');
+        const adsControls = document.querySelector('.ads-controls');
 
-        // Update UI based on current ads settings
+        // Update UI based on current ads settings and developer status
         function updateAdsStatus() {
           const adsEnabled = getCookie('ads-enabled') !== 'false';
           const performanceMode = getCookie('performance-mode') === 'true';
+          const isDevUser = isDeveloper();
           
           adsEnabledSwitch.checked = adsEnabled;
           
+          // Restrict ads control to developers only
+          if (!isDevUser) {
+            adsEnabledSwitch.disabled = true;
+            adsEnabledSwitch.checked = true; // Force ads enabled for non-developers
+            
+            // Add developer-only notice
+            if (!document.querySelector('.developer-ads-notice')) {
+              const notice = document.createElement('div');
+              notice.className = 'developer-ads-notice';
+              notice.innerHTML = `
+                <div style="
+                  background: rgba(255, 193, 7, 0.1);
+                  border: 1px solid rgba(255, 193, 7, 0.3);
+                  border-radius: 6px;
+                  padding: 12px;
+                  margin-top: 10px;
+                  color: #ffc107;
+                  font-size: 14px;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                ">
+                  <span>🔒</span>
+                  <div>
+                    <strong>Developer Only:</strong> Ad controls are restricted to authorized developers. 
+                    Ads help keep SlowGuardian free for everyone.
+                  </div>
+                </div>
+              `;
+              adsControls.appendChild(notice);
+            }
+          } else {
+            adsEnabledSwitch.disabled = false;
+            
+            // Remove developer notice if it exists
+            const notice = document.querySelector('.developer-ads-notice');
+            if (notice) {
+              notice.remove();
+            }
+          }
+          
           if (adsEnabled) {
             adsStatusDot.classList.remove('disabled');
-            adsStatusText.textContent = 'Ads Enabled - Supporting SlowGuardian';
+            adsStatusText.textContent = isDevUser ? 'Ads Enabled - Supporting SlowGuardian' : 'Ads Enabled (Developer Mode Required to Disable)';
             videoAdsStatus.textContent = performanceMode ? 'Disabled (Performance Mode)' : 'Enabled';
             displayAdsStatus.textContent = 'Enabled';
           } else {
             adsStatusDot.classList.add('disabled');
-            adsStatusText.textContent = 'Ads Disabled';
+            adsStatusText.textContent = 'Ads Disabled (Developer Mode)';
             videoAdsStatus.textContent = 'Disabled';
             displayAdsStatus.textContent = 'Disabled';
           }
         }
 
-        // Handle ads toggle
+        // Handle ads toggle (restricted to developers)
         adsEnabledSwitch.addEventListener('change', function() {
           const enabled = this.checked;
+          
+          // Double-check developer status
+          if (!isDeveloper()) {
+            this.checked = true; // Force enabled
+            showNotification('Developer access required to disable ads', 'warning');
+            return;
+          }
           
           if (enabled) {
             if (window.adsManager) {
@@ -1120,7 +1195,7 @@
             if (window.adsManager) {
               window.adsManager.disableAds();
             }
-            showNotification('Ads disabled', 'info');
+            showNotification('Ads disabled (Developer Mode)', 'info');
           }
           
           updateAdsStatus();
@@ -1153,6 +1228,9 @@
         if (window.adsManager) {
           setTimeout(updateAdsStatus, 1000);
         }
+        
+        // Update status when admin panel state changes
+        setInterval(updateAdsStatus, 5000);
       }
     </script>
 

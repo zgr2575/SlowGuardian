@@ -1,6 +1,48 @@
 // Ads
 document.addEventListener("DOMContentLoaded", function () {
+// Ads
+document.addEventListener("DOMContentLoaded", function () {
+  // Check if current user is a developer/admin
+  function isDeveloper() {
+    // Check if admin panel is logged in
+    if (window.adminPanel && window.adminPanel.isLoggedIn) {
+      return true;
+    }
+    
+    // Check for admin token in sessionStorage
+    const adminToken = sessionStorage.getItem('admin-token');
+    if (adminToken) {
+      return true;
+    }
+    
+    // Check for developer mode cookie
+    const devMode = getCookie('developer-mode');
+    if (devMode === 'true') {
+      return true;
+    }
+    
+    return false;
+  }
+
   function adChange(selectedValue) {
+    // Check developer status before allowing ads to be disabled
+    if (selectedValue === "off" && !isDeveloper()) {
+      // Revert to default and show notice
+      document.getElementById("adType").value = "default";
+      localStorage.setItem("ad", "on");
+      document.getElementById("legacy-ads-notice").style.display = "block";
+      
+      if (window.showNotification) {
+        window.showNotification("Developer access required to disable ads", "warning");
+      }
+      return;
+    }
+    
+    // Hide notice if developer is changing settings
+    if (isDeveloper()) {
+      document.getElementById("legacy-ads-notice").style.display = "none";
+    }
+    
     if (selectedValue === "default") {
       localStorage.setItem("ad", "on");
     } else if (selectedValue === "off") {
@@ -11,6 +53,22 @@ document.addEventListener("DOMContentLoaded", function () {
   var adTypeElement = document.getElementById("adType");
 
   if (adTypeElement) {
+    // Initial setup - check developer status
+    if (!isDeveloper()) {
+      // Force ads enabled for non-developers
+      localStorage.setItem("ad", "on");
+      adTypeElement.value = "default";
+      document.getElementById("legacy-ads-notice").style.display = "block";
+      
+      // Disable the off option for non-developers
+      const offOption = adTypeElement.querySelector('option[value="off"]');
+      if (offOption) {
+        offOption.disabled = true;
+      }
+    } else {
+      document.getElementById("legacy-ads-notice").style.display = "none";
+    }
+    
     adTypeElement.addEventListener("change", function () {
       var selectedOption = this.value;
       adChange(selectedOption);
@@ -19,11 +77,32 @@ document.addEventListener("DOMContentLoaded", function () {
     var storedAd = localStorage.getItem("ad");
     if (storedAd === "on") {
       adTypeElement.value = "default";
-    } else if (storedAd === "off") {
+    } else if (storedAd === "off" && isDeveloper()) {
       adTypeElement.value = "off";
     } else {
+      // Force default for non-developers
       adTypeElement.value = "default";
+      localStorage.setItem("ad", "on");
     }
+    
+    // Periodically check developer status and update UI
+    setInterval(() => {
+      const isDevNow = isDeveloper();
+      const offOption = adTypeElement.querySelector('option[value="off"]');
+      const notice = document.getElementById("legacy-ads-notice");
+      
+      if (!isDevNow) {
+        if (offOption) offOption.disabled = true;
+        if (adTypeElement.value === "off") {
+          adTypeElement.value = "default";
+          localStorage.setItem("ad", "on");
+        }
+        notice.style.display = "block";
+      } else {
+        if (offOption) offOption.disabled = false;
+        notice.style.display = "none";
+      }
+    }, 5000);
   }
   // Makes the custom icon and name persistent
   const iconElement = document.getElementById("icon");

@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "2e30c0c-1756537132820",
-  "buildDate": "2025-08-30T06:58:52.820Z",
-  "buildTimestamp": 1756537132820,
+  "buildId": "de3afcf-1756537635732",
+  "buildDate": "2025-08-30T07:07:15.732Z",
+  "buildTimestamp": 1756537635733,
   "git": {
-    "commit": "2e30c0c238512549060520df37324c0d92640b6c",
-    "commitShort": "2e30c0c",
+    "commit": "de3afcfba4606a686fab2243612118a671d7ed7d",
+    "commitShort": "de3afcf",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-30T06:48:07Z",
-    "commitMessage": "🔧 Fix popup redirects and JavaScript initialization reliability"
+    "commitDate": "2025-08-30T07:01:30Z",
+    "commitMessage": "🔧 Fix navigation consistency and JavaScript initialization across all pages"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

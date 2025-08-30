@@ -42,9 +42,36 @@ class AdsManager {
   }
 
   getAdsSetting() {
-    // Check if ads are enabled in settings
+    // Check if user is a developer (only developers can disable ads)
+    if (!this.isDeveloper()) {
+      // Non-developers always have ads enabled
+      return true;
+    }
+    
+    // Check if ads are enabled in settings (for developers only)
     return getCookie('ads-enabled') !== 'false' && 
            localStorage.getItem('ads-enabled') !== 'false';
+  }
+
+  isDeveloper() {
+    // Check for admin authentication
+    const adminToken = sessionStorage.getItem('admin-token');
+    if (adminToken) {
+      return true;
+    }
+    
+    // Check for developer mode cookie
+    const devMode = getCookie('developer-mode');
+    if (devMode === 'true') {
+      return true;
+    }
+    
+    // Check if admin panel is active
+    if (window.adminPanel && window.adminPanel.isLoggedIn) {
+      return true;
+    }
+    
+    return false;
   }
 
   detectAdBlock() {
@@ -856,6 +883,12 @@ class AdsManager {
   }
 
   disableAds() {
+    // Only allow developers to disable ads
+    if (!this.isDeveloper()) {
+      console.warn('📢 Ad disabling restricted to developers only');
+      return false;
+    }
+    
     this.adsEnabled = false;
     setCookie('ads-enabled', 'false');
     
@@ -863,6 +896,8 @@ class AdsManager {
     document.querySelectorAll('.page-ad-container, .ads-sidebar, .footer-ads').forEach(el => {
       el.remove();
     });
+    
+    return true;
   }
 
   showProxyVideoAd(url, callback) {
