@@ -701,3 +701,39 @@ body {
     font-size: var(--font-size-xs);
   }
 }
+
+/* Sidebar Layout Adjustments */
+.main-content.with-sidebar {
+  margin-left: 60px; /* Space for collapsed sidebar */
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--accent-color);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 10001;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Responsive adjustments for sidebar */
+@media (max-width: 768px) {
+  .main-content.with-sidebar {
+    margin-left: 40px; /* Smaller margin on mobile */
+  }
+}
+
+/* Hide original navbar when sidebar is active */
+.navbar:not(.sidebar-nav) {
+  display: none !important;
+}

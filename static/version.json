@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "ca05e8e-1756594427798",
-  "buildDate": "2025-08-30T22:53:47.798Z",
-  "buildTimestamp": 1756594427798,
+  "buildId": "af1c68e-1756596233845",
+  "buildDate": "2025-08-30T23:23:53.845Z",
+  "buildTimestamp": 1756596233845,
   "git": {
-    "commit": "ca05e8eaa0949b0c8dd4cb5f2c318894ab036871",
-    "commitShort": "ca05e8e",
+    "commit": "af1c68e79aaf8f4b1b48c0543b184038fc13f908",
+    "commitShort": "af1c68e",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-30T22:40:18Z",
-    "commitMessage": "🔧 Fix particle system crashes and JavaScript syntax errors - enhance error handling and prevent undefined particle access"
+    "commitDate": "2025-08-30T23:17:43Z",
+    "commitMessage": "🔇 Remove excessive service worker console logging to clean up console output"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

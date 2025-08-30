@@ -36,6 +36,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Background -->
     <div class="background">
       <div class="bg-gradient"></div>
@@ -43,51 +46,8 @@
       <div class="bg-overlay"></div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-      <div class="nav-container">
-        <div class="nav-brand">
-          <span class="brand-icon">🛡️</span>
-          <span class="brand-text">SlowGuardian</span>
-          <span class="brand-version">v9</span>
-        </div>
-
-        <div class="nav-links">
-          <a href="/" class="nav-link active" data-page="home">
-            <i class="icon">🏠</i>
-            <span>Home</span>
-          </a>
-          <a href="/apps" class="nav-link" data-page="apps">
-            <i class="icon">📱</i>
-            <span>Apps</span>
-          </a>
-          <a href="/games" class="nav-link" data-page="games">
-            <i class="icon">🎮</i>
-            <span>Games</span>
-          </a>
-          <a href="/tabs" class="nav-link" data-page="tabs">
-            <i class="icon">🗂️</i>
-            <span>Tabs</span>
-          </a>
-          <a href="/settings" class="nav-link" data-page="settings">
-            <i class="icon">⚙️</i>
-            <span>Settings</span>
-          </a>
-        </div>
-
-        <div class="nav-actions">
-          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
-            <i class="icon">🌙</i>
-          </button>
-          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
-            <i class="icon">⛶</i>
-          </button>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
+    <!-- Main Content (navbar will be injected by navbar.js) -->
+    <main class="main-content with-sidebar" id="main-content">
       <!-- Home Page -->
       <section class="page active" id="page-home">
         <div class="hero">
@@ -344,6 +304,13 @@
     <script src="assets/scripts/v9/proxy.js" type="module"></script>
     <script src="assets/scripts/v9/ui.js" type="module"></script>
     <script src="assets/scripts/v9/app.js" type="module"></script>
+    
+    <!-- Main utilities (includes changeTheme for loading detection) -->
+    <script src="assets/scripts/main.js?v=31"></script>
+    
+    <!-- Centralized Navigation Bar -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+    
     <!-- Enhanced Features System -->
     <script src="assets/scripts/v9/features.js"></script>
 
