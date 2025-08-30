@@ -929,6 +929,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.sgFeatures = new SlowGuardianFeatures();
+  
+  // Mark features module as loaded
+  if (typeof window.markModuleLoaded === 'function') {
+    window.markModuleLoaded('features');
+  }
 });
 
 // Export for use in other modules

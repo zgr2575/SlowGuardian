@@ -204,7 +204,12 @@ class InteractiveParticleSystem extends ParticleSystem {
       typeof particle.x !== "number" ||
       typeof particle.y !== "number"
     ) {
-      return;
+      return false; // Remove invalid particle
+    }
+
+    // Ensure mouse is initialized
+    if (!this.mouse || typeof this.mouse.x !== "number") {
+      this.mouse = { x: -1000, y: -1000 };
     }
 
     // Calculate distance to mouse

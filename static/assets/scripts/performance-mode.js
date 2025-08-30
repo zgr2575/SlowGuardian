@@ -36,6 +36,11 @@ class PerformanceMode {
 
     // Add performance mode toggle to settings
     this.addPerformanceModeToggle();
+    
+    // Mark module as loaded
+    if (typeof window.markModuleLoaded === 'function') {
+      window.markModuleLoaded('performance-mode');
+    }
   }
 
   enablePerformanceMode() {

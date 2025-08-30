@@ -469,4 +469,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (savedBackgroundImage) {
     document.body.style.backgroundImage = "url('" + savedBackgroundImage + "')";
   }
+  
+  // Mark main module as loaded
+  if (typeof window.markModuleLoaded === 'function') {
+    window.markModuleLoaded('main');
+  }
 });

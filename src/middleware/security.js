@@ -27,6 +27,7 @@ export function setupSecurity(app, config) {
   app.use((req, res, next) => {
     res.set("X-Powered-By", "SlowGuardian");
     res.set("Server", `SlowGuardian/${config.version}`);
+    res.set("X-Frame-Options", "SAMEORIGIN");
     next();
   });
 

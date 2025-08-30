@@ -30,6 +30,10 @@ class AdsManager {
   init() {
     if (!this.adsEnabled) {
       console.log("📢 Ads disabled by admin configuration");
+      // Still mark as loaded even if disabled
+      if (typeof window.markModuleLoaded === 'function') {
+        window.markModuleLoaded('ads-manager');
+      }
       return;
     }
 
@@ -39,6 +43,11 @@ class AdsManager {
     this.setupVideoAds();
 
     console.log("📢 SlowGuardian Ads Manager initialized");
+    
+    // Mark module as loaded
+    if (typeof window.markModuleLoaded === 'function') {
+      window.markModuleLoaded('ads-manager');
+    }
   }
 
   getAdsSetting() {

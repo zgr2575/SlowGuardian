@@ -25,3 +25,8 @@ function deleteCookie(name) {
 window.getCookie = getCookie;
 window.setCookie = setCookie;
 window.deleteCookie = deleteCookie;
+
+// Mark module as loaded
+if (typeof window.markModuleLoaded === 'function') {
+  window.markModuleLoaded('cookie-utils');
+}

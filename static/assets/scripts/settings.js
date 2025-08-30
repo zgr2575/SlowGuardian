@@ -1202,4 +1202,3 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load version info after a short delay to ensure page is ready
   setTimeout(loadVersionInfo, 500);
 });
-

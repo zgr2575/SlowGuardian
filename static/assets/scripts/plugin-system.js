@@ -41,6 +41,11 @@ class PluginSystem {
     await this.loadUserPlugins();
     this.createPluginManager();
     console.log("✅ Plugin System initialized");
+    
+    // Mark module as loaded
+    if (typeof window.markModuleLoaded === 'function') {
+      window.markModuleLoaded('plugin-system');
+    }
   }
 
   registerCoreHooks() {
