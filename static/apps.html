@@ -31,6 +31,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Background -->
     <div class="background">
       <div class="bg-gradient"></div>
@@ -38,51 +41,8 @@
       <div class="bg-overlay"></div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-      <div class="nav-container">
-        <div class="nav-brand">
-          <span class="brand-icon">🛡️</span>
-          <span class="brand-text">SlowGuardian</span>
-          <span class="brand-version">v9</span>
-        </div>
-
-        <div class="nav-links">
-          <a href="/" class="nav-link" data-page="home">
-            <i class="icon">🏠</i>
-            <span>Home</span>
-          </a>
-          <a href="/apps" class="nav-link active" data-page="apps">
-            <i class="icon">📱</i>
-            <span>Apps</span>
-          </a>
-          <a href="/games" class="nav-link" data-page="games">
-            <i class="icon">🎮</i>
-            <span>Games</span>
-          </a>
-          <a href="/tabs" class="nav-link" data-page="tabs">
-            <i class="icon">🗂️</i>
-            <span>Tabs</span>
-          </a>
-          <a href="/settings" class="nav-link" data-page="settings">
-            <i class="icon">⚙️</i>
-            <span>Settings</span>
-          </a>
-        </div>
-
-        <div class="nav-actions">
-          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
-            <i class="icon">🌙</i>
-          </button>
-          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
-            <i class="icon">⛶</i>
-          </button>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
+    <!-- Main Content (navbar will be injected by navbar.js) -->
+    <main class="main-content with-sidebar" id="main-content">
       <section class="page active" id="page-apps">
         <div class="page-header">
           <h2 class="page-title">Applications</h2>
@@ -183,6 +143,10 @@
     <script src="assets/scripts/a.js?v=40"></script>
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
     <script src="assets/scripts/main.js?v=32"></script>
+    
+    <!-- Centralized Navigation Bar -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+    
     <script src="assets/scripts/particles.js?v=1"></script>
 
     <!-- Script Loader for dependency management -->

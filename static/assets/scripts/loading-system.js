@@ -8,6 +8,7 @@ class LoadingSystem {
     this.expectedModules = [
       "cookie-utils",
       "main",
+      "navbar",
       "features",
       "plugin-system",
       "performance-mode",
@@ -319,6 +320,14 @@ class LoadingSystem {
       typeof window.changeTheme === "function"
     ) {
       this.markModuleLoaded("main");
+    }
+
+    // Check for navbar system
+    if (
+      !this.loadedModules.has("navbar") &&
+      typeof window.sidebarNav !== "undefined"
+    ) {
+      this.markModuleLoaded("navbar");
     }
 
     // Check for features system
