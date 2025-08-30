@@ -1,17 +1,17 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "d0db0fe-1756593277158",
-  "buildDate": "2025-08-30T22:34:37.158Z",
-  "buildTimestamp": 1756593277158,
+  "buildId": "ca05e8e-1756594427798",
+  "buildDate": "2025-08-30T22:53:47.798Z",
+  "buildTimestamp": 1756594427798,
   "git": {
-    "commit": "d0db0fe2b13a09f2705170e15872069210bd41c4",
-    "commitShort": "d0db0fe",
+    "commit": "ca05e8eaa0949b0c8dd4cb5f2c318894ab036871",
+    "commitShort": "ca05e8e",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-30T22:28:26Z",
-    "commitMessage": "🔧 Fix static file MIME types for CSS and JS files to prevent proxy issues"
+    "commitDate": "2025-08-30T22:40:18Z",
+    "commitMessage": "🔧 Fix particle system crashes and JavaScript syntax errors - enhance error handling and prevent undefined particle access"
   },
-  "environment": "production",
+  "environment": "development",
   "nodeVersion": "v20.19.4",
   "platform": "linux",
   "arch": "x64"
