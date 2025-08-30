@@ -97,8 +97,41 @@ if (themeEle.href) {
 }
 // Global proxy navigation functions
 window.go = function (url) {
+  // Helper function to safely get cookie value
+  function safeCookie(name) {
+    if (typeof getCookie === 'function') {
+      return getCookie(name);
+    } else if (typeof window.getCookie === 'function') {
+      return window.getCookie(name);
+    } else {
+      // Fallback implementation
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
+  }
+  
+  // Check performance mode setting with fallbacks
+  const performanceMode = safeCookie("performance-mode") === "true" || 
+                          localStorage.getItem("performance-mode") === "true";
+  
+  // Check if we're coming from games or apps page
+  const isFromGamesOrApps = window.location.pathname.includes('/games') || 
+                            window.location.pathname.includes('/apps');
+  
+  // Store the URL for the proxy to use
   sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
-  window.location.href = "/p/" + __uv$config.encodeUrl(url);
+  
+  // If performance mode is disabled (default) and we're launching from games/apps,
+  // use the browser interface for better user experience
+  if (!performanceMode && isFromGamesOrApps) {
+    console.log("Browser mode: Using browser interface for", url);
+    window.location.href = "/go";
+  } else {
+    console.log("Direct mode: Going directly to proxy for", url);
+    window.location.href = "/p/" + __uv$config.encodeUrl(url);
+  }
 };
 
 window.dy = function (url) {
