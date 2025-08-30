@@ -353,6 +353,47 @@
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+    
+    <!-- Ads Manager System -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
+    <!-- Initialize v9 Systems after DOM load -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize v9 systems with proper error handling
+        try {
+          if (typeof PluginSystem !== "undefined") {
+            window.slowGuardianPlugins = new PluginSystem();
+          }
+        } catch (error) {
+          console.error("Failed to initialize PluginSystem:", error);
+        }
+
+        try {
+          if (typeof PerformanceMode !== "undefined") {
+            window.slowGuardianPerformanceMode = new PerformanceMode();
+          }
+        } catch (error) {
+          console.error("Failed to initialize PerformanceMode:", error);
+        }
+
+        try {
+          if (typeof MoveableButtons !== "undefined") {
+            // Check if moveable buttons feature is enabled
+            const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
+                                            localStorage.getItem("feature-moveable-buttons") === "true";
+            
+            if (moveableButtonsEnabled) {
+              window.slowGuardianMoveableButtons = new MoveableButtons();
+            } else {
+              console.log("⏸️ Moveable Buttons disabled by user preference");
+            }
+          }
+        } catch (error) {
+          console.error("Failed to initialize MoveableButtons:", error);
+        }
+      });
+    </script>
 
     <!-- Legacy Theme Support & Auto-Actions -->
     <script>

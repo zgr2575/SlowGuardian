@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "96fa03a-1756491456588",
-  "buildDate": "2025-08-29T18:17:36.588Z",
-  "buildTimestamp": 1756491456588,
+  "buildId": "c34ae65-1756530694572",
+  "buildDate": "2025-08-30T05:11:34.572Z",
+  "buildTimestamp": 1756530694573,
   "git": {
-    "commit": "96fa03a8dccbf9a37949d7d73ea25ea8baa15468",
-    "commitShort": "96fa03a",
+    "commit": "c34ae653d0f27cb67ca7daf7e900135bff86b8eb",
+    "commitShort": "c34ae65",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-29T18:17:24Z",
-    "commitMessage": "🎮 Add browser mode vs performance mode logic for games and apps"
+    "commitDate": "2025-08-29T18:19:23Z",
+    "commitMessage": "🔧 Complete comprehensive navigation and UI fixes - all major issues resolved"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

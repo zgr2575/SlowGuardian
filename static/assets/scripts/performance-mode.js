@@ -5,6 +5,12 @@
 
 class PerformanceMode {
   constructor() {
+    // Ensure getCookie is available
+    if (typeof getCookie !== "function") {
+      console.warn("getCookie not available, using localStorage fallback");
+      window.getCookie = () => null;
+    }
+    
     this.isPerformanceMode =
       getCookie("performance-mode") === "true" ||
       localStorage.getItem("performance-mode") === "true";
@@ -308,22 +314,7 @@ class PerformanceMode {
   }
 }
 
-// Initialize Performance Mode after DOM is loaded and cookie utilities are available
-document.addEventListener("DOMContentLoaded", () => {
-  // Ensure cookie utilities are available
-  if (typeof getCookie !== "function") {
-    console.error("Cookie utilities not loaded! Waiting...");
-    setTimeout(() => {
-      const performanceMode = new PerformanceMode();
-      window.performanceMode = performanceMode;
-    }, 100);
-  } else {
-    const performanceMode = new PerformanceMode();
-    window.performanceMode = performanceMode;
-  }
-});
-
-// Export for modules
+// Export for modules - no automatic initialization
 if (typeof module !== "undefined") {
   module.exports = PerformanceMode;
 }

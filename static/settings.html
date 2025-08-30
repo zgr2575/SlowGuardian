@@ -30,6 +30,111 @@
     <link rel="stylesheet" href="assets/styles/admin.css" />
     <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
 
+    <!-- Ads Management Styles -->
+    <style>
+      .ads-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: pulse 2s infinite;
+      }
+
+      .status-dot.disabled {
+        background: #ef4444;
+        animation: none;
+      }
+
+      .status-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .ads-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .control-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .ads-info {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .info-value {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .ads-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .ads-actions .btn {
+        flex: 1;
+      }
+
+      .ads-note {
+        padding: 12px;
+        background: rgba(103, 126, 234, 0.1);
+        border: 1px solid rgba(103, 126, 234, 0.2);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+    </style>
+
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -144,6 +249,59 @@
                 <button id="open-features-manager-btn" class="btn btn-primary btn-block">
                   🎛️ Open Features Manager
                 </button>
+              </div>
+            </div>
+
+            <!-- Ads Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">📢 Ads Management</h3>
+                <p class="card-description">
+                  Support SlowGuardian by viewing ads or upgrade to Premium for an ad-free experience
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="ads-status" id="ads-status">
+                  <div class="status-indicator">
+                    <span class="status-dot" id="ads-status-dot"></span>
+                    <span class="status-text" id="ads-status-text">Loading...</span>
+                  </div>
+                </div>
+
+                <div class="ads-controls">
+                  <label class="switch">
+                    <input type="checkbox" id="ads-enabled-switch" class="slider-checkbox" checked />
+                    <span class="switch-slider"></span>
+                  </label>
+                  <span class="control-label">Enable Ads</span>
+                </div>
+
+                <div class="ads-info">
+                  <div class="info-item">
+                    <span class="info-label">Video Ads on Proxy:</span>
+                    <span class="info-value" id="video-ads-status">Enabled</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Display Ads:</span>
+                    <span class="info-value" id="display-ads-status">Enabled</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Support Revenue:</span>
+                    <span class="info-value">Active</span>
+                  </div>
+                </div>
+
+                <div class="ads-actions">
+                  <button id="test-video-ad-btn" class="btn btn-secondary">Test Video Ad</button>
+                  <button id="upgrade-premium-btn" class="btn btn-primary">🚀 Upgrade to Premium</button>
+                </div>
+
+                <div class="ads-note">
+                  <small>
+                    <strong>Note:</strong> Ads help keep SlowGuardian free for everyone. 
+                    Premium users enjoy an ad-free experience plus faster speeds and priority support.
+                  </small>
+                </div>
               </div>
             </div>
 
@@ -811,6 +969,94 @@
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+    
+    <!-- Ads Manager -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
+    <!-- Ads Management Settings Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize ads management UI
+        initAdsManagement();
+      });
+
+      function initAdsManagement() {
+        const adsEnabledSwitch = document.getElementById('ads-enabled-switch');
+        const adsStatusDot = document.getElementById('ads-status-dot');
+        const adsStatusText = document.getElementById('ads-status-text');
+        const videoAdsStatus = document.getElementById('video-ads-status');
+        const displayAdsStatus = document.getElementById('display-ads-status');
+        const testVideoAdBtn = document.getElementById('test-video-ad-btn');
+        const upgradePremiumBtn = document.getElementById('upgrade-premium-btn');
+
+        // Update UI based on current ads settings
+        function updateAdsStatus() {
+          const adsEnabled = getCookie('ads-enabled') !== 'false';
+          const performanceMode = getCookie('performance-mode') === 'true';
+          
+          adsEnabledSwitch.checked = adsEnabled;
+          
+          if (adsEnabled) {
+            adsStatusDot.classList.remove('disabled');
+            adsStatusText.textContent = 'Ads Enabled - Supporting SlowGuardian';
+            videoAdsStatus.textContent = performanceMode ? 'Disabled (Performance Mode)' : 'Enabled';
+            displayAdsStatus.textContent = 'Enabled';
+          } else {
+            adsStatusDot.classList.add('disabled');
+            adsStatusText.textContent = 'Ads Disabled';
+            videoAdsStatus.textContent = 'Disabled';
+            displayAdsStatus.textContent = 'Disabled';
+          }
+        }
+
+        // Handle ads toggle
+        adsEnabledSwitch.addEventListener('change', function() {
+          const enabled = this.checked;
+          
+          if (enabled) {
+            if (window.adsManager) {
+              window.adsManager.enableAds();
+            }
+            showNotification('Ads enabled - Thank you for supporting SlowGuardian!', 'success');
+          } else {
+            if (window.adsManager) {
+              window.adsManager.disableAds();
+            }
+            showNotification('Ads disabled', 'info');
+          }
+          
+          updateAdsStatus();
+        });
+
+        // Test video ad
+        testVideoAdBtn.addEventListener('click', function() {
+          if (window.adsManager) {
+            window.adsManager.showVideoAd(() => {
+              showNotification('Test video ad completed!', 'success');
+            });
+          } else {
+            showNotification('Ads manager not available', 'error');
+          }
+        });
+
+        // Upgrade to premium
+        upgradePremiumBtn.addEventListener('click', function() {
+          if (window.adsManager) {
+            window.adsManager.showUpgradeModal();
+          } else {
+            showNotification('Premium upgrade coming soon!', 'info');
+          }
+        });
+
+        // Initial status update
+        updateAdsStatus();
+
+        // Update status when ads manager loads
+        if (window.adsManager) {
+          setTimeout(updateAdsStatus, 1000);
+        }
+      }
+    </script>
 
     <div id="adv"></div>
   </body>

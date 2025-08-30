@@ -5,6 +5,12 @@
 
 class MoveableButtons {
   constructor() {
+    // Ensure getCookie is available
+    if (typeof getCookie !== "function") {
+      console.warn("getCookie not available, using localStorage fallback");
+      window.getCookie = () => null;
+    }
+    
     this.buttons = new Map();
     this.positions = JSON.parse(
       getCookie("button-positions") ||
@@ -735,31 +741,7 @@ class MoveableButtons {
   }
 }
 
-// Initialize Moveable Buttons System after DOM is loaded and cookie utilities are available
-document.addEventListener("DOMContentLoaded", () => {
-  // Check if moveable buttons feature is enabled
-  const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
-                                  localStorage.getItem("feature-moveable-buttons") === "true";
-  
-  if (!moveableButtonsEnabled) {
-    console.log("⏸️ Moveable Buttons disabled by user preference");
-    return;
-  }
-  
-  // Ensure cookie utilities are available
-  if (typeof getCookie !== "function") {
-    console.error("Cookie utilities not loaded! Waiting...");
-    setTimeout(() => {
-      const moveableButtons = new MoveableButtons();
-      window.moveableButtons = moveableButtons;
-    }, 100);
-  } else {
-    const moveableButtons = new MoveableButtons();
-    window.moveableButtons = moveableButtons;
-  }
-});
-
-// Export for modules
+// Export for modules - no automatic initialization  
 if (typeof module !== "undefined") {
   module.exports = MoveableButtons;
 }

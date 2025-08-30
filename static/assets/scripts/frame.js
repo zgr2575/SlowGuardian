@@ -109,7 +109,21 @@ window.addEventListener("load", function () {
     if (iframe) {
       // Show loading indicators
       showLoadingProgress();
-      iframe.src = GoUrl;
+      
+      // Check if ads are enabled and show video ad before loading
+      const adsEnabled = getCookie && getCookie('ads-enabled') !== 'false';
+      const performanceMode = getCookie && getCookie('performance-mode') === 'true';
+      
+      if (adsEnabled && !performanceMode && window.adsManager) {
+        console.log("📢 Showing video ad before proxy load...");
+        window.adsManager.showProxyVideoAd(GoUrl, (url) => {
+          console.log("📢 Video ad completed, loading proxy:", url);
+          iframe.src = url;
+        });
+      } else {
+        // Load directly without ad
+        iframe.src = GoUrl;
+      }
     }
   } else {
     console.warn("No URL found in sessionStorage");
@@ -543,7 +557,20 @@ window.onload = function () {
         overlay.style.display = "flex";
       }
 
-      iframe.src = GoUrl;
+      // Check if ads are enabled and show video ad before loading
+      const adsEnabled = getCookie && getCookie('ads-enabled') !== 'false';
+      const performanceMode = getCookie && getCookie('performance-mode') === 'true';
+      
+      if (adsEnabled && !performanceMode && window.adsManager) {
+        console.log("📢 Showing video ad before proxy load (onload)...");
+        window.adsManager.showProxyVideoAd(GoUrl, (url) => {
+          console.log("📢 Video ad completed, loading proxy (onload):", url);
+          iframe.src = url;
+        });
+      } else {
+        // Load directly without ad
+        iframe.src = GoUrl;
+      }
 
       // Set up iframe error handling
       iframe.onerror = function () {

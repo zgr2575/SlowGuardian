@@ -319,6 +319,30 @@ function setupCustomEndpoints(app, config) {
     });
   });
 
+  // Ads tracking endpoint
+  app.post("/api/ads/track", (req, res) => {
+    try {
+      const { event, adType, timestamp, userAgent, url } = req.body;
+      
+      // Log ad events for analytics
+      console.log(`📢 [Ad Event] ${event} - ${adType} at ${timestamp}`);
+      
+      // In production, save to database or analytics service
+      // For now, just log and return success
+      
+      res.json({
+        success: true,
+        message: "Ad event tracked successfully"
+      });
+    } catch (error) {
+      console.error("Failed to track ad event:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to track ad event"
+      });
+    }
+  });
+
   // User preferences endpoint
   app.post("/api/preferences", express.json(), (req, res) => {
     try {
