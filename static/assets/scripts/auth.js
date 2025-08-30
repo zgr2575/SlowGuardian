@@ -24,10 +24,27 @@ class AuthSystem {
   async loadConfig() {
     try {
       const response = await fetch("/api/config");
-      this.config = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.text();
+      if (!data) {
+        throw new Error("Empty response from server");
+      }
+      this.config = JSON.parse(data);
     } catch (error) {
       console.warn("Failed to load auth config:", error);
-      this.config = { challenge: false, users: {} };
+      // Use fallback configuration when server is unavailable
+      this.config = { 
+        challenge: false, 
+        users: {},
+        version: 9,
+        developerMode: { enabled: false },
+        features: {
+          plugins: true,
+          localAssets: true
+        }
+      };
     }
   }
 

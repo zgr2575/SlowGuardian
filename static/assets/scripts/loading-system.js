@@ -296,13 +296,32 @@ class LoadingSystem {
       this.checkModuleAvailability();
     }, 100);
 
-    // Fallback timeout
+    // Fallback timeout with better handling
     setTimeout(() => {
       if (document.getElementById("slowguardian-loading-overlay")) {
-        console.warn("⏰ Loading timeout reached, hiding loading screen");
-        this.hideLoading();
+        const loadedCount = this.loadedModules.size;
+        const totalCount = this.expectedModules.length;
+        
+        if (loadedCount >= Math.floor(totalCount * 0.7)) {
+          // If we have at least 70% of modules loaded, proceed
+          console.log(`⏰ Loading timeout reached, but ${loadedCount}/${totalCount} modules loaded - proceeding`);
+          this.hideLoading();
+        } else {
+          // If too few modules loaded, give more details
+          const missing = this.expectedModules.filter(m => !this.loadedModules.has(m));
+          console.warn(`⏰ Loading timeout reached with only ${loadedCount}/${totalCount} modules loaded. Missing: ${missing.join(', ')}`);
+          this.hideLoading();
+        }
       }
     }, this.maxLoadingTime);
+
+    // Emergency timeout for critical failures
+    setTimeout(() => {
+      if (document.getElementById("slowguardian-loading-overlay")) {
+        console.error("🚨 Emergency timeout - forcing loading screen removal");
+        this.hideLoading();
+      }
+    }, this.maxLoadingTime + 5000);
   }
 
   checkModuleAvailability() {

@@ -626,32 +626,68 @@ class ConstellationSystem {
 
 // Initialize particle system based on user preference
 export const initParticles = (container, type = "floating") => {
-  // Check for reduced motion preference
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  try {
+    // Validate container element
+    if (!container) {
+      console.warn("No container provided for particle system");
+      return null;
+    }
+
+    // Check for reduced motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      console.log("Particles disabled due to reduced motion preference");
+      return null;
+    }
+
+    let system;
+
+    switch (type) {
+      case "interactive":
+        try {
+          system = new InteractiveParticleSystem(container);
+        } catch (error) {
+          console.warn("Failed to create InteractiveParticleSystem, falling back to basic:", error);
+          system = new ParticleSystem(container);
+        }
+        break;
+      case "constellation":
+        try {
+          system = new ConstellationSystem(container);
+        } catch (error) {
+          console.warn("Failed to create ConstellationSystem, falling back to basic:", error);
+          system = new ParticleSystem(container);
+        }
+        break;
+      case "floating":
+      default:
+        system = new ParticleSystem(container);
+        break;
+    }
+
+    if (!system) {
+      console.warn("Failed to create any particle system");
+      return null;
+    }
+
+    // Handle window resize with error protection
+    const resizeHandler = () => {
+      try {
+        if (system && typeof system.resize === 'function') {
+          system.resize();
+        }
+      } catch (error) {
+        console.warn("Error during particle system resize:", error);
+      }
+    };
+
+    window.addEventListener("resize", resizeHandler);
+
+    console.log(`✨ Particle system initialized: ${type}`);
+    return system;
+  } catch (error) {
+    console.error("Critical error initializing particle system:", error);
     return null;
   }
-
-  let system;
-
-  switch (type) {
-    case "interactive":
-      system = new InteractiveParticleSystem(container);
-      break;
-    case "constellation":
-      system = new ConstellationSystem(container);
-      break;
-    case "floating":
-    default:
-      system = new ParticleSystem(container);
-      break;
-  }
-
-  // Handle window resize
-  window.addEventListener("resize", () => {
-    system.resize();
-  });
-
-  return system;
 };
 
 // Export classes for advanced usage
