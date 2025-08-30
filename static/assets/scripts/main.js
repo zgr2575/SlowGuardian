@@ -38,39 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // About:blank is now manual only - users can enable it through settings
   // This prevents the infinite loop of about:blank windows being created automatically
 
-  // Add unsaved changes warning
-  let hasUnsavedChanges = false;
-
-  // Track changes to settings and mark as unsaved
-  function markUnsavedChanges() {
-    hasUnsavedChanges = true;
-  }
-
-  // Listen for setting changes
-  const settingsElements = document.querySelectorAll(
-    'input[type="checkbox"], input[type="text"], select'
-  );
-  settingsElements.forEach((element) => {
-    element.addEventListener("change", markUnsavedChanges);
-  });
-
-  // Prevent page close if there are unsaved changes
-  window.addEventListener("beforeunload", function (e) {
-    if (hasUnsavedChanges) {
-      const confirmationMessage =
-        "You have unsaved changes. If you leave now, your changes may be lost.";
-      e.preventDefault();
-      e.returnValue = confirmationMessage;
-      return confirmationMessage;
-    }
-  });
-
-  // Clear unsaved changes flag when settings are saved
-  window.clearUnsavedChanges = function () {
-    hasUnsavedChanges = false;
+  // Simple beforeunload prevention - "Leave Site?" prompt
+  window.onbeforeunload = function (event) {
+    const confirmationMessage = 'Leave Site?';
+    (event || window.event).returnValue = confirmationMessage;
+    return confirmationMessage;
   };
-
-  window.markUnsavedChanges = markUnsavedChanges;
 });
 
 // Nav

@@ -3,9 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
     <meta name="referrer" content="no-referrer" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <title id="tab-title">SlowGuardian v9 - Browser Tabs</title>
+    <title id="tab-title">SlowGuardian v9 - Browser</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
@@ -24,7 +25,297 @@
     <link rel="stylesheet" href="assets/styles/v9/main.css" />
     <link rel="stylesheet" href="assets/styles/v9/components.css" />
     <link rel="stylesheet" href="assets/styles/v9/animations.css" />
-    <link rel="stylesheet" href="assets/styles/browser-tabs.css" />
+
+    <!-- Browser specific styles -->
+    <style>
+      /* Browser specific overrides */
+      .browser-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: relative;
+        z-index: 1;
+      }
+
+      .browser-toolbar {
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border-primary);
+        padding: var(--space-3);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        position: sticky;
+        top: 64px;
+        z-index: var(--z-modal);
+      }
+
+      .browser-nav-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .browser-address-bar {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+
+      .browser-address-input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        transition: all var(--transition-base);
+      }
+
+      .browser-address-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .browser-address-input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .browser-utility-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .browser-iframe {
+        flex: 1;
+        border: none;
+        width: 100%;
+        background: var(--bg-primary);
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: var(--z-modal);
+        text-align: center;
+      }
+
+      .overlay h1 {
+        color: var(--text-primary);
+        margin-bottom: var(--space-4);
+      }
+
+      .overlay p {
+        color: var(--text-secondary);
+        max-width: 400px;
+      }
+
+      .overlay a {
+        color: var(--accent-primary);
+        text-decoration: underline;
+      }
+
+      /* Loading bar styles */
+      .loading-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        transition: width 0.3s ease;
+        z-index: 1000;
+      }
+
+      .loading-bar.active {
+        animation: loadingProgress 2s ease-out forwards;
+      }
+
+      @keyframes loadingProgress {
+        0% {
+          width: 0%;
+        }
+        50% {
+          width: 70%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+
+      /* Loading overlay with spinner and tips */
+      .loading-overlay {
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 64px);
+        background: var(--bg-primary);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        gap: var(--space-6);
+      }
+
+      .loading-overlay.active {
+        display: flex;
+      }
+
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(79, 70, 229, 0.1);
+        border-left: 4px solid var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-content {
+        text-align: center;
+        max-width: 400px;
+        padding: 0 var(--space-4);
+      }
+
+      .loading-title {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-3);
+      }
+
+      .loading-tip {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        min-height: 20px;
+        opacity: 0;
+        animation: fadeInTip 0.5s ease-in-out forwards;
+      }
+
+      @keyframes fadeInTip {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .loading-steps {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-top: var(--space-4);
+      }
+
+      .loading-step {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(79, 70, 229, 0.2);
+        transition: background 0.3s ease;
+      }
+
+      .loading-step.active {
+        background: var(--accent-primary);
+      }
+
+      .loading-step.completed {
+        background: var(--success, #10b981);
+      }
+      @media (max-width: 768px) {
+        .browser-toolbar {
+          padding: var(--space-2);
+          gap: var(--space-2);
+        }
+
+        .browser-nav-controls {
+          order: 2;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .browser-address-bar {
+          order: 1;
+          width: 100%;
+        }
+
+        .browser-utility-controls {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .nav-container {
+          padding: 0 var(--space-3);
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-mobile-toggle {
+          display: block;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .browser-nav-controls {
+          gap: var(--space-1);
+        }
+
+        .btn-icon {
+          padding: var(--space-1);
+          font-size: var(--font-size-sm);
+        }
+
+        .browser-address-input {
+          padding: var(--space-2) var(--space-3);
+          font-size: var(--font-size-xs);
+        }
+      }
+
+      /* Fullscreen mode */
+      .fullscreen .navbar,
+      .fullscreen .browser-toolbar {
+        display: none;
+      }
+
+      .fullscreen .browser-iframe {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: var(--z-modal);
+      }
+    </style>
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -72,256 +363,491 @@
         </div>
 
         <div class="nav-actions">
-          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
-            <i class="icon">🌙</i>
-          </button>
-          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
-            <i class="icon">⛶</i>
+          <button class="btn-icon nav-mobile-toggle" style="display: none">
+            <i class="icon">☰</i>
           </button>
         </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content" id="main-content">
-      <section class="page active" id="page-tabs">
-        <div class="page-header">
-          <h2 class="page-title">🗂️ Browser Tabs</h2>
-          <p class="page-subtitle">Multi-tab browsing with session management</p>
-        </div>
+    <!-- Browser Container -->
+    <div class="browser-container">
+      <!-- Browser Toolbar -->
+      <div class="browser-toolbar">
+        <!-- Loading Bar -->
+        <div class="loading-bar" id="loading-bar"></div>
 
-        <!-- Tab Management Bar -->
-        <div class="tab-management-bar">
-          <div class="tab-controls">
-            <button id="new-tab-btn" class="btn btn-primary">➕ New Tab</button>
-            <button id="close-all-tabs-btn" class="btn btn-secondary">✖️ Close All</button>
-            <button id="duplicate-tab-btn" class="btn btn-secondary">📋 Duplicate Tab</button>
-          </div>
-          <div class="tab-actions">
-            <button id="save-session-btn" class="btn btn-info">💾 Save Session</button>
-            <button id="restore-session-btn" class="btn btn-info">📂 Restore Session</button>
-          </div>
-        </div>
-
-        <!-- Tab Navigation -->
-        <div class="tab-navigation" id="tab-navigation">
-          <div class="tab-list" id="tab-list">
-            <!-- Tabs will be dynamically added here -->
-          </div>
-          <div class="tab-overflow">
-            <button id="tab-overflow-btn" class="btn-icon" title="More tabs">
-              <i class="icon">⋯</i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Browser Container -->
-        <div class="browser-container" id="browser-container">
-          <!-- No Tabs State -->
-          <div class="no-tabs-state" id="no-tabs-state">
-            <div class="empty-state">
-              <div class="empty-icon">🗂️</div>
-              <h3>No tabs open</h3>
-              <p>Click "New Tab" to start browsing</p>
-              <button id="new-tab-quick-btn" class="btn btn-primary">➕ Open New Tab</button>
-            </div>
-          </div>
-
-          <!-- Tab Content Area -->
-          <div class="tab-content-area" id="tab-content-area" style="display: none">
-            <!-- Browser Controls -->
-            <div class="browser-controls">
-              <div class="navigation-controls">
-                <button id="back-btn" class="btn-icon" title="Go back" disabled>
-                  <i class="icon">⬅️</i>
-                </button>
-                <button id="forward-btn" class="btn-icon" title="Go forward" disabled>
-                  <i class="icon">➡️</i>
-                </button>
-                <button id="refresh-btn" class="btn-icon" title="Refresh">
-                  <i class="icon">🔄</i>
-                </button>
-                <button id="home-btn" class="btn-icon" title="Home">
-                  <i class="icon">🏠</i>
-                </button>
-              </div>
-
-              <div class="address-bar-container">
-                <form id="address-form" class="address-form">
-                  <div class="security-indicator" id="security-indicator">
-                    <i class="icon">🔒</i>
-                  </div>
-                  <input
-                    type="text"
-                    id="address-bar"
-                    class="address-bar"
-                    placeholder="Enter URL or search term..."
-                    autocomplete="off"
-                  />
-                  <button type="submit" class="search-btn" title="Go">
-                    <i class="icon">🔍</i>
-                  </button>
-                </form>
-              </div>
-
-              <div class="page-controls">
-                <button id="bookmark-btn" class="btn-icon" title="Bookmark this page">
-                  <i class="icon">⭐</i>
-                </button>
-                <button id="share-btn" class="btn-icon" title="Share">
-                  <i class="icon">📤</i>
-                </button>
-                <button id="menu-btn" class="btn-icon" title="Menu">
-                  <i class="icon">⋮</i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Loading Bar -->
-            <div class="loading-bar" id="loading-bar">
-              <div class="loading-progress" id="loading-progress"></div>
-            </div>
-
-            <!-- Browser Loading State -->
-            <div class="browser-loading" id="browser-loading">
-              <div class="loading-container">
-                <div class="loading-spinner"></div>
-                <div class="loading-text" id="loading-text">Loading...</div>
-                <div class="loading-tip" id="loading-tip">💡 Tip: Use Ctrl+T to open a new tab quickly</div>
-                <div class="loading-steps">
-                  <div class="step" id="step-1">
-                    <span class="step-icon">🔍</span>
-                    <span class="step-text">Resolving URL...</span>
-                  </div>
-                  <div class="step" id="step-2">
-                    <span class="step-icon">🌐</span>
-                    <span class="step-text">Connecting to proxy...</span>
-                  </div>
-                  <div class="step" id="step-3">
-                    <span class="step-icon">📄</span>
-                    <span class="step-text">Loading content...</span>
-                  </div>
-                  <div class="step" id="step-4">
-                    <span class="step-icon">✅</span>
-                    <span class="step-text">Complete!</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Browser Iframe -->
-            <div class="browser-frame-container" id="browser-frame-container">
-              <!-- Active tab iframes will be inserted here -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab Context Menu -->
-        <div class="context-menu" id="tab-context-menu" style="display: none">
-          <div class="context-item" data-action="refresh">
+        <!-- Navigation Controls -->
+        <div class="browser-nav-controls">
+          <button title="Home Page" id="home-page" class="btn-icon">
+            <i class="icon">🏠</i>
+          </button>
+          <button title="Back" id="back-button" class="btn-icon">
+            <i class="icon">←</i>
+          </button>
+          <button title="Forward" id="forward-button" class="btn-icon">
+            <i class="icon">→</i>
+          </button>
+          <button title="Reload" id="reload-button" class="btn-icon">
             <i class="icon">🔄</i>
-            <span>Refresh Tab</span>
-          </div>
-          <div class="context-item" data-action="duplicate">
-            <i class="icon">📋</i>
-            <span>Duplicate Tab</span>
-          </div>
-          <div class="context-item" data-action="bookmark">
-            <i class="icon">⭐</i>
-            <span>Bookmark Tab</span>
-          </div>
-          <div class="context-separator"></div>
-          <div class="context-item" data-action="close">
-            <i class="icon">✖️</i>
-            <span>Close Tab</span>
-          </div>
-          <div class="context-item" data-action="close-others">
-            <i class="icon">❌</i>
-            <span>Close Other Tabs</span>
-          </div>
+          </button>
         </div>
 
-        <!-- ChatGPT Integration Panel -->
-        <div class="chatgpt-panel" id="chatgpt-panel">
-          <div class="chatgpt-toggle">
-            <button id="chatgpt-toggle-btn" class="btn-icon" title="Toggle ChatGPT">
-              <i class="icon">🤖</i>
-            </button>
-          </div>
-          <div class="chatgpt-content" id="chatgpt-content" style="display: none">
-            <div class="chatgpt-header">
-              <h4>🤖 ChatGPT Assistant</h4>
-              <button id="chatgpt-close-btn" class="btn-icon">
-                <i class="icon">✖️</i>
-              </button>
-            </div>
-            <div class="chatgpt-messages" id="chatgpt-messages">
-              <div class="message assistant">
-                <div class="message-content">
-                  Hello! I'm your AI assistant. I can help you with web browsing, answer questions, or assist with any
-                  tasks. How can I help you today?
-                </div>
-              </div>
-            </div>
-            <div class="chatgpt-input">
-              <form id="chatgpt-form">
-                <input type="text" id="chatgpt-input" placeholder="Ask me anything..." autocomplete="off" />
-                <button type="submit" class="btn btn-primary">
-                  <i class="icon">📤</i>
-                </button>
-              </form>
-            </div>
-          </div>
+        <!-- Address Bar -->
+        <div class="browser-address-bar">
+          <form id="fs">
+            <input
+              id="is"
+              class="browser-address-input"
+              placeholder="Search or enter a new URL..."
+              type="text"
+              autocomplete="url"
+              spellcheck="false"
+            />
+          </form>
         </div>
-      </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>SlowGuardian v9</h4>
-          <p>Multi-tab browsing with advanced session management</p>
+        <!-- Utility Controls -->
+        <div class="browser-utility-controls">
+          <button title="Inspect Element" id="eruda-button" class="btn-icon">
+            <i class="icon">🔍</i>
+          </button>
+          <button title="Open in New Window" id="popout-button" class="btn-icon">
+            <i class="icon">🗗</i>
+          </button>
+          <button title="Fullscreen" id="fullscreen-button" class="btn-icon">
+            <i class="icon">⛶</i>
+          </button>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
-      </div>
-    </footer>
 
-    <!-- Session Management Modal -->
-    <div id="session-modal" class="modal" style="display: none">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 id="session-modal-title">💾 Save Session</h3>
-          <button class="modal-close" id="close-session-modal">&times;</button>
-        </div>
-        <div class="modal-body" id="session-modal-body">
-          <!-- Content will be dynamically inserted -->
-        </div>
-        <div class="modal-footer" id="session-modal-footer">
-          <!-- Buttons will be dynamically inserted -->
+      <!-- Enhanced Loading Overlay -->
+      <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-content">
+          <div class="loading-title" id="loading-title">Loading Website...</div>
+          <div class="loading-tip" id="loading-tip">Preparing your browsing experience</div>
+          <div class="loading-steps" id="loading-steps">
+            <div class="loading-step" data-step="0"></div>
+            <div class="loading-step" data-step="1"></div>
+            <div class="loading-step" data-step="2"></div>
+            <div class="loading-step" data-step="3"></div>
+            <div class="loading-step" data-step="4"></div>
+          </div>
         </div>
       </div>
+
+      <!-- Browser Iframe -->
+      <iframe
+        src=""
+        id="ifra"
+        class="browser-iframe"
+        name="Browser Frame"
+        title="Web Browser"
+        allowfullscreen
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+      ></iframe>
     </div>
 
     <!-- Scripts -->
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
     
-    <!-- Ultraviolet -->
-    <script src="./m/bundle.js?v=5"></script>
-    <script src="./m/config.js?v=5"></script>
-    
     <!-- Core Scripts -->
-    <script src="assets/scripts/v9/utils.js" type="module"></script>
-    <script src="assets/scripts/v9/particles.js" type="module"></script>
-    <script src="assets/scripts/v9/proxy.js" type="module"></script>
-    <script src="assets/scripts/browser-tabs.js"></script>
-    <script src="assets/scripts/chatgpt-integration.js"></script>
-    <script src="assets/scripts/main.js"></script>
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/index.js?v=14"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="/assets/scripts/main.js?v=31"></script>
     
     <!-- Ads Manager -->
     <script src="assets/scripts/ads-manager.js?v=1"></script>
+    
+    <!-- Ultraviolet -->
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      // Register Ultraviolet service worker
+      (async function () {
+        try {
+          if ("serviceWorker" in navigator) {
+            console.log("Registering Ultraviolet service worker...");
+            await navigator.serviceWorker.register("/m/sw.js", {
+              scope: "/a/",
+            });
+            console.log("✅ Ultraviolet service worker registered successfully");
+          } else {
+            console.warn("⚠️ Service worker not supported in this browser");
+          }
+        } catch (error) {
+          console.error("❌ Failed to register service worker:", error);
+        }
+      })();
+    </script>
+
+    <script src="assets/scripts/frame.js?v=36"></script>
+
+    <!-- Simple beforeunload prevention for browsers -->
+    <script>
+      window.onbeforeunload = function (event) {
+        const confirmationMessage = 'Leave Site?';
+        (event || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+      };
+    </script>
+
+    <!-- Enhanced Browser Functionality -->
+    <script>
+      // Loading tips and system
+      const loadingTips = [
+        "SlowGuardian protects your privacy while browsing",
+        "Use Ctrl+L or Cmd+L to quickly focus the address bar",
+        "Your browsing activity is encrypted and secured",
+        "Tab cloaking disguises your browser tab for privacy",
+        "Try the about:blank popup feature for stealth browsing",
+        "SlowGuardian works on mobile devices too!",
+        "All your data stays private and secure",
+        "Check out the Apps and Games sections for quick access",
+        "Use the settings to customize your experience",
+        "SlowGuardian v9 features a modern UI and enhanced performance",
+      ];
+
+      const loadingSteps = [
+        "Initializing proxy connection...",
+        "Establishing secure tunnel...",
+        "Configuring privacy settings...",
+        "Loading website content...",
+        "Finalizing connection...",
+      ];
+
+      class BrowserLoadingSystem {
+        constructor() {
+          this.currentTip = 0;
+          this.currentStep = 0;
+          this.isLoading = false;
+          this.tipInterval = null;
+          this.stepInterval = null;
+
+          this.loadingOverlay = document.getElementById("loading-overlay");
+          this.loadingBar = document.getElementById("loading-bar");
+          this.loadingTitle = document.getElementById("loading-title");
+          this.loadingTip = document.getElementById("loading-tip");
+          this.loadingSteps = document.getElementById("loading-steps");
+        }
+
+        startLoading(url = "") {
+          if (this.isLoading) return;
+
+          this.isLoading = true;
+          this.currentTip = 0;
+          this.currentStep = 0;
+
+          // Show loading overlay
+          this.loadingOverlay.classList.add("active");
+          this.loadingBar.classList.add("active");
+
+          // Update title with URL if provided
+          if (url) {
+            this.loadingTitle.textContent = `Loading ${this.getDisplayUrl(url)}...`;
+          }
+
+          // Start cycling through tips
+          this.cycleTips();
+          this.cycleSteps();
+
+          // Auto-hide after a reasonable time
+          setTimeout(() => {
+            this.stopLoading();
+          }, 3000);
+        }
+
+        stopLoading() {
+          if (!this.isLoading) return;
+
+          this.isLoading = false;
+
+          // Clear intervals
+          if (this.tipInterval) clearInterval(this.tipInterval);
+          if (this.stepInterval) clearInterval(this.stepInterval);
+
+          // Mark all steps as completed
+          this.loadingSteps.querySelectorAll(".loading-step").forEach((step, index) => {
+            step.classList.remove("active");
+            step.classList.add("completed");
+          });
+
+          // Hide loading overlay after a short delay
+          setTimeout(() => {
+            this.loadingOverlay.classList.remove("active");
+            this.loadingBar.classList.remove("active");
+
+            // Reset steps
+            setTimeout(() => {
+              this.loadingSteps.querySelectorAll(".loading-step").forEach((step) => {
+                step.classList.remove("active", "completed");
+              });
+            }, 500);
+          }, 800);
+        }
+
+        cycleTips() {
+          this.updateTip();
+          this.tipInterval = setInterval(() => {
+            this.currentTip = (this.currentTip + 1) % loadingTips.length;
+            this.updateTip();
+          }, 2000);
+        }
+
+        cycleSteps() {
+          this.updateStep();
+          this.stepInterval = setInterval(() => {
+            if (this.currentStep < loadingSteps.length - 1) {
+              // Mark current step as completed
+              const currentStepElement = this.loadingSteps.querySelector(`[data-step="${this.currentStep}"]`);
+              if (currentStepElement) {
+                currentStepElement.classList.remove("active");
+                currentStepElement.classList.add("completed");
+              }
+
+              this.currentStep++;
+              this.updateStep();
+            } else {
+              if (this.stepInterval) clearInterval(this.stepInterval);
+            }
+          }, 600);
+        }
+
+        updateTip() {
+          this.loadingTip.style.opacity = "0";
+          setTimeout(() => {
+            this.loadingTip.textContent = loadingTips[this.currentTip];
+            this.loadingTip.style.opacity = "1";
+          }, 250);
+        }
+
+        updateStep() {
+          // Mark current step as active
+          const stepElement = this.loadingSteps.querySelector(`[data-step="${this.currentStep}"]`);
+          if (stepElement) {
+            stepElement.classList.add("active");
+          }
+
+          // Update title with current step
+          this.loadingTitle.textContent = loadingSteps[this.currentStep];
+        }
+
+        getDisplayUrl(url) {
+          try {
+            const urlObj = new URL(url.startsWith("http") ? url : "https://" + url);
+            return urlObj.hostname;
+          } catch {
+            return url.length > 30 ? url.substring(0, 30) + "..." : url;
+          }
+        }
+      }
+
+      // Initialize loading system
+      const browserLoading = new BrowserLoadingSystem();
+
+      // Enhanced home function for the browser
+      function goHome() {
+        window.location.href = "./";
+      }
+
+      // Enhanced back function for the browser
+      function goBack() {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          goHome();
+        }
+      }
+
+      // Enhanced forward function for the browser
+      function goForward() {
+        window.history.forward();
+      }
+
+      // Toggle fullscreen function for the browser
+      function toggleFullscreen() {
+        const iframe = document.getElementById("ifra");
+        if (iframe) {
+          if (!document.fullscreenElement) {
+            iframe.requestFullscreen().catch((err) => {
+              console.warn("Could not enable fullscreen mode:", err.message);
+            });
+          } else {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      // Mobile navigation toggle
+      document.addEventListener("DOMContentLoaded", function () {
+        const mobileToggle = document.querySelector(".nav-mobile-toggle");
+        const navLinks = document.querySelector(".nav-links");
+
+        if (mobileToggle && navLinks) {
+          mobileToggle.addEventListener("click", function () {
+            navLinks.style.display = navLinks.style.display === "flex" ? "none" : "flex";
+          });
+        }
+
+        // Auto-hide mobile menu on window resize
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > 768 && navLinks) {
+            navLinks.style.display = "";
+          }
+        });
+
+        // Set up browser controls
+        const backButton = document.getElementById("back-button");
+        const forwardButton = document.getElementById("forward-button");
+        const reloadButton = document.getElementById("reload-button");
+        const homeButton = document.getElementById("home-page");
+        const erudaButton = document.getElementById("eruda-button");
+        const popoutButton = document.getElementById("popout-button");
+        const fullscreenButton = document.getElementById("fullscreen-button");
+        const iframe = document.getElementById("ifra");
+
+        if (backButton) {
+          backButton.addEventListener("click", goBack);
+        }
+
+        if (forwardButton) {
+          forwardButton.addEventListener("click", goForward);
+        }
+
+        if (reloadButton) {
+          reloadButton.addEventListener("click", function () {
+            if (iframe) {
+              iframe.src = iframe.src;
+            }
+          });
+        }
+
+        if (homeButton) {
+          homeButton.addEventListener("click", goHome);
+        }
+
+        if (erudaButton) {
+          erudaButton.addEventListener("click", function () {
+            if (typeof erudaToggle === "function") {
+              erudaToggle();
+            }
+          });
+        }
+
+        if (popoutButton) {
+          popoutButton.addEventListener("click", function () {
+            if (typeof popout === "function") {
+              popout();
+            }
+          });
+        }
+
+        if (fullscreenButton) {
+          fullscreenButton.addEventListener("click", toggleFullscreen);
+        }
+
+        if (iframe) {
+          iframe.addEventListener("load", function () {
+            // Stop loading when iframe loads
+            browserLoading.stopLoading();
+
+            if (typeof iframeLoad === "function") {
+              iframeLoad();
+            }
+          });
+        }
+
+        // Override form submission to show loading
+        const form = document.getElementById("fs");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            const addressInput = document.getElementById("is");
+            if (addressInput && addressInput.value.trim()) {
+              browserLoading.startLoading(addressInput.value.trim());
+            }
+          });
+        }
+
+        // Enhanced keyboard navigation
+        const addressInput = document.getElementById("is");
+        if (addressInput) {
+          // Focus address bar with Ctrl+L or Cmd+L
+          document.addEventListener("keydown", function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === "l") {
+              e.preventDefault();
+              addressInput.focus();
+              addressInput.select();
+            }
+          });
+
+          // Enhanced address bar behavior
+          addressInput.addEventListener("focus", function () {
+            this.select();
+          });
+        }
+
+        // Responsive iframe handling
+        function updateIframeHeight() {
+          const toolbar = document.querySelector(".browser-toolbar");
+          const navbar = document.querySelector(".navbar");
+
+          if (iframe && toolbar && navbar) {
+            const toolbarHeight = toolbar.offsetHeight;
+            const navbarHeight = navbar.offsetHeight;
+            const availableHeight = window.innerHeight - toolbarHeight - navbarHeight;
+            iframe.style.height = availableHeight + "px";
+          }
+        }
+
+        // Update iframe height on load and resize
+        updateIframeHeight();
+        window.addEventListener("resize", updateIframeHeight);
+      });
+
+      // Enhanced error handling
+      window.addEventListener("error", function (e) {
+        console.error("Browser error:", e.error);
+      });
+
+      // Particles background (matching other v9 pages)
+      function createParticles() {
+        const particlesContainer = document.getElementById("particles");
+        if (!particlesContainer) return;
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.style.cssText = `
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(79, 70, 229, 0.6);
+            border-radius: 50%;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+          `;
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Add particle animation CSS
+      const particleStyles = document.createElement("style");
+      particleStyles.textContent = `
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); opacity: 0.6; }
+          50% { transform: translateY(-20px); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(particleStyles);
+
+      // Initialize particles
+      createParticles();
+    </script>
   </body>
 </html>
