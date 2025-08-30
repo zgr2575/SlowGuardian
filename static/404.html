@@ -287,7 +287,7 @@
           </svg>
           Go Home
         </a>
-        <button onclick="history.back()" class="btn btn-secondary">
+        <button id="go-back-btn" class="btn btn-secondary">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
@@ -318,6 +318,14 @@
           }
           if (typeof loadSettings === "function") {
             loadSettings();
+          }
+
+          // Add event listener for go back button
+          const goBackBtn = document.getElementById("go-back-btn");
+          if (goBackBtn) {
+            goBackBtn.addEventListener("click", function () {
+              history.back();
+            });
           }
         } catch (error) {
           console.log("Theme system not available");

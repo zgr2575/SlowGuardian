@@ -6,22 +6,40 @@ window.addEventListener("load", async () => {
 
       // Register Ultraviolet service worker for proxy functionality
       try {
-        const uvRegistration = await navigator.serviceWorker.register("/m/sw.js", {
-          scope: "/a/",
-        });
-        console.log("✅ Ultraviolet service worker registered successfully:", uvRegistration);
+        const uvRegistration = await navigator.serviceWorker.register(
+          "/m/sw.js",
+          {
+            scope: "/a/",
+          }
+        );
+        console.log(
+          "✅ Ultraviolet service worker registered successfully:",
+          uvRegistration
+        );
       } catch (uvError) {
-        console.error("❌ Failed to register Ultraviolet service worker:", uvError);
+        console.error(
+          "❌ Failed to register Ultraviolet service worker:",
+          uvError
+        );
       }
 
       // Register main service worker for general functionality
       try {
-        const mainRegistration = await navigator.serviceWorker.register("/sw.js", {
-          scope: "/",
-        });
-        console.log("✅ Main service worker registered successfully:", mainRegistration);
+        const mainRegistration = await navigator.serviceWorker.register(
+          "/sw.js",
+          {
+            scope: "/",
+          }
+        );
+        console.log(
+          "✅ Main service worker registered successfully:",
+          mainRegistration
+        );
       } catch (swError) {
-        console.warn("⚠️ Main service worker registration failed (non-critical):", swError);
+        console.warn(
+          "⚠️ Main service worker registration failed (non-critical):",
+          swError
+        );
       }
 
       // Wait for service worker to be ready
@@ -70,13 +88,15 @@ async function processUrl(value, path) {
     console.log("Processing URL:", url, "with path:", path);
 
     // Check for performance mode setting
-    const performanceMode = getCookie("performance-mode") === "true" || 
-                            localStorage.getItem("performance-mode") === "true";
-    
+    const performanceMode =
+      getCookie("performance-mode") === "true" ||
+      localStorage.getItem("performance-mode") === "true";
+
     // For games and apps, determine if we should use browser mode or direct mode
-    const isFromGamesOrApps = window.location.pathname.includes('/games') || 
-                              window.location.pathname.includes('/apps');
-    
+    const isFromGamesOrApps =
+      window.location.pathname.includes("/games") ||
+      window.location.pathname.includes("/apps");
+
     // If performance mode is enabled and launching from games/apps, skip browser interface
     if (performanceMode && isFromGamesOrApps && !path) {
       console.log("Performance mode: Direct proxy navigation");
@@ -91,13 +111,13 @@ async function processUrl(value, path) {
     // Ensure UV config is available before proceeding
     let retryCount = 0;
     const maxRetries = 10;
-    
+
     while (retryCount < maxRetries) {
       if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
         break;
       }
       console.log(`Waiting for UV config... (${retryCount + 1}/${maxRetries})`);
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       retryCount++;
     }
 

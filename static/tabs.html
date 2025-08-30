@@ -452,19 +452,19 @@
     <!-- Scripts -->
     <!-- Script Loader (Load first for dependency management) -->
     <script src="assets/scripts/script-loader.js?v=1"></script>
-    
+
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
-    
+
     <!-- Core Scripts -->
     <script src="assets/scripts/cookie-storage.js?v=1"></script>
     <script src="assets/scripts/index.js?v=14"></script>
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
     <script src="/assets/scripts/main.js?v=31"></script>
-    
+
     <!-- Ads Manager -->
     <script src="assets/scripts/ads-manager.js?v=1"></script>
-    
+
     <!-- Ultraviolet -->
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
@@ -494,7 +494,7 @@
     <!-- Simple beforeunload prevention for browsers -->
     <script>
       window.onbeforeunload = function (event) {
-        const confirmationMessage = 'Leave Site?';
+        const confirmationMessage = "Leave Site?";
         (event || window.event).returnValue = confirmationMessage;
         return confirmationMessage;
       };
@@ -688,10 +688,13 @@
 
       // Mobile navigation toggle
       // Use enhanced initialization with dependency checking
-      if (typeof window.whenReady === 'function') {
-        window.whenReady(function () {
-          initializeTabs();
-        }, ['cookie-utils', 'main']); // Wait for cookie utilities and main navigation functions
+      if (typeof window.whenReady === "function") {
+        window.whenReady(
+          function () {
+            initializeTabs();
+          },
+          ["cookie-utils", "main"]
+        ); // Wait for cookie utilities and main navigation functions
       } else {
         // Fallback to DOMContentLoaded if whenReady is not available
         document.addEventListener("DOMContentLoaded", function () {

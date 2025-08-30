@@ -109,11 +109,12 @@ window.addEventListener("load", function () {
     if (iframe) {
       // Show loading indicators
       showLoadingProgress();
-      
+
       // Check if ads are enabled and show video ad before loading
-      const adsEnabled = getCookie && getCookie('ads-enabled') !== 'false';
-      const performanceMode = getCookie && getCookie('performance-mode') === 'true';
-      
+      const adsEnabled = getCookie && getCookie("ads-enabled") !== "false";
+      const performanceMode =
+        getCookie && getCookie("performance-mode") === "true";
+
       if (adsEnabled && !performanceMode && window.adsManager) {
         console.log("📢 Showing video ad before proxy load...");
         window.adsManager.showProxyVideoAd(GoUrl, (url) => {
@@ -296,7 +297,7 @@ function popout() {
     newIframe.src = iframe.src;
 
     newWindow.document.body.appendChild(newIframe);
-    
+
     // Redirect main page to NASA to hide from browser history
     setTimeout(() => {
       window.location.replace("https://www.nasa.gov/");
@@ -563,9 +564,10 @@ window.onload = function () {
       }
 
       // Check if ads are enabled and show video ad before loading
-      const adsEnabled = getCookie && getCookie('ads-enabled') !== 'false';
-      const performanceMode = getCookie && getCookie('performance-mode') === 'true';
-      
+      const adsEnabled = getCookie && getCookie("ads-enabled") !== "false";
+      const performanceMode =
+        getCookie && getCookie("performance-mode") === "true";
+
       if (adsEnabled && !performanceMode && window.adsManager) {
         console.log("📢 Showing video ad before proxy load (onload)...");
         window.adsManager.showProxyVideoAd(GoUrl, (url) => {

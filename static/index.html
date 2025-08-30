@@ -356,7 +356,7 @@
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
-    
+
     <!-- Ads Manager System -->
     <script src="assets/scripts/ads-manager.js?v=1"></script>
 
@@ -383,9 +383,10 @@
         try {
           if (typeof MoveableButtons !== "undefined") {
             // Check if moveable buttons feature is enabled
-            const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
-                                            localStorage.getItem("feature-moveable-buttons") === "true";
-            
+            const moveableButtonsEnabled =
+              getCookie("feature-moveable-buttons") === "true" ||
+              localStorage.getItem("feature-moveable-buttons") === "true";
+
             if (moveableButtonsEnabled) {
               window.slowGuardianMoveableButtons = new MoveableButtons();
             } else {

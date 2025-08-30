@@ -115,7 +115,7 @@ class ProxyManager {
           "</body>" +
           "</html>"
       );
-      
+
       // Redirect main page to NASA to hide from browser history
       setTimeout(() => {
         window.location.replace("https://www.nasa.gov/");

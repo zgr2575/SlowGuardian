@@ -13,12 +13,16 @@ class FeaturesManager {
 
   initialize() {
     // Only initialize on settings page
-    if (!window.location.pathname.includes("/settings") && 
-        !window.location.pathname.includes("/s")) {
-      console.log("🎛️ Features Manager: Not on settings page, skipping initialization");
+    if (
+      !window.location.pathname.includes("/settings") &&
+      !window.location.pathname.includes("/s")
+    ) {
+      console.log(
+        "🎛️ Features Manager: Not on settings page, skipping initialization"
+      );
       return;
     }
-    
+
     console.log("🎛️ Initializing Features Manager...");
     this.createFeaturesInterface();
     this.loadFeatures();
@@ -27,15 +31,19 @@ class FeaturesManager {
 
   createFeaturesInterface() {
     // Only create if we're on the settings page and it doesn't already exist
-    if (!window.location.pathname.includes("/settings") && 
-        !window.location.pathname.includes("/s")) {
+    if (
+      !window.location.pathname.includes("/settings") &&
+      !window.location.pathname.includes("/s")
+    ) {
       console.log("Not on settings page, skipping features interface creation");
       return;
     }
 
     // Check if features management already exists
     if (document.getElementById("features-management")) {
-      console.log("Features management interface already exists, skipping creation");
+      console.log(
+        "Features management interface already exists, skipping creation"
+      );
       return;
     }
 
@@ -46,7 +54,9 @@ class FeaturesManager {
       document.body;
 
     if (!settingsContainer) {
-      console.warn("Settings container not found, skipping features interface creation");
+      console.warn(
+        "Settings container not found, skipping features interface creation"
+      );
       return;
     }
 

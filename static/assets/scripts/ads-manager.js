@@ -9,27 +9,27 @@ class AdsManager {
     this.adProviders = {
       google: {
         enabled: true,
-        clientId: '', // Will be set by admin
-        slots: new Map()
+        clientId: "", // Will be set by admin
+        slots: new Map(),
       },
       media: {
         enabled: true,
-        networkId: '', // Custom network
-        slots: new Map()
-      }
+        networkId: "", // Custom network
+        slots: new Map(),
+      },
     };
-    
+
     this.adContainers = new Map();
     this.videoAdQueue = [];
     this.displayAdQueue = [];
     this.adBlockDetected = false;
-    
+
     this.init();
   }
 
   init() {
     if (!this.adsEnabled) {
-      console.log('📢 Ads disabled by admin configuration');
+      console.log("📢 Ads disabled by admin configuration");
       return;
     }
 
@@ -37,8 +37,8 @@ class AdsManager {
     this.loadAdProviders();
     this.setupAdContainers();
     this.setupVideoAds();
-    
-    console.log('📢 SlowGuardian Ads Manager initialized');
+
+    console.log("📢 SlowGuardian Ads Manager initialized");
   }
 
   getAdsSetting() {
@@ -47,54 +47,57 @@ class AdsManager {
       // Non-developers always have ads enabled
       return true;
     }
-    
+
     // Check if ads are enabled in settings (for developers only)
-    return getCookie('ads-enabled') !== 'false' && 
-           localStorage.getItem('ads-enabled') !== 'false';
+    return (
+      getCookie("ads-enabled") !== "false" &&
+      localStorage.getItem("ads-enabled") !== "false"
+    );
   }
 
   isDeveloper() {
     // Check for admin authentication
-    const adminToken = sessionStorage.getItem('admin-token');
+    const adminToken = sessionStorage.getItem("admin-token");
     if (adminToken) {
       return true;
     }
-    
+
     // Check for developer mode cookie
-    const devMode = getCookie('developer-mode');
-    if (devMode === 'true') {
+    const devMode = getCookie("developer-mode");
+    if (devMode === "true") {
       return true;
     }
-    
+
     // Check if admin panel is active
     if (window.adminPanel && window.adminPanel.isLoggedIn) {
       return true;
     }
-    
+
     return false;
   }
 
   detectAdBlock() {
     // Create a test ad element to detect ad blockers
-    const testAd = document.createElement('div');
-    testAd.innerHTML = '&nbsp;';
-    testAd.className = 'adsbox';
-    testAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;';
+    const testAd = document.createElement("div");
+    testAd.innerHTML = "&nbsp;";
+    testAd.className = "adsbox";
+    testAd.style.cssText =
+      "position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;";
     document.body.appendChild(testAd);
 
     setTimeout(() => {
       if (testAd.offsetHeight === 0) {
         this.adBlockDetected = true;
         this.showAdBlockMessage();
-        console.warn('📢 Ad blocker detected');
+        console.warn("📢 Ad blocker detected");
       }
       document.body.removeChild(testAd);
     }, 100);
   }
 
   showAdBlockMessage() {
-    const message = document.createElement('div');
-    message.className = 'adblock-notice';
+    const message = document.createElement("div");
+    message.className = "adblock-notice";
     message.innerHTML = `
       <div class="adblock-content">
         <h3>🛡️ Ad Blocker Detected</h3>
@@ -114,8 +117,8 @@ class AdsManager {
       z-index: 10000;
       box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     `;
-    
-    const style = document.createElement('style');
+
+    const style = document.createElement("style");
     style.textContent = `
       .adblock-content h3 { margin: 0 0 10px 0; }
       .adblock-content p { margin: 0 0 10px 0; }
@@ -140,7 +143,7 @@ class AdsManager {
 
     // Google AdSense
     this.loadGoogleAds();
-    
+
     // Custom media networks
     this.loadMediaAds();
   }
@@ -148,22 +151,23 @@ class AdsManager {
   loadGoogleAds() {
     if (!this.adProviders.google.enabled) return;
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.async = true;
-    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-    script.crossOrigin = 'anonymous';
-    
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    script.crossOrigin = "anonymous";
+
     script.onerror = () => {
-      console.warn('📢 Google Ads failed to load');
+      console.warn("📢 Google Ads failed to load");
       this.adProviders.google.enabled = false;
     };
-    
+
     document.head.appendChild(script);
   }
 
   loadMediaAds() {
     // Custom ad network integration placeholder
-    console.log('📢 Loading custom media ads...');
+    console.log("📢 Loading custom media ads...");
   }
 
   setupAdContainers() {
@@ -174,21 +178,21 @@ class AdsManager {
   }
 
   createPageAds() {
-    const pages = ['home', 'apps', 'games', 'settings', 'tabs'];
-    
-    pages.forEach(pageId => {
+    const pages = ["home", "apps", "games", "settings", "tabs"];
+
+    pages.forEach((pageId) => {
       const pageElement = document.getElementById(`page-${pageId}`);
       if (pageElement) {
-        this.addDisplayAd(pageElement, `${pageId}-header`, 'top');
-        this.addDisplayAd(pageElement, `${pageId}-content`, 'middle');
+        this.addDisplayAd(pageElement, `${pageId}-header`, "top");
+        this.addDisplayAd(pageElement, `${pageId}-content`, "middle");
       }
     });
   }
 
   createSidebarAds() {
     // Add sidebar ads that appear on all pages
-    const sidebar = document.createElement('div');
-    sidebar.className = 'ads-sidebar';
+    const sidebar = document.createElement("div");
+    sidebar.className = "ads-sidebar";
     sidebar.innerHTML = `
       <div class="ad-container" id="sidebar-ad-1">
         <div class="ad-label">Advertisement</div>
@@ -199,7 +203,7 @@ class AdsManager {
         <div class="ad-content" id="sidebar-display-2"></div>
       </div>
     `;
-    
+
     sidebar.style.cssText = `
       position: fixed;
       right: 10px;
@@ -212,7 +216,7 @@ class AdsManager {
       gap: 20px;
     `;
 
-    const adStyle = document.createElement('style');
+    const adStyle = document.createElement("style");
     adStyle.textContent = `
       .ads-sidebar .ad-container {
         background: rgba(255,255,255,0.1);
@@ -248,20 +252,20 @@ class AdsManager {
     document.body.appendChild(sidebar);
 
     // Load ads into sidebar
-    this.loadDisplayAd('sidebar-display-1', '160x600');
-    this.loadDisplayAd('sidebar-display-2', '160x600');
+    this.loadDisplayAd("sidebar-display-1", "160x600");
+    this.loadDisplayAd("sidebar-display-2", "160x600");
   }
 
   createFooterAds() {
-    const footer = document.querySelector('.footer');
+    const footer = document.querySelector(".footer");
     if (footer) {
-      const adContainer = document.createElement('div');
-      adContainer.className = 'footer-ads';
+      const adContainer = document.createElement("div");
+      adContainer.className = "footer-ads";
       adContainer.innerHTML = `
         <div class="ad-label">Advertisement</div>
         <div class="ad-content" id="footer-display-ad"></div>
       `;
-      
+
       adContainer.style.cssText = `
         margin: 20px 0;
         text-align: center;
@@ -272,18 +276,18 @@ class AdsManager {
       `;
 
       footer.insertBefore(adContainer, footer.firstChild);
-      this.loadDisplayAd('footer-display-ad', '728x90');
+      this.loadDisplayAd("footer-display-ad", "728x90");
     }
   }
 
-  addDisplayAd(container, adId, position = 'top') {
-    const adElement = document.createElement('div');
-    adElement.className = 'page-ad-container';
+  addDisplayAd(container, adId, position = "top") {
+    const adElement = document.createElement("div");
+    adElement.className = "page-ad-container";
     adElement.innerHTML = `
       <div class="ad-label">Advertisement</div>
       <div class="ad-content" id="${adId}"></div>
     `;
-    
+
     adElement.style.cssText = `
       margin: 20px auto;
       text-align: center;
@@ -294,16 +298,16 @@ class AdsManager {
       border: 1px solid rgba(255,255,255,0.1);
     `;
 
-    if (position === 'top') {
+    if (position === "top") {
       container.insertBefore(adElement, container.firstChild);
-    } else if (position === 'middle') {
+    } else if (position === "middle") {
       const middle = Math.floor(container.children.length / 2);
       container.insertBefore(adElement, container.children[middle]);
     } else {
       container.appendChild(adElement);
     }
 
-    this.loadDisplayAd(adId, '728x90');
+    this.loadDisplayAd(adId, "728x90");
   }
 
   loadDisplayAd(containerId, size) {
@@ -328,20 +332,20 @@ class AdsManager {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const adElement = document.createElement('ins');
-    adElement.className = 'adsbygoogle';
-    adElement.style.display = 'block';
-    adElement.setAttribute('data-ad-client', 'ca-pub-YOUR_PUBLISHER_ID'); // Replace with actual ID
-    adElement.setAttribute('data-ad-slot', 'AUTO_SLOT'); // Replace with actual slot
-    adElement.setAttribute('data-ad-format', 'auto');
-    adElement.setAttribute('data-full-width-responsive', 'true');
+    const adElement = document.createElement("ins");
+    adElement.className = "adsbygoogle";
+    adElement.style.display = "block";
+    adElement.setAttribute("data-ad-client", "ca-pub-YOUR_PUBLISHER_ID"); // Replace with actual ID
+    adElement.setAttribute("data-ad-slot", "AUTO_SLOT"); // Replace with actual slot
+    adElement.setAttribute("data-ad-format", "auto");
+    adElement.setAttribute("data-full-width-responsive", "true");
 
     container.appendChild(adElement);
 
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (error) {
-      console.warn('📢 Google Ad failed to load:', error);
+      console.warn("📢 Google Ad failed to load:", error);
       this.loadCustomDisplayAd(containerId, size);
     }
   }
@@ -351,7 +355,7 @@ class AdsManager {
     if (!container) return;
 
     // Create custom ad content
-    const adContent = document.createElement('div');
+    const adContent = document.createElement("div");
     adContent.innerHTML = `
       <div style="
         width: 100%;
@@ -373,8 +377,8 @@ class AdsManager {
       </div>
     `;
 
-    adContent.addEventListener('click', () => {
-      this.handleAdClick('custom-upgrade');
+    adContent.addEventListener("click", () => {
+      this.handleAdClick("custom-upgrade");
     });
 
     container.appendChild(adContent);
@@ -406,9 +410,9 @@ class AdsManager {
   }
 
   createVideoAdModal() {
-    const modal = document.createElement('div');
-    modal.id = 'video-ad-modal';
-    modal.className = 'video-ad-modal';
+    const modal = document.createElement("div");
+    modal.id = "video-ad-modal";
+    modal.className = "video-ad-modal";
     modal.innerHTML = `
       <div class="video-ad-overlay"></div>
       <div class="video-ad-content">
@@ -440,7 +444,7 @@ class AdsManager {
       </div>
     `;
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .video-ad-modal {
         position: fixed;
@@ -636,58 +640,61 @@ class AdsManager {
   }
 
   setupVideoAdEvents() {
-    const skipButton = document.getElementById('video-ad-skip');
-    const closeButton = document.getElementById('video-ad-close');
-    const modal = document.getElementById('video-ad-modal');
-    
+    const skipButton = document.getElementById("video-ad-skip");
+    const closeButton = document.getElementById("video-ad-close");
+    const modal = document.getElementById("video-ad-modal");
+
     let skipCountdown = 5;
     let countdownTimer;
 
-    skipButton.addEventListener('click', () => {
+    skipButton.addEventListener("click", () => {
       if (skipCountdown <= 0) {
         this.closeVideoAd();
       }
     });
 
-    closeButton.addEventListener('click', () => {
+    closeButton.addEventListener("click", () => {
       this.closeVideoAd();
     });
 
     // Auto-start countdown when modal shows
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          if (modal.style.display === 'block' && !countdownTimer) {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "style"
+        ) {
+          if (modal.style.display === "block" && !countdownTimer) {
             this.startAdCountdown();
           }
         }
       });
     });
-    
+
     observer.observe(modal, { attributes: true });
   }
 
   startAdCountdown() {
-    const skipButton = document.getElementById('video-ad-skip');
-    const closeButton = document.getElementById('video-ad-close');
+    const skipButton = document.getElementById("video-ad-skip");
+    const closeButton = document.getElementById("video-ad-close");
     let skipCountdown = 5;
-    
+
     const countdownTimer = setInterval(() => {
       skipCountdown--;
-      document.getElementById('skip-countdown').textContent = skipCountdown;
-      
+      document.getElementById("skip-countdown").textContent = skipCountdown;
+
       if (skipCountdown <= 0) {
         clearInterval(countdownTimer);
-        skipButton.innerHTML = 'Skip Ad';
-        skipButton.style.cursor = 'pointer';
-        skipButton.style.backgroundColor = 'rgba(255,255,255,0.3)';
+        skipButton.innerHTML = "Skip Ad";
+        skipButton.style.cursor = "pointer";
+        skipButton.style.backgroundColor = "rgba(255,255,255,0.3)";
       }
     }, 1000);
 
     // Auto-close after 8 seconds total
     setTimeout(() => {
-      closeButton.style.display = 'block';
-      skipButton.style.display = 'none';
+      closeButton.style.display = "block";
+      skipButton.style.display = "none";
     }, 8000);
   }
 
@@ -698,28 +705,29 @@ class AdsManager {
       return;
     }
 
-    const modal = document.getElementById('video-ad-modal');
-    
-    modal.style.display = 'block';
-    
+    const modal = document.getElementById("video-ad-modal");
+
+    modal.style.display = "block";
+
     // Store callback for when ad closes
     this.videoAdCallback = callback;
-    
+
     // Reset UI elements
-    document.getElementById('skip-countdown').textContent = '5';
-    document.getElementById('video-ad-skip').style.display = 'block';
-    document.getElementById('video-ad-skip').innerHTML = 'Skip in <span id="skip-countdown">5</span>s';
-    document.getElementById('video-ad-close').style.display = 'none';
-    
+    document.getElementById("skip-countdown").textContent = "5";
+    document.getElementById("video-ad-skip").style.display = "block";
+    document.getElementById("video-ad-skip").innerHTML =
+      'Skip in <span id="skip-countdown">5</span>s';
+    document.getElementById("video-ad-close").style.display = "none";
+
     // Start the countdown automatically
     this.startAdCountdown();
   }
 
   closeVideoAd() {
-    const modal = document.getElementById('video-ad-modal');
-    
-    modal.style.display = 'none';
-    
+    const modal = document.getElementById("video-ad-modal");
+
+    modal.style.display = "none";
+
     // Execute callback
     if (this.videoAdCallback) {
       this.videoAdCallback();
@@ -729,13 +737,13 @@ class AdsManager {
 
   handleAdClick(adType) {
     console.log(`📢 Ad clicked: ${adType}`);
-    
+
     // Track ad clicks for analytics
-    this.trackAdEvent('click', adType);
-    
+    this.trackAdEvent("click", adType);
+
     // Handle different ad types
     switch (adType) {
-      case 'custom-upgrade':
+      case "custom-upgrade":
         this.showUpgradeModal();
         break;
       default:
@@ -745,8 +753,8 @@ class AdsManager {
   }
 
   showUpgradeModal() {
-    const modal = document.createElement('div');
-    modal.className = 'upgrade-modal';
+    const modal = document.createElement("div");
+    modal.className = "upgrade-modal";
     modal.innerHTML = `
       <div class="upgrade-overlay" onclick="this.parentElement.remove()"></div>
       <div class="upgrade-content">
@@ -769,7 +777,7 @@ class AdsManager {
       </div>
     `;
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .upgrade-modal {
         position: fixed;
@@ -858,64 +866,66 @@ class AdsManager {
 
   trackAdEvent(event, adType) {
     // Send analytics data to server
-    fetch('/api/ads/track', {
-      method: 'POST',
+    fetch("/api/ads/track", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         event,
         adType,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        url: window.location.href
-      })
-    }).catch(error => {
-      console.warn('Failed to track ad event:', error);
+        url: window.location.href,
+      }),
+    }).catch((error) => {
+      console.warn("Failed to track ad event:", error);
     });
   }
 
   // Public API methods
   enableAds() {
     this.adsEnabled = true;
-    setCookie('ads-enabled', 'true');
+    setCookie("ads-enabled", "true");
     this.init();
   }
 
   disableAds() {
     // Only allow developers to disable ads
     if (!this.isDeveloper()) {
-      console.warn('📢 Ad disabling restricted to developers only');
+      console.warn("📢 Ad disabling restricted to developers only");
       return false;
     }
-    
+
     this.adsEnabled = false;
-    setCookie('ads-enabled', 'false');
-    
+    setCookie("ads-enabled", "false");
+
     // Remove all ad containers
-    document.querySelectorAll('.page-ad-container, .ads-sidebar, .footer-ads').forEach(el => {
-      el.remove();
-    });
-    
+    document
+      .querySelectorAll(".page-ad-container, .ads-sidebar, .footer-ads")
+      .forEach((el) => {
+        el.remove();
+      });
+
     return true;
   }
 
   showProxyVideoAd(url, callback) {
-    console.log('📢 Showing video ad before proxy load...');
+    console.log("📢 Showing video ad before proxy load...");
     this.showVideoAd(() => {
-      console.log('📢 Video ad completed, loading proxy...');
+      console.log("📢 Video ad completed, loading proxy...");
       if (callback) callback(url);
     });
   }
 }
 
 // Initialize ads manager when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Only initialize if cookie utils are available
-  if (typeof getCookie === 'function') {
+  if (typeof getCookie === "function") {
     window.adsManager = new AdsManager();
   } else {
-    console.warn('Cookie utilities not available, delaying ads initialization');
+    console.warn("Cookie utilities not available, delaying ads initialization");
     setTimeout(() => {
       window.adsManager = new AdsManager();
     }, 500);
@@ -923,6 +933,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for modules
-if (typeof module !== 'undefined') {
+if (typeof module !== "undefined") {
   module.exports = AdsManager;
 }

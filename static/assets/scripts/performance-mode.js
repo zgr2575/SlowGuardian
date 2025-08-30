@@ -21,7 +21,7 @@ class PerformanceMode {
       window.getCookie = () => null;
       window.setCookie = () => {};
     }
-    
+
     this.isPerformanceMode =
       getCookie("performance-mode") === "true" ||
       localStorage.getItem("performance-mode") === "true";
@@ -335,5 +335,5 @@ if (typeof module !== "undefined") {
       console.log("⚡ Creating PerformanceMode instance...");
       window.performanceMode = new PerformanceMode();
     }
-  }, ['cookie-utils']);
+  }, ["cookie-utils"]);
 }

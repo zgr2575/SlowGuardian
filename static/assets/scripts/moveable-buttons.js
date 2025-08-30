@@ -21,7 +21,7 @@ class MoveableButtons {
       window.getCookie = () => null;
       window.setCookie = () => {};
     }
-    
+
     this.buttons = new Map();
     this.positions = JSON.parse(
       getCookie("button-positions") ||
@@ -752,7 +752,7 @@ class MoveableButtons {
   }
 }
 
-// Export for modules - no automatic initialization  
+// Export for modules - no automatic initialization
 if (typeof module !== "undefined") {
   module.exports = MoveableButtons;
 } else {
@@ -762,5 +762,5 @@ if (typeof module !== "undefined") {
       console.log("🎛️ Creating MoveableButtons instance...");
       window.moveableButtons = new MoveableButtons();
     }
-  }, ['cookie-utils']);
+  }, ["cookie-utils"]);
 }

@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Simple beforeunload prevention - "Leave Site?" prompt
   window.onbeforeunload = function (event) {
-    const confirmationMessage = 'Leave Site?';
+    const confirmationMessage = "Leave Site?";
     (event || window.event).returnValue = confirmationMessage;
     return confirmationMessage;
   };
@@ -99,9 +99,9 @@ if (themeEle.href) {
 window.go = function (url) {
   // Helper function to safely get cookie value
   function safeCookie(name) {
-    if (typeof getCookie === 'function') {
+    if (typeof getCookie === "function") {
       return getCookie(name);
-    } else if (typeof window.getCookie === 'function') {
+    } else if (typeof window.getCookie === "function") {
       return window.getCookie(name);
     } else {
       // Fallback implementation
@@ -111,18 +111,20 @@ window.go = function (url) {
       return null;
     }
   }
-  
+
   // Check performance mode setting with fallbacks
-  const performanceMode = safeCookie("performance-mode") === "true" || 
-                          localStorage.getItem("performance-mode") === "true";
-  
+  const performanceMode =
+    safeCookie("performance-mode") === "true" ||
+    localStorage.getItem("performance-mode") === "true";
+
   // Check if we're coming from games or apps page
-  const isFromGamesOrApps = window.location.pathname.includes('/games') || 
-                            window.location.pathname.includes('/apps');
-  
+  const isFromGamesOrApps =
+    window.location.pathname.includes("/games") ||
+    window.location.pathname.includes("/apps");
+
   // Store the URL for the proxy to use
   sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
-  
+
   // If performance mode is disabled (default) and we're launching from games/apps,
   // use the browser interface for better user experience
   if (!performanceMode && isFromGamesOrApps) {
@@ -200,13 +202,19 @@ window.AB = function () {
       popup = window.open("about:blank", "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error("Failed to create popup:", error);
-      showNotification("Popup blocked. Please allow popups for this site.", "error");
+      showNotification(
+        "Popup blocked. Please allow popups for this site.",
+        "error"
+      );
       return;
     }
 
     if (!popup || popup.closed) {
       console.log("Popup blocked - please allow popups");
-      showNotification("Popup blocked. Please allow popups to use about:blank mode.", "warning");
+      showNotification(
+        "Popup blocked. Please allow popups to use about:blank mode.",
+        "warning"
+      );
       return;
     }
 

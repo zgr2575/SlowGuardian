@@ -10,18 +10,18 @@ class ScriptLoader {
     this.initCallbacks = [];
     this.retryAttempts = new Map();
     this.maxRetries = 3;
-    
+
     // Track required dependencies
     this.dependencies = {
-      'cookie-utils': ['getCookie', 'setCookie'],
-      'main': ['changeTheme', 'toggleAboutBlank'],
-      'utils': ['showNotification', 'fadeIn', 'fadeOut'],
-      'features': ['SlowGuardianFeatures'],
-      'plugin-system': ['PluginSystem'],
-      'performance-mode': ['PerformanceMode'],
-      'moveable-buttons': ['MoveableButtons']
+      "cookie-utils": ["getCookie", "setCookie"],
+      main: ["changeTheme", "toggleAboutBlank"],
+      utils: ["showNotification", "fadeIn", "fadeOut"],
+      features: ["SlowGuardianFeatures"],
+      "plugin-system": ["PluginSystem"],
+      "performance-mode": ["PerformanceMode"],
+      "moveable-buttons": ["MoveableButtons"],
     };
-    
+
     this.checkInitialization();
   }
 
@@ -29,8 +29,8 @@ class ScriptLoader {
   checkDependencies(scriptName) {
     const deps = this.dependencies[scriptName];
     if (!deps) return true;
-    
-    return deps.every(dep => {
+
+    return deps.every((dep) => {
       const available = this.isGlobalAvailable(dep);
       if (!available) {
         console.warn(`Dependency ${dep} not available for ${scriptName}`);
@@ -42,8 +42,23 @@ class ScriptLoader {
   // Check if a global function/object is available
   isGlobalAvailable(name) {
     try {
-      return typeof window[name] !== 'undefined' || 
-             typeof eval(name) !== 'undefined';
+      // Check window object first
+      if (typeof window[name] !== "undefined") {
+        return true;
+      }
+
+      // Check global scope
+      if (typeof globalThis[name] !== "undefined") {
+        return true;
+      }
+
+      // For function names, try to evaluate safely
+      try {
+        const value = eval(`typeof ${name}`);
+        return value !== "undefined";
+      } catch (evalError) {
+        return false;
+      }
     } catch (e) {
       return false;
     }
@@ -53,14 +68,14 @@ class ScriptLoader {
   async waitForScript(scriptName, timeout = 5000) {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
-      
+
       const checkScript = () => {
         if (this.checkDependencies(scriptName)) {
           this.loadedScripts.add(scriptName);
           resolve();
           return;
         }
-        
+
         if (Date.now() - startTime > timeout) {
           const attempts = this.retryAttempts.get(scriptName) || 0;
           if (attempts < this.maxRetries) {
@@ -68,15 +83,17 @@ class ScriptLoader {
             this.retryAttempts.set(scriptName, attempts + 1);
             setTimeout(checkScript, 1000);
           } else {
-            console.error(`Failed to load ${scriptName} after ${this.maxRetries} attempts`);
+            console.error(
+              `Failed to load ${scriptName} after ${this.maxRetries} attempts`
+            );
             reject(new Error(`Script ${scriptName} failed to load`));
           }
           return;
         }
-        
+
         setTimeout(checkScript, 100);
       };
-      
+
       checkScript();
     });
   }
@@ -85,32 +102,32 @@ class ScriptLoader {
   async initializeScript(scriptName, initFunction) {
     try {
       await this.waitForScript(scriptName);
-      
-      if (typeof initFunction === 'function') {
+
+      if (typeof initFunction === "function") {
         console.log(`✅ Initializing ${scriptName}`);
         await initFunction();
         console.log(`✅ ${scriptName} initialized successfully`);
       }
-      
+
       return true;
     } catch (error) {
       console.error(`❌ Failed to initialize ${scriptName}:`, error);
-      
+
       // Try to show user-friendly error notification
       if (window.showNotification) {
         window.showNotification(
           `Some features may not be available. Try refreshing the page.`,
-          'warning'
+          "warning"
         );
       }
-      
+
       return false;
     }
   }
 
   // Add initialization callback to run when all dependencies are ready
   onReady(callback) {
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       this.initCallbacks.push(callback);
     }
   }
@@ -119,20 +136,24 @@ class ScriptLoader {
   checkInitialization() {
     const checkInterval = setInterval(() => {
       // Check if basic dependencies are available
-      const basicDeps = ['getCookie', 'setCookie', 'showNotification'];
-      const allBasicReady = basicDeps.every(dep => this.isGlobalAvailable(dep));
-      
+      const basicDeps = ["getCookie", "setCookie", "showNotification"];
+      const allBasicReady = basicDeps.every((dep) =>
+        this.isGlobalAvailable(dep)
+      );
+
       if (allBasicReady || this.initCallbacks.length === 0) {
         clearInterval(checkInterval);
         this.runInitCallbacks();
       }
     }, 500);
-    
+
     // Timeout after 10 seconds
     setTimeout(() => {
       clearInterval(checkInterval);
       if (this.initCallbacks.length > 0) {
-        console.warn('Some initialization callbacks may not have run due to missing dependencies');
+        console.warn(
+          "Some initialization callbacks may not have run due to missing dependencies"
+        );
         this.runInitCallbacks();
       }
     }, 10000);
@@ -140,7 +161,7 @@ class ScriptLoader {
 
   // Run all pending initialization callbacks
   runInitCallbacks() {
-    console.log('🚀 Running initialization callbacks...');
+    console.log("🚀 Running initialization callbacks...");
     this.initCallbacks.forEach((callback, index) => {
       try {
         callback();
@@ -161,7 +182,7 @@ class ScriptLoader {
         return;
       }
 
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = src;
       script.async = true;
 
@@ -187,30 +208,32 @@ class ScriptLoader {
 window.scriptLoader = new ScriptLoader();
 
 // Enhanced DOMContentLoaded wrapper that waits for dependencies
-window.whenReady = function(callback, dependencies = []) {
+window.whenReady = function (callback, dependencies = []) {
   const wrappedCallback = async () => {
     try {
       // Wait for specific dependencies if provided
       if (dependencies.length > 0) {
         await Promise.all(
-          dependencies.map(dep => window.scriptLoader.waitForScript(dep, 5000))
+          dependencies.map((dep) =>
+            window.scriptLoader.waitForScript(dep, 5000)
+          )
         );
       }
-      
+
       callback();
     } catch (error) {
-      console.error('whenReady callback failed:', error);
+      console.error("whenReady callback failed:", error);
       // Still try to run the callback even if dependencies failed
       try {
         callback();
       } catch (callbackError) {
-        console.error('Callback execution failed:', callbackError);
+        console.error("Callback execution failed:", callbackError);
       }
     }
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wrappedCallback);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", wrappedCallback);
   } else {
     // DOM already loaded, run immediately
     setTimeout(wrappedCallback, 0);
@@ -218,12 +241,12 @@ window.whenReady = function(callback, dependencies = []) {
 };
 
 // Utility function to safely call functions that might not be loaded yet
-window.safeCall = function(functionName, args = [], fallback = null) {
+window.safeCall = function (functionName, args = [], fallback = null) {
   try {
-    const func = typeof functionName === 'string' ? 
-      eval(functionName) : functionName;
-    
-    if (typeof func === 'function') {
+    const func =
+      typeof functionName === "string" ? eval(functionName) : functionName;
+
+    if (typeof func === "function") {
       return func.apply(window, args);
     } else {
       console.warn(`Function ${functionName} not available`);
@@ -235,4 +258,4 @@ window.safeCall = function(functionName, args = [], fallback = null) {
   }
 };
 
-console.log('📦 Script Loader initialized');
+console.log("📦 Script Loader initialized");

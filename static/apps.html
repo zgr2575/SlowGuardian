@@ -101,7 +101,7 @@
               autocomplete="off"
               spellcheck="false"
             />
-            <button class="search-clear" id="search-clear" style="display: none;">✕</button>
+            <button class="search-clear" id="search-clear" style="display: none">✕</button>
           </div>
 
           <select id="category" name="category" class="filter-select">
@@ -189,7 +189,7 @@
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
-    
+
     <!-- Ads Manager -->
     <script src="assets/scripts/ads-manager.js?v=1"></script>
 
@@ -236,10 +236,10 @@
       }
 
       // Add event listeners for search functionality with enhanced initialization
-      if (typeof window.whenReady === 'function') {
+      if (typeof window.whenReady === "function") {
         window.whenReady(() => {
           initAppsPage();
-        }, ['cookie-utils']); // Wait for cookie utilities
+        }, ["cookie-utils"]); // Wait for cookie utilities
       } else {
         // Fallback to DOMContentLoaded if whenReady is not available
         document.addEventListener("DOMContentLoaded", () => {

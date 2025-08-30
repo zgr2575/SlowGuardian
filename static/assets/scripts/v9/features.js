@@ -907,22 +907,27 @@ class SlowGuardianFeatures {
 // Initialize features when DOM is ready - only on appropriate pages
 document.addEventListener("DOMContentLoaded", () => {
   // Only initialize features on main pages, not on game/app proxy pages
-  const isProxyPage = window.location.pathname.includes('/go') || 
-                      window.location.pathname.includes('/p/') ||
-                      window.location.pathname.includes('/a/');
-  
-  const isDirectGamePage = window.location.pathname.includes('/games') && 
-                          document.querySelector('.browser-iframe, iframe');
-  
-  const isDirectAppPage = window.location.pathname.includes('/apps') && 
-                         document.querySelector('.browser-iframe, iframe');
-  
+  const isProxyPage =
+    window.location.pathname.includes("/go") ||
+    window.location.pathname.includes("/p/") ||
+    window.location.pathname.includes("/a/");
+
+  const isDirectGamePage =
+    window.location.pathname.includes("/games") &&
+    document.querySelector(".browser-iframe, iframe");
+
+  const isDirectAppPage =
+    window.location.pathname.includes("/apps") &&
+    document.querySelector(".browser-iframe, iframe");
+
   // Don't initialize features on proxy pages or when games/apps are actually loaded in iframe
   if (isProxyPage || isDirectGamePage || isDirectAppPage) {
-    console.log("Skipping features initialization on proxy/active game/app page");
+    console.log(
+      "Skipping features initialization on proxy/active game/app page"
+    );
     return;
   }
-  
+
   window.sgFeatures = new SlowGuardianFeatures();
 });
 

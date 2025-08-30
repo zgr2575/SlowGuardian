@@ -3,7 +3,7 @@
 // Now requires manual activation only to prevent infinite loops
 
 // Manual about:blank function - call with window.createAboutBlank() if needed
-window.createAboutBlank = function() {
+window.createAboutBlank = function () {
   let inFrame;
 
   try {

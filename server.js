@@ -62,6 +62,7 @@ async function createSlowGuardianServer() {
             "https:",
             "blob:",
           ],
+          scriptSrcAttr: ["'unsafe-inline'"], // Allow inline event handlers
           styleSrc: ["'self'", "'unsafe-inline'", "https:"],
           imgSrc: ["'self'", "data:", "https:", "blob:"],
           connectSrc: ["'self'", "https:", "wss:", "blob:"],

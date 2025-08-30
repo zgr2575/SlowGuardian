@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "2ae5780-1756542408346",
-  "buildDate": "2025-08-30T08:26:48.346Z",
-  "buildTimestamp": 1756542408346,
+  "buildId": "a1cd5ba-1756591498926",
+  "buildDate": "2025-08-30T22:04:58.926Z",
+  "buildTimestamp": 1756591498926,
   "git": {
-    "commit": "2ae57809f9afcbd3f22ef184ee69721b32a09113",
-    "commitShort": "2ae5780",
+    "commit": "a1cd5ba2bce4d02b2b341ad2a9ed41607fdfb9bf",
+    "commitShort": "a1cd5ba",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-08-30T07:09:22Z",
-    "commitMessage": "🔒 Restrict ads management to developers only - enhance security and revenue protection"
+    "commitDate": "2025-08-30T08:31:57Z",
+    "commitMessage": "🔧 Fix settings page layout issues by preventing duplicate features manager creation"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/styles/main.css?v=8" />
     <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
   </head>
-  <body class="center" onload="SplashT">
+  <body class="center">
     <div class="fixed-nav-bar"></div>
     <div id="particles-js">
       <script rel="preload" src="https://cdn.jsdelivr.net/particles.js/2.0.0/"></script>
@@ -65,6 +65,19 @@
 
       timer = setInterval(showRemaining, 1000);
     </script> -->
+
+    <script>
+      // Initialize splash text when page loads
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof SplashT !== "undefined") {
+          const SplashE = document.getElementById("splash");
+          if (SplashE && SplashT.length > 0) {
+            const SplashI = Math.floor(Math.random() * SplashT.length);
+            SplashE.innerText = SplashT[SplashI];
+          }
+        }
+      });
+    </script>
 
     <div id="adv"></div>
   </body>

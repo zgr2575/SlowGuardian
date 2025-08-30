@@ -199,11 +199,11 @@ class AdminPanel {
       if (response.ok && data.success) {
         this.authToken = data.token;
         this.isLoggedIn = true;
-        
+
         // Store admin token for other components to check
-        sessionStorage.setItem('admin-token', data.token);
-        setCookie('developer-mode', 'true', 1); // Set for 1 day
-        
+        sessionStorage.setItem("admin-token", data.token);
+        setCookie("developer-mode", "true", 1); // Set for 1 day
+
         this.showDashboard();
         this.startRefreshInterval();
         this.showNotification(
@@ -225,11 +225,11 @@ class AdminPanel {
   handleLogout() {
     this.authToken = null;
     this.isLoggedIn = false;
-    
+
     // Clear admin tokens and developer mode
-    sessionStorage.removeItem('admin-token');
-    deleteCookie('developer-mode');
-    
+    sessionStorage.removeItem("admin-token");
+    deleteCookie("developer-mode");
+
     this.stopRefreshInterval();
     this.showLogin();
     this.showNotification("Logged out of admin panel", "info");

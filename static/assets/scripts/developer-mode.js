@@ -879,30 +879,32 @@ class DeveloperMode {
   async loadSessionStatistics() {
     try {
       // Fetch real session statistics from the API
-      const response = await fetch('/api/admin/sessions/stats');
+      const response = await fetch("/api/admin/sessions/stats");
       if (response.ok) {
         const stats = await response.json();
-        
+
         // Update the modal with real data
-        const activeSessionsEl = document.getElementById('active-sessions-count');
-        const totalTodayEl = document.getElementById('total-sessions-today');
-        const avgDurationEl = document.getElementById('average-duration');
-        
+        const activeSessionsEl = document.getElementById(
+          "active-sessions-count"
+        );
+        const totalTodayEl = document.getElementById("total-sessions-today");
+        const avgDurationEl = document.getElementById("average-duration");
+
         if (activeSessionsEl) {
-          activeSessionsEl.textContent = stats.activeSessions || '0';
+          activeSessionsEl.textContent = stats.activeSessions || "0";
         }
         if (totalTodayEl) {
-          totalTodayEl.textContent = stats.totalToday || '0';
+          totalTodayEl.textContent = stats.totalToday || "0";
         }
         if (avgDurationEl) {
-          avgDurationEl.textContent = stats.averageDuration || '0m';
+          avgDurationEl.textContent = stats.averageDuration || "0m";
         }
       } else {
         // Fallback to calculated estimates
         this.loadFallbackStatistics();
       }
     } catch (error) {
-      console.error('Failed to load session statistics:', error);
+      console.error("Failed to load session statistics:", error);
       this.loadFallbackStatistics();
     }
   }
@@ -911,16 +913,19 @@ class DeveloperMode {
     // Use reasonable fallback values based on server info
     const uptime = Math.floor(window.serverInfo?.uptime || 0);
     const memoryUsed = window.serverInfo?.memory?.used || 0;
-    
+
     // Calculate reasonable estimates
     const activeSessions = Math.max(1, Math.floor(memoryUsed / 10));
-    const totalToday = Math.max(activeSessions, Math.floor(uptime / 60) + activeSessions);
-    const avgDuration = Math.max(5, Math.floor(uptime / 60) % 30 + 10);
-    
-    const activeSessionsEl = document.getElementById('active-sessions-count');
-    const totalTodayEl = document.getElementById('total-sessions-today');
-    const avgDurationEl = document.getElementById('average-duration');
-    
+    const totalToday = Math.max(
+      activeSessions,
+      Math.floor(uptime / 60) + activeSessions
+    );
+    const avgDuration = Math.max(5, (Math.floor(uptime / 60) % 30) + 10);
+
+    const activeSessionsEl = document.getElementById("active-sessions-count");
+    const totalTodayEl = document.getElementById("total-sessions-today");
+    const avgDurationEl = document.getElementById("average-duration");
+
     if (activeSessionsEl) {
       activeSessionsEl.textContent = activeSessions.toString();
     }

@@ -21,7 +21,7 @@ class PluginSystem {
       window.getCookie = () => null;
       window.setCookie = () => {};
     }
-    
+
     this.plugins = new Map();
     this.hooks = new Map();
     this.pluginDirectory = "/plugins/";
@@ -519,5 +519,5 @@ if (typeof module !== "undefined") {
       console.log("🔌 Creating PluginSystem instance...");
       window.pluginSystem = new PluginSystem();
     }
-  }, ['cookie-utils']);
+  }, ["cookie-utils"]);
 }
