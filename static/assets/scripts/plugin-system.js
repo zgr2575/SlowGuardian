@@ -5,10 +5,21 @@
 
 class PluginSystem {
   constructor() {
+    // Wait for dependencies before initializing
+    if (window.scriptLoader) {
+      window.scriptLoader.onReady(() => this.initialize());
+    } else {
+      // Fallback initialization
+      setTimeout(() => this.initialize(), 1000);
+    }
+  }
+
+  initialize() {
     // Ensure getCookie is available
     if (typeof getCookie !== "function") {
       console.warn("getCookie not available, using localStorage fallback");
       window.getCookie = () => null;
+      window.setCookie = () => {};
     }
     
     this.plugins = new Map();
@@ -501,4 +512,12 @@ window.pluginSystem.registerPlugin('your-plugin-name', new YourPlugin());
 // Export for modules - no automatic initialization
 if (typeof module !== "undefined") {
   module.exports = PluginSystem;
+} else {
+  // Initialize plugin system when script loads
+  whenReady(() => {
+    if (!window.pluginSystem) {
+      console.log("🔌 Creating PluginSystem instance...");
+      window.pluginSystem = new PluginSystem();
+    }
+  }, ['cookie-utils']);
 }

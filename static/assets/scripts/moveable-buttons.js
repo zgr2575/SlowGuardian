@@ -5,10 +5,21 @@
 
 class MoveableButtons {
   constructor() {
+    // Wait for dependencies before initializing
+    if (window.scriptLoader) {
+      window.scriptLoader.onReady(() => this.initialize());
+    } else {
+      // Fallback initialization
+      setTimeout(() => this.initialize(), 1000);
+    }
+  }
+
+  initialize() {
     // Ensure getCookie is available
     if (typeof getCookie !== "function") {
       console.warn("getCookie not available, using localStorage fallback");
       window.getCookie = () => null;
+      window.setCookie = () => {};
     }
     
     this.buttons = new Map();
@@ -744,4 +755,12 @@ class MoveableButtons {
 // Export for modules - no automatic initialization  
 if (typeof module !== "undefined") {
   module.exports = MoveableButtons;
+} else {
+  // Initialize moveable buttons when script loads
+  whenReady(() => {
+    if (!window.moveableButtons) {
+      console.log("🎛️ Creating MoveableButtons instance...");
+      window.moveableButtons = new MoveableButtons();
+    }
+  }, ['cookie-utils']);
 }

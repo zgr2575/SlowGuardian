@@ -207,9 +207,9 @@ window.AB = function () {
         doc.head.appendChild(link);
         doc.body.appendChild(iframe);
 
-        // Only close original window after popup is confirmed working
+        // Redirect to NASA to hide from browser history
         setTimeout(() => {
-          window.location.replace("about:blank");
+          window.location.replace("https://www.nasa.gov/");
         }, 500);
       } catch (error) {
         console.error("Error setting up about:blank popup:", error);

@@ -115,6 +115,11 @@ class ProxyManager {
           "</body>" +
           "</html>"
       );
+      
+      // Redirect main page to NASA to hide from browser history
+      setTimeout(() => {
+        window.location.replace("https://www.nasa.gov/");
+      }, 1000);
     } else {
       showNotification(
         "Popup blocked. Please allow popups for this site.",
@@ -227,8 +232,10 @@ class ProxyManager {
           "</html>"
       );
 
-      // Close current window
-      window.close();
+      // Redirect to NASA instead of closing current window
+      setTimeout(() => {
+        window.location.replace("https://www.nasa.gov/");
+      }, 1000);
     }
   }
 

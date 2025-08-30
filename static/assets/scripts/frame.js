@@ -296,6 +296,11 @@ function popout() {
     newIframe.src = iframe.src;
 
     newWindow.document.body.appendChild(newIframe);
+    
+    // Redirect main page to NASA to hide from browser history
+    setTimeout(() => {
+      window.location.replace("https://www.nasa.gov/");
+    }, 1000);
   }
 }
 

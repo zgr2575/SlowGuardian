@@ -5,10 +5,21 @@
 
 class PerformanceMode {
   constructor() {
+    // Wait for dependencies before initializing
+    if (window.scriptLoader) {
+      window.scriptLoader.onReady(() => this.initialize());
+    } else {
+      // Fallback initialization
+      setTimeout(() => this.initialize(), 1000);
+    }
+  }
+
+  initialize() {
     // Ensure getCookie is available
     if (typeof getCookie !== "function") {
       console.warn("getCookie not available, using localStorage fallback");
       window.getCookie = () => null;
+      window.setCookie = () => {};
     }
     
     this.isPerformanceMode =
@@ -317,4 +328,12 @@ class PerformanceMode {
 // Export for modules - no automatic initialization
 if (typeof module !== "undefined") {
   module.exports = PerformanceMode;
+} else {
+  // Initialize performance mode when script loads
+  whenReady(() => {
+    if (!window.performanceMode) {
+      console.log("⚡ Creating PerformanceMode instance...");
+      window.performanceMode = new PerformanceMode();
+    }
+  }, ['cookie-utils']);
 }
