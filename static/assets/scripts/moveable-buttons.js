@@ -49,10 +49,10 @@ class MoveableButtons {
     this.restorePositions();
     this.createControlPanel();
     console.log("✅ Moveable Buttons System initialized");
-    
+
     // Mark module as loaded
-    if (typeof window.markModuleLoaded === 'function') {
-      window.markModuleLoaded('moveable-buttons');
+    if (typeof window.markModuleLoaded === "function") {
+      window.markModuleLoaded("moveable-buttons");
     }
   }
 

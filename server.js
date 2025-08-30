@@ -107,14 +107,17 @@ async function createSlowGuardianServer() {
         etag: true,
         setHeaders: (res, path) => {
           // Ensure proper MIME types for CSS files
-          if (path.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+          if (path.endsWith(".css")) {
+            res.setHeader("Content-Type", "text/css; charset=utf-8");
           }
           // Ensure proper MIME types for JS files
-          if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+          if (path.endsWith(".js")) {
+            res.setHeader(
+              "Content-Type",
+              "application/javascript; charset=utf-8"
+            );
           }
-        }
+        },
       })
     );
   }

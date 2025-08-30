@@ -6,28 +6,28 @@
 class LoadingSystem {
   constructor() {
     this.expectedModules = [
-      'cookie-utils',
-      'main',
-      'features',
-      'plugin-system', 
-      'performance-mode',
-      'moveable-buttons',
-      'ads-manager'
+      "cookie-utils",
+      "main",
+      "features",
+      "plugin-system",
+      "performance-mode",
+      "moveable-buttons",
+      "ads-manager",
     ];
-    
+
     this.loadedModules = new Set();
     this.loadingStartTime = Date.now();
     this.minLoadingTime = 800; // Minimum loading time for UX
     this.maxLoadingTime = 10000; // Maximum loading time before timeout
-    
+
     this.createLoadingScreen();
     this.startInitializationCheck();
   }
 
   createLoadingScreen() {
     // Create loading overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'slowguardian-loading-overlay';
+    const overlay = document.createElement("div");
+    overlay.id = "slowguardian-loading-overlay";
     overlay.innerHTML = `
       <div class="loading-container">
         <div class="loading-logo">
@@ -45,18 +45,22 @@ class LoadingSystem {
         </div>
         
         <div class="loading-modules" id="loading-modules">
-          ${this.expectedModules.map(module => `
+          ${this.expectedModules
+            .map(
+              (module) => `
             <div class="module-status" data-module="${module}">
               <span class="module-icon">⏳</span>
               <span class="module-name">${this.formatModuleName(module)}</span>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
       </div>
     `;
 
     // Add loading styles
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       #slowguardian-loading-overlay {
         position: fixed;
@@ -218,48 +222,53 @@ class LoadingSystem {
 
   formatModuleName(module) {
     return module
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   }
 
   updateProgress() {
-    const progressFill = document.getElementById('loading-progress-fill');
-    const loadingText = document.getElementById('loading-text');
-    const loadingDetails = document.getElementById('loading-details');
-    
+    const progressFill = document.getElementById("loading-progress-fill");
+    const loadingText = document.getElementById("loading-text");
+    const loadingDetails = document.getElementById("loading-details");
+
     if (!progressFill) return;
 
-    const progress = (this.loadedModules.size / this.expectedModules.length) * 100;
+    const progress =
+      (this.loadedModules.size / this.expectedModules.length) * 100;
     progressFill.style.width = `${progress}%`;
 
     if (this.loadedModules.size === 0) {
-      loadingText.textContent = 'Initializing modules...';
-      loadingDetails.textContent = 'Starting up...';
+      loadingText.textContent = "Initializing modules...";
+      loadingDetails.textContent = "Starting up...";
     } else if (this.loadedModules.size < this.expectedModules.length) {
       loadingText.textContent = `Loading modules... (${this.loadedModules.size}/${this.expectedModules.length})`;
-      loadingDetails.textContent = `Loaded: ${Array.from(this.loadedModules).join(', ')}`;
+      loadingDetails.textContent = `Loaded: ${Array.from(this.loadedModules).join(", ")}`;
     } else {
-      loadingText.textContent = 'Finalizing...';
-      loadingDetails.textContent = 'All modules loaded successfully';
+      loadingText.textContent = "Finalizing...";
+      loadingDetails.textContent = "All modules loaded successfully";
     }
   }
 
   markModuleLoaded(moduleName) {
     if (this.loadedModules.has(moduleName)) return;
-    
+
     this.loadedModules.add(moduleName);
-    
+
     // Update module status in UI
-    const moduleElement = document.querySelector(`[data-module="${moduleName}"]`);
+    const moduleElement = document.querySelector(
+      `[data-module="${moduleName}"]`
+    );
     if (moduleElement) {
-      moduleElement.classList.add('loaded');
-      const icon = moduleElement.querySelector('.module-icon');
-      if (icon) icon.textContent = '✅';
+      moduleElement.classList.add("loaded");
+      const icon = moduleElement.querySelector(".module-icon");
+      if (icon) icon.textContent = "✅";
     }
 
     this.updateProgress();
-    console.log(`📦 Module loaded: ${moduleName} (${this.loadedModules.size}/${this.expectedModules.length})`);
+    console.log(
+      `📦 Module loaded: ${moduleName} (${this.loadedModules.size}/${this.expectedModules.length})`
+    );
 
     // Check if we can hide loading screen
     if (this.loadedModules.size >= this.expectedModules.length) {
@@ -269,12 +278,14 @@ class LoadingSystem {
 
   markModuleError(moduleName, error) {
     console.warn(`❌ Module failed: ${moduleName}`, error);
-    
-    const moduleElement = document.querySelector(`[data-module="${moduleName}"]`);
+
+    const moduleElement = document.querySelector(
+      `[data-module="${moduleName}"]`
+    );
     if (moduleElement) {
-      moduleElement.classList.add('error');
-      const icon = moduleElement.querySelector('.module-icon');
-      if (icon) icon.textContent = '❌';
+      moduleElement.classList.add("error");
+      const icon = moduleElement.querySelector(".module-icon");
+      if (icon) icon.textContent = "❌";
     }
   }
 
@@ -286,8 +297,8 @@ class LoadingSystem {
 
     // Fallback timeout
     setTimeout(() => {
-      if (document.getElementById('slowguardian-loading-overlay')) {
-        console.warn('⏰ Loading timeout reached, hiding loading screen');
+      if (document.getElementById("slowguardian-loading-overlay")) {
+        console.warn("⏰ Loading timeout reached, hiding loading screen");
         this.hideLoading();
       }
     }, this.maxLoadingTime);
@@ -295,38 +306,59 @@ class LoadingSystem {
 
   checkModuleAvailability() {
     // Check for cookie-utils
-    if (!this.loadedModules.has('cookie-utils') && typeof window.getCookie === 'function') {
-      this.markModuleLoaded('cookie-utils');
+    if (
+      !this.loadedModules.has("cookie-utils") &&
+      typeof window.getCookie === "function"
+    ) {
+      this.markModuleLoaded("cookie-utils");
     }
 
     // Check for main utilities
-    if (!this.loadedModules.has('main') && typeof window.changeTheme === 'function') {
-      this.markModuleLoaded('main');
+    if (
+      !this.loadedModules.has("main") &&
+      typeof window.changeTheme === "function"
+    ) {
+      this.markModuleLoaded("main");
     }
 
     // Check for features system
-    if (!this.loadedModules.has('features') && typeof window.SlowGuardianFeatures === 'function') {
-      this.markModuleLoaded('features');
+    if (
+      !this.loadedModules.has("features") &&
+      typeof window.SlowGuardianFeatures === "function"
+    ) {
+      this.markModuleLoaded("features");
     }
 
     // Check for plugin system
-    if (!this.loadedModules.has('plugin-system') && typeof window.PluginSystem === 'function') {
-      this.markModuleLoaded('plugin-system');
+    if (
+      !this.loadedModules.has("plugin-system") &&
+      typeof window.PluginSystem === "function"
+    ) {
+      this.markModuleLoaded("plugin-system");
     }
 
     // Check for performance mode
-    if (!this.loadedModules.has('performance-mode') && typeof window.PerformanceMode === 'function') {
-      this.markModuleLoaded('performance-mode');
+    if (
+      !this.loadedModules.has("performance-mode") &&
+      typeof window.PerformanceMode === "function"
+    ) {
+      this.markModuleLoaded("performance-mode");
     }
 
     // Check for moveable buttons
-    if (!this.loadedModules.has('moveable-buttons') && typeof window.MoveableButtons === 'function') {
-      this.markModuleLoaded('moveable-buttons');
+    if (
+      !this.loadedModules.has("moveable-buttons") &&
+      typeof window.MoveableButtons === "function"
+    ) {
+      this.markModuleLoaded("moveable-buttons");
     }
 
     // Check for ads manager
-    if (!this.loadedModules.has('ads-manager') && typeof window.AdsManager === 'function') {
-      this.markModuleLoaded('ads-manager');
+    if (
+      !this.loadedModules.has("ads-manager") &&
+      typeof window.AdsManager === "function"
+    ) {
+      this.markModuleLoaded("ads-manager");
     }
   }
 
@@ -340,23 +372,23 @@ class LoadingSystem {
   }
 
   hideLoading() {
-    const overlay = document.getElementById('slowguardian-loading-overlay');
+    const overlay = document.getElementById("slowguardian-loading-overlay");
     if (!overlay) return;
 
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
     }
 
-    overlay.classList.add('fade-out');
-    
+    overlay.classList.add("fade-out");
+
     setTimeout(() => {
       if (overlay.parentNode) {
         overlay.parentNode.removeChild(overlay);
       }
-      console.log('🚀 SlowGuardian fully loaded and ready!');
-      
+      console.log("🚀 SlowGuardian fully loaded and ready!");
+
       // Dispatch custom event for other scripts to listen to
-      window.dispatchEvent(new CustomEvent('slowguardian:ready'));
+      window.dispatchEvent(new CustomEvent("slowguardian:ready"));
     }, 500);
   }
 
@@ -367,23 +399,23 @@ class LoadingSystem {
 }
 
 // Initialize loading system immediately when script loads
-if (typeof window !== 'undefined' && document.body) {
+if (typeof window !== "undefined" && document.body) {
   window.slowGuardianLoader = new LoadingSystem();
 } else {
   // If body isn't ready yet, wait for it
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     window.slowGuardianLoader = new LoadingSystem();
   });
 }
 
 // Global function to mark modules as loaded (for external scripts)
-window.markModuleLoaded = function(moduleName) {
+window.markModuleLoaded = function (moduleName) {
   if (window.slowGuardianLoader) {
     window.slowGuardianLoader.markModuleLoaded(moduleName);
   }
 };
 
-window.markModuleError = function(moduleName, error) {
+window.markModuleError = function (moduleName, error) {
   if (window.slowGuardianLoader) {
     window.slowGuardianLoader.markModuleError(moduleName, error);
   }

@@ -1,7 +1,7 @@
-importScripts("/m/bundle.js?v=4"), importScripts("/m/config.js?v=4");
+(importScripts("/m/bundle.js?v=4"), importScripts("/m/config.js?v=4"));
 class UVServiceWorker extends EventEmitter {
   constructor(e = __uv$config) {
-    super(),
+    (super(),
       e.bare || (e.bare = "/o/"),
       (this.addresses =
         "string" == typeof e.bare
@@ -36,7 +36,7 @@ class UVServiceWorker extends EventEmitter {
       ).getBrowserName()),
       "Firefox" === this.browser &&
         (this.headers.forward.push("user-agent"),
-        this.headers.forward.push("content-type"));
+        this.headers.forward.push("content-type")));
   }
   async fetch({ request: e }) {
     if (!e.url.startsWith(location.origin + (this.config.prefix || "/a/")))
@@ -46,8 +46,8 @@ class UVServiceWorker extends EventEmitter {
       "function" == typeof this.config.construct &&
         this.config.construct(t, "service");
       const r = await t.cookie.db();
-      (t.meta.origin = location.origin),
-        (t.meta.base = t.meta.url = new URL(t.sourceUrl(e.url)));
+      ((t.meta.origin = location.origin),
+        (t.meta.base = t.meta.url = new URL(t.sourceUrl(e.url))));
       const n = new RequestContext(
         e,
         this,
@@ -62,19 +62,19 @@ class UVServiceWorker extends EventEmitter {
         e.referrer && e.referrer.startsWith(location.origin))
       ) {
         const r = new URL(t.sourceUrl(e.referrer));
-        (n.headers.origin ||
+        ((n.headers.origin ||
           (t.meta.url.origin !== r.origin && "cors" === e.mode)) &&
           (n.headers.origin = r.origin),
-          (n.headers.referer = r.href);
+          (n.headers.referer = r.href));
       }
       const s = (await t.cookie.getCookies(r)) || [],
         i = t.cookie.serialize(s, t.meta, !1);
-      "Firefox" === this.browser &&
+      ("Firefox" === this.browser &&
         "iframe" !== e.destination &&
         "document" !== e.destination &&
         n.forward.shift(),
         i && (n.headers.cookie = i),
-        (n.headers.Host = n.url.host);
+        (n.headers.Host = n.url.host));
       const o = new HookEvent(n, null, null);
       if ((this.emit("request", o), o.intercepted)) return o.returnValue;
       const a = await fetch(n.send);
@@ -102,8 +102,8 @@ class UVServiceWorker extends EventEmitter {
         switch (e.destination) {
           case "script":
           case "worker":
-            (c.body = `if (!self.__uv && self.importScripts) importScripts('${__uv$config.bundle}', '${__uv$config.config}', '${__uv$config.handler}');\n`),
-              (c.body += t.js.rewrite(await a.text()));
+            ((c.body = `if (!self.__uv && self.importScripts) importScripts('${__uv$config.bundle}', '${__uv$config.config}', '${__uv$config.handler}');\n`),
+              (c.body += t.js.rewrite(await a.text())));
             break;
           case "style":
             c.body = t.rewriteCSS(await a.text());
@@ -172,13 +172,13 @@ class ResponseContext {
           body: t.body,
         }
       : r.getBarerResponse(t);
-    (this.request = e),
+    ((this.request = e),
       (this.raw = t),
       (this.ultraviolet = e.ultraviolet),
       (this.headers = n),
       (this.status = s),
       (this.statusText = i),
-      (this.body = o);
+      (this.body = o));
   }
   get url() {
     return this.request.url;
@@ -192,7 +192,7 @@ class ResponseContext {
 }
 class RequestContext {
   constructor(e, t, r, n = null) {
-    (this.ultraviolet = r),
+    ((this.ultraviolet = r),
       (this.request = e),
       (this.headers = Object.fromEntries([...e.headers.entries()])),
       (this.method = e.method),
@@ -202,7 +202,7 @@ class RequestContext {
       (this.redirect = e.redirect),
       (this.credentials = "omit"),
       (this.mode = "cors" === e.mode ? e.mode : "same-origin"),
-      (this.blob = !1);
+      (this.blob = !1));
   }
   get send() {
     return new Request(
@@ -251,11 +251,11 @@ class HookEvent {
   #e;
   #t;
   constructor(e = {}, t = null, r = null) {
-    (this.#e = !1),
+    ((this.#e = !1),
       (this.#t = null),
       (this.data = e),
       (this.target = t),
-      (this.that = r);
+      (this.that = r));
   }
   get intercepted() {
     return this.#e;
@@ -264,7 +264,7 @@ class HookEvent {
     return this.#t;
   }
   respondWith(e) {
-    (this.#t = e), (this.#e = !0);
+    ((this.#t = e), (this.#e = !0));
   }
 }
 var ReflectOwnKeys,
@@ -298,10 +298,10 @@ var NumberIsNaN =
 function EventEmitter() {
   EventEmitter.init.call(this);
 }
-(EventEmitter.EventEmitter = EventEmitter),
+((EventEmitter.EventEmitter = EventEmitter),
   (EventEmitter.prototype._events = void 0),
   (EventEmitter.prototype._eventsCount = 0),
-  (EventEmitter.prototype._maxListeners = void 0);
+  (EventEmitter.prototype._maxListeners = void 0));
 var defaultMaxListeners = 10;
 function checkListener(e) {
   if ("function" != typeof e)
@@ -327,7 +327,7 @@ function _addListener(e, t, r, n) {
         (o = i[t])),
     void 0 === o)
   )
-    (o = i[t] = r), ++e._eventsCount;
+    ((o = i[t] = r), ++e._eventsCount);
   else if (
     ("function" == typeof o
       ? (o = i[t] = n ? [r, o] : [o, r])
@@ -344,11 +344,11 @@ function _addListener(e, t, r, n) {
         String(t) +
         " listeners added. Use emitter.setMaxListeners() to increase limit"
     );
-    (a.name = "MaxListenersExceededWarning"),
+    ((a.name = "MaxListenersExceededWarning"),
       (a.emitter = e),
       (a.type = t),
       (a.count = o.length),
-      ProcessEmitWarning(a);
+      ProcessEmitWarning(a));
   }
   return e;
 }
@@ -365,7 +365,7 @@ function onceWrapper() {
 function _onceWrap(e, t, r) {
   var n = { fired: !1, wrapFn: void 0, target: e, type: t, listener: r },
     s = onceWrapper.bind(n);
-  return (s.listener = r), (n.wrapFn = s), s;
+  return ((s.listener = r), (n.wrapFn = s), s);
 }
 function _listeners(e, t, r) {
   var n = e._events;
@@ -406,14 +406,14 @@ function unwrapListeners(e) {
 function once(e, t) {
   return new Promise(function (r, n) {
     function s(r) {
-      e.removeListener(t, i), n(r);
+      (e.removeListener(t, i), n(r));
     }
     function i() {
-      "function" == typeof e.removeListener && e.removeListener("error", s),
-        r([].slice.call(arguments));
+      ("function" == typeof e.removeListener && e.removeListener("error", s),
+        r([].slice.call(arguments)));
     }
-    eventTargetAgnosticAddListener(e, t, i, { once: !0 }),
-      "error" !== t && addErrorHandlerIfEventEmitter(e, s, { once: !0 });
+    (eventTargetAgnosticAddListener(e, t, i, { once: !0 }),
+      "error" !== t && addErrorHandlerIfEventEmitter(e, s, { once: !0 }));
   });
 }
 function addErrorHandlerIfEventEmitter(e, t, r) {
@@ -428,11 +428,11 @@ function eventTargetAgnosticAddListener(e, t, r, n) {
           typeof e
       );
     e.addEventListener(t, function s(i) {
-      n.once && e.removeEventListener(t, s), r(i);
+      (n.once && e.removeEventListener(t, s), r(i));
     });
   }
 }
-Object.defineProperty(EventEmitter, "defaultMaxListeners", {
+(Object.defineProperty(EventEmitter, "defaultMaxListeners", {
   enumerable: !0,
   get: function () {
     return defaultMaxListeners;
@@ -448,10 +448,10 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
   },
 }),
   (EventEmitter.init = function () {
-    (void 0 !== this._events &&
+    ((void 0 !== this._events &&
       this._events !== Object.getPrototypeOf(this)._events) ||
       ((this._events = Object.create(null)), (this._eventsCount = 0)),
-      (this._maxListeners = this._maxListeners || void 0);
+      (this._maxListeners = this._maxListeners || void 0));
   }),
   (EventEmitter.prototype.setMaxListeners = function (e) {
     if ("number" != typeof e || e < 0 || NumberIsNaN(e))
@@ -460,7 +460,7 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
           e +
           "."
       );
-    return (this._maxListeners = e), this;
+    return ((this._maxListeners = e), this);
   }),
   (EventEmitter.prototype.getMaxListeners = function () {
     return _getMaxListeners(this);
@@ -495,11 +495,13 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
     return _addListener(this, e, t, !0);
   }),
   (EventEmitter.prototype.once = function (e, t) {
-    return checkListener(t), this.on(e, _onceWrap(this, e, t)), this;
+    return (checkListener(t), this.on(e, _onceWrap(this, e, t)), this);
   }),
   (EventEmitter.prototype.prependOnceListener = function (e, t) {
     return (
-      checkListener(t), this.prependListener(e, _onceWrap(this, e, t)), this
+      checkListener(t),
+      this.prependListener(e, _onceWrap(this, e, t)),
+      this
     );
   }),
   (EventEmitter.prototype.removeListener = function (e, t) {
@@ -514,13 +516,13 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
     else if ("function" != typeof r) {
       for (s = -1, i = r.length - 1; i >= 0; i--)
         if (r[i] === t || r[i].listener === t) {
-          (o = r[i].listener), (s = i);
+          ((o = r[i].listener), (s = i));
           break;
         }
       if (s < 0) return this;
-      0 === s ? r.shift() : spliceOne(r, s),
+      (0 === s ? r.shift() : spliceOne(r, s),
         1 === r.length && (n[e] = r[0]),
-        void 0 !== n.removeListener && this.emit("removeListener", e, o || t);
+        void 0 !== n.removeListener && this.emit("removeListener", e, o || t));
     }
     return this;
   }),
@@ -569,4 +571,4 @@ Object.defineProperty(EventEmitter, "defaultMaxListeners", {
   (EventEmitter.prototype.listenerCount = listenerCount),
   (EventEmitter.prototype.eventNames = function () {
     return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
-  });
+  }));

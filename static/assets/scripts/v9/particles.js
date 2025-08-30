@@ -28,31 +28,49 @@ class ParticleSystem {
   }
 
   createParticle() {
-    const particle = {
-      element: this.createElement(),
-      x: random.float(0, this.container.offsetWidth),
-      y: random.float(
-        this.container.offsetHeight,
-        this.container.offsetHeight + 100
-      ),
-      vx: random.float(-0.5, 0.5),
-      vy: random.float(-2, -0.5),
-      life: 1,
-      decay: random.float(0.005, 0.015),
-      size: random.float(2, 6),
-      color: this.getRandomColor(),
-    };
+    try {
+      const particle = {
+        element: this.createElement(),
+        x: random.float(0, this.container.offsetWidth) || 0,
+        y:
+          random.float(
+            this.container.offsetHeight,
+            this.container.offsetHeight + 100
+          ) || this.container.offsetHeight,
+        vx: random.float(-0.5, 0.5) || 0,
+        vy: random.float(-2, -0.5) || -1,
+        life: 1,
+        decay: random.float(0.005, 0.015) || 0.01,
+        size: random.float(2, 6) || 3,
+        color: this.getRandomColor(),
+      };
 
-    particle.element.style.left = particle.x + "px";
-    particle.element.style.top = particle.y + "px";
-    particle.element.style.width = particle.size + "px";
-    particle.element.style.height = particle.size + "px";
-    particle.element.style.backgroundColor = particle.color;
+      // Validate particle properties
+      if (
+        !particle.element ||
+        typeof particle.x !== "number" ||
+        typeof particle.y !== "number" ||
+        isNaN(particle.x) ||
+        isNaN(particle.y)
+      ) {
+        console.warn("Invalid particle created, skipping");
+        return null;
+      }
 
-    this.container.appendChild(particle.element);
-    this.particles.push(particle);
+      particle.element.style.left = particle.x + "px";
+      particle.element.style.top = particle.y + "px";
+      particle.element.style.width = particle.size + "px";
+      particle.element.style.height = particle.size + "px";
+      particle.element.style.backgroundColor = particle.color;
 
-    return particle;
+      this.container.appendChild(particle.element);
+      this.particles.push(particle);
+
+      return particle;
+    } catch (error) {
+      console.warn("Error creating particle:", error);
+      return null;
+    }
   }
 
   createElement() {
@@ -109,18 +127,37 @@ class ParticleSystem {
   animate() {
     if (!this.isRunning) return;
 
-    // Update existing particles
+    // Update existing particles with enhanced safety
     this.particles = this.particles.filter((particle) => {
-      const shouldKeep = this.updateParticle(particle);
-      if (!shouldKeep) {
-        particle.element.remove();
+      // Skip null/undefined particles
+      if (!particle || typeof particle !== "object") {
+        return false;
       }
-      return shouldKeep;
+
+      try {
+        const shouldKeep = this.updateParticle(particle);
+        if (!shouldKeep && particle.element && particle.element.remove) {
+          particle.element.remove();
+        }
+        return shouldKeep;
+      } catch (error) {
+        console.warn("Error updating particle:", error);
+        // Remove problematic particle
+        if (particle.element && particle.element.remove) {
+          particle.element.remove();
+        }
+        return false;
+      }
     });
 
     // Create new particles
     while (this.particles.length < this.maxParticles) {
-      this.createParticle();
+      try {
+        this.createParticle();
+      } catch (error) {
+        console.warn("Error creating particle:", error);
+        break; // Stop creating particles if there's an error
+      }
     }
 
     this.animationId = requestAnimationFrame(() => this.animate());
@@ -178,9 +215,13 @@ class ParticleSystem {
 // Enhanced particle system with mouse interaction
 class InteractiveParticleSystem extends ParticleSystem {
   constructor(container) {
-    super(container);
-    this.mouse = { x: 0, y: 0 };
+    // Initialize mouse first to prevent race conditions
+    this.mouse = { x: -1000, y: -1000 };
     this.mouseInfluence = 50;
+
+    super(container);
+
+    // Setup mouse events after parent initialization
     this.setupMouseEvents();
   }
 
@@ -198,30 +239,47 @@ class InteractiveParticleSystem extends ParticleSystem {
   }
 
   updateParticle(particle) {
-    // Check if particle is valid
+    // Enhanced validation for particle object
     if (
       !particle ||
+      particle === null ||
+      typeof particle !== "object" ||
       typeof particle.x !== "number" ||
-      typeof particle.y !== "number"
+      typeof particle.y !== "number" ||
+      isNaN(particle.x) ||
+      isNaN(particle.y)
     ) {
       return false; // Remove invalid particle
     }
 
-    // Ensure mouse is initialized
-    if (!this.mouse || typeof this.mouse.x !== "number") {
+    // Ensure mouse is initialized with defensive checks
+    if (!this.mouse || typeof this.mouse !== "object") {
       this.mouse = { x: -1000, y: -1000 };
     }
+    if (typeof this.mouse.x !== "number" || isNaN(this.mouse.x)) {
+      this.mouse.x = -1000;
+    }
+    if (typeof this.mouse.y !== "number" || isNaN(this.mouse.y)) {
+      this.mouse.y = -1000;
+    }
 
-    // Calculate distance to mouse
-    const dx = this.mouse.x - particle.x;
-    const dy = this.mouse.y - particle.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    // Calculate distance to mouse with safety checks
+    try {
+      const dx = this.mouse.x - particle.x;
+      const dy = this.mouse.y - particle.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // Apply mouse influence
-    if (distance < this.mouseInfluence) {
-      const force = (this.mouseInfluence - distance) / this.mouseInfluence;
-      particle.vx += (dx / distance) * force * 0.1;
-      particle.vy += (dy / distance) * force * 0.1;
+      // Apply mouse influence
+      if (distance < this.mouseInfluence && !isNaN(distance)) {
+        const force = (this.mouseInfluence - distance) / this.mouseInfluence;
+        if (!isNaN(force)) {
+          particle.vx += (dx / distance) * force * 0.1;
+          particle.vy += (dy / distance) * force * 0.1;
+        }
+      }
+    } catch (error) {
+      console.warn("Error in mouse influence calculation:", error);
+      return false;
     }
 
     return super.updateParticle(particle);

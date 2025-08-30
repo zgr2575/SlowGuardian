@@ -11,7 +11,8 @@
       ? Je(e, t, { enumerable: !0, configurable: !0, writable: !0, value: i })
       : (e[t] = i);
   var Nt = (e, t) => () => (
-      t || e((t = { exports: {} }).exports, t), t.exports
+      t || e((t = { exports: {} }).exports, t),
+      t.exports
     ),
     fr = (e, t) => {
       for (var i in t) Je(e, i, { get: t[i], enumerable: !0 });
@@ -64,26 +65,26 @@
                 if (i.length > 2) {
                   var c = i.lastIndexOf("/");
                   if (c !== i.length - 1) {
-                    c === -1
+                    (c === -1
                       ? ((i = ""), (r = 0))
                       : ((i = i.slice(0, c)),
                         (r = i.length - 1 - i.lastIndexOf("/"))),
                       (n = o),
-                      (a = 0);
+                      (a = 0));
                     continue;
                   }
                 } else if (i.length === 2 || i.length === 1) {
-                  (i = ""), (r = 0), (n = o), (a = 0);
+                  ((i = ""), (r = 0), (n = o), (a = 0));
                   continue;
                 }
               }
               t && (i.length > 0 ? (i += "/..") : (i = ".."), (r = 2));
             } else
-              i.length > 0
+              (i.length > 0
                 ? (i += "/" + e.slice(n + 1, o))
                 : (i = e.slice(n + 1, o)),
-                (r = o - n - 1);
-          (n = o), (a = 0);
+                (r = o - n - 1));
+          ((n = o), (a = 0));
         } else s === 46 && a !== -1 ? ++a : (a = -1);
       }
       return i;
@@ -101,11 +102,12 @@
           n--
         ) {
           var a;
-          n >= 0
+          (n >= 0
             ? (a = arguments[n])
             : (r === void 0 && (r = process.cwd()), (a = r)),
             te(a),
-            a.length !== 0 && ((t = a + "/" + t), (i = a.charCodeAt(0) === 47));
+            a.length !== 0 &&
+              ((t = a + "/" + t), (i = a.charCodeAt(0) === 47)));
         }
         return (
           (t = dr(t, !i)),
@@ -124,13 +126,13 @@
         );
       },
       isAbsolute: function (t) {
-        return te(t), t.length > 0 && t.charCodeAt(0) === 47;
+        return (te(t), t.length > 0 && t.charCodeAt(0) === 47);
       },
       join: function () {
         if (arguments.length === 0) return ".";
         for (var t, i = 0; i < arguments.length; ++i) {
           var r = arguments[i];
-          te(r), r.length > 0 && (t === void 0 ? (t = r) : (t += "/" + r));
+          (te(r), r.length > 0 && (t === void 0 ? (t = r) : (t += "/" + r)));
         }
         return t === void 0 ? "." : _e.normalize(t);
       },
@@ -216,13 +218,16 @@
                 break;
               }
             } else
-              c === -1 && ((a = !1), (c = s + 1)),
+              (c === -1 && ((a = !1), (c = s + 1)),
                 o >= 0 &&
                   (l === i.charCodeAt(o)
                     ? --o === -1 && (n = s)
-                    : ((o = -1), (n = c)));
+                    : ((o = -1), (n = c))));
           }
-          return r === n ? (n = c) : n === -1 && (n = t.length), t.slice(r, n);
+          return (
+            r === n ? (n = c) : n === -1 && (n = t.length),
+            t.slice(r, n)
+          );
         } else {
           for (s = t.length - 1; s >= 0; --s)
             if (t.charCodeAt(s) === 47) {
@@ -249,12 +254,12 @@
             }
             continue;
           }
-          n === -1 && ((a = !1), (n = o + 1)),
+          (n === -1 && ((a = !1), (n = o + 1)),
             c === 46
               ? i === -1
                 ? (i = o)
                 : s !== 1 && (s = 1)
-              : i !== -1 && (s = -1);
+              : i !== -1 && (s = -1));
         }
         return i === -1 ||
           n === -1 ||
@@ -291,12 +296,12 @@
             }
             continue;
           }
-          c === -1 && ((l = !1), (c = h + 1)),
+          (c === -1 && ((l = !1), (c = h + 1)),
             r === 46
               ? s === -1
                 ? (s = h)
                 : f !== 1 && (f = 1)
-              : s !== -1 && (f = -1);
+              : s !== -1 && (f = -1));
         }
         return (
           s === -1 ||
@@ -344,7 +349,7 @@
         var c = e.slice(a, s).trim();
         if (i[c] === void 0) {
           var l = e.slice(s + 1, o).trim();
-          l.charCodeAt(0) === 34 && (l = l.slice(1, -1)), (i[c] = Ns(l, n));
+          (l.charCodeAt(0) === 34 && (l = l.slice(1, -1)), (i[c] = Ns(l, n)));
         }
         a = o + 1;
       }
@@ -505,13 +510,13 @@
                 return n.toLowerCase() === "set-cookie";
               })
             ];
-          !i &&
+          (!i &&
             e.headers.cookie &&
             !t.silent &&
             console.warn(
               "Warning: set-cookie-parser appears to have been called on a request object. It is designed to parse Set-Cookie headers from responses, not Cookie headers from requests. Set the option {silent: true} to suppress this warning."
             ),
-            (e = i);
+            (e = i));
         }
       if (
         (Array.isArray(e) || (e = [e]),
@@ -521,7 +526,7 @@
         var r = {};
         return e.filter(ci).reduce(function (n, a) {
           var s = ui(a, t);
-          return (n[s.name] = s), n;
+          return ((n[s.name] = s), n);
         }, r);
       } else
         return e.filter(ci).map(function (n) {
@@ -543,7 +548,7 @@
         return i < e.length;
       }
       function l() {
-        return (n = e.charAt(i)), n !== "=" && n !== ";" && n !== ",";
+        return ((n = e.charAt(i)), n !== "=" && n !== ";" && n !== ",");
       }
       for (; i < e.length; ) {
         for (r = i, o = !1; c(); )
@@ -795,14 +800,14 @@
       }
     });
   }
-  (U.charset = yr),
+  ((U.charset = yr),
     (U.charsets = { lookup: yr }),
     (U.contentType = da),
     (U.extension = ma),
     (U.extensions = Object.create(null)),
     (U.lookup = ya),
     (U.types = Object.create(null)),
-    ga(U.extensions, U.types);
+    ga(U.extensions, U.types));
   var _r = U;
   var Us = Ze(Mt(), 1);
   var tt = {};
@@ -839,16 +844,16 @@
   function wa(e) {
     let t = new Promise((i, r) => {
       let n = () => {
-          e.removeEventListener("success", a),
-            e.removeEventListener("error", s);
+          (e.removeEventListener("success", a),
+            e.removeEventListener("error", s));
         },
         a = () => {
-          i(G(e.result)), n();
+          (i(G(e.result)), n());
         },
         s = () => {
-          r(e.error), n();
+          (r(e.error), n());
         };
-      e.addEventListener("success", a), e.addEventListener("error", s);
+      (e.addEventListener("success", a), e.addEventListener("error", s));
     });
     return (
       t
@@ -864,19 +869,19 @@
     if (Ot.has(e)) return;
     let t = new Promise((i, r) => {
       let n = () => {
-          e.removeEventListener("complete", a),
+          (e.removeEventListener("complete", a),
             e.removeEventListener("error", s),
-            e.removeEventListener("abort", s);
+            e.removeEventListener("abort", s));
         },
         a = () => {
-          i(), n();
+          (i(), n());
         },
         s = () => {
-          r(e.error || new DOMException("AbortError", "AbortError")), n();
+          (r(e.error || new DOMException("AbortError", "AbortError")), n());
         };
-      e.addEventListener("complete", a),
+      (e.addEventListener("complete", a),
         e.addEventListener("error", s),
-        e.addEventListener("abort", s);
+        e.addEventListener("abort", s));
     });
     Ot.set(e, t);
   }
@@ -893,7 +898,7 @@
       return G(e[t]);
     },
     set(e, t, i) {
-      return (e[t] = i), !0;
+      return ((e[t] = i), !0);
     },
     has(e, t) {
       return e instanceof IDBTransaction && (t === "done" || t === "store")
@@ -909,11 +914,11 @@
       !("objectStoreNames" in IDBTransaction.prototype)
       ? function (t, ...i) {
           let r = e.call(Pe(this), t, ...i);
-          return Sr.set(r, t.sort ? t.sort() : [t]), G(r);
+          return (Sr.set(r, t.sort ? t.sort() : [t]), G(r));
         }
       : ba().includes(e)
         ? function (...t) {
-            return e.apply(Pe(this), t), G(vr.get(this));
+            return (e.apply(Pe(this), t), G(vr.get(this)));
           }
         : function (...t) {
             return G(e.apply(Pe(this), t));
@@ -929,7 +934,7 @@
     if (e instanceof IDBRequest) return wa(e);
     if (Dt.has(e)) return Dt.get(e);
     let t = Ea(e);
-    return t !== e && (Dt.set(e, t), Ft.set(t, e)), t;
+    return (t !== e && (Dt.set(e, t), Ft.set(t, e)), t);
   }
   var Pe = (e) => Ft.get(e);
   function $t(
@@ -948,11 +953,11 @@
         s.addEventListener("blocked", (c) => i(c.oldVersion, c.newVersion, c)),
       o
         .then((c) => {
-          a && c.addEventListener("close", () => a()),
+          (a && c.addEventListener("close", () => a()),
             n &&
               c.addEventListener("versionchange", (l) =>
                 n(l.oldVersion, l.newVersion, l)
-              );
+              ));
         })
         .catch(() => {}),
       o
@@ -988,7 +993,7 @@
         (await Promise.all([l[i](...o), n && c.done]))[0]
       );
     };
-    return Bt.set(t, a), a;
+    return (Bt.set(t, a), a);
   }
   Er((e) => ({
     ...e,
@@ -1105,7 +1110,7 @@
                     : Wt(e, Rr) || Wt(e, La);
   }
   var L = function (t, i) {
-    i === void 0 && (i = {}),
+    (i === void 0 && (i = {}),
       (this.label = t),
       (this.keyword = i.keyword),
       (this.beforeExpr = !!i.beforeExpr),
@@ -1115,7 +1120,7 @@
       (this.prefix = !!i.prefix),
       (this.postfix = !!i.postfix),
       (this.binop = i.binop || null),
-      (this.updateContext = null);
+      (this.updateContext = null));
   };
   function z(e, t) {
     return new L(e, { beforeExpr: !0, binop: t });
@@ -1124,7 +1129,7 @@
     H = { startsExpr: !0 },
     zt = {};
   function k(e, t) {
-    return t === void 0 && (t = {}), (t.keyword = e), (zt[e] = new L(e, t));
+    return (t === void 0 && (t = {}), (t.keyword = e), (zt[e] = new L(e, t)));
   }
   var u = {
       num: new L("num", H),
@@ -1253,21 +1258,21 @@
   var Va =
       /(?:[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/,
     Ie = function (t, i) {
-      (this.line = t), (this.column = i);
+      ((this.line = t), (this.column = i));
     };
   Ie.prototype.offset = function (t) {
     return new Ie(this.line, this.column + t);
   };
   var st = function (t, i, r) {
-    (this.start = i),
+    ((this.start = i),
       (this.end = r),
-      t.sourceFile !== null && (this.source = t.sourceFile);
+      t.sourceFile !== null && (this.source = t.sourceFile));
   };
   function Dr(e, t) {
     for (var i = 1, r = 0; ; ) {
       var n = Tr(e, r, t);
       if (n < 0) return new Ie(i, t - r);
-      ++i, (r = n);
+      (++i, (r = n));
     }
   }
   var qt = {
@@ -1317,14 +1322,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
         return r.push(n);
       };
     }
-    return kr(t.onComment) && (t.onComment = Ba(t, t.onComment)), t;
+    return (kr(t.onComment) && (t.onComment = Ba(t, t.onComment)), t);
   }
   function Ba(e, t) {
     return function (i, r, n, a, s, o) {
       var c = { type: i ? "Block" : "Line", value: r, start: n, end: a };
-      e.locations && (c.loc = new st(this, s, o)),
+      (e.locations && (c.loc = new st(this, s, o)),
         e.ranges && (c.range = [n, a]),
-        t.push(c);
+        t.push(c));
     };
   }
   var Te = 1,
@@ -1347,18 +1352,18 @@ Defaulting to 2020, but this will stop working in the future.`)),
     jr = 4,
     Ur = 5,
     T = function (t, i, r) {
-      (this.options = t = Fa(t)),
+      ((this.options = t = Fa(t)),
         (this.sourceFile = t.sourceFile),
         (this.keywords = pe(
           Ra[t.ecmaVersion >= 6 ? 6 : t.sourceType === "module" ? "5module" : 5]
-        ));
+        )));
       var n = "";
-      t.allowReserved !== !0 &&
+      (t.allowReserved !== !0 &&
         ((n = jt[t.ecmaVersion >= 6 ? 6 : t.ecmaVersion === 5 ? 5 : 3]),
         t.sourceType === "module" && (n += " await")),
-        (this.reservedWords = pe(n));
+        (this.reservedWords = pe(n)));
       var a = (n ? n + " " : "") + jt.strict;
-      (this.reservedWordsStrict = pe(a)),
+      ((this.reservedWordsStrict = pe(a)),
         (this.reservedWordsStrictBind = pe(a + " " + jt.strictBind)),
         (this.input = String(i)),
         (this.containsEsc = !1),
@@ -1396,7 +1401,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         (this.scopeStack = []),
         this.enterScope(Te),
         (this.regexpState = null),
-        (this.privateNameStack = []);
+        (this.privateNameStack = []));
     },
     ie = {
       inFunction: { configurable: !0 },
@@ -1411,7 +1416,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     };
   T.prototype.parse = function () {
     var t = this.options.program || this.startNode();
-    return this.nextToken(), this.parseTopLevel(t);
+    return (this.nextToken(), this.parseTopLevel(t));
   };
   ie.inFunction.get = function () {
     return (this.currentVarScope().flags & ve) > 0;
@@ -1470,7 +1475,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   T.parseExpressionAt = function (t, i, r) {
     var n = new this(r, t, i);
-    return n.nextToken(), n.parseExpression();
+    return (n.nextToken(), n.parseExpression());
   };
   T.tokenizer = function (t, i) {
     return new this(i, t);
@@ -1481,7 +1486,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   $.strictDirective = function (e) {
     if (this.options.ecmaVersion < 5) return !1;
     for (;;) {
-      (X.lastIndex = e), (e += X.exec(this.input)[0].length);
+      ((X.lastIndex = e), (e += X.exec(this.input)[0].length));
       var t = $a.exec(this.input.slice(e));
       if (!t) return !1;
       if ((t[1] || t[2]) === "use strict") {
@@ -1499,10 +1504,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
             ))
         );
       }
-      (e += t[0].length),
+      ((e += t[0].length),
         (X.lastIndex = e),
         (e += X.exec(this.input)[0].length),
-        this.input[e] === ";" && e++;
+        this.input[e] === ";" && e++);
     }
   };
   $.eat = function (e) {
@@ -1578,19 +1583,22 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var i = e.shorthandAssign,
       r = e.doubleProto;
     if (!t) return i >= 0 || r >= 0;
-    i >= 0 &&
+    (i >= 0 &&
       this.raise(
         i,
         "Shorthand property assignments are valid only in destructuring patterns"
       ),
-      r >= 0 && this.raiseRecoverable(r, "Redefinition of __proto__ property");
+      r >= 0 && this.raiseRecoverable(r, "Redefinition of __proto__ property"));
   };
   $.checkYieldAwaitInDefaultParams = function () {
-    this.yieldPos &&
+    (this.yieldPos &&
       (!this.awaitPos || this.yieldPos < this.awaitPos) &&
       this.raise(this.yieldPos, "Yield expression cannot be a default value"),
       this.awaitPos &&
-        this.raise(this.awaitPos, "Await expression cannot be a default value");
+        this.raise(
+          this.awaitPos,
+          "Await expression cannot be a default value"
+        ));
   };
   $.isSimpleAssignTarget = function (e) {
     return e.type === "ParenthesizedExpression"
@@ -1678,7 +1686,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           this.parseFunctionStatement(n, !1, !e)
         );
       case u._class:
-        return e && this.unexpected(), this.parseClass(n, !0);
+        return (e && this.unexpected(), this.parseClass(n, !0));
       case u._if:
         return this.parseIfStatement(n);
       case u._return:
@@ -1744,12 +1752,12 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   w.parseBreakContinueStatement = function (e, t) {
     var i = t === "break";
-    this.next(),
+    (this.next(),
       this.eat(u.semi) || this.insertSemicolon()
         ? (e.label = null)
         : this.type !== u.name
           ? this.unexpected()
-          : ((e.label = this.parseIdent()), this.semicolon());
+          : ((e.label = this.parseIdent()), this.semicolon()));
     for (var r = 0; r < this.labels.length; ++r) {
       var n = this.labels[r];
       if (
@@ -1765,7 +1773,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   w.parseDebuggerStatement = function (e) {
     return (
-      this.next(), this.semicolon(), this.finishNode(e, "DebuggerStatement")
+      this.next(),
+      this.semicolon(),
+      this.finishNode(e, "DebuggerStatement")
     );
   };
   w.parseDoStatement = function (e) {
@@ -1794,7 +1804,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.expect(u.parenL),
       this.type === u.semi)
     )
-      return t > -1 && this.unexpected(t), this.parseFor(e, null);
+      return (t > -1 && this.unexpected(t), this.parseFor(e, null));
     var i = this.isLet();
     if (this.type === u._var || this.type === u._const || i) {
       var r = this.startNode(),
@@ -1838,7 +1848,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.parseFor(e, c));
   };
   w.parseFunctionStatement = function (e, t, i) {
-    return this.next(), this.parseFunction(e, Re | (i ? 0 : Gt), !1, t);
+    return (this.next(), this.parseFunction(e, Re | (i ? 0 : Gt), !1, t));
   };
   w.parseIfStatement = function (e) {
     return (
@@ -1862,16 +1872,16 @@ Defaulting to 2020, but this will stop working in the future.`)),
     );
   };
   w.parseSwitchStatement = function (e) {
-    this.next(),
+    (this.next(),
       (e.discriminant = this.parseParenExpression()),
       (e.cases = []),
       this.expect(u.braceL),
       this.labels.push(ja),
-      this.enterScope(0);
+      this.enterScope(0));
     for (var t, i = !1; this.type !== u.braceR; )
       if (this.type === u._case || this.type === u._default) {
         var r = this.type === u._case;
-        t && this.finishNode(t, "SwitchCase"),
+        (t && this.finishNode(t, "SwitchCase"),
           e.cases.push((t = this.startNode())),
           (t.consequent = []),
           this.next(),
@@ -1884,9 +1894,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 ),
               (i = !0),
               (t.test = null)),
-          this.expect(u.colon);
+          this.expect(u.colon));
       } else
-        t || this.unexpected(), t.consequent.push(this.parseStatement(null));
+        (t || this.unexpected(), t.consequent.push(this.parseStatement(null)));
     return (
       this.exitScope(),
       t && this.finishNode(t, "SwitchCase"),
@@ -1924,7 +1934,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.type === u._catch)
     ) {
       var t = this.startNode();
-      this.next(),
+      (this.next(),
         this.eat(u.parenL)
           ? (t.param = this.parseCatchClauseParam())
           : (this.options.ecmaVersion < 10 && this.unexpected(),
@@ -1932,7 +1942,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             this.enterScope(0)),
         (t.body = this.parseBlock(!1)),
         this.exitScope(),
-        (e.handler = this.finishNode(t, "CatchClause"));
+        (e.handler = this.finishNode(t, "CatchClause")));
     }
     return (
       (e.finalizer = this.eat(u._finally) ? this.parseBlock() : null),
@@ -1970,7 +1980,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     );
   };
   w.parseEmptyStatement = function (e) {
-    return this.next(), this.finishNode(e, "EmptyStatement");
+    return (this.next(), this.finishNode(e, "EmptyStatement"));
   };
   w.parseLabeledStatement = function (e, t, i, r) {
     for (var n = 0, a = this.labels; n < a.length; n += 1) {
@@ -1990,7 +2000,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     ) {
       var l = this.labels[c];
       if (l.statementStart === e.start)
-        (l.statementStart = this.start), (l.kind = o);
+        ((l.statementStart = this.start), (l.kind = o));
       else break;
     }
     return (
@@ -2099,14 +2109,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
     return e;
   };
   w.parseVarId = function (e, t) {
-    (e.id = this.parseBindingAtom()),
-      this.checkLValPattern(e.id, t === "var" ? Jt : le, !1);
+    ((e.id = this.parseBindingAtom()),
+      this.checkLValPattern(e.id, t === "var" ? Jt : le, !1));
   };
   var Re = 1,
     Gt = 2,
     Hr = 4;
   w.parseFunction = function (e, t, i, r, n) {
-    this.initFunction(e),
+    (this.initFunction(e),
       (this.options.ecmaVersion >= 9 ||
         (this.options.ecmaVersion >= 6 && !r)) &&
         (this.type === u.star && t & Gt && this.unexpected(),
@@ -2123,7 +2133,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 ? Jt
                 : le
               : $r
-          ));
+          )));
     var a = this.yieldPos,
       s = this.awaitPos,
       o = this.awaitIdentPos;
@@ -2142,18 +2152,18 @@ Defaulting to 2020, but this will stop working in the future.`)),
     );
   };
   w.parseFunctionParams = function (e) {
-    this.expect(u.parenL),
+    (this.expect(u.parenL),
       (e.params = this.parseBindingList(
         u.parenR,
         !1,
         this.options.ecmaVersion >= 8
       )),
-      this.checkYieldAwaitInDefaultParams();
+      this.checkYieldAwaitInDefaultParams());
   };
   w.parseClass = function (e, t) {
     this.next();
     var i = this.strict;
-    (this.strict = !0), this.parseClassId(e, t), this.parseClassSuper(e);
+    ((this.strict = !0), this.parseClassId(e, t), this.parseClassSuper(e));
     var r = this.enterClassBody(),
       n = this.startNode(),
       a = !1;
@@ -2195,7 +2205,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       o = !1;
     if (this.eatContextual("static")) {
       if (t >= 13 && this.eat(u.braceL))
-        return this.parseClassStaticBlock(i), i;
+        return (this.parseClassStaticBlock(i), i);
       this.isClassElementNameStart() || this.type === u.star
         ? (o = !0)
         : (r = "static");
@@ -2227,11 +2237,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
     ) {
       var l = !i.static && nt(i, "constructor"),
         h = l && e;
-      l &&
+      (l &&
         s !== "method" &&
         this.raise(i.key.start, "Constructor can't have get/set modifier"),
         (i.kind = l ? "constructor" : s),
-        this.parseClassMethod(i, n, a, h);
+        this.parseClassMethod(i, n, a, h));
     } else this.parseClassField(i);
     return i;
   };
@@ -2301,11 +2311,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
     ) {
       var t = this.currentThisScope(),
         i = t.inClassFieldInit;
-      (t.inClassFieldInit = !0),
+      ((t.inClassFieldInit = !0),
         (e.value = this.parseMaybeAssign()),
-        (t.inClassFieldInit = i);
+        (t.inClassFieldInit = i));
     } else e.value = null;
-    return this.semicolon(), this.finishNode(e, "PropertyDefinition");
+    return (this.semicolon(), this.finishNode(e, "PropertyDefinition"));
   };
   w.parseClassStaticBlock = function (e) {
     e.body = [];
@@ -2333,7 +2343,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   w.enterClassBody = function () {
     var e = { declared: Object.create(null), used: [] };
-    return this.privateNameStack.push(e), e.declared;
+    return (this.privateNameStack.push(e), e.declared);
   };
   w.exitClassBody = function () {
     var e = this.privateNameStack.pop(),
@@ -2410,30 +2420,30 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.finishNode(e, "ExportDefaultDeclaration")
       );
     if (this.shouldParseExportStatement())
-      (e.declaration = this.parseExportDeclaration(e)),
+      ((e.declaration = this.parseExportDeclaration(e)),
         e.declaration.type === "VariableDeclaration"
           ? this.checkVariableExport(t, e.declaration.declarations)
           : this.checkExport(t, e.declaration.id, e.declaration.id.start),
         (e.specifiers = []),
-        (e.source = null);
+        (e.source = null));
     else {
       if (
         ((e.declaration = null),
         (e.specifiers = this.parseExportSpecifiers(t)),
         this.eatContextual("from"))
       )
-        this.type !== u.string && this.unexpected(),
-          (e.source = this.parseExprAtom());
+        (this.type !== u.string && this.unexpected(),
+          (e.source = this.parseExprAtom()));
       else {
         for (var i = 0, r = e.specifiers; i < r.length; i += 1) {
           var n = r[i];
-          this.checkUnreserved(n.local),
+          (this.checkUnreserved(n.local),
             this.checkLocalExport(n.local),
             n.local.type === "Literal" &&
               this.raise(
                 n.local.start,
                 "A string literal cannot be used as an exported binding without `from`."
-              );
+              ));
         }
         e.source = null;
       }
@@ -2449,14 +2459,16 @@ Defaulting to 2020, but this will stop working in the future.`)),
     if (this.type === u._function || (e = this.isAsyncFunction())) {
       var t = this.startNode();
       return (
-        this.next(), e && this.next(), this.parseFunction(t, Re | Hr, !1, e)
+        this.next(),
+        e && this.next(),
+        this.parseFunction(t, Re | Hr, !1, e)
       );
     } else if (this.type === u._class) {
       var i = this.startNode();
       return this.parseClass(i, "nullableID");
     } else {
       var r = this.parseMaybeAssign();
-      return this.semicolon(), r;
+      return (this.semicolon(), r);
     }
   };
   w.checkExport = function (e, t, i) {
@@ -2577,7 +2589,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     )
       return e;
     if (this.type === u.star)
-      return e.push(this.parseImportNamespaceSpecifier()), e;
+      return (e.push(this.parseImportNamespaceSpecifier()), e);
     for (this.expect(u.braceL); !this.eat(u.braceR); ) {
       if (t) t = !1;
       else if ((this.expect(u.comma), this.afterTrailingComma(u.braceR))) break;
@@ -2630,47 +2642,47 @@ Defaulting to 2020, but this will stop working in the future.`)),
         case "RestElement":
           break;
         case "ObjectExpression":
-          (e.type = "ObjectPattern"), i && this.checkPatternErrors(i, !0);
+          ((e.type = "ObjectPattern"), i && this.checkPatternErrors(i, !0));
           for (var r = 0, n = e.properties; r < n.length; r += 1) {
             var a = n[r];
-            this.toAssignable(a, t),
+            (this.toAssignable(a, t),
               a.type === "RestElement" &&
                 (a.argument.type === "ArrayPattern" ||
                   a.argument.type === "ObjectPattern") &&
-                this.raise(a.argument.start, "Unexpected token");
+                this.raise(a.argument.start, "Unexpected token"));
           }
           break;
         case "Property":
-          e.kind !== "init" &&
+          (e.kind !== "init" &&
             this.raise(
               e.key.start,
               "Object pattern can't contain getter or setter"
             ),
-            this.toAssignable(e.value, t);
+            this.toAssignable(e.value, t));
           break;
         case "ArrayExpression":
-          (e.type = "ArrayPattern"),
+          ((e.type = "ArrayPattern"),
             i && this.checkPatternErrors(i, !0),
-            this.toAssignableList(e.elements, t);
+            this.toAssignableList(e.elements, t));
           break;
         case "SpreadElement":
-          (e.type = "RestElement"),
+          ((e.type = "RestElement"),
             this.toAssignable(e.argument, t),
             e.argument.type === "AssignmentPattern" &&
               this.raise(
                 e.argument.start,
                 "Rest elements cannot have a default value"
-              );
+              ));
           break;
         case "AssignmentExpression":
-          e.operator !== "=" &&
+          (e.operator !== "=" &&
             this.raise(
               e.left.end,
               "Only '=' operator can be used for specifying default value."
             ),
             (e.type = "AssignmentPattern"),
             delete e.operator,
-            this.toAssignable(e.left, t);
+            this.toAssignable(e.left, t));
           break;
         case "ParenthesizedExpression":
           this.toAssignable(e.expression, t, i);
@@ -2747,14 +2759,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
         if (i && this.afterTrailingComma(e)) break;
         if (this.type === u.ellipsis) {
           var s = this.parseRestBinding();
-          this.parseBindingListItem(s),
+          (this.parseBindingListItem(s),
             n.push(s),
             this.type === u.comma &&
               this.raiseRecoverable(
                 this.start,
                 "Comma is not permitted after the rest element"
               ),
-            this.expect(e);
+            this.expect(e));
           break;
         } else n.push(this.parseAssignableListItem(r));
       }
@@ -2762,7 +2774,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   J.parseAssignableListItem = function (e) {
     var t = this.parseMaybeDefault(this.start, this.startLoc);
-    return this.parseBindingListItem(t), t;
+    return (this.parseBindingListItem(t), t);
   };
   J.parseBindingListItem = function (e) {
     return e;
@@ -2785,7 +2797,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var r = t !== rt;
     switch (e.type) {
       case "Identifier":
-        this.strict &&
+        (this.strict &&
           this.reservedWordsStrictBind.test(e.name) &&
           this.raiseRecoverable(
             e.start,
@@ -2802,7 +2814,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               (Ne(i, e.name) &&
                 this.raiseRecoverable(e.start, "Argument name clash"),
               (i[e.name] = !0)),
-            t !== Ur && this.declareName(e.name, t, e.start));
+            t !== Ur && this.declareName(e.name, t, e.start)));
         break;
       case "ChainExpression":
         this.raiseRecoverable(
@@ -2857,11 +2869,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
     }
   };
   var Z = function (t, i, r, n, a) {
-      (this.token = t),
+      ((this.token = t),
         (this.isExpr = !!i),
         (this.preserveSpace = !!r),
         (this.override = n),
-        (this.generator = !!a);
+        (this.generator = !!a));
     },
     R = {
       b_stat: new Z("{", !1),
@@ -2929,25 +2941,25 @@ Defaulting to 2020, but this will stop working in the future.`)),
       return;
     }
     var e = this.context.pop();
-    e === R.b_stat &&
+    (e === R.b_stat &&
       this.curContext().token === "function" &&
       (e = this.context.pop()),
-      (this.exprAllowed = !e.isExpr);
+      (this.exprAllowed = !e.isExpr));
   };
   u.braceL.updateContext = function (e) {
-    this.context.push(this.braceIsBlock(e) ? R.b_stat : R.b_expr),
-      (this.exprAllowed = !0);
+    (this.context.push(this.braceIsBlock(e) ? R.b_stat : R.b_expr),
+      (this.exprAllowed = !0));
   };
   u.dollarBraceL.updateContext = function () {
-    this.context.push(R.b_tmpl), (this.exprAllowed = !0);
+    (this.context.push(R.b_tmpl), (this.exprAllowed = !0));
   };
   u.parenL.updateContext = function (e) {
     var t = e === u._if || e === u._for || e === u._with || e === u._while;
-    this.context.push(t ? R.p_stat : R.p_expr), (this.exprAllowed = !0);
+    (this.context.push(t ? R.p_stat : R.p_expr), (this.exprAllowed = !0));
   };
   u.incDec.updateContext = function () {};
   u._function.updateContext = u._class.updateContext = function (e) {
-    e.beforeExpr &&
+    (e.beforeExpr &&
     e !== u._else &&
     !(e === u.semi && this.curContext() !== R.p_stat) &&
     !(
@@ -2956,13 +2968,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
     !((e === u.colon || e === u.braceL) && this.curContext() === R.b_stat)
       ? this.context.push(R.f_expr)
       : this.context.push(R.f_stat),
-      (this.exprAllowed = !1);
+      (this.exprAllowed = !1));
   };
   u.backQuote.updateContext = function () {
-    this.curContext() === R.q_tmpl
+    (this.curContext() === R.q_tmpl
       ? this.context.pop()
       : this.context.push(R.q_tmpl),
-      (this.exprAllowed = !1);
+      (this.exprAllowed = !1));
   };
   u.star.updateContext = function (e) {
     if (e === u._function) {
@@ -2975,12 +2987,12 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   u.name.updateContext = function (e) {
     var t = !1;
-    this.options.ecmaVersion >= 6 &&
+    (this.options.ecmaVersion >= 6 &&
       e !== u.dot &&
       ((this.value === "of" && !this.exprAllowed) ||
         (this.value === "yield" && this.inGeneratorContext())) &&
       (t = !0),
-      (this.exprAllowed = t);
+      (this.exprAllowed = t));
   };
   var v = T.prototype;
   v.checkPropClash = function (e, t, i) {
@@ -3021,10 +3033,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
       var s = t[n];
       if (s) {
         var o;
-        a === "init"
+        (a === "init"
           ? (o = (this.strict && s.init) || s.get || s.set)
           : (o = s.init || s[a]),
-          o && this.raiseRecoverable(r.start, "Redefinition of property");
+          o && this.raiseRecoverable(r.start, "Redefinition of property"));
       } else s = t[n] = { init: !1, get: !1, set: !1 };
       s[a] = !0;
     }
@@ -3078,7 +3090,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
       );
     } else r && this.checkExpressionErrors(t, !0);
     return (
-      n > -1 && (t.parenthesizedAssign = n), a > -1 && (t.trailingComma = a), l
+      n > -1 && (t.parenthesizedAssign = n),
+      a > -1 && (t.trailingComma = a),
+      l
     );
   };
   v.parseMaybeConditional = function (e, t) {
@@ -3150,11 +3164,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
       a = this.startLoc,
       s;
     if (this.isContextual("await") && this.canAwait)
-      (s = this.parseAwait(r)), (t = !0);
+      ((s = this.parseAwait(r)), (t = !0));
     else if (this.type.prefix) {
       var o = this.startNode(),
         c = this.type === u.incDec;
-      (o.operator = this.value),
+      ((o.operator = this.value),
         (o.prefix = !0),
         this.next(),
         (o.argument = this.parseMaybeUnary(null, !0, c, r)),
@@ -3174,24 +3188,24 @@ Defaulting to 2020, but this will stop working in the future.`)),
                   "Private fields can not be deleted"
                 )
               : (t = !0),
-        (s = this.finishNode(o, c ? "UpdateExpression" : "UnaryExpression"));
+        (s = this.finishNode(o, c ? "UpdateExpression" : "UnaryExpression")));
     } else if (!t && this.type === u.privateId)
-      (r || this.privateNameStack.length === 0) &&
+      ((r || this.privateNameStack.length === 0) &&
         this.options.checkPrivateFields &&
         this.unexpected(),
         (s = this.parsePrivateIdent()),
-        this.type !== u._in && this.unexpected();
+        this.type !== u._in && this.unexpected());
     else {
       if (((s = this.parseExprSubscripts(e, r)), this.checkExpressionErrors(e)))
         return s;
       for (; this.type.postfix && !this.canInsertSemicolon(); ) {
         var l = this.startNodeAt(n, a);
-        (l.operator = this.value),
+        ((l.operator = this.value),
           (l.prefix = !1),
           (l.argument = s),
           this.checkLValSimple(s),
           this.next(),
-          (s = this.finishNode(l, "UpdateExpression"));
+          (s = this.finishNode(l, "UpdateExpression")));
       }
     }
     if (!i && this.eat(u.starstar))
@@ -3254,7 +3268,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       ) {
         if (s) {
           var c = this.startNodeAt(t, i);
-          (c.expression = o), (o = this.finishNode(c, "ChainExpression"));
+          ((c.expression = o), (o = this.finishNode(c, "ChainExpression")));
         }
         return o;
       }
@@ -3283,7 +3297,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.eat(u.dot)
     ) {
       var h = this.startNodeAt(t, i);
-      (h.object = e),
+      ((h.object = e),
         l
           ? ((h.property = this.parseExpression()), this.expect(u.bracketR))
           : this.type === u.privateId && e.type !== "Super"
@@ -3293,13 +3307,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
               )),
         (h.computed = !!l),
         o && (h.optional = c),
-        (e = this.finishNode(h, "MemberExpression"));
+        (e = this.finishNode(h, "MemberExpression")));
     } else if (!r && this.eat(u.parenL)) {
       var f = new ot(),
         A = this.yieldPos,
         d = this.awaitPos,
         p = this.awaitIdentPos;
-      (this.yieldPos = 0), (this.awaitPos = 0), (this.awaitIdentPos = 0);
+      ((this.yieldPos = 0), (this.awaitPos = 0), (this.awaitIdentPos = 0));
       var W = this.parseExprList(
         u.parenR,
         this.options.ecmaVersion >= 8,
@@ -3320,15 +3334,15 @@ Defaulting to 2020, but this will stop working in the future.`)),
           (this.awaitIdentPos = p),
           this.parseSubscriptAsyncArrow(t, i, W, s)
         );
-      this.checkExpressionErrors(f, !0),
+      (this.checkExpressionErrors(f, !0),
         (this.yieldPos = A || this.yieldPos),
         (this.awaitPos = d || this.awaitPos),
-        (this.awaitIdentPos = p || this.awaitIdentPos);
+        (this.awaitIdentPos = p || this.awaitIdentPos));
       var ae = this.startNodeAt(t, i);
-      (ae.callee = e),
+      ((ae.callee = e),
         (ae.arguments = W),
         o && (ae.optional = c),
-        (e = this.finishNode(ae, "CallExpression"));
+        (e = this.finishNode(ae, "CallExpression")));
     } else if (this.type === u.backQuote) {
       (c || a) &&
         this.raise(
@@ -3336,9 +3350,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
           "Optional chaining cannot appear in the tag of tagged template expressions"
         );
       var se = this.startNodeAt(t, i);
-      (se.tag = e),
+      ((se.tag = e),
         (se.quasi = this.parseTemplate({ isTagged: !0 })),
-        (e = this.finishNode(se, "TaggedTemplateExpression"));
+        (e = this.finishNode(se, "TaggedTemplateExpression")));
     }
     return e;
   };
@@ -3451,9 +3465,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
           this.finishNode(r, "ArrayExpression")
         );
       case u.braceL:
-        return this.overrideContext(R.b_expr), this.parseObj(!1, e);
+        return (this.overrideContext(R.b_expr), this.parseObj(!1, e));
       case u._function:
-        return (r = this.startNode()), this.next(), this.parseFunction(r, 0);
+        return ((r = this.startNode()), this.next(), this.parseFunction(r, 0));
       case u._class:
         return this.parseClass(this.startNode(), !1);
       case u._new:
@@ -3477,7 +3491,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.raiseRecoverable(this.start, "Escape sequence in keyword import");
     var i = this.parseIdent(!0);
     if (this.type === u.parenL && !e) return this.parseDynamicImport(t);
-    if (this.type === u.dot) return (t.meta = i), this.parseImportMeta(t);
+    if (this.type === u.dot) return ((t.meta = i), this.parseImportMeta(t));
     this.unexpected();
   };
   v.parseDynamicImport = function (e) {
@@ -3529,7 +3543,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   v.parseParenExpression = function () {
     this.expect(u.parenL);
     var e = this.parseExpression();
-    return this.expect(u.parenR), e;
+    return (this.expect(u.parenR), e);
   };
   v.shouldParseArrow = function (e) {
     return !this.canInsertSemicolon();
@@ -3558,13 +3572,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
           h = !0;
           break;
         } else if (this.type === u.ellipsis) {
-          (p = this.start),
+          ((p = this.start),
             c.push(this.parseParenItem(this.parseRestBinding())),
             this.type === u.comma &&
               this.raiseRecoverable(
                 this.start,
                 "Comma is not permitted after the rest element"
-              );
+              ));
           break;
         } else c.push(this.parseMaybeAssign(!1, f, this.parseParenItem));
       var W = this.lastTokEnd,
@@ -3580,7 +3594,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           (this.awaitPos = d),
           this.parseParenArrowList(i, r, c, t)
         );
-      (!c.length || h) && this.unexpected(this.lastTokStart),
+      ((!c.length || h) && this.unexpected(this.lastTokStart),
         p && this.unexpected(p),
         this.checkExpressionErrors(f, !0),
         (this.yieldPos = A || this.yieldPos),
@@ -3589,12 +3603,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
           ? ((n = this.startNodeAt(s, o)),
             (n.expressions = c),
             this.finishNodeAt(n, "SequenceExpression", W, ae))
-          : (n = c[0]);
+          : (n = c[0]));
     } else n = this.parseParenExpression();
     if (this.options.preserveParens) {
       var se = this.startNodeAt(i, r);
       return (
-        (se.expression = n), this.finishNode(se, "ParenthesizedExpression")
+        (se.expression = n),
+        this.finishNode(se, "ParenthesizedExpression")
       );
     } else return n;
   };
@@ -3682,16 +3697,16 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var t = e.isTagged;
     t === void 0 && (t = !1);
     var i = this.startNode();
-    this.next(), (i.expressions = []);
+    (this.next(), (i.expressions = []));
     var r = this.parseTemplateElement({ isTagged: t });
     for (i.quasis = [r]; !r.tail; )
-      this.type === u.eof &&
+      (this.type === u.eof &&
         this.raise(this.pos, "Unterminated template literal"),
         this.expect(u.dollarBraceL),
         i.expressions.push(this.parseExpression()),
         this.expect(u.braceR),
-        i.quasis.push((r = this.parseTemplateElement({ isTagged: t })));
-    return this.next(), this.finishNode(i, "TemplateLiteral");
+        i.quasis.push((r = this.parseTemplateElement({ isTagged: t }))));
+    return (this.next(), this.finishNode(i, "TemplateLiteral"));
   };
   v.isAsyncProp = function (e) {
     return (
@@ -3719,7 +3734,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       )
         break;
       var a = this.parseProperty(e, t);
-      e || this.checkPropClash(a, n, t), i.properties.push(a);
+      (e || this.checkPropClash(a, n, t), i.properties.push(a));
     }
     return this.finishNode(i, e ? "ObjectPattern" : "ObjectExpression");
   };
@@ -3762,9 +3777,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
     );
   };
   v.parseGetterSetter = function (e) {
-    (e.kind = e.key.name),
+    ((e.kind = e.key.name),
       this.parsePropertyName(e),
-      (e.value = this.parseMethod(!1));
+      (e.value = this.parseMethod(!1)));
     var t = e.kind === "get" ? 0 : 1;
     if (e.value.params.length !== t) {
       var i = e.value.start;
@@ -3780,7 +3795,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         );
   };
   v.parsePropertyValue = function (e, t, i, r, n, a, s, o) {
-    (i || r) && this.type === u.colon && this.unexpected(),
+    ((i || r) && this.type === u.colon && this.unexpected(),
       this.eat(u.colon)
         ? ((e.value = t
             ? this.parseMaybeDefault(this.start, this.startLoc)
@@ -3826,7 +3841,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                       )))
                     : (e.value = this.copyNode(e.key)),
                 (e.shorthand = !0))
-              : this.unexpected();
+              : this.unexpected());
   };
   v.parsePropertyName = function (e) {
     if (this.options.ecmaVersion >= 6) {
@@ -3845,9 +3860,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
         : this.parseIdent(this.options.allowReserved !== "never"));
   };
   v.initFunction = function (e) {
-    (e.id = null),
+    ((e.id = null),
       this.options.ecmaVersion >= 6 && (e.generator = e.expression = !1),
-      this.options.ecmaVersion >= 8 && (e.async = !1);
+      this.options.ecmaVersion >= 8 && (e.async = !1));
   };
   v.parseMethod = function (e, t, i) {
     var r = this.startNode(),
@@ -3900,9 +3915,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
       a = this.strict,
       s = !1;
     if (n)
-      (e.body = this.parseMaybeAssign(r)),
+      ((e.body = this.parseMaybeAssign(r)),
         (e.expression = !0),
-        this.checkParams(e, !1);
+        this.checkParams(e, !1));
     else {
       var o =
         this.options.ecmaVersion >= 7 && !this.isSimpleParamList(e.params);
@@ -3915,7 +3930,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             "Illegal 'use strict' directive in function with non-simple parameter list"
           ));
       var c = this.labels;
-      (this.labels = []),
+      ((this.labels = []),
         s && (this.strict = !0),
         this.checkParams(
           e,
@@ -3925,7 +3940,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         (e.body = this.parseBlock(!1, void 0, s && !a)),
         (e.expression = !1),
         this.adaptDirectivePrologue(e.body.body),
-        (this.labels = c);
+        (this.labels = c));
     }
     this.exitScope();
   };
@@ -3951,7 +3966,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       if (a) a = !1;
       else if ((this.expect(u.comma), t && this.afterTrailingComma(e))) break;
       var s = void 0;
-      i && this.type === u.comma
+      (i && this.type === u.comma
         ? (s = null)
         : this.type === u.ellipsis
           ? ((s = this.parseSpread(r)),
@@ -3960,7 +3975,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               r.trailingComma < 0 &&
               (r.trailingComma = this.start))
           : (s = this.parseMaybeAssign(!1, r)),
-        n.push(s);
+        n.push(s));
     }
     return n;
   };
@@ -4095,11 +4110,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   var de = T.prototype,
     qa = function (t) {
-      (this.flags = t),
+      ((this.flags = t),
         (this.var = []),
         (this.lexical = []),
         (this.functions = []),
-        (this.inClassFieldInit = !1);
+        (this.inClassFieldInit = !1));
     };
   de.enterScope = function (e) {
     this.scopeStack.push(new qa(e));
@@ -4114,21 +4129,21 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var r = !1;
     if (t === le) {
       var n = this.currentScope();
-      (r =
+      ((r =
         n.lexical.indexOf(e) > -1 ||
         n.functions.indexOf(e) > -1 ||
         n.var.indexOf(e) > -1),
         n.lexical.push(e),
-        this.inModule && n.flags & Te && delete this.undefinedExports[e];
+        this.inModule && n.flags & Te && delete this.undefinedExports[e]);
     } else if (t === jr) {
       var a = this.currentScope();
       a.lexical.push(e);
     } else if (t === $r) {
       var s = this.currentScope();
-      this.treatFunctionsAsVar
+      (this.treatFunctionsAsVar
         ? (r = s.lexical.indexOf(e) > -1)
         : (r = s.lexical.indexOf(e) > -1 || s.var.indexOf(e) > -1),
-        s.functions.push(e);
+        s.functions.push(e));
     } else
       for (var o = this.scopeStack.length - 1; o >= 0; --o) {
         var c = this.scopeStack[o];
@@ -4174,13 +4189,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
     }
   };
   var ct = function (t, i, r) {
-      (this.type = ""),
+      ((this.type = ""),
         (this.start = i),
         (this.end = 0),
         t.options.locations && (this.loc = new st(t, r)),
         t.options.directSourceFile &&
           (this.sourceFile = t.options.directSourceFile),
-        t.options.ranges && (this.range = [i, 0]);
+        t.options.ranges && (this.range = [i, 0]));
     },
     De = T.prototype;
   De.startNode = function () {
@@ -4244,19 +4259,19 @@ Defaulting to 2020, but this will stop working in the future.`)),
       binaryOfStrings: pe(Xa[e]),
       nonBinary: { General_Category: pe(Lr), Script: pe(Ya[e]) },
     });
-    (t.nonBinary.Script_Extensions = t.nonBinary.Script),
+    ((t.nonBinary.Script_Extensions = t.nonBinary.Script),
       (t.nonBinary.gc = t.nonBinary.General_Category),
       (t.nonBinary.sc = t.nonBinary.Script),
-      (t.nonBinary.scx = t.nonBinary.Script_Extensions);
+      (t.nonBinary.scx = t.nonBinary.Script_Extensions));
   }
   for (it = 0, Ht = [9, 10, 11, 12, 13, 14]; it < Ht.length; it += 1)
-    (Pr = Ht[it]), Ja(Pr);
+    ((Pr = Ht[it]), Ja(Pr));
   var Pr,
     it,
     Ht,
     b = T.prototype,
     re = function (t) {
-      (this.parser = t),
+      ((this.parser = t),
         (this.validFlags =
           "gim" +
           (t.options.ecmaVersion >= 6 ? "uy" : "") +
@@ -4278,19 +4293,19 @@ Defaulting to 2020, but this will stop working in the future.`)),
         (this.numCapturingParens = 0),
         (this.maxBackReference = 0),
         (this.groupNames = []),
-        (this.backReferenceNames = []);
+        (this.backReferenceNames = []));
     };
   re.prototype.reset = function (t, i, r) {
     var n = r.indexOf("v") !== -1,
       a = r.indexOf("u") !== -1;
-    (this.start = t | 0),
+    ((this.start = t | 0),
       (this.source = i + ""),
       (this.flags = r),
       n && this.parser.options.ecmaVersion >= 15
         ? ((this.switchU = !0), (this.switchV = !0), (this.switchN = !0))
         : ((this.switchU = a && this.parser.options.ecmaVersion >= 6),
           (this.switchV = !1),
-          (this.switchN = a && this.parser.options.ecmaVersion >= 9));
+          (this.switchN = a && this.parser.options.ecmaVersion >= 9)));
   };
   re.prototype.raise = function (t) {
     this.parser.raiseRecoverable(
@@ -4326,13 +4341,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
       : t + 2;
   };
   re.prototype.current = function (t) {
-    return t === void 0 && (t = !1), this.at(this.pos, t);
+    return (t === void 0 && (t = !1), this.at(this.pos, t));
   };
   re.prototype.lookahead = function (t) {
-    return t === void 0 && (t = !1), this.at(this.nextIndex(this.pos, t), t);
+    return (t === void 0 && (t = !1), this.at(this.nextIndex(this.pos, t), t));
   };
   re.prototype.advance = function (t) {
-    t === void 0 && (t = !1), (this.pos = this.nextIndex(this.pos, t));
+    (t === void 0 && (t = !1), (this.pos = this.nextIndex(this.pos, t)));
   };
   re.prototype.eat = function (t, i) {
     return (
@@ -4348,7 +4363,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       if (o === -1 || o !== s) return !1;
       r = this.nextIndex(r, i);
     }
-    return (this.pos = r), !0;
+    return ((this.pos = r), !0);
   };
   b.validateRegExpFlags = function (e) {
     for (
@@ -4357,12 +4372,12 @@ Defaulting to 2020, but this will stop working in the future.`)),
       a++
     ) {
       var s = i.charAt(a);
-      t.indexOf(s) === -1 &&
+      (t.indexOf(s) === -1 &&
         this.raise(e.start, "Invalid regular expression flag"),
         i.indexOf(s, a + 1) > -1 &&
           this.raise(e.start, "Duplicate regular expression flag"),
         s === "u" && (r = !0),
-        s === "v" && (n = !0);
+        s === "v" && (n = !0));
     }
     this.options.ecmaVersion >= 15 &&
       r &&
@@ -4370,14 +4385,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.raise(e.start, "Invalid regular expression flag");
   };
   b.validateRegExpPattern = function (e) {
-    this.regexp_pattern(e),
+    (this.regexp_pattern(e),
       !e.switchN &&
         this.options.ecmaVersion >= 9 &&
         e.groupNames.length > 0 &&
-        ((e.switchN = !0), this.regexp_pattern(e));
+        ((e.switchN = !0), this.regexp_pattern(e)));
   };
   b.regexp_pattern = function (e) {
-    (e.pos = 0),
+    ((e.pos = 0),
       (e.lastIntValue = 0),
       (e.lastStringValue = ""),
       (e.lastAssertionIsQuantifiable = !1),
@@ -4389,7 +4404,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       e.pos !== e.source.length &&
         (e.eat(41) && e.raise("Unmatched ')'"),
         (e.eat(93) || e.eat(125)) && e.raise("Lone quantifier brackets")),
-      e.maxBackReference > e.numCapturingParens && e.raise("Invalid escape");
+      e.maxBackReference > e.numCapturingParens && e.raise("Invalid escape"));
     for (var t = 0, i = e.backReferenceNames; t < i.length; t += 1) {
       var r = i[t];
       e.groupNames.indexOf(r) === -1 &&
@@ -4398,8 +4413,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   b.regexp_disjunction = function (e) {
     for (this.regexp_alternative(e); e.eat(124); ) this.regexp_alternative(e);
-    this.regexp_eatQuantifier(e, !0) && e.raise("Nothing to repeat"),
-      e.eat(123) && e.raise("Lone quantifier brackets");
+    (this.regexp_eatQuantifier(e, !0) && e.raise("Nothing to repeat"),
+      e.eat(123) && e.raise("Lone quantifier brackets"));
   };
   b.regexp_alternative = function (e) {
     for (; e.pos < e.source.length && this.regexp_eatTerm(e); );
@@ -4436,7 +4451,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           !0
         );
     }
-    return (e.pos = t), !1;
+    return ((e.pos = t), !1);
   };
   b.regexp_eatQuantifier = function (e, t) {
     return (
@@ -4470,7 +4485,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             e.raise("numbers out of order in {} quantifier"),
           !0
         );
-      e.switchU && !t && e.raise("Incomplete quantifier"), (e.pos = i);
+      (e.switchU && !t && e.raise("Incomplete quantifier"), (e.pos = i));
     }
     return !1;
   };
@@ -4512,7 +4527,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.regexp_disjunction(e),
         e.eat(41))
       )
-        return (e.numCapturingParens += 1), !0;
+        return ((e.numCapturingParens += 1), !0);
       e.raise("Unterminated group");
     }
     return !1;
@@ -4530,7 +4545,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   b.regexp_eatInvalidBracedQuantifier = function (e) {
     return (
-      this.regexp_eatBracedQuantifier(e, !0) && e.raise("Nothing to repeat"), !1
+      this.regexp_eatBracedQuantifier(e, !0) && e.raise("Nothing to repeat"),
+      !1
     );
   };
   b.regexp_eatSyntaxCharacter = function (e) {
@@ -4568,9 +4584,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
   b.regexp_groupSpecifier = function (e) {
     if (e.eat(63)) {
       if (this.regexp_eatGroupName(e)) {
-        e.groupNames.indexOf(e.lastStringValue) !== -1 &&
+        (e.groupNames.indexOf(e.lastStringValue) !== -1 &&
           e.raise("Duplicate capture group name"),
-          e.groupNames.push(e.lastStringValue);
+          e.groupNames.push(e.lastStringValue));
         return;
       }
       e.raise("Invalid group");
@@ -4641,7 +4657,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     if (this.regexp_eatDecimalEscape(e)) {
       var i = e.lastIntValue;
       if (e.switchU)
-        return i > e.maxBackReference && (e.maxBackReference = i), !0;
+        return (i > e.maxBackReference && (e.maxBackReference = i), !0);
       if (i <= e.numCapturingParens) return !0;
       e.pos = t;
     }
@@ -4650,7 +4666,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   b.regexp_eatKGroupName = function (e) {
     if (e.eat(107)) {
       if (this.regexp_eatGroupName(e))
-        return e.backReferenceNames.push(e.lastStringValue), !0;
+        return (e.backReferenceNames.push(e.lastStringValue), !0);
       e.raise("Invalid named reference");
     }
     return !1;
@@ -4713,10 +4729,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
             var s = e.lastIntValue;
             if (s >= 56320 && s <= 57343)
               return (
-                (e.lastIntValue = (n - 55296) * 1024 + (s - 56320) + 65536), !0
+                (e.lastIntValue = (n - 55296) * 1024 + (s - 56320) + 65536),
+                !0
               );
           }
-          (e.pos = a), (e.lastIntValue = n);
+          ((e.pos = a), (e.lastIntValue = n));
         }
         return !0;
       }
@@ -4728,7 +4745,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         ts(e.lastIntValue)
       )
         return !0;
-      r && e.raise("Invalid unicode escape"), (e.pos = i);
+      (r && e.raise("Invalid unicode escape"), (e.pos = i));
     }
     return !1;
   };
@@ -4751,7 +4768,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     e.lastIntValue = 0;
     var t = e.current();
     if (t >= 49 && t <= 57) {
-      do (e.lastIntValue = 10 * e.lastIntValue + (t - 48)), e.advance();
+      do ((e.lastIntValue = 10 * e.lastIntValue + (t - 48)), e.advance());
       while ((t = e.current()) >= 48 && t <= 57);
       return !0;
     }
@@ -4762,21 +4779,21 @@ Defaulting to 2020, but this will stop working in the future.`)),
     Q = 2;
   b.regexp_eatCharacterClassEscape = function (e) {
     var t = e.current();
-    if (is(t)) return (e.lastIntValue = -1), e.advance(), ue;
+    if (is(t)) return ((e.lastIntValue = -1), e.advance(), ue);
     var i = !1;
     if (
       e.switchU &&
       this.options.ecmaVersion >= 9 &&
       ((i = t === 80) || t === 112)
     ) {
-      (e.lastIntValue = -1), e.advance();
+      ((e.lastIntValue = -1), e.advance());
       var r;
       if (
         e.eat(123) &&
         (r = this.regexp_eatUnicodePropertyValueExpression(e)) &&
         e.eat(125)
       )
-        return i && r === Q && e.raise("Invalid property name"), r;
+        return (i && r === Q && e.raise("Invalid property name"), r);
       e.raise("Invalid property name");
     }
     return sn;
@@ -4792,7 +4809,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       var i = e.lastStringValue;
       if (this.regexp_eatUnicodePropertyValue(e)) {
         var r = e.lastStringValue;
-        return this.regexp_validateUnicodePropertyNameAndValue(e, i, r), ue;
+        return (this.regexp_validateUnicodePropertyNameAndValue(e, i, r), ue);
       }
     }
     if (((e.pos = t), this.regexp_eatLoneUnicodePropertyNameOrValue(e))) {
@@ -4802,9 +4819,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
     return sn;
   };
   b.regexp_validateUnicodePropertyNameAndValue = function (e, t, i) {
-    Ne(e.unicodeProperties.nonBinary, t) || e.raise("Invalid property name"),
+    (Ne(e.unicodeProperties.nonBinary, t) || e.raise("Invalid property name"),
       e.unicodeProperties.nonBinary[t].test(i) ||
-        e.raise("Invalid property value");
+        e.raise("Invalid property value"));
   };
   b.regexp_validateUnicodePropertyNameOrValue = function (e, t) {
     if (e.unicodeProperties.binary.test(t)) return ue;
@@ -4814,7 +4831,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   b.regexp_eatUnicodePropertyName = function (e) {
     var t = 0;
     for (e.lastStringValue = ""; on((t = e.current())); )
-      (e.lastStringValue += fe(t)), e.advance();
+      ((e.lastStringValue += fe(t)), e.advance());
     return e.lastStringValue !== "";
   };
   function on(e) {
@@ -4823,7 +4840,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   b.regexp_eatUnicodePropertyValue = function (e) {
     var t = 0;
     for (e.lastStringValue = ""; rs((t = e.current())); )
-      (e.lastStringValue += fe(t)), e.advance();
+      ((e.lastStringValue += fe(t)), e.advance());
     return e.lastStringValue !== "";
   };
   function rs(e) {
@@ -4856,13 +4873,13 @@ Defaulting to 2020, but this will stop working in the future.`)),
       var t = e.lastIntValue;
       if (e.eat(45) && this.regexp_eatClassAtom(e)) {
         var i = e.lastIntValue;
-        e.switchU &&
+        (e.switchU &&
           (t === -1 || i === -1) &&
           e.raise("Invalid character class"),
           t !== -1 &&
             i !== -1 &&
             t > i &&
-            e.raise("Range out of order in character class");
+            e.raise("Range out of order in character class"));
       }
     }
   };
@@ -4872,8 +4889,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
       if (this.regexp_eatClassEscape(e)) return !0;
       if (e.switchU) {
         var i = e.current();
-        (i === 99 || ln(i)) && e.raise("Invalid class escape"),
-          e.raise("Invalid escape");
+        ((i === 99 || ln(i)) && e.raise("Invalid class escape"),
+          e.raise("Invalid escape"));
       }
       e.pos = t;
     }
@@ -4882,8 +4899,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   b.regexp_eatClassEscape = function (e) {
     var t = e.pos;
-    if (e.eat(98)) return (e.lastIntValue = 8), !0;
-    if (e.switchU && e.eat(45)) return (e.lastIntValue = 45), !0;
+    if (e.eat(98)) return ((e.lastIntValue = 8), !0);
+    if (e.switchU && e.eat(45)) return ((e.lastIntValue = 45), !0);
     if (!e.switchU && e.eat(99)) {
       if (this.regexp_eatClassControlLetter(e)) return !0;
       e.pos = t;
@@ -5047,7 +5064,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var t = e.pos;
     if (e.eat(120)) {
       if (this.regexp_eatFixedHexDigits(e, 2)) return !0;
-      e.switchU && e.raise("Invalid escape"), (e.pos = t);
+      (e.switchU && e.raise("Invalid escape"), (e.pos = t));
     }
     return !1;
   };
@@ -5055,7 +5072,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var t = e.pos,
       i = 0;
     for (e.lastIntValue = 0; ut((i = e.current())); )
-      (e.lastIntValue = 10 * e.lastIntValue + (i - 48)), e.advance();
+      ((e.lastIntValue = 10 * e.lastIntValue + (i - 48)), e.advance());
     return e.pos !== t;
   };
   function ut(e) {
@@ -5065,7 +5082,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     var t = e.pos,
       i = 0;
     for (e.lastIntValue = 0; cn((i = e.current())); )
-      (e.lastIntValue = 16 * e.lastIntValue + un(i)), e.advance();
+      ((e.lastIntValue = 16 * e.lastIntValue + un(i)), e.advance());
     return e.pos !== t;
   };
   function cn(e) {
@@ -5107,22 +5124,22 @@ Defaulting to 2020, but this will stop working in the future.`)),
     e.lastIntValue = 0;
     for (var r = 0; r < t; ++r) {
       var n = e.current();
-      if (!cn(n)) return (e.pos = i), !1;
-      (e.lastIntValue = 16 * e.lastIntValue + un(n)), e.advance();
+      if (!cn(n)) return ((e.pos = i), !1);
+      ((e.lastIntValue = 16 * e.lastIntValue + un(n)), e.advance());
     }
     return !0;
   };
   var ei = function (t) {
-      (this.type = t.type),
+      ((this.type = t.type),
         (this.value = t.value),
         (this.start = t.start),
         (this.end = t.end),
         t.options.locations && (this.loc = new st(t, t.startLoc, t.endLoc)),
-        t.options.ranges && (this.range = [t.start, t.end]);
+        t.options.ranges && (this.range = [t.start, t.end]));
     },
     C = T.prototype;
   C.next = function (e) {
-    !e &&
+    (!e &&
       this.type.keyword &&
       this.containsEsc &&
       this.raiseRecoverable(
@@ -5134,10 +5151,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
       (this.lastTokStart = this.start),
       (this.lastTokEndLoc = this.endLoc),
       (this.lastTokStartLoc = this.startLoc),
-      this.nextToken();
+      this.nextToken());
   };
   C.getToken = function () {
-    return this.next(), new ei(this);
+    return (this.next(), new ei(this));
   };
   typeof Symbol < "u" &&
     (C[Symbol.iterator] = function () {
@@ -5182,7 +5199,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.options.locations)
     )
       for (var r = void 0, n = t; (r = Tr(this.input, n, this.pos)) > -1; )
-        ++this.curLine, (n = this.lineStart = r);
+        (++this.curLine, (n = this.lineStart = r));
     this.options.onComment &&
       this.options.onComment(
         !0,
@@ -5225,9 +5242,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
         case 10:
         case 8232:
         case 8233:
-          ++this.pos,
+          (++this.pos,
             this.options.locations &&
-              (++this.curLine, (this.lineStart = this.pos));
+              (++this.curLine, (this.lineStart = this.pos)));
           break;
         case 47:
           switch (this.input.charCodeAt(this.pos + 1)) {
@@ -5252,10 +5269,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
     }
   };
   C.finishToken = function (e, t) {
-    (this.end = this.pos),
-      this.options.locations && (this.endLoc = this.curPosition());
+    ((this.end = this.pos),
+      this.options.locations && (this.endLoc = this.curPosition()));
     var i = this.type;
-    (this.type = e), (this.value = t), this.updateContext(i);
+    ((this.type = e), (this.value = t), this.updateContext(i));
   };
   C.readToken_dot = function () {
     var e = this.input.charCodeAt(this.pos + 1);
@@ -5378,26 +5395,26 @@ Defaulting to 2020, but this will stop working in the future.`)),
       case 46:
         return this.readToken_dot();
       case 40:
-        return ++this.pos, this.finishToken(u.parenL);
+        return (++this.pos, this.finishToken(u.parenL));
       case 41:
-        return ++this.pos, this.finishToken(u.parenR);
+        return (++this.pos, this.finishToken(u.parenR));
       case 59:
-        return ++this.pos, this.finishToken(u.semi);
+        return (++this.pos, this.finishToken(u.semi));
       case 44:
-        return ++this.pos, this.finishToken(u.comma);
+        return (++this.pos, this.finishToken(u.comma));
       case 91:
-        return ++this.pos, this.finishToken(u.bracketL);
+        return (++this.pos, this.finishToken(u.bracketL));
       case 93:
-        return ++this.pos, this.finishToken(u.bracketR);
+        return (++this.pos, this.finishToken(u.bracketR));
       case 123:
-        return ++this.pos, this.finishToken(u.braceL);
+        return (++this.pos, this.finishToken(u.braceL));
       case 125:
-        return ++this.pos, this.finishToken(u.braceR);
+        return (++this.pos, this.finishToken(u.braceR));
       case 58:
-        return ++this.pos, this.finishToken(u.colon);
+        return (++this.pos, this.finishToken(u.colon));
       case 96:
         if (this.options.ecmaVersion < 6) break;
-        return ++this.pos, this.finishToken(u.backQuote);
+        return (++this.pos, this.finishToken(u.backQuote));
       case 48:
         var t = this.input.charCodeAt(this.pos + 1);
         if (t === 120 || t === 88) return this.readRadixNumber(16);
@@ -5448,7 +5465,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   C.finishOp = function (e, t) {
     var i = this.input.slice(this.pos, this.pos + t);
-    return (this.pos += t), this.finishToken(e, i);
+    return ((this.pos += t), this.finishToken(e, i));
   };
   C.readRegexp = function () {
     for (var e, t, i = this.pos; ; ) {
@@ -5471,9 +5488,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
       s = this.readWord1();
     this.containsEsc && this.unexpected(a);
     var o = this.regexpState || (this.regexpState = new re(this));
-    o.reset(i, n, s),
+    (o.reset(i, n, s),
       this.validateRegExpFlags(o),
-      this.validateRegExpPattern(o);
+      this.validateRegExpPattern(o));
     var c = null;
     try {
       c = new RegExp(n, s);
@@ -5495,7 +5512,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       var h = this.input.charCodeAt(this.pos),
         f = void 0;
       if (r && h === 95) {
-        n &&
+        (n &&
           this.raiseRecoverable(
             this.pos,
             "Numeric separator is not allowed in legacy octal numeric literals"
@@ -5510,7 +5527,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               this.pos,
               "Numeric separator is not allowed at the first of digits"
             ),
-          (o = h);
+          (o = h));
         continue;
       }
       if (
@@ -5524,7 +5541,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         f >= e)
       )
         break;
-      (o = h), (s = s * e + f);
+      ((o = h), (s = s * e + f));
     }
     return (
       r &&
@@ -5572,7 +5589,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         this.finishToken(u.num, n)
       );
     }
-    i && /[89]/.test(this.input.slice(t, this.pos)) && (i = !1),
+    (i && /[89]/.test(this.input.slice(t, this.pos)) && (i = !1),
       r === 46 &&
         !i &&
         (++this.pos, this.readInt(10), (r = this.input.charCodeAt(this.pos))),
@@ -5582,7 +5599,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         (r === 43 || r === 45) && ++this.pos,
         this.readInt(10) === null && this.raise(t, "Invalid number")),
       ce(this.fullCharCodeAtPos()) &&
-        this.raise(this.pos, "Identifier directly after number");
+        this.raise(this.pos, "Identifier directly after number"));
     var a = os(this.input.slice(t, this.pos), i);
     return this.finishToken(u.num, a);
   };
@@ -5592,9 +5609,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
     if (e === 123) {
       this.options.ecmaVersion < 6 && this.unexpected();
       var i = ++this.pos;
-      (t = this.readHexChar(this.input.indexOf("}", this.pos) - this.pos)),
+      ((t = this.readHexChar(this.input.indexOf("}", this.pos) - this.pos)),
         ++this.pos,
-        t > 1114111 && this.invalidStringToken(i, "Code point out of bounds");
+        t > 1114111 && this.invalidStringToken(i, "Code point out of bounds"));
     } else t = this.readHexChar(4);
     return t;
   };
@@ -5618,7 +5635,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
             ++this.pos);
     }
     return (
-      (t += this.input.slice(i, this.pos++)), this.finishToken(u.string, t)
+      (t += this.input.slice(i, this.pos++)),
+      this.finishToken(u.string, t)
     );
   };
   var pn = {};
@@ -5650,9 +5668,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
           : ((e += this.input.slice(t, this.pos)),
             this.finishToken(u.template, e));
       if (i === 92)
-        (e += this.input.slice(t, this.pos)),
+        ((e += this.input.slice(t, this.pos)),
           (e += this.readEscapedChar(!0)),
-          (t = this.pos);
+          (t = this.pos));
       else if (we(i)) {
         switch (((e += this.input.slice(t, this.pos)), ++this.pos, i)) {
           case 13:
@@ -5665,8 +5683,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
             e += String.fromCharCode(i);
             break;
         }
-        this.options.locations && (++this.curLine, (this.lineStart = this.pos)),
-          (t = this.pos);
+        (this.options.locations &&
+          (++this.curLine, (this.lineStart = this.pos)),
+          (t = this.pos));
       } else ++this.pos;
     }
   };
@@ -5767,19 +5786,19 @@ Defaulting to 2020, but this will stop working in the future.`)),
       var n = this.fullCharCodeAtPos();
       if (be(n, r)) this.pos += n <= 65535 ? 1 : 2;
       else if (n === 92) {
-        (this.containsEsc = !0), (e += this.input.slice(i, this.pos));
+        ((this.containsEsc = !0), (e += this.input.slice(i, this.pos)));
         var a = this.pos;
-        this.input.charCodeAt(++this.pos) !== 117 &&
+        (this.input.charCodeAt(++this.pos) !== 117 &&
           this.invalidStringToken(
             this.pos,
             "Expecting Unicode escape sequence \\uXXXX"
           ),
-          ++this.pos;
+          ++this.pos);
         var s = this.readCodePoint();
-        (t ? ce : be)(s, r) ||
+        ((t ? ce : be)(s, r) ||
           this.invalidStringToken(a, "Invalid Unicode escape"),
           (e += fe(s)),
-          (i = this.pos);
+          (i = this.pos));
       } else break;
       t = !1;
     }
@@ -5788,7 +5807,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   C.readWord = function () {
     var e = this.readWord1(),
       t = u.name;
-    return this.keywords.test(e) && (t = zt[e]), this.finishToken(t, e);
+    return (this.keywords.test(e) && (t = zt[e]), this.finishToken(t, e));
   };
   var cs = "8.10.0";
   T.acorn = {
@@ -5834,7 +5853,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         super(r.message || r.code);
         q(this, "status");
         q(this, "body");
-        (this.status = i), (this.body = r);
+        ((this.status = i), (this.body = r));
       }
     },
     ri = class {
@@ -5866,7 +5885,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     return pt(i ^ (t | ~r), e, t, n, a, s);
   }
   function lt(e, t) {
-    (e[t >> 5] |= 128 << t % 32), (e[(((t + 64) >>> 9) << 4) + 14] = t);
+    ((e[t >> 5] |= 128 << t % 32), (e[(((t + 64) >>> 9) << 4) + 14] = t));
     let i = 1732584193,
       r = -271733879,
       n = -1732584194,
@@ -5876,7 +5895,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         c = r,
         l = n,
         h = a;
-      (i = D(i, r, n, a, e[s], 7, -680876936)),
+      ((i = D(i, r, n, a, e[s], 7, -680876936)),
         (a = D(a, i, r, n, e[s + 1], 12, -389564586)),
         (n = D(n, a, i, r, e[s + 2], 17, 606105819)),
         (r = D(r, n, a, i, e[s + 3], 22, -1044525330)),
@@ -5943,7 +5962,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
         (i = ye(i, o)),
         (r = ye(r, c)),
         (n = ye(n, l)),
-        (a = ye(a, h));
+        (a = ye(a, h)));
     }
     return [i, r, n, a];
   }
@@ -5972,7 +5991,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       n = [];
     i.length > 16 && (i = lt(i, e.length * 8));
     for (let s = 0; s < 16; s += 1)
-      (r[s] = i[s] ^ 909522486), (n[s] = i[s] ^ 1549556828);
+      ((r[s] = i[s] ^ 909522486), (n[s] = i[s] ^ 1549556828));
     let a = lt(r.concat(ni(t)), 512 + t.length * 8);
     return mn(lt(n.concat(a), 512 + 128));
   }
@@ -6034,7 +6053,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             message: "Value didn't begin with semi-colon.",
           });
         let s = parseInt(n.slice(i.length + 1));
-        (r[s] = a.slice(1)), t.delete(n);
+        ((r[s] = a.slice(1)), t.delete(n));
       }
       t.set(i, r.join(""));
     }
@@ -6045,17 +6064,17 @@ Defaulting to 2020, but this will stop working in the future.`)),
         super(3, i);
         q(this, "ws");
         q(this, "http");
-        (this.ws = new URL(this.base)),
+        ((this.ws = new URL(this.base)),
           (this.http = new URL(this.base)),
           this.ws.protocol === "https:"
             ? (this.ws.protocol = "wss:")
-            : (this.ws.protocol = "ws:");
+            : (this.ws.protocol = "ws:"));
       }
       connect(i, r, n, a, s) {
         let o = new me(this.ws),
           c = () => {
-            o.removeEventListener("close", l),
-              o.removeEventListener("message", h);
+            (o.removeEventListener("close", l),
+              o.removeEventListener("message", h));
           },
           l = () => {
             c();
@@ -6068,10 +6087,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
             let A = JSON.parse(f.data);
             if (A.type !== "open")
               throw new TypeError("message was not of open type");
-            f.stopImmediatePropagation(),
+            (f.stopImmediatePropagation(),
               a({ protocol: A.protocol, setCookies: A.setCookies }),
               s(ge.OPEN),
-              o.dispatchEvent(new Event("open"));
+              o.dispatchEvent(new Event("open")));
           };
         return (
           o.addEventListener("close", l),
@@ -6079,7 +6098,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           o.addEventListener(
             "open",
             (f) => {
-              f.stopImmediatePropagation(),
+              (f.stopImmediatePropagation(),
                 s(ge.CONNECTING),
                 n().then((A) =>
                   ge.prototype.send.call(
@@ -6092,7 +6111,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                       forwardHeaders: [],
                     })
                   )
-                );
+                ));
             },
             { once: !0 }
           ),
@@ -6113,10 +6132,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
         if (r instanceof Headers) for (let [p, W] of r) l[p] = W;
         else for (let p in r) l[p] = r[p];
         let h = { credentials: "omit", method: i, signal: c };
-        s !== "only-if-cached" && (h.cache = s),
+        (s !== "only-if-cached" && (h.cache = s),
           n !== void 0 && (h.body = n),
           o !== void 0 && (h.duplex = o),
-          (h.headers = this.createBareHeaders(a, l));
+          (h.headers = this.createBareHeaders(a, l)));
         let f = await ii(this.http + "?cache=" + xs(a.toString()), h),
           A = await this.readBareResponse(f),
           d = new dn(hs.includes(A.status) ? void 0 : f.body, {
@@ -6124,7 +6143,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             statusText: A.statusText ?? void 0,
             headers: new Headers(A.headers),
           });
-        return (d.rawHeaders = A.headers), (d.rawResponse = f), d;
+        return ((d.rawHeaders = A.headers), (d.rawResponse = f), d);
       }
       async readBareResponse(i) {
         if (!i.ok) throw new ht(i.status, await i.json());
@@ -6135,16 +6154,16 @@ Defaulting to 2020, but this will stop working in the future.`)),
         let s = r.get("x-bare-status-text");
         s !== null && (n.statusText = s);
         let o = r.get("x-bare-headers");
-        return o !== null && (n.headers = JSON.parse(o)), n;
+        return (o !== null && (n.headers = JSON.parse(o)), n);
       }
       createBareHeaders(i, r, n = [], a = [], s = []) {
         let o = new Headers();
-        o.set("x-bare-url", i.toString()),
-          o.set("x-bare-headers", JSON.stringify(r));
+        (o.set("x-bare-url", i.toString()),
+          o.set("x-bare-headers", JSON.stringify(r)));
         for (let c of n) o.append("x-bare-forward-headers", c);
         for (let c of a) o.append("x-bare-pass-headers", c);
         for (let c of s) o.append("x-bare-pass-status", c.toString());
-        return _s(o), o;
+        return (_s(o), o);
       }
     },
     ws =
@@ -6175,14 +6194,16 @@ Defaulting to 2020, but this will stop working in the future.`)),
         q(this, "working");
         q(this, "onDemand");
         q(this, "onDemandSignal");
-        (this.server = new URL(t)),
+        ((this.server = new URL(t)),
           !i || i instanceof AbortSignal
             ? ((this.onDemand = !0), (this.onDemandSignal = i))
-            : ((this.onDemand = !1), this.loadManifest(i));
+            : ((this.onDemand = !1), this.loadManifest(i)));
       }
       loadManifest(t) {
         return (
-          (this.manifest = t), (this.client = this.getClient()), this.client
+          (this.manifest = t),
+          (this.client = this.getClient()),
+          this.client
         );
       }
       demand() {
@@ -6219,7 +6240,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           throw new DOMException(
             `Failed to construct 'WebSocket': The URL's scheme must be either 'ws' or 'wss'. '${t.protocol}' is not allowed.`
           );
-        Array.isArray(i) || (i = [i]), (i = i.map(String));
+        (Array.isArray(i) || (i = [i]), (i = i.map(String)));
         for (let h of i)
           if (!vs(h))
             throw new DOMException(
@@ -6244,8 +6265,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
               );
             },
             (h) => {
-              (a = h.protocol),
-                r.setCookiesCallback && r.setCookiesCallback(h.setCookies);
+              ((a = h.protocol),
+                r.setCookiesCallback && r.setCookiesCallback(h.setCookies));
             },
             (h) => {
               s = h;
@@ -6271,7 +6292,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               "Failed to execute 'send' on 'WebSocket': Still in CONNECTING state."
             );
         };
-        r.sendErrorHook
+        (r.sendErrorHook
           ? r.sendErrorHook(n, c)
           : (n.send = function (...h) {
               let f = c();
@@ -6284,7 +6305,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 get: () => t.toString(),
                 configurable: !0,
                 enumerable: !0,
-              });
+              }));
         let l = () => a;
         return (
           r.protocolHook
@@ -6409,7 +6430,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
       let { length: r } = t;
       for (let n = 1; n < r; n++) {
         let a = t[n];
-        e.write(", "), i[a.type](a, e);
+        (e.write(", "), i[a.type](a, e));
       }
     }
     e.write(")");
@@ -6450,7 +6471,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
     let { length: n } = t;
     for (let a = 0; a < n; a++) {
       let s = t[a];
-      e.write(i),
+      (e.write(i),
         s.type[0] === "L"
           ? e.write(
               "// " +
@@ -6459,7 +6480,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
 `,
               s
             )
-          : (e.write("/*"), Fs(e, s.value, i, r), e.write("*/" + r));
+          : (e.write("/*"), Fs(e, s.value, i, r), e.write("*/" + r)));
     }
   }
   function Bs(e) {
@@ -6478,7 +6499,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
     let { length: n } = r;
     if (n > 0) {
       i.VariableDeclarator(r[0], e);
-      for (let a = 1; a < n; a++) e.write(", "), i.VariableDeclarator(r[a], e);
+      for (let a = 1; a < n; a++)
+        (e.write(", "), i.VariableDeclarator(r[a], e));
     }
   }
   var En,
@@ -6496,10 +6518,10 @@ Defaulting to 2020, but this will stop working in the future.`)),
           { length: s } = a;
         for (let o = 0; o < s; o++) {
           let c = a[o];
-          n && c.comments != null && j(t, c.comments, i, r),
+          (n && c.comments != null && j(t, c.comments, i, r),
             t.write(i),
             this[c.type](c, t),
-            t.write(r);
+            t.write(r));
         }
         n && e.trailingComments != null && j(t, e.trailingComments, i, r);
       },
@@ -6510,68 +6532,68 @@ Defaulting to 2020, but this will stop working in the future.`)),
         t.write("{");
         let s = e.body;
         if (s != null && s.length > 0) {
-          t.write(r), n && e.comments != null && j(t, e.comments, a, r);
+          (t.write(r), n && e.comments != null && j(t, e.comments, a, r));
           let { length: o } = s;
           for (let c = 0; c < o; c++) {
             let l = s[c];
-            n && l.comments != null && j(t, l.comments, a, r),
+            (n && l.comments != null && j(t, l.comments, a, r),
               t.write(a),
               this[l.type](l, t),
-              t.write(r);
+              t.write(r));
           }
           t.write(i);
         } else
           n &&
             e.comments != null &&
             (t.write(r), j(t, e.comments, a, r), t.write(i));
-        n && e.trailingComments != null && j(t, e.trailingComments, a, r),
+        (n && e.trailingComments != null && j(t, e.trailingComments, a, r),
           t.write("}"),
-          t.indentLevel--;
+          t.indentLevel--);
       }),
       ClassBody: Pn,
       StaticBlock(e, t) {
-        t.write("static "), this.BlockStatement(e, t);
+        (t.write("static "), this.BlockStatement(e, t));
       },
       EmptyStatement(e, t) {
         t.write(";");
       },
       ExpressionStatement(e, t) {
         let i = t.expressionsPrecedence[e.expression.type];
-        i === ee || (i === 3 && e.expression.left.type[0] === "O")
+        (i === ee || (i === 3 && e.expression.left.type[0] === "O")
           ? (t.write("("),
             this[e.expression.type](e.expression, t),
             t.write(")"))
           : this[e.expression.type](e.expression, t),
-          t.write(";");
+          t.write(";"));
       },
       IfStatement(e, t) {
-        t.write("if ("),
+        (t.write("if ("),
           this[e.test.type](e.test, t),
           t.write(") "),
           this[e.consequent.type](e.consequent, t),
           e.alternate != null &&
-            (t.write(" else "), this[e.alternate.type](e.alternate, t));
+            (t.write(" else "), this[e.alternate.type](e.alternate, t)));
       },
       LabeledStatement(e, t) {
-        this[e.label.type](e.label, t),
+        (this[e.label.type](e.label, t),
           t.write(": "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       },
       BreakStatement(e, t) {
-        t.write("break"),
+        (t.write("break"),
           e.label != null && (t.write(" "), this[e.label.type](e.label, t)),
-          t.write(";");
+          t.write(";"));
       },
       ContinueStatement(e, t) {
-        t.write("continue"),
+        (t.write("continue"),
           e.label != null && (t.write(" "), this[e.label.type](e.label, t)),
-          t.write(";");
+          t.write(";"));
       },
       WithStatement(e, t) {
-        t.write("with ("),
+        (t.write("with ("),
           this[e.object.type](e.object, t),
           t.write(") "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       },
       SwitchStatement(e, t) {
         let i = t.indent.repeat(t.indentLevel++),
@@ -6579,92 +6601,92 @@ Defaulting to 2020, but this will stop working in the future.`)),
         t.indentLevel++;
         let a = i + t.indent,
           s = a + t.indent;
-        t.write("switch ("),
+        (t.write("switch ("),
           this[e.discriminant.type](e.discriminant, t),
-          t.write(") {" + r);
+          t.write(") {" + r));
         let { cases: o } = e,
           { length: c } = o;
         for (let l = 0; l < c; l++) {
           let h = o[l];
-          n && h.comments != null && j(t, h.comments, a, r),
+          (n && h.comments != null && j(t, h.comments, a, r),
             h.test
               ? (t.write(a + "case "),
                 this[h.test.type](h.test, t),
                 t.write(":" + r))
-              : t.write(a + "default:" + r);
+              : t.write(a + "default:" + r));
           let { consequent: f } = h,
             { length: A } = f;
           for (let d = 0; d < A; d++) {
             let p = f[d];
-            n && p.comments != null && j(t, p.comments, s, r),
+            (n && p.comments != null && j(t, p.comments, s, r),
               t.write(s),
               this[p.type](p, t),
-              t.write(r);
+              t.write(r));
           }
         }
-        (t.indentLevel -= 2), t.write(i + "}");
+        ((t.indentLevel -= 2), t.write(i + "}"));
       },
       ReturnStatement(e, t) {
-        t.write("return"),
+        (t.write("return"),
           e.argument && (t.write(" "), this[e.argument.type](e.argument, t)),
-          t.write(";");
+          t.write(";"));
       },
       ThrowStatement(e, t) {
-        t.write("throw "), this[e.argument.type](e.argument, t), t.write(";");
+        (t.write("throw "), this[e.argument.type](e.argument, t), t.write(";"));
       },
       TryStatement(e, t) {
         if ((t.write("try "), this[e.block.type](e.block, t), e.handler)) {
           let { handler: i } = e;
-          i.param == null
+          (i.param == null
             ? t.write(" catch ")
             : (t.write(" catch ("),
               this[i.param.type](i.param, t),
               t.write(") ")),
-            this[i.body.type](i.body, t);
+            this[i.body.type](i.body, t));
         }
         e.finalizer &&
           (t.write(" finally "), this[e.finalizer.type](e.finalizer, t));
       },
       WhileStatement(e, t) {
-        t.write("while ("),
+        (t.write("while ("),
           this[e.test.type](e.test, t),
           t.write(") "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       },
       DoWhileStatement(e, t) {
-        t.write("do "),
+        (t.write("do "),
           this[e.body.type](e.body, t),
           t.write(" while ("),
           this[e.test.type](e.test, t),
-          t.write(");");
+          t.write(");"));
       },
       ForStatement(e, t) {
         if ((t.write("for ("), e.init != null)) {
           let { init: i } = e;
           i.type[0] === "V" ? li(t, i) : this[i.type](i, t);
         }
-        t.write("; "),
+        (t.write("; "),
           e.test && this[e.test.type](e.test, t),
           t.write("; "),
           e.update && this[e.update.type](e.update, t),
           t.write(") "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       },
       ForInStatement: (En = function (e, t) {
         t.write(`for ${e.await ? "await " : ""}(`);
         let { left: i } = e;
-        i.type[0] === "V" ? li(t, i) : this[i.type](i, t),
+        (i.type[0] === "V" ? li(t, i) : this[i.type](i, t),
           t.write(e.type[3] === "I" ? " in " : " of "),
           this[e.right.type](e.right, t),
           t.write(") "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       }),
       ForOfStatement: En,
       DebuggerStatement(e, t) {
         t.write("debugger;", e);
       },
       FunctionDeclaration: (Cn = function (e, t) {
-        t.write(
+        (t.write(
           (e.async ? "async " : "") +
             (e.generator ? "function* " : "function ") +
             (e.id ? e.id.name : ""),
@@ -6672,15 +6694,15 @@ Defaulting to 2020, but this will stop working in the future.`)),
         ),
           Ce(t, e.params),
           t.write(" "),
-          this[e.body.type](e.body, t);
+          this[e.body.type](e.body, t));
       }),
       FunctionExpression: Cn,
       VariableDeclaration(e, t) {
-        li(t, e), t.write(";");
+        (li(t, e), t.write(";"));
       },
       VariableDeclarator(e, t) {
-        this[e.id.type](e.id, t),
-          e.init != null && (t.write(" = "), this[e.init.type](e.init, t));
+        (this[e.id.type](e.id, t),
+          e.init != null && (t.write(" = "), this[e.init.type](e.init, t)));
       },
       ClassDeclaration(e, t) {
         if (
@@ -6690,11 +6712,11 @@ Defaulting to 2020, but this will stop working in the future.`)),
           let { superClass: i } = e,
             { type: r } = i,
             n = t.expressionsPrecedence[r];
-          (r[0] !== "C" || r[1] !== "l" || r[5] !== "E") &&
+          ((r[0] !== "C" || r[1] !== "l" || r[5] !== "E") &&
           (n === ee || n < t.expressionsPrecedence.ClassExpression)
             ? (t.write("("), this[e.superClass.type](i, t), t.write(")"))
             : this[i.type](i, t),
-            t.write(" ");
+            t.write(" "));
         }
         this.ClassBody(e.body, t);
       },
@@ -6708,8 +6730,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
             n > 0 && t.write(", ");
             let a = i[n],
               s = a.type[6];
-            if (s === "D") t.write(a.local.name, a), n++;
-            else if (s === "N") t.write("* as " + a.local.name, a), n++;
+            if (s === "D") (t.write(a.local.name, a), n++);
+            else if (s === "N") (t.write("* as " + a.local.name, a), n++);
             else break;
           }
           if (n < r) {
@@ -6728,17 +6750,17 @@ Defaulting to 2020, but this will stop working in the future.`)),
           }
           t.write(" from ");
         }
-        this.Literal(e.source, t), t.write(";");
+        (this.Literal(e.source, t), t.write(";"));
       },
       ImportExpression(e, t) {
-        t.write("import("), this[e.source.type](e.source, t), t.write(")");
+        (t.write("import("), this[e.source.type](e.source, t), t.write(")"));
       },
       ExportDefaultDeclaration(e, t) {
-        t.write("export default "),
+        (t.write("export default "),
           this[e.declaration.type](e.declaration, t),
           t.expressionsPrecedence[e.declaration.type] != null &&
             e.declaration.type[0] !== "F" &&
-            t.write(";");
+            t.write(";"));
       },
       ExportNamedDeclaration(e, t) {
         if ((t.write("export "), e.declaration))
@@ -6759,22 +6781,22 @@ Defaulting to 2020, but this will stop working in the future.`)),
                 t.write(", ");
               else break;
             }
-          t.write("}"),
+          (t.write("}"),
             e.source && (t.write(" from "), this.Literal(e.source, t)),
-            t.write(";");
+            t.write(";"));
         }
       },
       ExportAllDeclaration(e, t) {
-        e.exported != null
+        (e.exported != null
           ? t.write("export * as " + e.exported.name + " from ")
           : t.write("export * from "),
           this.Literal(e.source, t),
-          t.write(";");
+          t.write(";"));
       },
       MethodDefinition(e, t) {
         e.static && t.write("static ");
         let i = e.kind[0];
-        (i === "g" || i === "s") && t.write(e.kind + " "),
+        ((i === "g" || i === "s") && t.write(e.kind + " "),
           e.value.async && t.write("async "),
           e.value.generator && t.write("*"),
           e.computed
@@ -6782,7 +6804,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             : this[e.key.type](e.key, t),
           Ce(t, e.value.params),
           t.write(" "),
-          this[e.value.body.type](e.value.body, t);
+          this[e.value.body.type](e.value.body, t));
       },
       ClassExpression(e, t) {
         this.ClassDeclaration(e, t);
@@ -6790,14 +6812,14 @@ Defaulting to 2020, but this will stop working in the future.`)),
       ArrowFunctionExpression(e, t) {
         t.write(e.async ? "async " : "", e);
         let { params: i } = e;
-        i != null &&
+        (i != null &&
           (i.length === 1 && i[0].type[0] === "I"
             ? t.write(i[0].name, i[0])
             : Ce(t, e.params)),
           t.write(" => "),
           e.body.type[0] === "O"
             ? (t.write("("), this.ObjectExpression(e.body, t), t.write(")"))
-            : this[e.body.type](e.body, t);
+            : this[e.body.type](e.body, t));
       },
       ThisExpression(e, t) {
         t.write("this", e);
@@ -6806,15 +6828,15 @@ Defaulting to 2020, but this will stop working in the future.`)),
         t.write("super", e);
       },
       RestElement: (kn = function (e, t) {
-        t.write("..."), this[e.argument.type](e.argument, t);
+        (t.write("..."), this[e.argument.type](e.argument, t));
       }),
       SpreadElement: kn,
       YieldExpression(e, t) {
-        t.write(e.delegate ? "yield*" : "yield"),
-          e.argument && (t.write(" "), this[e.argument.type](e.argument, t));
+        (t.write(e.delegate ? "yield*" : "yield"),
+          e.argument && (t.write(" "), this[e.argument.type](e.argument, t)));
       },
       AwaitExpression(e, t) {
-        t.write("await ", e), mt(t, e.argument, e);
+        (t.write("await ", e), mt(t, e.argument, e));
       },
       TemplateLiteral(e, t) {
         let { quasis: i, expressions: r } = e;
@@ -6823,19 +6845,19 @@ Defaulting to 2020, but this will stop working in the future.`)),
         for (let s = 0; s < n; s++) {
           let o = r[s],
             c = i[s];
-          t.write(c.value.raw, c),
+          (t.write(c.value.raw, c),
             t.write("${"),
             this[o.type](o, t),
-            t.write("}");
+            t.write("}"));
         }
         let a = i[i.length - 1];
-        t.write(a.value.raw, a), t.write("`");
+        (t.write(a.value.raw, a), t.write("`"));
       },
       TemplateElement(e, t) {
         t.write(e.value.raw, e);
       },
       TaggedTemplateExpression(e, t) {
-        mt(t, e.tag, e), this[e.quasi.type](e.quasi, t);
+        (mt(t, e.tag, e), this[e.quasi.type](e.quasi, t));
       },
       ArrayExpression: (Ln = function (e, t) {
         if ((t.write("["), e.elements.length > 0)) {
@@ -6858,7 +6880,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           { lineEnd: r, writeComments: n } = t,
           a = i + t.indent;
         if ((t.write("{"), e.properties.length > 0)) {
-          t.write(r), n && e.comments != null && j(t, e.comments, a, r);
+          (t.write(r), n && e.comments != null && j(t, e.comments, a, r));
           let s = "," + r,
             { properties: o } = e,
             { length: c } = o;
@@ -6873,9 +6895,9 @@ Defaulting to 2020, but this will stop working in the future.`)),
               t.write(s);
             else break;
           }
-          t.write(r),
+          (t.write(r),
             n && e.trailingComments != null && j(t, e.trailingComments, a, r),
-            t.write(i + "}");
+            t.write(i + "}"));
         } else
           n
             ? e.comments != null
@@ -6910,7 +6932,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           e.key.type[0] !== "F" && t.write(";");
           return;
         }
-        t.write(" = "), this[e.value.type](e.value, t), t.write(";");
+        (t.write(" = "), this[e.value.type](e.value, t), t.write(";"));
       },
       ObjectPattern(e, t) {
         if ((t.write("{"), e.properties.length > 0)) {
@@ -6932,7 +6954,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
           } = e;
           t.write(i);
           let a = Rn(t, r, e);
-          !a &&
+          (!a &&
             (i.length > 1 ||
               (n[0] === "U" &&
                 (n[1] === "n" || n[1] === "p") &&
@@ -6944,8 +6966,8 @@ Defaulting to 2020, but this will stop working in the future.`)),
               ? (t.write(i.length > 1 ? " (" : "("),
                 this[n](r, t),
                 t.write(")"))
-              : this[n](r, t);
-        } else this[e.argument.type](e.argument, t), t.write(e.operator);
+              : this[n](r, t));
+        } else (this[e.argument.type](e.argument, t), t.write(e.operator));
       },
       UpdateExpression(e, t) {
         e.prefix
@@ -6953,57 +6975,57 @@ Defaulting to 2020, but this will stop working in the future.`)),
           : (this[e.argument.type](e.argument, t), t.write(e.operator));
       },
       AssignmentExpression(e, t) {
-        this[e.left.type](e.left, t),
+        (this[e.left.type](e.left, t),
           t.write(" " + e.operator + " "),
-          this[e.right.type](e.right, t);
+          this[e.right.type](e.right, t));
       },
       AssignmentPattern(e, t) {
-        this[e.left.type](e.left, t),
+        (this[e.left.type](e.left, t),
           t.write(" = "),
-          this[e.right.type](e.right, t);
+          this[e.right.type](e.right, t));
       },
       BinaryExpression: (An = function (e, t) {
         let i = e.operator === "in";
-        i && t.write("("),
+        (i && t.write("("),
           mt(t, e.left, e, !1),
           t.write(" " + e.operator + " "),
           mt(t, e.right, e, !0),
-          i && t.write(")");
+          i && t.write(")"));
       }),
       LogicalExpression: An,
       ConditionalExpression(e, t) {
         let { test: i } = e,
           r = t.expressionsPrecedence[i.type];
-        r === ee || r <= t.expressionsPrecedence.ConditionalExpression
+        (r === ee || r <= t.expressionsPrecedence.ConditionalExpression
           ? (t.write("("), this[i.type](i, t), t.write(")"))
           : this[i.type](i, t),
           t.write(" ? "),
           this[e.consequent.type](e.consequent, t),
           t.write(" : "),
-          this[e.alternate.type](e.alternate, t);
+          this[e.alternate.type](e.alternate, t));
       },
       NewExpression(e, t) {
         t.write("new ");
         let i = t.expressionsPrecedence[e.callee.type];
-        i === ee || i < t.expressionsPrecedence.CallExpression || Bs(e.callee)
+        (i === ee || i < t.expressionsPrecedence.CallExpression || Bs(e.callee)
           ? (t.write("("), this[e.callee.type](e.callee, t), t.write(")"))
           : this[e.callee.type](e.callee, t),
-          Ce(t, e.arguments);
+          Ce(t, e.arguments));
       },
       CallExpression(e, t) {
         let i = t.expressionsPrecedence[e.callee.type];
-        i === ee || i < t.expressionsPrecedence.CallExpression
+        (i === ee || i < t.expressionsPrecedence.CallExpression
           ? (t.write("("), this[e.callee.type](e.callee, t), t.write(")"))
           : this[e.callee.type](e.callee, t),
           e.optional && t.write("?."),
-          Ce(t, e.arguments);
+          Ce(t, e.arguments));
       },
       ChainExpression(e, t) {
         this[e.expression.type](e.expression, t);
       },
       MemberExpression(e, t) {
         let i = t.expressionsPrecedence[e.object.type];
-        i === ee || i < t.expressionsPrecedence.MemberExpression
+        (i === ee || i < t.expressionsPrecedence.MemberExpression
           ? (t.write("("), this[e.object.type](e.object, t), t.write(")"))
           : this[e.object.type](e.object, t),
           e.computed
@@ -7012,7 +7034,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
               this[e.property.type](e.property, t),
               t.write("]"))
             : (e.optional ? t.write("?.") : t.write("."),
-              this[e.property.type](e.property, t));
+              this[e.property.type](e.property, t)));
       },
       MetaProperty(e, t) {
         t.write(e.meta.name + "." + e.property.name, e);
@@ -7041,7 +7063,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   var hi = class {
     constructor(t) {
       let i = t ?? js;
-      (this.output = ""),
+      ((this.output = ""),
         i.output != null
           ? ((this.output = i.output), (this.write = this.writeToStream))
           : (this.output = ""),
@@ -7071,7 +7093,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
             generated: this,
             name: void 0,
             source: i.sourceMap.file || i.sourceMap._file,
-          }));
+          })));
     }
     write(t) {
       this.output += t;
@@ -7080,23 +7102,23 @@ Defaulting to 2020, but this will stop working in the future.`)),
       this.output.write(t);
     }
     writeAndMap(t, i) {
-      (this.output += t), this.map(t, i);
+      ((this.output += t), this.map(t, i));
     }
     writeToStreamAndMap(t, i) {
-      this.output.write(t), this.map(t, i);
+      (this.output.write(t), this.map(t, i));
     }
     map(t, i) {
       if (i != null) {
         let { type: a } = i;
         if (a[0] === "L" && a[2] === "n") {
-          (this.column = 0), this.line++;
+          ((this.column = 0), this.line++);
           return;
         }
         if (i.loc != null) {
           let { mapping: s } = this;
-          (s.original = i.loc.start),
+          ((s.original = i.loc.start),
             (s.name = i.name),
-            this.sourceMap.addMapping(s);
+            this.sourceMap.addMapping(s));
         }
         if (
           (a[0] === "T" && a[8] === "E") ||
@@ -7110,7 +7132,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
 `
               ? ((o = 0), c++)
               : o++;
-          (this.column = o), (this.line = c);
+          ((this.column = o), (this.line = c));
           return;
         }
       }
@@ -7128,7 +7150,7 @@ Defaulting to 2020, but this will stop working in the future.`)),
   };
   function In(e, t) {
     let i = new hi(t);
-    return i.generator[e.type](e, i), i.output;
+    return (i.generator[e.type](e, i), i.output);
   }
   var pi = class {
       constructor(t) {
@@ -7328,10 +7350,10 @@ The document has moved
     iterate(t, i) {
       function r(n = t) {
         for (var a = 0; a < n.childNodes.length; a++)
-          i(n.childNodes[a]),
+          (i(n.childNodes[a]),
             n.childNodes[a].childNodes &&
               n.childNodes[a].childNodes.length &&
-              r(n.childNodes[a]);
+              r(n.childNodes[a]));
       }
       r(t);
     }
@@ -7383,7 +7405,7 @@ The document has moved
     i(e, null, t);
     function i(r, n, a) {
       if (!(typeof r != "object" || !a)) {
-        (r.parent = n), a(r, n, a);
+        ((r.parent = n), a(r, n, a));
         for (let s in r)
           s !== "parent" &&
             (Array.isArray(r[s])
@@ -7502,13 +7524,13 @@ The document has moved
         e.object.type !== "Super"
       ) {
         var r = e.object?.name;
-        (e.type = "CallExpression"),
+        ((e.type = "CallExpression"),
           (e.callee = { type: "Identifier", name: "__dynamic$message" }),
           (e.arguments = [
             { type: "Identifier", name: r },
             { type: "Identifier", name: "self", __dynamic: !0 },
           ]),
-          t.type == "CallExpression" && (t.arguments = t.arguments);
+          t.type == "CallExpression" && (t.arguments = t.arguments));
         return;
       }
     }
@@ -7584,12 +7606,12 @@ The document has moved
           t.type !== "BinaryExpression" &&
           t.type !== "AssignmentExpression"))
     ) {
-      (e.property.__dynamic = !0), (e.__dynamic = !0);
+      ((e.property.__dynamic = !0), (e.__dynamic = !0));
       let n = Object.assign({}, e);
-      (e.type = "CallExpression"),
+      ((e.type = "CallExpression"),
         (e.callee = { type: "Identifier", name: "dg$", __dynamic: !0 }),
         (e.arguments = [n]),
-        (e.__dynamic = !0);
+        (e.__dynamic = !0));
     }
     e.computed &&
       i.destination !== "worker" &&
@@ -7607,13 +7629,13 @@ The document has moved
       !["location", "parent", "top", "postMessage"].includes(e.value))
     )
       return !1;
-    e.value == "postMessage" &&
+    (e.value == "postMessage" &&
       t.type != "AssignmentExpression" &&
       t.left != e &&
       ke(e, t),
       e.value == "location" && (e.value = "__dynamic$location"),
       e.value == "__dynamic" && (e.value = "undefined"),
-      e.value == "eval" && (e.value = "__dynamic$eval");
+      e.value == "eval" && (e.value = "__dynamic$eval"));
   }
   function yt(e, t = {}) {
     e.__dynamic ||
@@ -7637,7 +7659,7 @@ The document has moved
       if (e.callee.type == "Identifier") {
         if (e.callee.name == "postMessage") {
           let i = "undefined";
-          (e.callee.type = "CallExpression"),
+          ((e.callee.type = "CallExpression"),
             (e.callee.callee = {
               type: "Identifier",
               name: "__dynamic$message",
@@ -7645,7 +7667,7 @@ The document has moved
             (e.callee.arguments = [
               { type: "Identifier", name: i },
               { type: "Identifier", name: "self", __dynamic: !0 },
-            ]);
+            ]));
           return;
         }
         e.callee.name == "eval" && yt(e);
@@ -7656,7 +7678,7 @@ The document has moved
           e.callee.object.type !== "Super"
         ) {
           let i = e.callee.object;
-          (e.callee.type = "CallExpression"),
+          ((e.callee.type = "CallExpression"),
             (e.callee.callee = {
               type: "Identifier",
               name: "__dynamic$message",
@@ -7664,7 +7686,7 @@ The document has moved
             (e.callee.arguments = [
               i,
               { type: "Identifier", name: "self", __dynamic: !0 },
-            ]);
+            ]));
           return;
         }
         e.callee.object.name == "eval" && yt(e);
@@ -7680,9 +7702,9 @@ The document has moved
       if (e.left.name == "location") {
         var i = structuredClone(e.left),
           r = structuredClone(e.right);
-        (e.right.type = "CallExpression"),
+        ((e.right.type = "CallExpression"),
           (e.right.callee = { type: "Identifier", name: "ds$" }),
-          (e.right.arguments = [i, r]);
+          (e.right.arguments = [i, r]));
       }
     }
   }
@@ -7699,9 +7721,9 @@ The document has moved
         t.type == "ExportAllDeclaration")
     ) {
       var n = e.value + "";
-      (e.value = i.url.encode(e.value, r.meta)),
+      ((e.value = i.url.encode(e.value, r.meta)),
         (e.raw = e.raw.replace(n, e.value)),
-        (e.__dynamic = !0);
+        (e.__dynamic = !0));
     }
     e.type == "ImportExpression" &&
       ((e.source = {
@@ -7850,12 +7872,12 @@ ${t}`;
   };
   var Ei = class {
       constructor(t) {
-        (this.ctx = t),
+        ((this.ctx = t),
           (this.html = new Fe(this)),
           (this.srcset = Dn),
           (this.js = new $e(this)),
           (this.css = new Be(this)),
-          (this.man = new je(this));
+          (this.man = new je(this)));
       }
     },
     On = Ei;
@@ -7946,10 +7968,10 @@ ${t}`;
         case "omit":
           break;
         case "same-origin":
-          i.client &&
+          (i.client &&
             t.origin == i.client.__dynamic$location.origin &&
             (e.Cookie = r),
-            i.client || (e.Cookie = r);
+            i.client || (e.Cookie = r));
           break;
         case "include":
           e.Cookie = r;
@@ -7961,10 +7983,10 @@ ${t}`;
     }
     if (n && n != location.origin + "/")
       try {
-        (e.Referer = this.ctx.url.decode(n)),
+        ((e.Referer = this.ctx.url.decode(n)),
           i.referrerPolicy == "strict-origin-when-cross-origin" &&
             (e.Referer = new URL(this.ctx.url.decode(n)).origin),
-          (e.Origin = new URL(this.ctx.url.decode(n)).origin);
+          (e.Origin = new URL(this.ctx.url.decode(n)).origin));
       } catch {}
     return (
       i.client &&
@@ -8129,7 +8151,7 @@ self.document?.currentScript?.remove();`,
         var i = this.ctx.regex.DataRegex.exec(e);
         if (i) {
           var [r, n, a, s, o] = i;
-          s == "base64"
+          (s == "base64"
             ? (o = this.ctx.modules.base64.atob(decodeURIComponent(o)))
             : (o = decodeURIComponent(o)),
             n &&
@@ -8157,7 +8179,7 @@ self.document?.currentScript?.remove();`,
                 : (e = `data:${n};${a},${o}`)
               : s
                 ? (e = `data:${n};${s},${o}`)
-                : (e = `data:${n},${o}`);
+                : (e = `data:${n},${o}`));
         }
       } catch {}
       return e;
@@ -8437,7 +8459,7 @@ self.document?.currentScript?.remove();`,
     );
   }
   function xt(e) {
-    (e.__dynamic$get = function (t) {
+    ((e.__dynamic$get = function (t) {
       var i = e.__dynamic.fire("get", [t]);
       if (i) return i;
       try {
@@ -8487,10 +8509,10 @@ self.document?.currentScript?.remove();`,
       (e.d$g_ = e.__dynamic$get),
       (e.d$s_ = e.__dynamic$set),
       (e.d$p_ = e.__dynamic$property),
-      (e.d$v_ = e.__dynamic$var);
+      (e.d$v_ = e.__dynamic$var));
   }
   function _t(e) {
-    (e.__dynamic.util.CreateDocumentProxy = function (i) {
+    ((e.__dynamic.util.CreateDocumentProxy = function (i) {
       return new Proxy(i, {
         get(r, n) {
           let a = r[n];
@@ -8571,7 +8593,8 @@ self.document?.currentScript?.remove();`,
             try {
               var s = Object.getOwnPropertyDescriptor(r, n);
               if (s?.writable === !1 && s?.enumerable === !1) return !1;
-              if (n.constructor == e.Symbol) return Reflect.set(r, n, a), r[n];
+              if (n.constructor == e.Symbol)
+                return (Reflect.set(r, n, a), r[n]);
               if (r.hasOwnProperty("undefined") && r[n] + "" == n)
                 return r[n] || a || !0;
               if (n == "location") return (i.__dynamic$location = a);
@@ -8607,7 +8630,7 @@ self.document?.currentScript?.remove();`,
           writable: !1,
         }),
       (e.__dynamic$globalThis = e.__dynamic$window),
-      (e.__dynamic$self = e.__dynamic$window);
+      (e.__dynamic$self = e.__dynamic$window));
   }
   function qi(e) {
     e.__dynamic.rewrite.dom = function (t, i) {
@@ -8638,12 +8661,12 @@ self.document?.currentScript?.remove();`,
             (s.href = e.__dynamic.url.encode(s.getAttribute("href"), i));
         }),
         a.querySelectorAll("img").forEach(function (s) {
-          s.src && (s.src = e.__dynamic.url.encode(s.getAttribute("src"), i)),
+          (s.src && (s.src = e.__dynamic.url.encode(s.getAttribute("src"), i)),
             s.srcset &&
               (s.srcset = e.__dynamic.rewrite.srcset.encode(
                 s.getAttribute("srcset"),
                 e.__dynamic
-              ));
+              )));
         }),
         a.querySelectorAll("a").forEach(function (s) {
           s.href &&
@@ -8665,7 +8688,7 @@ self.document?.currentScript?.remove();`,
         r.elements.forEach((n) => {
           r.tags.forEach((a) => {
             var s = Object.getOwnPropertyDescriptor(n.prototype, a);
-            s ||
+            (s ||
               (s = Object.getOwnPropertyDescriptor(HTMLElement.prototype, a)),
               typeof n.prototype.setAttribute.__dynamic$target > "u" &&
                 ((n.prototype.setAttribute = e.__dynamic.wrap(
@@ -8827,7 +8850,7 @@ self.document?.currentScript?.remove();`,
                             s.set.call(this, o)))
                   );
                 },
-              });
+              }));
           });
         });
       }),
@@ -8931,7 +8954,7 @@ self.document?.currentScript?.remove();`,
         function s() {
           return this["__" + n] || (a?.get && a.get.call(this));
         }
-        e.__dynamic.define(e.HTMLStyleElement.prototype, n, {
+        (e.__dynamic.define(e.HTMLStyleElement.prototype, n, {
           get: s,
           set(o) {
             return (
@@ -8966,7 +8989,7 @@ self.document?.currentScript?.remove();`,
                     )
               );
             },
-          });
+          }));
       }),
       (e.Text.prototype.toString = function () {
         return this.textContent;
@@ -8986,10 +9009,10 @@ self.document?.currentScript?.remove();`,
       !document.querySelector('link[rel="icon"], link[rel="shortcut icon"]'))
     ) {
       var i = document.createElement("link");
-      (i.rel = "icon"),
+      ((i.rel = "icon"),
         (i.href = (e.__dynamic$icon || "/favicon.ico") + "?dynamic"),
         (i.dataset.dynamic_hidden = "true"),
-        document.head.appendChild(i);
+        document.head.appendChild(i));
     }
     e.__dynamic.define(e.Attr.prototype, "value", {
       get() {
@@ -9033,7 +9056,7 @@ self.document?.currentScript?.remove();`,
             r[0].trim().startsWith(`blob:${e.location.origin}`))
           ) {
             let n = new t();
-            n.open("GET", r[0], !1), n.send();
+            (n.open("GET", r[0], !1), n.send());
             let a = e.__dynamic.rewrite.js.rewrite(
                 n.responseText,
                 { type: "worker" },
@@ -9047,10 +9070,10 @@ self.document?.currentScript?.remove();`,
     });
   }
   function Ki(e) {
-    (e.__dynamic$history = function (t, ...i) {
-      i[2] && (i[2] = e.__dynamic.url.encode(i[2], e.__dynamic.meta)),
+    ((e.__dynamic$history = function (t, ...i) {
+      (i[2] && (i[2] = e.__dynamic.url.encode(i[2], e.__dynamic.meta)),
         e.__dynamic.Reflect.apply(t, this, i),
-        e.__dynamic.client.location(e, !0, !1);
+        e.__dynamic.client.location(e, !0, !1));
     }),
       (e.History.prototype.pushState = e.__dynamic.wrap(
         e.History.prototype.pushState,
@@ -9059,7 +9082,7 @@ self.document?.currentScript?.remove();`,
       (e.History.prototype.replaceState = e.__dynamic.wrap(
         e.History.prototype.replaceState,
         e.__dynamic$history
-      ));
+      )));
   }
   var Ks =
       "!#$%&'*+-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstuvwxyz|~",
@@ -9088,7 +9111,7 @@ self.document?.currentScript?.remove();`,
           .replace(/http(s?):\/\//g, "")
           .replace(/\/\//g, "/"),
       i = Object.getOwnPropertyDescriptor(e.WebSocket.prototype, "url");
-    e.__dynamic.define(e.WebSocket.prototype, "url", {
+    (e.__dynamic.define(e.WebSocket.prototype, "url", {
       get() {
         let r = i.get.call(this);
         return e.__dynamic.url.decode(r);
@@ -9128,15 +9151,18 @@ self.document?.currentScript?.remove();`,
           n[1] && (s.headers["sec-websocket-protocol"] = n[1].toString()),
           [t(), ["bare", Wn(JSON.stringify(s))]]
         );
-      }));
+      })));
   }
   function Qi(e) {
-    (e.Request = e.__dynamic.wrap(e.Request, function (t, ...i) {
+    ((e.Request = e.__dynamic.wrap(e.Request, function (t, ...i) {
       if (i[0] instanceof t) {
         let r = Reflect.construct(t, i);
-        return i[0].mode === "navigate" && (r.mode = "same-origin"), r;
+        return (i[0].mode === "navigate" && (r.mode = "same-origin"), r);
       }
-      return i[0] && (i[0] = e.__dynamic.url.encode(i[0], e.__dynamic.meta)), i;
+      return (
+        i[0] && (i[0] = e.__dynamic.url.encode(i[0], e.__dynamic.meta)),
+        i
+      );
     })),
       e.__dynamic.define(e.Request.prototype, "url", {
         get() {
@@ -9195,10 +9221,10 @@ self.document?.currentScript?.remove();`,
       (e.open = e.__dynamic.wrap(
         e.open,
         function (t, ...i) {
-          i[0] != "" &&
+          (i[0] != "" &&
             i[0] &&
             (i[0] = e.__dynamic.url.encode(i[0], e.__dynamic.meta)),
-            i[0] == "" && (i[0] = "about:blank");
+            i[0] == "" && (i[0] = "about:blank"));
           let r = Reflect.apply(t, this, i);
           r.opener = e.__dynamic$window;
           try {
@@ -9226,7 +9252,7 @@ self.document?.currentScript?.remove();`,
           };
         },
         set: () => {},
-      });
+      }));
   }
   function bt(e) {
     let t = (a) =>
@@ -9248,7 +9274,7 @@ self.document?.currentScript?.remove();`,
               return !1;
             }
           });
-    (e.__dynamic$message = function (a, s = top) {
+    ((e.__dynamic$message = function (a, s = top) {
       a || (a = e);
       function o() {
         var c = arguments;
@@ -9300,11 +9326,11 @@ self.document?.currentScript?.remove();`,
                 (e._onmessage = a)
               );
             },
-          }));
+          })));
     function n(a) {
       let s = e.__dynamic.util.clone(a),
         o;
-      a.source && (o = r(a.data[3], a.data[2]) || a.currentTarget),
+      (a.source && (o = r(a.data[3], a.data[2]) || a.currentTarget),
         e.__dynamic.define(s, "isTrusted", { value: !0, writable: !1 }),
         a.origin &&
           (Array.isArray(a.data) && a.data.length == 5
@@ -9335,7 +9361,7 @@ self.document?.currentScript?.remove();`,
                     ? a.source
                     : a.currentTarget,
                 writable: !0,
-              }));
+              })));
       for (var c in a)
         switch (c) {
           default:
@@ -9359,7 +9385,7 @@ self.document?.currentScript?.remove();`,
     });
   }
   function wt(e) {
-    (e.importScripts = new Proxy(e.importScripts, {
+    ((e.importScripts = new Proxy(e.importScripts, {
       apply(t, i, r) {
         return (
           [...r].forEach((n, a) => {
@@ -9381,12 +9407,12 @@ self.document?.currentScript?.remove();`,
           return t;
         },
       }),
-      (e.location = e.__dynamic.location);
+      (e.location = e.__dynamic.location));
   }
   function vt(e) {
     var t = e.Reflect.get.bind({}),
       i = e.Reflect.set.bind({});
-    (e.Reflect.set = e.__dynamic.wrap(
+    ((e.Reflect.set = e.__dynamic.wrap(
       e.Reflect.set,
       function (r, ...n) {
         return n[0].constructor.name == "Window" && n[1] == "location"
@@ -9430,10 +9456,10 @@ self.document?.currentScript?.remove();`,
         ownKeys: e.Reflect.ownKeys.bind({}),
         preventExtensions: e.Reflect.preventExtensions.bind({}),
         setPrototypeOf: e.Reflect.setPrototypeOf.bind({}),
-      });
+      }));
   }
   function Ji(e) {
-    e.__dynamic.define(e.document, "origin", {
+    (e.__dynamic.define(e.document, "origin", {
       value: e.__dynamic$location.origin,
       configurable: !1,
       enumerable: !1,
@@ -9473,7 +9499,7 @@ self.document?.currentScript?.remove();`,
               .map((a) => {
                 if (a.name) {
                   var s = e.__dynamic.util.clone(a);
-                  s.__defineGetter__("name", function () {
+                  (s.__defineGetter__("name", function () {
                     return this._name;
                   }),
                     s.__defineSetter__("name", function (l) {
@@ -9485,7 +9511,7 @@ self.document?.currentScript?.remove();`,
                       value: s._name,
                       writable: !1,
                     }),
-                    delete s._name;
+                    delete s._name);
                   for (var o in a)
                     if (o != "name") {
                       if (typeof a[o] == "function")
@@ -9563,10 +9589,10 @@ self.document?.currentScript?.remove();`,
           apply(t, i, r) {
             return r[1] == 500 ? null : Reflect.apply(t, i, r);
           },
-        }));
+        })));
   }
   function Zi(e) {
-    (e.Storage.prototype.setItem = e.__dynamic.wrap(
+    ((e.Storage.prototype.setItem = e.__dynamic.wrap(
       e.Storage.prototype.setItem,
       function (t, ...i) {
         return (
@@ -9641,7 +9667,7 @@ self.document?.currentScript?.remove();`,
         "Storage.prototype.key"
       )),
       ["localStorage", "sessionStorage"].forEach((t) => {
-        (e["__dynamic$" + t] = new Proxy(e[t], {
+        ((e["__dynamic$" + t] = new Proxy(e[t], {
           get(i, r) {
             if (r == "length") {
               for (
@@ -9682,11 +9708,11 @@ self.document?.currentScript?.remove();`,
           },
         })),
           delete e[t],
-          (e[t] = e["__dynamic$" + t]);
-      });
+          (e[t] = e["__dynamic$" + t]));
+      }));
   }
   function er(e) {
-    "serviceWorker" in e.navigator &&
+    ("serviceWorker" in e.navigator &&
       ((e.__dynamic.sw = e.navigator.serviceWorker),
       delete e.navigator.serviceWorker,
       delete e.Navigator.prototype.serviceWorker),
@@ -9699,7 +9725,7 @@ self.document?.currentScript?.remove();`,
           );
         },
         "navigator.sendBeacon"
-      ));
+      )));
   }
   var tr = (e) =>
       e
@@ -9736,7 +9762,7 @@ self.document?.currentScript?.remove();`,
               i,
             ]);
           if (r) return r;
-          (i.name = i.name.replace(/^\./g, "")),
+          ((i.name = i.name.replace(/^\./g, "")),
             Promise.resolve(
               e.__dynamic.cookies.set(
                 e.__dynamic.location.host,
@@ -9746,16 +9772,16 @@ self.document?.currentScript?.remove();`,
                 })
               )
             ).then(async (a) => {
-              await e.__dynamic.cookies.update(e.__dynamic.location.host),
+              (await e.__dynamic.cookies.update(e.__dynamic.location.host),
                 (e.__dynamic.cookie.str = await e.__dynamic.cookies.get(
                   e.__dynamic.location.host
-                ));
-            });
+                )));
+            }));
           var n = tr(e.__dynamic.cookie.str || "");
-          (n[i.name] = i.value),
+          ((n[i.name] = i.value),
             (e.__dynamic.cookie.str = qe(
               Object.entries(n).map((a) => ({ name: a[0], value: a[1] }))
-            ));
+            )));
         },
       }),
       e.navigator.serviceWorker)
@@ -9765,10 +9791,10 @@ self.document?.currentScript?.remove();`,
           if (t.host == e.__dynamic.location.host && t.type == "set-cookie") {
             var i = e.__dynamic.modules.cookie.parse(t.val),
               r = tr(e.__dynamic.cookie.str || "");
-            (r[Object.entries(i)[0][0]] = Object.entries(i)[0][1]),
+            ((r[Object.entries(i)[0][0]] = Object.entries(i)[0][1]),
               (e.__dynamic.cookie.str = qe(
                 Object.entries(r).map((n) => ({ name: n[0], value: n[1] }))
-              ));
+              )));
           }
           t.host == e.__dynamic.location.host &&
             t.type == "cookies" &&
@@ -9777,7 +9803,7 @@ self.document?.currentScript?.remove();`,
       } catch {}
   }
   function rr(e) {
-    (e.CSSStyleDeclaration.prototype._setProperty =
+    ((e.CSSStyleDeclaration.prototype._setProperty =
       e.CSSStyleDeclaration.prototype.setProperty),
       (e.CSSStyleDeclaration.prototype.setProperty = e.__dynamic.wrap(
         e.CSSStyleDeclaration.prototype.setProperty,
@@ -9839,12 +9865,12 @@ self.document?.currentScript?.remove();`,
             )
           );
         },
-      });
+      }));
   }
   function St(e) {
     e.__dynamic.createBlobHandler = async function (t, i, r) {
       let n = (await e.__dynamic.sw.ready).active;
-      e.__dynamic.sw.addEventListener(
+      (e.__dynamic.sw.addEventListener(
         "message",
         ({ data: { url: a } }) => {
           a && e.__dynamic.elements.iframeSrc.set.call(i, a);
@@ -9858,13 +9884,13 @@ self.document?.currentScript?.remove();`,
             r.toString().split("").slice(0, 10)
           ),
           location: e.__dynamic.location.href,
-        });
+        }));
     };
   }
   var qn = (e, t, i) => (
     (i = new MutationObserver(function (n) {
       for (var a of n)
-        e[a.type](a),
+        (e[a.type](a),
           document.dispatchEvent(
             new CustomEvent(
               {
@@ -9874,7 +9900,7 @@ self.document?.currentScript?.remove();`,
               }[a.type],
               { detail: a }
             )
-          );
+          ));
     })).observe(t, { subtree: !0, attributes: !0, childList: !0 }),
     i
   );
@@ -10087,7 +10113,7 @@ self.document?.currentScript?.remove();`,
     );
   }
   function nr(e) {
-    (e.__dynamic.eval = e.__dynamic.wrap(
+    ((e.__dynamic.eval = e.__dynamic.wrap(
       eval,
       function (t, ...i) {
         if (i.length) {
@@ -10126,17 +10152,17 @@ self.document?.currentScript?.remove();`,
           )),
           t)
         );
-      });
+      }));
   }
   function ar(e) {
     var t = e.Function.prototype.toString;
-    (e.__dynamic.Function = e.Function.bind({})),
+    ((e.__dynamic.Function = e.Function.bind({})),
       e.__dynamic.define(e.Function.prototype, "_toString", {
         get() {
           return t;
         },
         set: () => {},
-      });
+      }));
     var i = function () {
       try {
         var r = Reflect.apply(t, this, []);
@@ -10147,7 +10173,7 @@ self.document?.currentScript?.remove();`,
         ? `function ${this.name}() { [native code] }`
         : r;
     };
-    e.__dynamic.define(e.Function.prototype, "toString", {
+    (e.__dynamic.define(e.Function.prototype, "toString", {
       get() {
         return this.__toString || i;
       },
@@ -10215,7 +10241,7 @@ self.document?.currentScript?.remove();`,
           );
         },
         "Function.prototype.bind"
-      ));
+      )));
   }
   function sr(e) {}
   function or(e) {}
@@ -10247,7 +10273,7 @@ self.document?.currentScript?.remove();`,
   var Ge = class {
     constructor(t) {
       this.methods = Gn;
-      self.constructor.name == "DedicatedWorkerGlobalScope" ||
+      (self.constructor.name == "DedicatedWorkerGlobalScope" ||
       self.constructor.name == "SharedWorkerGlobalScope"
         ? ((this.message = bt),
           (this.location = gt),
@@ -10281,7 +10307,7 @@ self.document?.currentScript?.remove();`,
           (this.func = ar),
           (this.rtc = or),
           (this.dom = qi)),
-        (this.ctx = t);
+        (this.ctx = t));
     }
   };
   function Qs(e, t) {
@@ -10349,7 +10375,7 @@ self.document?.currentScript?.remove();`,
       return r;
     },
     remove: async (e, t, i) => {
-      t.domain && (e = t.domain), e.startsWith(".") && (e = e.slice(1));
+      (t.domain && (e = t.domain), e.startsWith(".") && (e = e.slice(1)));
       var r = await (await i).get("__dynamic$cookies", e);
       return r
         ? ((r = r.filter((n) => n.name !== t.name)),
@@ -10397,7 +10423,8 @@ self.document?.currentScript?.remove();`,
     }
     async update(t) {
       return (
-        this._db || (this._db = this.db.open()), await he.update(t, this._db)
+        this._db || (this._db = this.db.open()),
+        await he.update(t, this._db)
       );
     }
   };
@@ -10473,7 +10500,7 @@ self.document?.currentScript?.remove();`,
         o = e.concat(t),
         c;
       for (a[0] = Xn(o), s = a[0], c = 1; c < i; c++)
-        (a[c] = Xn(a[c - 1].concat(o))), (s = s.concat(a[c]));
+        ((a[c] = Xn(a[c - 1].concat(o))), (s = s.concat(a[c])));
       return (
         (r = s.slice(0, 4 * ne)),
         (n = s.slice(4 * ne, 4 * ne + 16)),
@@ -10497,8 +10524,8 @@ self.document?.currentScript?.remove();`,
         a < n.length;
         a++
       )
-        (n[a] = a === 0 ? Tt(n[a], i) : Tt(n[a], s[a - 1])),
-          (s[a] = ro(n[a], t));
+        ((n[a] = a === 0 ? Tt(n[a], i) : Tt(n[a], s[a - 1])),
+          (s[a] = ro(n[a], t)));
       return s;
     },
     io = function (e, t, i, r) {
@@ -10510,17 +10537,17 @@ self.document?.currentScript?.remove();`,
         c = "";
       for (s = 0; s < n; s++) a.push(e.slice(s * 16, (s + 1) * 16));
       for (s = a.length - 1; s >= 0; s--)
-        (o[s] = no(a[s], t)),
-          (o[s] = s === 0 ? Tt(o[s], i) : Tt(o[s], a[s - 1]));
+        ((o[s] = no(a[s], t)),
+          (o[s] = s === 0 ? Tt(o[s], i) : Tt(o[s], a[s - 1])));
       for (s = 0; s < n - 1; s++) c += zn(o[s], !1);
-      return (c += zn(o[s], !0)), r ? c : Js(c);
+      return ((c += zn(o[s], !0)), r ? c : Js(c));
     },
     ro = function (e, t) {
       Ke = !1;
       var i = It(e, t, 0),
         r;
       for (r = 1; r < xe + 1; r++)
-        (i = Yn(i)), (i = Jn(i)), r < xe && (i = Zn(i)), (i = It(i, t, r));
+        ((i = Yn(i)), (i = Jn(i)), r < xe && (i = Zn(i)), (i = It(i, t, r)));
       return i;
     },
     no = function (e, t) {
@@ -10528,7 +10555,7 @@ self.document?.currentScript?.remove();`,
       var i = It(e, t, xe),
         r;
       for (r = xe - 1; r > -1; r--)
-        (i = Jn(i)), (i = Yn(i)), (i = It(i, t, r)), r > 0 && (i = Zn(i));
+        ((i = Jn(i)), (i = Yn(i)), (i = It(i, t, r)), r > 0 && (i = Zn(i)));
       return i;
     },
     Yn = function (e) {
@@ -10552,7 +10579,7 @@ self.document?.currentScript?.remove();`,
         i;
       if (Ke)
         for (i = 0; i < 4; i++)
-          (t[i * 4] =
+          ((t[i * 4] =
             Rt[e[i * 4]] ^
             Lt[e[1 + i * 4]] ^
             Pt[e[2 + i * 4]] ^
@@ -10571,17 +10598,17 @@ self.document?.currentScript?.remove();`,
               Lt[e[i * 4]] ^
               Pt[e[1 + i * 4]] ^
               At[e[2 + i * 4]] ^
-              Rt[e[3 + i * 4]]);
+              Rt[e[3 + i * 4]]));
       else
         for (i = 0; i < 4; i++)
-          (t[i * 4] =
+          ((t[i * 4] =
             Ct[e[i * 4]] ^ kt[e[1 + i * 4]] ^ e[2 + i * 4] ^ e[3 + i * 4]),
             (t[1 + i * 4] =
               e[i * 4] ^ Ct[e[1 + i * 4]] ^ kt[e[2 + i * 4]] ^ e[3 + i * 4]),
             (t[2 + i * 4] =
               e[i * 4] ^ e[1 + i * 4] ^ Ct[e[2 + i * 4]] ^ kt[e[3 + i * 4]]),
             (t[3 + i * 4] =
-              kt[e[i * 4]] ^ e[1 + i * 4] ^ e[2 + i * 4] ^ Ct[e[3 + i * 4]]);
+              kt[e[i * 4]] ^ e[1 + i * 4] ^ e[2 + i * 4] ^ Ct[e[3 + i * 4]]));
       return t;
     },
     It = function (e, t, i) {
@@ -10605,7 +10632,8 @@ self.document?.currentScript?.remove();`,
         s = [],
         o;
       for (r = 0; r < ne; r++)
-        (n = [e[4 * r], e[4 * r + 1], e[4 * r + 2], e[4 * r + 3]]), (t[r] = n);
+        ((n = [e[4 * r], e[4 * r + 1], e[4 * r + 2], e[4 * r + 3]]),
+          (t[r] = n));
       for (r = ne; r < 4 * (xe + 1); r++) {
         for (t[r] = [], a = 0; a < 4; a++) i[a] = t[r - 1][a];
         for (
@@ -10636,7 +10664,7 @@ self.document?.currentScript?.remove();`,
       var t = e[0],
         i;
       for (i = 0; i < 3; i++) e[i] = e[i + 1];
-      return (e[3] = t), e;
+      return ((e[3] = t), e);
     },
     ur = function (e, t) {
       var i,
@@ -10653,9 +10681,9 @@ self.document?.currentScript?.remove();`,
     oo = function (e, t) {
       var i, r;
       for (r = 0, i = 0; i < 8; i++)
-        (r = (t & 1) === 1 ? r ^ e : r),
+        ((r = (t & 1) === 1 ? r ^ e : r),
           (e = e > 127 ? 283 ^ (e << 1) : e << 1),
-          (t >>>= 1);
+          (t >>>= 1));
       return r;
     },
     Ae = function (e) {
@@ -10683,7 +10711,12 @@ self.document?.currentScript?.remove();`,
         s = n.iv,
         o,
         c = [[83, 97, 108, 116, 101, 100, 95, 95].concat(r)];
-      return (e = cr(e, i)), (o = to(e, a, s)), (o = c.concat(o)), ra.encode(o);
+      return (
+        (e = cr(e, i)),
+        (o = to(e, a, s)),
+        (o = c.concat(o)),
+        ra.encode(o)
+      );
     },
     ia = function (e, t, i) {
       var r = ra.decode(e),
@@ -10691,7 +10724,7 @@ self.document?.currentScript?.remove();`,
         a = Qn(cr(t, i), n),
         s = a.key,
         o = a.iv;
-      return (r = r.slice(16, r.length)), (e = io(r, s, o, i)), e;
+      return ((r = r.slice(16, r.length)), (e = io(r, s, o, i)), e);
     },
     Xn = function (e) {
       function t(S, E) {
@@ -10727,16 +10760,16 @@ self.document?.currentScript?.remove();`,
         return E ^ (S | ~P);
       }
       function o(S, E, P, N, B, M, I) {
-        return (S = i(S, i(i(r(E, P, N), B), I))), i(t(S, M), E);
+        return ((S = i(S, i(i(r(E, P, N), B), I))), i(t(S, M), E));
       }
       function c(S, E, P, N, B, M, I) {
-        return (S = i(S, i(i(n(E, P, N), B), I))), i(t(S, M), E);
+        return ((S = i(S, i(i(n(E, P, N), B), I))), i(t(S, M), E));
       }
       function l(S, E, P, N, B, M, I) {
-        return (S = i(S, i(i(a(E, P, N), B), I))), i(t(S, M), E);
+        return ((S = i(S, i(i(a(E, P, N), B), I))), i(t(S, M), E));
       }
       function h(S, E, P, N, B, M, I) {
-        return (S = i(S, i(i(s(E, P, N), B), I))), i(t(S, M), E);
+        return ((S = i(S, i(i(s(E, P, N), B), I))), i(t(S, M), E));
       }
       function f(S) {
         for (
@@ -10751,10 +10784,10 @@ self.document?.currentScript?.remove();`,
           oe < P;
 
         )
-          (E = (oe - (oe % 4)) / 4),
+          ((E = (oe - (oe % 4)) / 4),
             (Ye = (oe % 4) * 8),
             (I[E] = I[E] | (S[oe] << Ye)),
-            oe++;
+            oe++);
         return (
           (E = (oe - (oe % 4)) / 4),
           (Ye = (oe % 4) * 8),
@@ -10768,7 +10801,8 @@ self.document?.currentScript?.remove();`,
         var E,
           P,
           N = [];
-        for (P = 0; P <= 3; P++) (E = (S >>> (P * 8)) & 255), (N = N.concat(E));
+        for (P = 0; P <= 3; P++)
+          ((E = (S >>> (P * 8)) & 255), (N = N.concat(E)));
         return N;
       }
       var d = [],
@@ -10790,7 +10824,7 @@ self.document?.currentScript?.remove();`,
         p < d.length;
         p += 16
       )
-        (W = m),
+        ((W = m),
           (ae = y),
           (se = g),
           (pr = x),
@@ -10861,7 +10895,7 @@ self.document?.currentScript?.remove();`,
           (m = i(m, W)),
           (y = i(y, ae)),
           (g = i(g, se)),
-          (x = i(x, pr));
+          (x = i(x, pr)));
       return A(m).concat(A(y), A(g), A(x));
     };
   var ra = (function () {
@@ -10876,12 +10910,12 @@ self.document?.currentScript?.remove();`,
         for (c = 0; c < n.length * 16; c++)
           s.push(n[Math.floor(c / 16)][c % 16]);
         for (c = 0; c < s.length; c = c + 3)
-          (o += t[s[c] >> 2]),
+          ((o += t[s[c] >> 2]),
             (o += t[((s[c] & 3) << 4) | (s[c + 1] >> 4)]),
             s[c + 1] !== void 0
               ? (o += t[((s[c + 1] & 15) << 2) | (s[c + 2] >> 6)])
               : (o += "="),
-            s[c + 2] !== void 0 ? (o += t[s[c + 2] & 63]) : (o += "=");
+            s[c + 2] !== void 0 ? (o += t[s[c + 2] & 63]) : (o += "="));
         for (
           l =
             o.slice(0, 64) +
@@ -10906,18 +10940,19 @@ self.document?.currentScript?.remove();`,
           o = [],
           c;
         for (c = 0; c < n.length; c = c + 4)
-          (s[0] = e.indexOf(n.charAt(c))),
+          ((s[0] = e.indexOf(n.charAt(c))),
             (s[1] = e.indexOf(n.charAt(c + 1))),
             (s[2] = e.indexOf(n.charAt(c + 2))),
             (s[3] = e.indexOf(n.charAt(c + 3))),
             (o[0] = (s[0] << 2) | (s[1] >> 4)),
             (o[1] = ((s[1] & 15) << 4) | (s[2] >> 2)),
             (o[2] = ((s[2] & 3) << 6) | s[3]),
-            a.push(o[0], o[1], o[2]);
-        return (a = a.slice(0, a.length - (a.length % 16))), a;
+            a.push(o[0], o[1], o[2]));
+        return ((a = a.slice(0, a.length - (a.length % 16))), a);
       };
     return (
-      typeof Array.indexOf == "function" && (e = t), { encode: i, decode: r }
+      typeof Array.indexOf == "function" && (e = t),
+      { encode: i, decode: r }
     );
   })();
   var lo = {
@@ -10965,7 +11000,7 @@ self.document?.currentScript?.remove();`,
       this.encoding = hr;
       this.headers = Un;
       this.listeners = [];
-      t && !this.config && (this.config = t), t && this.util.encode(self);
+      (t && !this.config && (this.config = t), t && this.util.encode(self));
     }
     on(t, i) {
       this.listeners.push({ event: t, cb: i });
@@ -11006,11 +11041,12 @@ self.document?.currentScript?.remove();`,
             constructor(...l) {
               var h = [...l],
                 f = i.call(t, t, ...l);
-              f && (l = f), super(...l), r && r(this, h);
+              (f && (l = f), super(...l), r && r(this, h));
             }
           };
           return (
-            Object.defineProperty(c, "name", { value: t.name, writable: !1 }), c
+            Object.defineProperty(c, "name", { value: t.name, writable: !1 }),
+            c
           );
         } catch {
           return t;
@@ -11019,10 +11055,10 @@ self.document?.currentScript?.remove();`,
   }
   function na(e, t = {}, i = "") {
     if (e.hasOwnProperty("__dynamic")) return !1;
-    e.hasOwnProperty("__dynamic$config") || (e.__dynamic$config = t),
-      e.parent?.__dynamic && (e.__dynamic$bare = e.parent.__dynamic$bare);
+    (e.hasOwnProperty("__dynamic$config") || (e.__dynamic$config = t),
+      e.parent?.__dynamic && (e.__dynamic$bare = e.parent.__dynamic$bare));
     let r = new Le(e.__dynamic$config);
-    (r.config.bare.path =
+    ((r.config.bare.path =
       typeof r.config.bare.path == "string" || r.config.bare.path instanceof URL
         ? [new URL(r.config.bare.path, e.location)][0]
         : r.config.bare.path.map((a) => new URL(a, e.location))),
@@ -11038,7 +11074,7 @@ self.document?.currentScript?.remove();`,
       )),
       e.__dynamic.meta.load(new URL(e.__dynamic$baseURL)),
       Qe(e, null),
-      Xe(e);
+      Xe(e));
     for (var n of e.__dynamic.client.methods) {
       let a = n.name,
         s = Object.entries(e.__dynamic.client).find((o) => o[0] == a);
@@ -11047,7 +11083,7 @@ self.document?.currentScript?.remove();`,
     return e;
   }
   function Qe(e, t) {
-    t || (t = e.__dynamic),
+    (t || (t = e.__dynamic),
       (t.define = new e.Proxy(e.Object.defineProperty, {
         apply(i, r, n) {
           try {
@@ -11263,14 +11299,14 @@ self.document?.currentScript?.remove();`,
               return e.__dynamic$config.tab.ua;
             },
             set() {},
-          }));
+          })));
   }
   importScripts("/dy/config.js?v=3");
   (function (e) {
     let t = new Le(e.__dynamic$config);
     e.__dynamic = t;
     let i = t.url.decode(location.pathname);
-    t.meta.load(new URL(i)),
+    (t.meta.load(new URL(i)),
       Qe(e, null),
       Xe(e),
       t.client.message(e),
@@ -11279,7 +11315,7 @@ self.document?.currentScript?.remove();`,
       t.client.get(e),
       t.client.reflect(e),
       t.client.imports(e),
-      t.client.blob(e);
+      t.client.blob(e));
   })(self);
 })();
 /*! Bundled license information:

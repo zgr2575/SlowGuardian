@@ -402,7 +402,6 @@ Create a plugin manifest:
 ### Distribution
 
 1. **GitHub Repository**
-
    - Create a public repository
    - Include comprehensive README
    - Add installation instructions

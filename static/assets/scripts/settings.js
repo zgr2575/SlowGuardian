@@ -1,26 +1,24 @@
 // Ads
 document.addEventListener("DOMContentLoaded", function () {
-// Ads
-document.addEventListener("DOMContentLoaded", function () {
   // Check if current user is a developer/admin
   function isDeveloper() {
     // Check if admin panel is logged in
     if (window.adminPanel && window.adminPanel.isLoggedIn) {
       return true;
     }
-    
+
     // Check for admin token in sessionStorage
-    const adminToken = sessionStorage.getItem('admin-token');
+    const adminToken = sessionStorage.getItem("admin-token");
     if (adminToken) {
       return true;
     }
-    
+
     // Check for developer mode cookie
-    const devMode = getCookie('developer-mode');
-    if (devMode === 'true') {
+    const devMode = getCookie("developer-mode");
+    if (devMode === "true") {
       return true;
     }
-    
+
     return false;
   }
   function adChange(selectedValue) {
@@ -30,18 +28,21 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("adType").value = "default";
       localStorage.setItem("ad", "on");
       document.getElementById("legacy-ads-notice").style.display = "block";
-      
+
       if (window.showNotification) {
-        window.showNotification("Developer access required to disable ads", "warning");
+        window.showNotification(
+          "Developer access required to disable ads",
+          "warning"
+        );
       }
       return;
     }
-    
+
     // Hide notice if developer is changing settings
     if (isDeveloper()) {
       document.getElementById("legacy-ads-notice").style.display = "none";
     }
-    
+
     if (selectedValue === "default") {
       localStorage.setItem("ad", "on");
     } else if (selectedValue === "off") {
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.setItem("ad", "on");
       adTypeElement.value = "default";
       document.getElementById("legacy-ads-notice").style.display = "block";
-      
+
       // Disable the off option for non-developers
       const offOption = adTypeElement.querySelector('option[value="off"]');
       if (offOption) {
@@ -65,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       document.getElementById("legacy-ads-notice").style.display = "none";
     }
-    
+
     adTypeElement.addEventListener("change", function () {
       var selectedOption = this.value;
       adChange(selectedOption);
@@ -80,13 +81,13 @@ document.addEventListener("DOMContentLoaded", function () {
       adTypeElement.value = "default";
       localStorage.setItem("ad", "on");
     }
-    
+
     // Periodically check developer status and update UI
     setInterval(() => {
       const isDevNow = isDeveloper();
       const offOption = adTypeElement.querySelector('option[value="off"]');
       const notice = document.getElementById("legacy-ads-notice");
-      
+
       if (!isDevNow) {
         if (offOption) offOption.disabled = true;
         if (adTypeElement.value === "off") {
@@ -954,13 +955,13 @@ function createFeaturesManagerModal() {
     </div>
   `;
   document.body.appendChild(modal);
-  
+
   // Add event listener for close button
-  const closeBtn = modal.querySelector('#features-modal-close-btn');
+  const closeBtn = modal.querySelector("#features-modal-close-btn");
   if (closeBtn) {
-    closeBtn.addEventListener('click', closeFeaturesManager);
+    closeBtn.addEventListener("click", closeFeaturesManager);
   }
-  
+
   // Close on outside click
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
