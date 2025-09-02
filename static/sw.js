@@ -40,7 +40,10 @@ self.addEventListener("fetch", (event) => {
         // Default: pass through to network
         return await fetch(event.request);
       } catch (error) {
-        console.error("Service worker fetch error:", error);
+        // Only log critical navigation errors, not routine fetch failures
+        if (event.request.mode === "navigate" || error.message.includes("register")) {
+          console.error("Service worker fetch error:", error);
+        }
 
         // Fallback for failed requests
         if (event.request.mode === "navigate") {

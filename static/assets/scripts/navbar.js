@@ -20,6 +20,7 @@ class NavigationBar {
     if (path.includes('/games')) return 'games';
     if (path.includes('/tabs')) return 'tabs';
     if (path.includes('/settings')) return 'settings';
+    if (path.includes('/go') || path.includes('/p/')) return 'browser';
     
     return 'home'; // default
   }
@@ -66,6 +67,10 @@ class NavigationBar {
           <a href="/games" class="sidebar-link ${this.currentPage === 'games' ? 'active' : ''}" data-page="games">
             <div class="link-icon">🎮</div>
             <span class="link-text">Games</span>
+          </a>
+          <a href="/go" class="sidebar-link ${this.currentPage === 'browser' ? 'active' : ''}" data-page="browser">
+            <div class="link-icon">🌐</div>
+            <span class="link-text">Browser</span>
           </a>
           <a href="/tabs" class="sidebar-link ${this.currentPage === 'tabs' ? 'active' : ''}" data-page="tabs">
             <div class="link-icon">🗂️</div>

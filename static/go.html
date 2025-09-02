@@ -27,6 +27,11 @@
 
     <!-- Browser specific styles -->
     <style>
+      /* Hide old navbar for centralized navigation */
+      .navbar {
+        display: none !important;
+      }
+
       /* Browser specific overrides */
       .browser-container {
         display: flex;
@@ -34,6 +39,14 @@
         height: 100vh;
         position: relative;
         z-index: 1;
+        /* Add left padding for sidebar */
+        padding-left: 70px;
+        transition: padding-left 0.3s ease;
+      }
+
+      /* Expand container when sidebar is expanded */
+      body:has(.sidebar-nav:hover) .browser-container {
+        padding-left: 280px;
       }
 
       .browser-toolbar {
@@ -46,7 +59,7 @@
         gap: var(--space-3);
         flex-wrap: wrap;
         position: sticky;
-        top: 64px;
+        top: 0; /* Changed from 64px since old navbar is hidden */
         z-index: var(--z-modal);
       }
 
@@ -462,6 +475,9 @@
     <script src="assets/scripts/screenshot-protection.js?v=1"></script>
     <script src="/assets/scripts/main.js?v=31"></script>
 
+    <!-- Centralized Navigation -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+
     <!-- Ads Manager -->
     <script src="assets/scripts/ads-manager.js?v=1"></script>
 
@@ -476,7 +492,7 @@
         try {
           if ("serviceWorker" in navigator) {
             console.log("Registering Ultraviolet service worker...");
-            await navigator.serviceWorker.register("/m/sw.js", {
+            await navigator.serviceWorker.register("/a/sw.js", {
               scope: "/a/",
             });
             console.log("✅ Ultraviolet service worker registered successfully");
@@ -822,13 +838,13 @@
 
         // Responsive iframe handling
         function updateIframeHeight() {
+          const iframe = document.getElementById("browser-iframe");
           const toolbar = document.querySelector(".browser-toolbar");
-          const navbar = document.querySelector(".navbar");
 
-          if (iframe && toolbar && navbar) {
+          if (iframe && toolbar) {
             const toolbarHeight = toolbar.offsetHeight;
-            const navbarHeight = navbar.offsetHeight;
-            const availableHeight = window.innerHeight - toolbarHeight - navbarHeight;
+            // No navbar height since old navbar is hidden
+            const availableHeight = window.innerHeight - toolbarHeight;
             iframe.style.height = availableHeight + "px";
           }
         }
