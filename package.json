@@ -34,7 +34,9 @@
     "url": "https://github.com/zgr2575/SlowGuardian.git"
   },
   "dependencies": {
+    "@nebula-services/dynamic": "^0.7.2-patch.2",
     "@replit/database": "^3.0.1",
+    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "@tomphttp/bare-server-node": "2.0.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",

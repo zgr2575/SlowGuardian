@@ -253,9 +253,14 @@ document.addEventListener("DOMContentLoaded", () => {
         appInd++;
       });
 
-      const appsContainer = document.getElementById("apps-container");
-      appsContainer.appendChild(pinnedApps);
-      appsContainer.appendChild(nonPinnedApps);
+      const appsContainer = document.getElementById("games-grid");
+      if (appsContainer) {
+        const containerApps = appsContainer.querySelector(".container-apps");
+        if (containerApps) {
+          containerApps.appendChild(pinnedApps);
+          containerApps.appendChild(nonPinnedApps);
+        }
+      }
     })
     .catch((error) => {
       console.error("Error fetching JSON data:", error);

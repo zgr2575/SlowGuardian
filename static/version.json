@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "34e52a6-1756826060677",
-  "buildDate": "2025-09-02T15:14:20.677Z",
-  "buildTimestamp": 1756826060677,
+  "buildId": "1caa53d-1756826764064",
+  "buildDate": "2025-09-02T15:26:04.064Z",
+  "buildTimestamp": 1756826764064,
   "git": {
-    "commit": "34e52a618f8d105b41217e8953494d2396eba608",
-    "commitShort": "34e52a6",
+    "commit": "1caa53d4c91eb11314e67c6556878743d016623d",
+    "commitShort": "1caa53d",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-02T14:30:10Z",
-    "commitMessage": "🎯 Enhanced navigation hiding, interactive tutorial, and IP-based session tracking for developer commands"
+    "commitDate": "2025-09-02T15:14:45Z",
+    "commitMessage": "🔧 Fix about:blank popup, plugin visibility, and service worker scope issues"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

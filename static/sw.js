@@ -4,7 +4,7 @@ try {
   importScripts("/dy/worker.js");
   importScripts("/m/bundle.js");
   importScripts("/m/config.js");
-  importScripts(__uv$config.sw || "/m/sw.js");
+  importScripts(__uv$config.sw || "/a/sw.js");
 } catch (error) {
   console.error("Failed to import scripts:", error);
 }
