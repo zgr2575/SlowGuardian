@@ -138,18 +138,12 @@ class NavigationBar {
     }
 
     // Navigation links
-    sidebar.querySelectorAll('.sidebar-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        // Update active state
-        sidebar.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        
-        // Hide sidebar after navigation
-        setTimeout(() => {
-          this.hideSidebar();
-        }, 150);
+      sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          // Force full page reload for navigation
+          window.location.href = link.getAttribute('href');
+        });
       });
-    });
   }
 
   showSidebar() {
@@ -462,12 +456,13 @@ class NavigationBar {
 
   // Public method to update active page
   setActivePage(page) {
-    this.currentPage = page;
     const sidebar = document.getElementById('sidebar-nav');
     if (sidebar) {
       sidebar.querySelectorAll('.sidebar-link').forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('data-page') === page) {
+        const tempAnchor = document.createElement('a');
+        tempAnchor.href = link.getAttribute('href');
+        if (page === tempAnchor.pathname || link.getAttribute('data-page') === page) {
           link.classList.add('active');
         }
       });
