@@ -530,6 +530,10 @@ if (typeof module !== "undefined") {
         window.pluginSystem = new PluginSystem();
       } else {
         console.log("🔌 Plugin System disabled by user preference");
+        // Mark module as loaded even when disabled to prevent loading timeout
+        if (typeof window.markModuleLoaded === "function") {
+          window.markModuleLoaded("plugin-system");
+        }
       }
     }
   }, ["cookie-utils"]);

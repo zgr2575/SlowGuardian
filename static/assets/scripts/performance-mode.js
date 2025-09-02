@@ -346,6 +346,10 @@ if (typeof module !== "undefined") {
         window.performanceMode = new PerformanceMode();
       } else {
         console.log("⚡ Performance Mode disabled by user preference");
+        // Mark module as loaded even when disabled to prevent loading timeout
+        if (typeof window.markModuleLoaded === "function") {
+          window.markModuleLoaded("performance-mode");
+        }
       }
     }
   }, ["cookie-utils"]);

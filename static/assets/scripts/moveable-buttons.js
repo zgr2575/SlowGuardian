@@ -773,6 +773,10 @@ if (typeof module !== "undefined") {
         window.moveableButtons = new MoveableButtons();
       } else {
         console.log("🎛️ Moveable Buttons disabled by user preference");
+        // Mark module as loaded even when disabled to prevent loading timeout
+        if (typeof window.markModuleLoaded === "function") {
+          window.markModuleLoaded("moveable-buttons");
+        }
       }
     }
   }, ["cookie-utils"]);

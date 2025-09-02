@@ -112,9 +112,9 @@ class NavigationBar {
       this.showSidebar();
     });
 
-    // Also trigger on hover near left edge of screen
+    // Also trigger on hover near left edge of screen - larger trigger area
     document.addEventListener('mousemove', (e) => {
-      if (e.clientX <= 50 && !sidebar.classList.contains('expanded')) {
+      if (e.clientX <= 10 && !sidebar.classList.contains('expanded')) {
         this.showSidebar();
       }
     });
@@ -226,7 +226,7 @@ class NavigationBar {
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         z-index: 10000;
-        transform: translateX(-280px);
+        transform: translateX(-290px);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
       }
@@ -254,7 +254,7 @@ class NavigationBar {
         z-index: 10001;
       }
 
-      /* Add hover indicator */
+      /* Add hover indicator - completely hidden by default */
       .sidebar-nav::after {
         content: '▶';
         position: absolute;
@@ -270,9 +270,10 @@ class NavigationBar {
         align-items: center;
         justify-content: center;
         font-size: 12px;
-        opacity: 0.7;
+        opacity: 0;
         transition: opacity 0.3s ease;
         z-index: 10000;
+        pointer-events: none;
       }
 
       .sidebar-nav:hover::after {
