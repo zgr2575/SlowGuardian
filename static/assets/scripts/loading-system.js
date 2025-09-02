@@ -5,24 +5,51 @@
 
 class LoadingSystem {
   constructor() {
+    this.loadedModules = new Set();
+    
+    // Build expected modules list based on user preferences
     this.expectedModules = [
       "cookie-utils",
       "main",
-      "navbar",
-      "features",
-      "plugin-system",
-      "performance-mode",
-      "moveable-buttons",
-      "ads-manager",
+      "navbar"
     ];
+    
+    // Check user preferences and add optional modules
+    this.checkAndAddModule("features", "features");
+    this.checkAndAddModule("plugin-system", "feature-plugins");
+    this.checkAndAddModule("performance-mode", "feature-performance-mode");
+    this.checkAndAddModule("moveable-buttons", "feature-moveable-buttons");
+    this.checkAndAddModule("ads-manager", "ads-enabled");
 
-    this.loadedModules = new Set();
     this.loadingStartTime = Date.now();
     this.minLoadingTime = 800; // Minimum loading time for UX
     this.maxLoadingTime = 10000; // Maximum loading time before timeout
 
     this.createLoadingScreen();
     this.startInitializationCheck();
+  }
+  
+  checkAndAddModule(moduleName, preferenceKey) {
+    // Check if the feature is enabled via cookie or localStorage
+    const isEnabled = this.getCookie(preferenceKey) === "true" || 
+                     localStorage.getItem(preferenceKey) === "true";
+    
+    if (isEnabled) {
+      this.expectedModules.push(moduleName);
+    } else {
+      console.log(`📦 Module ${moduleName} disabled by user preference`);
+    }
+  }
+  
+  getCookie(name) {
+    if (typeof getCookie === 'function') {
+      return getCookie(name);
+    }
+    // Fallback cookie implementation
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
   }
 
   createLoadingScreen() {
@@ -349,40 +376,45 @@ class LoadingSystem {
       this.markModuleLoaded("navbar");
     }
 
-    // Check for features system
+    // Check for features system (only if enabled)
     if (
+      this.expectedModules.includes("features") &&
       !this.loadedModules.has("features") &&
       typeof window.SlowGuardianFeatures === "function"
     ) {
       this.markModuleLoaded("features");
     }
 
-    // Check for plugin system
+    // Check for plugin system (only if enabled)
     if (
+      this.expectedModules.includes("plugin-system") &&
       !this.loadedModules.has("plugin-system") &&
       typeof window.PluginSystem === "function"
     ) {
       this.markModuleLoaded("plugin-system");
     }
 
-    // Check for performance mode
+    // Check for performance mode (only if enabled)
     if (
+      this.expectedModules.includes("performance-mode") &&
       !this.loadedModules.has("performance-mode") &&
       typeof window.PerformanceMode === "function"
     ) {
       this.markModuleLoaded("performance-mode");
     }
 
-    // Check for moveable buttons
+    // Check for moveable buttons (only if enabled)
     if (
+      this.expectedModules.includes("moveable-buttons") &&
       !this.loadedModules.has("moveable-buttons") &&
       typeof window.MoveableButtons === "function"
     ) {
       this.markModuleLoaded("moveable-buttons");
     }
 
-    // Check for ads manager
+    // Check for ads manager (only if enabled)
     if (
+      this.expectedModules.includes("ads-manager") &&
       !this.loadedModules.has("ads-manager") &&
       typeof window.AdsManager === "function"
     ) {
