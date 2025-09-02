@@ -227,12 +227,15 @@ const adminStore = new AdminStore();
  */
 export function sessionTracker(req, res, next) {
   // Use IP address as primary session identifier for developer commands
-  const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress || 
-                   (req.connection.socket ? req.connection.socket.remoteAddress : '127.0.0.1');
-  
+  const clientIP =
+    req.ip ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    (req.connection.socket ? req.connection.socket.remoteAddress : "127.0.0.1");
+
   // Create a more robust IP-based session ID
   const userAgent = req.headers["user-agent"] || "";
-  const sessionId = `ip_${clientIP}_${userAgent.slice(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const sessionId = `ip_${clientIP}_${userAgent.slice(0, 50).replace(/[^a-zA-Z0-9]/g, "_")}`;
 
   // Update session with detailed IP tracking info
   const userData = {
@@ -244,10 +247,10 @@ export function sessionTracker(req, res, next) {
     // Additional IP tracking details for developer commands
     ipInfo: {
       originalIP: clientIP,
-      forwardedFor: req.headers['x-forwarded-for'] || null,
-      realIP: req.headers['x-real-ip'] || null,
-      cfConnectingIP: req.headers['cf-connecting-ip'] || null
-    }
+      forwardedFor: req.headers["x-forwarded-for"] || null,
+      realIP: req.headers["x-real-ip"] || null,
+      cfConnectingIP: req.headers["cf-connecting-ip"] || null,
+    },
   };
 
   adminStore.addSession(sessionId, userData);

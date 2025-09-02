@@ -326,9 +326,9 @@ class OnboardingSystem {
 
     // Update buttons
     this.updateButtons(step.buttons);
-    
+
     // Execute onShow callback if it exists
-    if (step.onShow && typeof step.onShow === 'function') {
+    if (step.onShow && typeof step.onShow === "function") {
       setTimeout(step.onShow, 100); // Small delay to ensure DOM is updated
     }
   }
@@ -460,17 +460,17 @@ class OnboardingSystem {
 
   demoNavigation() {
     // Temporarily show the navigation demo animation
-    const demoSidebar = document.querySelector('.demo-sidebar');
+    const demoSidebar = document.querySelector(".demo-sidebar");
     if (demoSidebar) {
       // Animate the demo sidebar to show hover effect
       setTimeout(() => {
-        demoSidebar.style.transform = 'translateX(0)';
-        demoSidebar.style.opacity = '1';
+        demoSidebar.style.transform = "translateX(0)";
+        demoSidebar.style.opacity = "1";
       }, 500);
-      
+
       setTimeout(() => {
-        demoSidebar.style.transform = 'translateX(-220px)';
-        demoSidebar.style.opacity = '0.7';
+        demoSidebar.style.transform = "translateX(-220px)";
+        demoSidebar.style.opacity = "0.7";
       }, 3000);
     }
 
@@ -478,27 +478,27 @@ class OnboardingSystem {
     const showNavHint = (e) => {
       if (e.clientX <= 50) {
         // Briefly show the real navbar to demonstrate
-        const realNavbar = document.getElementById('sidebar-nav');
+        const realNavbar = document.getElementById("sidebar-nav");
         if (realNavbar && window.sidebarNav) {
           window.sidebarNav.showSidebar();
-          
+
           // Auto-hide after a moment
           setTimeout(() => {
             window.sidebarNav.hideSidebar();
           }, 2000);
         }
-        
+
         // Remove this listener after first trigger
-        document.removeEventListener('mousemove', showNavHint);
+        document.removeEventListener("mousemove", showNavHint);
       }
     };
 
     // Add the listener for this step only
-    document.addEventListener('mousemove', showNavHint);
-    
+    document.addEventListener("mousemove", showNavHint);
+
     // Clean up listener if user moves to next step without triggering
     setTimeout(() => {
-      document.removeEventListener('mousemove', showNavHint);
+      document.removeEventListener("mousemove", showNavHint);
     }, 30000); // 30 seconds
   }
 

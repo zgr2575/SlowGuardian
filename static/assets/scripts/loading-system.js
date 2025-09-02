@@ -6,14 +6,10 @@
 class LoadingSystem {
   constructor() {
     this.loadedModules = new Set();
-    
+
     // Build expected modules list based on user preferences
-    this.expectedModules = [
-      "cookie-utils",
-      "main",
-      "navbar"
-    ];
-    
+    this.expectedModules = ["cookie-utils", "main", "navbar"];
+
     // Check user preferences and add optional modules
     this.checkAndAddModule("features", "features");
     this.checkAndAddModule("plugin-system", "feature-plugins");
@@ -28,27 +24,28 @@ class LoadingSystem {
     this.createLoadingScreen();
     this.startInitializationCheck();
   }
-  
+
   checkAndAddModule(moduleName, preferenceKey) {
     // Check if the feature is enabled via cookie or localStorage
-    const isEnabled = this.getCookie(preferenceKey) === "true" || 
-                     localStorage.getItem(preferenceKey) === "true";
-    
+    const isEnabled =
+      this.getCookie(preferenceKey) === "true" ||
+      localStorage.getItem(preferenceKey) === "true";
+
     if (isEnabled) {
       this.expectedModules.push(moduleName);
     } else {
       console.log(`📦 Module ${moduleName} disabled by user preference`);
     }
   }
-  
+
   getCookie(name) {
-    if (typeof getCookie === 'function') {
+    if (typeof getCookie === "function") {
       return getCookie(name);
     }
     // Fallback cookie implementation
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
     return null;
   }
 
@@ -328,15 +325,21 @@ class LoadingSystem {
       if (document.getElementById("slowguardian-loading-overlay")) {
         const loadedCount = this.loadedModules.size;
         const totalCount = this.expectedModules.length;
-        
+
         if (loadedCount >= Math.floor(totalCount * 0.7)) {
           // If we have at least 70% of modules loaded, proceed
-          console.log(`⏰ Loading timeout reached, but ${loadedCount}/${totalCount} modules loaded - proceeding`);
+          console.log(
+            `⏰ Loading timeout reached, but ${loadedCount}/${totalCount} modules loaded - proceeding`
+          );
           this.hideLoading();
         } else {
           // If too few modules loaded, give more details
-          const missing = this.expectedModules.filter(m => !this.loadedModules.has(m));
-          console.warn(`⏰ Loading timeout reached with only ${loadedCount}/${totalCount} modules loaded. Missing: ${missing.join(', ')}`);
+          const missing = this.expectedModules.filter(
+            (m) => !this.loadedModules.has(m)
+          );
+          console.warn(
+            `⏰ Loading timeout reached with only ${loadedCount}/${totalCount} modules loaded. Missing: ${missing.join(", ")}`
+          );
           this.hideLoading();
         }
       }

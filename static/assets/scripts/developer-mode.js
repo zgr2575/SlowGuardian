@@ -816,8 +816,8 @@ class DeveloperMode {
         try {
           const response = await fetch("/api/admin/sessions", {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("admin-token") || ""}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("admin-token") || ""}`,
+            },
           });
 
           if (response.ok) {
@@ -825,7 +825,8 @@ class DeveloperMode {
             const sessions = data.users || [];
 
             if (sessions.length === 0) {
-              sessionContent.innerHTML = '<div class="no-data">No active sessions</div>';
+              sessionContent.innerHTML =
+                '<div class="no-data">No active sessions</div>';
               return;
             }
 
@@ -837,15 +838,15 @@ class DeveloperMode {
                   <strong>Session: ${session.sessionId.substring(0, 12)}...</strong>
                   <div class="session-details">
                     <div class="ip-info">
-                      <strong>🌐 Primary IP:</strong> ${session.ip || session.originalIP || 'Unknown'}
-                      ${session.forwardedFor ? `<br><small>📡 Forwarded: ${session.forwardedFor}</small>` : ''}
-                      ${session.realIP ? `<br><small>🔗 Real IP: ${session.realIP}</small>` : ''}
-                      ${session.cfConnectingIP ? `<br><small>☁️ CloudFlare: ${session.cfConnectingIP}</small>` : ''}
+                      <strong>🌐 Primary IP:</strong> ${session.ip || session.originalIP || "Unknown"}
+                      ${session.forwardedFor ? `<br><small>📡 Forwarded: ${session.forwardedFor}</small>` : ""}
+                      ${session.realIP ? `<br><small>🔗 Real IP: ${session.realIP}</small>` : ""}
+                      ${session.cfConnectingIP ? `<br><small>☁️ CloudFlare: ${session.cfConnectingIP}</small>` : ""}
                     </div>
                     <small>👤 User: ${session.username}</small>
                     <small>🕒 Joined: ${new Date(session.joinedAt).toLocaleString()}</small>
                     <small>⏰ Last Seen: ${new Date(session.lastSeen).toLocaleString()}</small>
-                    <small>🖥️ User Agent: ${session.userAgent ? session.userAgent.substring(0, 60) + '...' : 'Unknown'}</small>
+                    <small>🖥️ User Agent: ${session.userAgent ? session.userAgent.substring(0, 60) + "..." : "Unknown"}</small>
                   </div>
                 </div>
                 <div class="session-actions">
@@ -862,11 +863,13 @@ class DeveloperMode {
               .join("");
           } else {
             // Fallback to mock data if API fails
-            sessionContent.innerHTML = '<div class="error-text">Failed to load sessions. Using offline mode.</div>';
+            sessionContent.innerHTML =
+              '<div class="error-text">Failed to load sessions. Using offline mode.</div>';
           }
         } catch (error) {
           console.error("Failed to load sessions:", error);
-          sessionContent.innerHTML = '<div class="error-text">Error loading sessions. Check console for details.</div>';
+          sessionContent.innerHTML =
+            '<div class="error-text">Error loading sessions. Check console for details.</div>';
         }
       }
     }, 500);

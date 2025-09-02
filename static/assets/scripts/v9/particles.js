@@ -30,13 +30,19 @@ class ParticleSystem {
   createParticle() {
     try {
       // Ensure container dimensions are available
-      const containerWidth = this.container ? (this.container.offsetWidth || 1000) : 1000;
-      const containerHeight = this.container ? (this.container.offsetHeight || 800) : 800;
+      const containerWidth = this.container
+        ? this.container.offsetWidth || 1000
+        : 1000;
+      const containerHeight = this.container
+        ? this.container.offsetHeight || 800
+        : 800;
 
       const particle = {
         element: this.createElement(),
         x: random.float(0, containerWidth) || 0,
-        y: random.float(containerHeight, containerHeight + 100) || containerHeight,
+        y:
+          random.float(containerHeight, containerHeight + 100) ||
+          containerHeight,
         vx: random.float(-0.5, 0.5) || 0,
         vy: random.float(-2, -0.5) || -1,
         life: 1,
@@ -129,12 +135,12 @@ class ParticleSystem {
       !particle ||
       particle === null ||
       typeof particle !== "object" ||
-      !particle.hasOwnProperty('x') ||
-      !particle.hasOwnProperty('y') ||
-      !particle.hasOwnProperty('vx') ||
-      !particle.hasOwnProperty('vy') ||
-      !particle.hasOwnProperty('life') ||
-      !particle.hasOwnProperty('decay') ||
+      !particle.hasOwnProperty("x") ||
+      !particle.hasOwnProperty("y") ||
+      !particle.hasOwnProperty("vx") ||
+      !particle.hasOwnProperty("vy") ||
+      !particle.hasOwnProperty("life") ||
+      !particle.hasOwnProperty("decay") ||
       typeof particle.x !== "number" ||
       typeof particle.y !== "number" ||
       typeof particle.vx !== "number" ||
@@ -159,8 +165,16 @@ class ParticleSystem {
       particle.y += particle.vy;
 
       // Validate new position
-      if (isNaN(particle.x) || isNaN(particle.y) || !isFinite(particle.x) || !isFinite(particle.y)) {
-        console.warn("Invalid particle position after update:", { x: particle.x, y: particle.y });
+      if (
+        isNaN(particle.x) ||
+        isNaN(particle.y) ||
+        !isFinite(particle.x) ||
+        !isFinite(particle.y)
+      ) {
+        console.warn("Invalid particle position after update:", {
+          x: particle.x,
+          y: particle.y,
+        });
         return false;
       }
 
@@ -176,7 +190,7 @@ class ParticleSystem {
       // Apply physics with validation
       const gravityValue = random.float(-0.01, 0.01);
       const turbulenceValue = random.float(-0.01, 0.01);
-      
+
       if (!isNaN(gravityValue) && isFinite(gravityValue)) {
         particle.vy += 0.01; // gravity
       }
@@ -192,7 +206,10 @@ class ParticleSystem {
       if (particle.element && particle.element.style) {
         particle.element.style.left = particle.x + "px";
         particle.element.style.top = particle.y + "px";
-        particle.element.style.opacity = Math.max(0, Math.min(1, particle.life));
+        particle.element.style.opacity = Math.max(
+          0,
+          Math.min(1, particle.life)
+        );
       } else {
         console.warn("Particle missing DOM element:", particle);
         return false;
@@ -323,7 +340,10 @@ class InteractiveParticleSystem extends ParticleSystem {
       // Setup mouse events after parent initialization with error handling
       this.setupMouseEvents();
     } catch (error) {
-      console.error("Failed to initialize InteractiveParticleSystem post-super:", error);
+      console.error(
+        "Failed to initialize InteractiveParticleSystem post-super:",
+        error
+      );
       // Fallback to basic functionality
       this.mouse = { x: -1000, y: -1000 };
       this.mouseInfluence = 0; // Disable mouse influence if initialization fails
@@ -340,15 +360,20 @@ class InteractiveParticleSystem extends ParticleSystem {
       this.container.addEventListener("mousemove", (e) => {
         try {
           if (!e || !this.container) return;
-          
+
           const rect = this.container.getBoundingClientRect();
           if (!rect) return;
-          
+
           const newX = e.clientX - rect.left;
           const newY = e.clientY - rect.top;
-          
+
           // Validate mouse coordinates
-          if (!isNaN(newX) && !isNaN(newY) && isFinite(newX) && isFinite(newY)) {
+          if (
+            !isNaN(newX) &&
+            !isNaN(newY) &&
+            isFinite(newX) &&
+            isFinite(newY)
+          ) {
             this.mouse.x = newX;
             this.mouse.y = newY;
           }
@@ -376,14 +401,14 @@ class InteractiveParticleSystem extends ParticleSystem {
       !particle ||
       particle === null ||
       typeof particle !== "object" ||
-      !particle.hasOwnProperty('x') ||
-      !particle.hasOwnProperty('y') ||
+      !particle.hasOwnProperty("x") ||
+      !particle.hasOwnProperty("y") ||
       typeof particle.x !== "number" ||
       typeof particle.y !== "number" ||
       isNaN(particle.x) ||
       isNaN(particle.y) ||
-      !particle.hasOwnProperty('vx') ||
-      !particle.hasOwnProperty('vy') ||
+      !particle.hasOwnProperty("vx") ||
+      !particle.hasOwnProperty("vy") ||
       typeof particle.vx !== "number" ||
       typeof particle.vy !== "number" ||
       isNaN(particle.vx) ||
@@ -408,27 +433,37 @@ class InteractiveParticleSystem extends ParticleSystem {
     try {
       const dx = this.mouse.x - particle.x;
       const dy = this.mouse.y - particle.y;
-      
+
       // Validate calculated values
       if (isNaN(dx) || isNaN(dy) || !isFinite(dx) || !isFinite(dy)) {
         console.warn("Invalid distance calculation, skipping mouse influence");
         return super.updateParticle(particle);
       }
-      
+
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       // Apply mouse influence only if distance is valid
-      if (distance < this.mouseInfluence && !isNaN(distance) && isFinite(distance) && distance > 0) {
+      if (
+        distance < this.mouseInfluence &&
+        !isNaN(distance) &&
+        isFinite(distance) &&
+        distance > 0
+      ) {
         const force = (this.mouseInfluence - distance) / this.mouseInfluence;
         if (!isNaN(force) && isFinite(force)) {
           const forceX = (dx / distance) * force * 0.1;
           const forceY = (dy / distance) * force * 0.1;
-          
+
           // Validate force values before applying
-          if (!isNaN(forceX) && !isNaN(forceY) && isFinite(forceX) && isFinite(forceY)) {
+          if (
+            !isNaN(forceX) &&
+            !isNaN(forceY) &&
+            isFinite(forceX) &&
+            isFinite(forceY)
+          ) {
             particle.vx += forceX;
             particle.vy += forceY;
-            
+
             // Ensure velocity stays within reasonable bounds
             particle.vx = Math.max(-10, Math.min(10, particle.vx));
             particle.vy = Math.max(-10, Math.min(10, particle.vy));
@@ -646,7 +681,10 @@ export const initParticles = (container, type = "floating") => {
         try {
           system = new InteractiveParticleSystem(container);
         } catch (error) {
-          console.warn("Failed to create InteractiveParticleSystem, falling back to basic:", error);
+          console.warn(
+            "Failed to create InteractiveParticleSystem, falling back to basic:",
+            error
+          );
           system = new ParticleSystem(container);
         }
         break;
@@ -654,7 +692,10 @@ export const initParticles = (container, type = "floating") => {
         try {
           system = new ConstellationSystem(container);
         } catch (error) {
-          console.warn("Failed to create ConstellationSystem, falling back to basic:", error);
+          console.warn(
+            "Failed to create ConstellationSystem, falling back to basic:",
+            error
+          );
           system = new ParticleSystem(container);
         }
         break;
@@ -672,7 +713,7 @@ export const initParticles = (container, type = "floating") => {
     // Handle window resize with error protection
     const resizeHandler = () => {
       try {
-        if (system && typeof system.resize === 'function') {
+        if (system && typeof system.resize === "function") {
           system.resize();
         }
       } catch (error) {

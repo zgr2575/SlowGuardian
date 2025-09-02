@@ -51,6 +51,33 @@ const config = {
     version: 3,
   },
 
+  // Google AdSense Configuration
+  adsense: {
+    enabled: true, // Enable Google AdSense
+    publisherId: process.env.GOOGLE_ADSENSE_PUBLISHER_ID || "", // ca-pub-XXXXXXXXXXXXXXXX
+    autoAds: true, // Enable Auto Ads
+    slots: {
+      // Display Ad Slots - Configure these in AdSense dashboard
+      header: process.env.ADSENSE_SLOT_HEADER || "", // Header banner slot
+      sidebar: process.env.ADSENSE_SLOT_SIDEBAR || "", // Sidebar slots
+      footer: process.env.ADSENSE_SLOT_FOOTER || "", // Footer banner slot
+      content: process.env.ADSENSE_SLOT_CONTENT || "", // In-content slots
+      mobile: process.env.ADSENSE_SLOT_MOBILE || "", // Mobile-optimized slots
+      video: process.env.ADSENSE_SLOT_VIDEO || "", // Video ad slots
+    },
+    settings: {
+      enableLazyLoading: true, // Enable lazy loading for better performance
+      enableResponsive: true, // Enable responsive ads
+      enablePageLevel: true, // Enable page-level ads
+      testMode: process.env.NODE_ENV !== "production", // Enable test mode in development
+    },
+    tracking: {
+      enableAnalytics: true, // Track ad performance
+      customEvents: true, // Custom event tracking
+      revenueTracking: true, // Revenue tracking
+    },
+  },
+
   // Development Settings
   debug: process.env.NODE_ENV !== "production",
   logLevel: process.env.LOG_LEVEL || "info",

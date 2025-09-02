@@ -1,20 +1,24 @@
 /**
  * SlowGuardian v9 Ads Manager
- * Comprehensive advertising system for monetization
+ * Comprehensive Google AdSense integration system for monetization
+ * Supports responsive ads, auto ads, and multiple placement strategies
  */
 
 class AdsManager {
   constructor() {
     this.adsEnabled = this.getAdsSetting();
+    this.adsenseConfig = this.loadAdsenseConfig();
     this.adProviders = {
       google: {
         enabled: true,
-        clientId: "", // Will be set by admin
+        publisherId: this.adsenseConfig.publisherId,
+        autoAds: this.adsenseConfig.autoAds,
         slots: new Map(),
+        testMode: this.adsenseConfig.testMode,
       },
       media: {
         enabled: true,
-        networkId: "", // Custom network
+        networkId: "", // Custom network fallback
         slots: new Map(),
       },
     };
@@ -23,8 +27,75 @@ class AdsManager {
     this.videoAdQueue = [];
     this.displayAdQueue = [];
     this.adBlockDetected = false;
+    this.adsenseReady = false;
+    this.autoAdsLoaded = false;
 
     this.init();
+  }
+
+  loadAdsenseConfig() {
+    // Load AdSense configuration from server or localStorage
+    const defaultConfig = {
+      publisherId: "", // Will be loaded from server config
+      autoAds: true,
+      testMode: true, // Default to test mode
+      slots: {
+        header: "",
+        sidebar: "",
+        footer: "",
+        content: "",
+        mobile: "",
+        video: "",
+      },
+      settings: {
+        enableLazyLoading: true,
+        enableResponsive: true,
+        enablePageLevel: true,
+      },
+      tracking: {
+        enableAnalytics: true,
+        customEvents: true,
+        revenueTracking: true,
+      },
+    };
+
+    // Try to load from server config endpoint
+    if (typeof fetch !== "undefined") {
+      fetch("/api/adsense-config")
+        .then((response) => response.json())
+        .then((config) => {
+          Object.assign(defaultConfig, config);
+          this.updateAdsenseConfig(defaultConfig);
+        })
+        .catch(() => {
+          // Fallback to localStorage or environment
+          const storedConfig = localStorage.getItem("adsense-config");
+          if (storedConfig) {
+            try {
+              Object.assign(defaultConfig, JSON.parse(storedConfig));
+            } catch (e) {
+              console.warn("📢 Invalid stored AdSense config, using defaults");
+            }
+          }
+        });
+    }
+
+    return defaultConfig;
+  }
+
+  updateAdsenseConfig(config) {
+    this.adsenseConfig = config;
+    this.adProviders.google.publisherId = config.publisherId;
+    this.adProviders.google.autoAds = config.autoAds;
+    this.adProviders.google.testMode = config.testMode;
+
+    // Save to localStorage for offline access
+    localStorage.setItem("adsense-config", JSON.stringify(config));
+
+    // Reinitialize if already loaded
+    if (this.adsenseReady) {
+      this.initializeAdsense();
+    }
   }
 
   init() {
@@ -160,18 +231,133 @@ class AdsManager {
   loadGoogleAds() {
     if (!this.adProviders.google.enabled) return;
 
+    // Load AdSense script with enhanced configuration
     const script = document.createElement("script");
     script.async = true;
     script.src =
       "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
     script.crossOrigin = "anonymous";
 
+    // Add publisher ID as data attribute if available
+    if (this.adProviders.google.publisherId) {
+      script.setAttribute(
+        "data-ad-client",
+        this.adProviders.google.publisherId
+      );
+    }
+
+    script.onload = () => {
+      this.adsenseReady = true;
+      this.initializeAdsense();
+      console.log("📢 Google AdSense loaded successfully");
+    };
+
     script.onerror = () => {
-      // Silently disable Google Ads on load failure - external service issue
+      // Enhanced error handling
+      console.warn(
+        "📢 Google AdSense failed to load - check network or ad blocker"
+      );
       this.adProviders.google.enabled = false;
+      this.showAdsenseErrorFallback();
     };
 
     document.head.appendChild(script);
+  }
+
+  initializeAdsense() {
+    if (!this.adsenseReady || !this.adProviders.google.publisherId) return;
+
+    // Initialize Auto Ads if enabled
+    if (this.adProviders.google.autoAds && !this.autoAdsLoaded) {
+      this.enableAutoAds();
+    }
+
+    // Initialize manual ad slots
+    this.refreshAllAds();
+
+    // Setup AdSense configuration
+    if (window.adsbygoogle) {
+      // Configure page-level settings
+      window.adsbygoogle.push({
+        google_ad_client: this.adProviders.google.publisherId,
+        enable_page_level_ads: this.adsenseConfig.settings.enablePageLevel,
+        overlays: { bottom: true }, // Enable overlay ads
+      });
+    }
+
+    console.log(
+      "📢 Google AdSense initialized with publisher:",
+      this.adProviders.google.publisherId
+    );
+  }
+
+  enableAutoAds() {
+    if (!this.adProviders.google.publisherId) {
+      console.warn("📢 Cannot enable Auto Ads - publisher ID not configured");
+      return;
+    }
+
+    // Add Auto Ads script tag
+    const autoAdsScript = document.createElement("script");
+    autoAdsScript.async = true;
+    autoAdsScript.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" +
+      this.adProviders.google.publisherId;
+    autoAdsScript.crossOrigin = "anonymous";
+
+    autoAdsScript.onload = () => {
+      // Enable Auto Ads
+      (window.adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: this.adProviders.google.publisherId,
+        enable_page_level_ads: true,
+        tag_partner: "site_kit",
+      });
+
+      this.autoAdsLoaded = true;
+      console.log("📢 Google Auto Ads enabled");
+    };
+
+    document.head.appendChild(autoAdsScript);
+  }
+
+  showAdsenseErrorFallback() {
+    // Show user-friendly message when AdSense fails
+    const errorContainer = document.createElement("div");
+    errorContainer.className = "adsense-error-notice";
+    errorContainer.innerHTML = `
+      <div style="
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin: 20px;
+        font-size: 14px;
+        box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+      ">
+        <div style="font-weight: bold; margin-bottom: 8px;">🚨 Ad Service Temporarily Unavailable</div>
+        <div style="opacity: 0.9;">Our ad service is currently experiencing issues. Please refresh the page or try again later.</div>
+        <button onclick="location.reload()" style="
+          background: rgba(255,255,255,0.2);
+          border: 1px solid rgba(255,255,255,0.3);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-top: 10px;
+        ">Refresh Page</button>
+      </div>
+    `;
+
+    // Add to top of page
+    document.body.insertBefore(errorContainer, document.body.firstChild);
+
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+      if (errorContainer.parentNode) {
+        errorContainer.remove();
+      }
+    }, 10000);
   }
 
   loadMediaAds() {
@@ -339,23 +525,132 @@ class AdsManager {
 
   loadGoogleDisplayAd(containerId, size) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container || !this.adProviders.google.publisherId) return;
+
+    // Determine the appropriate ad slot based on container and size
+    const adSlot = this.getAdSlotForContainer(containerId, size);
 
     const adElement = document.createElement("ins");
     adElement.className = "adsbygoogle";
     adElement.style.display = "block";
-    adElement.setAttribute("data-ad-client", "ca-pub-YOUR_PUBLISHER_ID"); // Replace with actual ID
-    adElement.setAttribute("data-ad-slot", "AUTO_SLOT"); // Replace with actual slot
-    adElement.setAttribute("data-ad-format", "auto");
-    adElement.setAttribute("data-full-width-responsive", "true");
+    adElement.setAttribute(
+      "data-ad-client",
+      this.adProviders.google.publisherId
+    );
+
+    // Use specific slot if available, otherwise use auto ads
+    if (adSlot) {
+      adElement.setAttribute("data-ad-slot", adSlot);
+    } else {
+      adElement.setAttribute("data-ad-format", "auto");
+      adElement.setAttribute("data-full-width-responsive", "true");
+    }
+
+    // Configure responsive behavior
+    if (this.adsenseConfig.settings.enableResponsive) {
+      adElement.setAttribute("data-full-width-responsive", "true");
+    }
+
+    // Configure lazy loading
+    if (this.adsenseConfig.settings.enableLazyLoading) {
+      adElement.setAttribute("data-ad-loading", "lazy");
+    }
+
+    // Test mode configuration
+    if (this.adProviders.google.testMode) {
+      adElement.setAttribute("data-adtest", "on");
+    }
 
     container.appendChild(adElement);
 
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
+
+      // Track ad placement for analytics
+      this.trackAdPlacement(containerId, size, "google");
     } catch (error) {
       console.warn("📢 Google Ad failed to load:", error);
       this.loadCustomDisplayAd(containerId, size);
+    }
+  }
+
+  getAdSlotForContainer(containerId, size) {
+    // Map container IDs to configured ad slots
+    const slotMap = {
+      header: this.adsenseConfig.slots.header,
+      footer: this.adsenseConfig.slots.footer,
+      sidebar: this.adsenseConfig.slots.sidebar,
+      content: this.adsenseConfig.slots.content,
+      mobile: this.adsenseConfig.slots.mobile,
+      video: this.adsenseConfig.slots.video,
+    };
+
+    // Check if container ID contains any slot keywords
+    for (const [key, slot] of Object.entries(slotMap)) {
+      if (containerId.toLowerCase().includes(key) && slot) {
+        return slot;
+      }
+    }
+
+    // Default based on size
+    if (size === "728x90" && this.adsenseConfig.slots.header) {
+      return this.adsenseConfig.slots.header;
+    } else if (size === "160x600" && this.adsenseConfig.slots.sidebar) {
+      return this.adsenseConfig.slots.sidebar;
+    }
+
+    return null; // Use auto ads
+  }
+
+  trackAdPlacement(containerId, size, provider) {
+    if (!this.adsenseConfig.tracking.enableAnalytics) return;
+
+    const placementData = {
+      containerId,
+      size,
+      provider,
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+      viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+    };
+
+    // Send to analytics endpoint
+    fetch("/api/ads/track-placement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(placementData),
+    }).catch((error) => {
+      console.warn("Failed to track ad placement:", error);
+    });
+
+    // Also track custom events if enabled
+    if (
+      this.adsenseConfig.tracking.customEvents &&
+      typeof gtag !== "undefined"
+    ) {
+      gtag("event", "ad_placement", {
+        container_id: containerId,
+        ad_size: size,
+        ad_provider: provider,
+      });
+    }
+  }
+
+  refreshAllAds() {
+    // Refresh all AdSense ads on the page
+    if (window.adsbygoogle && this.adsenseReady) {
+      try {
+        // Push refresh command for all ads
+        window.adsbygoogle.push(function () {
+          // This will refresh all ads on the page
+        });
+        console.log("📢 Refreshed all Google Ads");
+      } catch (error) {
+        console.warn("📢 Failed to refresh ads:", error);
+      }
     }
   }
 
@@ -892,7 +1187,7 @@ class AdsManager {
     });
   }
 
-  // Public API methods
+  // Public API methods for AdSense management
   enableAds() {
     this.adsEnabled = true;
     setCookie("ads-enabled", "true");
@@ -919,6 +1214,368 @@ class AdsManager {
     return true;
   }
 
+  // AdSense Configuration Management
+  configureAdsense(config) {
+    if (!this.isDeveloper()) {
+      console.warn("📢 AdSense configuration restricted to developers only");
+      return false;
+    }
+
+    this.updateAdsenseConfig(config);
+
+    // Reinitialize with new configuration
+    if (this.adsenseReady) {
+      this.refreshAllAds();
+    }
+
+    console.log("📢 AdSense configuration updated");
+    return true;
+  }
+
+  setPublisherId(publisherId) {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Publisher ID change restricted to developers only");
+      return false;
+    }
+
+    if (!publisherId || !publisherId.startsWith("ca-pub-")) {
+      console.error(
+        "📢 Invalid publisher ID format. Must start with 'ca-pub-'"
+      );
+      return false;
+    }
+
+    this.adsenseConfig.publisherId = publisherId;
+    this.adProviders.google.publisherId = publisherId;
+    localStorage.setItem("adsense-config", JSON.stringify(this.adsenseConfig));
+
+    console.log("📢 Publisher ID updated to:", publisherId);
+    return true;
+  }
+
+  configureAdSlots(slots) {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Ad slot configuration restricted to developers only");
+      return false;
+    }
+
+    Object.assign(this.adsenseConfig.slots, slots);
+    localStorage.setItem("adsense-config", JSON.stringify(this.adsenseConfig));
+
+    console.log("📢 Ad slots configured:", slots);
+    return true;
+  }
+
+  toggleAutoAds(enabled) {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Auto Ads toggle restricted to developers only");
+      return false;
+    }
+
+    this.adsenseConfig.autoAds = enabled;
+    this.adProviders.google.autoAds = enabled;
+
+    if (enabled && this.adsenseReady && !this.autoAdsLoaded) {
+      this.enableAutoAds();
+    }
+
+    localStorage.setItem("adsense-config", JSON.stringify(this.adsenseConfig));
+    console.log("📢 Auto Ads", enabled ? "enabled" : "disabled");
+    return true;
+  }
+
+  toggleTestMode(enabled) {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Test mode toggle restricted to developers only");
+      return false;
+    }
+
+    this.adsenseConfig.testMode = enabled;
+    this.adProviders.google.testMode = enabled;
+
+    localStorage.setItem("adsense-config", JSON.stringify(this.adsenseConfig));
+    console.log("📢 Test mode", enabled ? "enabled" : "disabled");
+    return true;
+  }
+
+  // Revenue Tracking and Analytics
+  getAdMetrics() {
+    return fetch("/api/ads/metrics")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("📢 Ad metrics retrieved:", data);
+        return data;
+      })
+      .catch((error) => {
+        console.warn("Failed to retrieve ad metrics:", error);
+        return null;
+      });
+  }
+
+  getRevenueReport(period = "30d") {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Revenue reports restricted to developers only");
+      return Promise.resolve(null);
+    }
+
+    return fetch(`/api/ads/revenue?period=${period}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(`📢 Revenue report (${period}):`, data);
+        return data;
+      })
+      .catch((error) => {
+        console.warn("Failed to retrieve revenue report:", error);
+        return null;
+      });
+  }
+
+  // Administration Interface
+  showAdminPanel() {
+    if (!this.isDeveloper()) {
+      console.warn("📢 Admin panel access restricted to developers only");
+      return;
+    }
+
+    this.createAdminModal();
+  }
+
+  createAdminModal() {
+    const modal = document.createElement("div");
+    modal.className = "adsense-admin-modal";
+    modal.innerHTML = `
+      <div class="admin-overlay" onclick="this.parentElement.remove()"></div>
+      <div class="admin-content">
+        <div class="admin-header">
+          <h2>🚀 AdSense Administration</h2>
+          <button onclick="this.closest('.adsense-admin-modal').remove()" class="close-btn">×</button>
+        </div>
+        <div class="admin-body">
+          <div class="config-section">
+            <h3>Publisher Configuration</h3>
+            <div class="input-group">
+              <label>Publisher ID:</label>
+              <input type="text" id="publisher-id" placeholder="ca-pub-XXXXXXXXXXXXXXXX" 
+                     value="${this.adsenseConfig.publisherId || ""}" />
+              <button onclick="window.adsManager.setPublisherId(document.getElementById('publisher-id').value)">
+                Update
+              </button>
+            </div>
+          </div>
+          
+          <div class="config-section">
+            <h3>Ad Slots</h3>
+            <div class="slots-grid">
+              <div class="input-group">
+                <label>Header Slot:</label>
+                <input type="text" id="slot-header" placeholder="Slot ID" 
+                       value="${this.adsenseConfig.slots.header || ""}" />
+              </div>
+              <div class="input-group">
+                <label>Sidebar Slot:</label>
+                <input type="text" id="slot-sidebar" placeholder="Slot ID" 
+                       value="${this.adsenseConfig.slots.sidebar || ""}" />
+              </div>
+              <div class="input-group">
+                <label>Footer Slot:</label>
+                <input type="text" id="slot-footer" placeholder="Slot ID" 
+                       value="${this.adsenseConfig.slots.footer || ""}" />
+              </div>
+              <div class="input-group">
+                <label>Content Slot:</label>
+                <input type="text" id="slot-content" placeholder="Slot ID" 
+                       value="${this.adsenseConfig.slots.content || ""}" />
+              </div>
+            </div>
+            <button onclick="window.adsManager.updateSlotsFromForm()">Update Slots</button>
+          </div>
+          
+          <div class="config-section">
+            <h3>Settings</h3>
+            <div class="settings-grid">
+              <label class="toggle">
+                <input type="checkbox" id="auto-ads" ${this.adsenseConfig.autoAds ? "checked" : ""} 
+                       onchange="window.adsManager.toggleAutoAds(this.checked)">
+                <span>Auto Ads</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="test-mode" ${this.adsenseConfig.testMode ? "checked" : ""} 
+                       onchange="window.adsManager.toggleTestMode(this.checked)">
+                <span>Test Mode</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="lazy-loading" ${this.adsenseConfig.settings.enableLazyLoading ? "checked" : ""}>
+                <span>Lazy Loading</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="responsive-ads" ${this.adsenseConfig.settings.enableResponsive ? "checked" : ""}>
+                <span>Responsive Ads</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="config-section">
+            <h3>Actions</h3>
+            <div class="actions-grid">
+              <button onclick="window.adsManager.refreshAllAds()" class="action-btn">
+                🔄 Refresh All Ads
+              </button>
+              <button onclick="window.adsManager.getAdMetrics().then(m => alert(JSON.stringify(m, null, 2)))" class="action-btn">
+                📊 View Metrics
+              </button>
+              <button onclick="window.adsManager.getRevenueReport().then(r => alert(JSON.stringify(r, null, 2)))" class="action-btn">
+                💰 Revenue Report
+              </button>
+              <button onclick="location.reload()" class="action-btn">
+                🔃 Reload Page
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .adsense-admin-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10003;
+      }
+      .admin-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+      }
+      .admin-content {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 800px;
+        width: 90%;
+        max-height: 80vh;
+        background: #1a1a2e;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .admin-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .admin-header h2 {
+        margin: 0;
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      .admin-body {
+        padding: 20px;
+        max-height: 60vh;
+        overflow-y: auto;
+        color: white;
+      }
+      .config-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .config-section h3 {
+        margin-top: 0;
+        color: #667eea;
+      }
+      .input-group {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input-group label {
+        min-width: 120px;
+        font-weight: bold;
+      }
+      .input-group input[type="text"] {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 4px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+      }
+      .input-group button, .action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .slots-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .toggle input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+      }
+      .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .action-btn {
+        padding: 12px;
+        text-align: center;
+        white-space: nowrap;
+      }
+    `;
+    document.head.appendChild(style);
+    document.body.appendChild(modal);
+  }
+
+  updateSlotsFromForm() {
+    const slots = {
+      header: document.getElementById("slot-header").value,
+      sidebar: document.getElementById("slot-sidebar").value,
+      footer: document.getElementById("slot-footer").value,
+      content: document.getElementById("slot-content").value,
+    };
+
+    this.configureAdSlots(slots);
+    alert("Ad slots updated successfully!");
+  }
+
   showProxyVideoAd(url, callback) {
     console.log("📢 Showing video ad before proxy load...");
     this.showVideoAd(() => {
@@ -939,7 +1596,119 @@ document.addEventListener("DOMContentLoaded", () => {
       window.adsManager = new AdsManager();
     }, 500);
   }
+
+  // Add helpful console commands for AdSense management
+  if (typeof window.console !== "undefined") {
+    setTimeout(() => {
+      console.log(`
+🚀 SlowGuardian AdSense Management Console
+==========================================
+
+Available Commands:
+- adsense.config()        → Show current configuration
+- adsense.setup(id)       → Quick setup with Publisher ID
+- adsense.admin()         → Open admin panel  
+- adsense.metrics()       → View ad metrics
+- adsense.revenue()       → View revenue report (admin)
+- adsense.refresh()       → Refresh all ads
+- adsense.test()          → Toggle test mode
+- adsense.help()          → Show this help again
+
+Example: adsense.setup('ca-pub-1234567890123456')
+      `);
+    }, 2000);
+  }
 });
+
+// AdSense Console Helper
+window.adsense = {
+  config: () => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    console.table(window.adsManager.adsenseConfig);
+    return window.adsManager.adsenseConfig;
+  },
+
+  setup: (publisherId) => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    if (!publisherId)
+      return console.error(
+        'Publisher ID required: adsense.setup("ca-pub-XXXXXXXXXXXXXXXX")'
+      );
+
+    const success = window.adsManager.setPublisherId(publisherId);
+    if (success) {
+      console.log("✅ Publisher ID configured successfully!");
+      console.log("💡 Run adsense.admin() to configure ad slots");
+    }
+    return success;
+  },
+
+  admin: () => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    window.adsManager.showAdminPanel();
+    console.log("✅ Admin panel opened");
+  },
+
+  metrics: async () => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    const metrics = await window.adsManager.getAdMetrics();
+    console.table(metrics);
+    return metrics;
+  },
+
+  revenue: async (period = "30d") => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    const revenue = await window.adsManager.getRevenueReport(period);
+    console.table(revenue);
+    return revenue;
+  },
+
+  refresh: () => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    window.adsManager.refreshAllAds();
+    console.log("✅ All ads refreshed");
+  },
+
+  test: (enabled) => {
+    if (!window.adsManager) return console.error("Ads Manager not loaded");
+    if (typeof enabled === "undefined") {
+      enabled = !window.adsManager.adsenseConfig.testMode;
+    }
+    const success = window.adsManager.toggleTestMode(enabled);
+    if (success) {
+      console.log(`✅ Test mode ${enabled ? "enabled" : "disabled"}`);
+    }
+    return success;
+  },
+
+  help: () => {
+    console.log(`
+🚀 SlowGuardian AdSense Management Console
+==========================================
+
+Configuration Commands:
+  adsense.config()              - Show current AdSense configuration
+  adsense.setup(publisherId)    - Quick setup with Publisher ID
+  adsense.admin()               - Open visual admin panel
+
+Analytics Commands:
+  adsense.metrics()             - View current ad performance metrics
+  adsense.revenue(period)       - View revenue report (30d, 7d, 1d)
+
+Management Commands:
+  adsense.refresh()             - Refresh all ads on page
+  adsense.test(true/false)      - Toggle test mode on/off
+
+Setup Example:
+  1. adsense.setup('ca-pub-1234567890123456')
+  2. adsense.admin()
+  3. Configure slots in the admin panel
+  4. adsense.metrics() to check performance
+
+For detailed setup instructions, see: /docs/ADSENSE-SETUP.md
+    `);
+  },
+};
 
 // Export for modules
 if (typeof module !== "undefined") {

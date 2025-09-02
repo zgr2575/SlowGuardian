@@ -8,21 +8,21 @@ class NavigationBar {
     this.currentPage = this.detectCurrentPage();
     this.isHovered = false;
     this.hideTimeout = null;
-    
+
     this.init();
   }
 
   detectCurrentPage() {
     const path = window.location.pathname;
-    
-    if (path === '/' || path === '/index.html') return 'home';
-    if (path.includes('/apps')) return 'apps';
-    if (path.includes('/games')) return 'games';
-    if (path.includes('/tabs')) return 'tabs';
-    if (path.includes('/settings')) return 'settings';
-    if (path.includes('/go') || path.includes('/p/')) return 'browser';
-    
-    return 'home'; // default
+
+    if (path === "/" || path === "/index.html") return "home";
+    if (path.includes("/apps")) return "apps";
+    if (path.includes("/games")) return "games";
+    if (path.includes("/tabs")) return "tabs";
+    if (path.includes("/settings")) return "settings";
+    if (path.includes("/go") || path.includes("/p/")) return "browser";
+
+    return "home"; // default
   }
 
   init() {
@@ -33,16 +33,16 @@ class NavigationBar {
 
   createNavbar() {
     // Remove existing navbar if any
-    const existingNav = document.querySelector('.navbar, .sidebar-nav');
+    const existingNav = document.querySelector(".navbar, .sidebar-nav");
     if (existingNav) {
       existingNav.remove();
     }
 
     // Create sidebar navigation
-    const navbar = document.createElement('nav');
-    navbar.className = 'sidebar-nav';
-    navbar.id = 'sidebar-nav';
-    
+    const navbar = document.createElement("nav");
+    navbar.className = "sidebar-nav";
+    navbar.id = "sidebar-nav";
+
     navbar.innerHTML = `
       <div class="sidebar-content">
         <!-- Brand Section -->
@@ -56,27 +56,27 @@ class NavigationBar {
 
         <!-- Navigation Links -->
         <div class="sidebar-links">
-          <a href="/" class="sidebar-link ${this.currentPage === 'home' ? 'active' : ''}" data-page="home">
+          <a href="/" class="sidebar-link ${this.currentPage === "home" ? "active" : ""}" data-page="home">
             <div class="link-icon">🏠</div>
             <span class="link-text">Home</span>
           </a>
-          <a href="/apps" class="sidebar-link ${this.currentPage === 'apps' ? 'active' : ''}" data-page="apps">
+          <a href="/apps" class="sidebar-link ${this.currentPage === "apps" ? "active" : ""}" data-page="apps">
             <div class="link-icon">📱</div>
             <span class="link-text">Apps</span>
           </a>
-          <a href="/games" class="sidebar-link ${this.currentPage === 'games' ? 'active' : ''}" data-page="games">
+          <a href="/games" class="sidebar-link ${this.currentPage === "games" ? "active" : ""}" data-page="games">
             <div class="link-icon">🎮</div>
             <span class="link-text">Games</span>
           </a>
-          <a href="/go" class="sidebar-link ${this.currentPage === 'browser' ? 'active' : ''}" data-page="browser">
+          <a href="/go" class="sidebar-link ${this.currentPage === "browser" ? "active" : ""}" data-page="browser">
             <div class="link-icon">🌐</div>
             <span class="link-text">Browser</span>
           </a>
-          <a href="/tabs" class="sidebar-link ${this.currentPage === 'tabs' ? 'active' : ''}" data-page="tabs">
+          <a href="/tabs" class="sidebar-link ${this.currentPage === "tabs" ? "active" : ""}" data-page="tabs">
             <div class="link-icon">🗂️</div>
             <span class="link-text">Tabs</span>
           </a>
-          <a href="/settings" class="sidebar-link ${this.currentPage === 'settings' ? 'active' : ''}" data-page="settings">
+          <a href="/settings" class="sidebar-link ${this.currentPage === "settings" ? "active" : ""}" data-page="settings">
             <div class="link-icon">⚙️</div>
             <span class="link-text">Settings</span>
           </a>
@@ -104,34 +104,34 @@ class NavigationBar {
   }
 
   attachEventListeners() {
-    const sidebar = document.getElementById('sidebar-nav');
-    const trigger = sidebar.querySelector('.sidebar-trigger');
-    
+    const sidebar = document.getElementById("sidebar-nav");
+    const trigger = sidebar.querySelector(".sidebar-trigger");
+
     // Hover to show - expanded trigger area
-    sidebar.addEventListener('mouseenter', () => {
+    sidebar.addEventListener("mouseenter", () => {
       this.showSidebar();
     });
 
     // Also trigger on hover near left edge of screen - larger trigger area
-    document.addEventListener('mousemove', (e) => {
-      if (e.clientX <= 10 && !sidebar.classList.contains('expanded')) {
+    document.addEventListener("mousemove", (e) => {
+      if (e.clientX <= 10 && !sidebar.classList.contains("expanded")) {
         this.showSidebar();
       }
     });
 
     // Hide when leaving
-    sidebar.addEventListener('mouseleave', () => {
+    sidebar.addEventListener("mouseleave", () => {
       this.hideSidebar();
     });
 
     // Theme toggle
-    const themeToggle = sidebar.querySelector('#theme-toggle');
+    const themeToggle = sidebar.querySelector("#theme-toggle");
     if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        if (typeof window.changeTheme === 'function') {
+      themeToggle.addEventListener("click", () => {
+        if (typeof window.changeTheme === "function") {
           // Use legacy theme system if available
           window.changeTheme();
-        } else if (typeof window.theme !== 'undefined' && window.theme.toggle) {
+        } else if (typeof window.theme !== "undefined" && window.theme.toggle) {
           // Use v9 theme system
           window.theme.toggle();
         } else {
@@ -142,27 +142,27 @@ class NavigationBar {
     }
 
     // Fullscreen toggle
-    const fullscreenToggle = sidebar.querySelector('#fullscreen-toggle');
+    const fullscreenToggle = sidebar.querySelector("#fullscreen-toggle");
     if (fullscreenToggle) {
-      fullscreenToggle.addEventListener('click', () => {
+      fullscreenToggle.addEventListener("click", () => {
         this.toggleFullscreen();
       });
     }
 
     // Navigation links
-      sidebar.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          // Force full page reload for navigation
-          window.location.href = link.getAttribute('href');
-        });
+    sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        // Force full page reload for navigation
+        window.location.href = link.getAttribute("href");
       });
+    });
   }
 
   showSidebar() {
-    const sidebar = document.getElementById('sidebar-nav');
-    sidebar.classList.add('expanded');
+    const sidebar = document.getElementById("sidebar-nav");
+    sidebar.classList.add("expanded");
     this.isHovered = true;
-    
+
     if (this.hideTimeout) {
       clearTimeout(this.hideTimeout);
       this.hideTimeout = null;
@@ -173,29 +173,29 @@ class NavigationBar {
     this.isHovered = false;
     this.hideTimeout = setTimeout(() => {
       if (!this.isHovered) {
-        const sidebar = document.getElementById('sidebar-nav');
-        sidebar.classList.remove('expanded');
+        const sidebar = document.getElementById("sidebar-nav");
+        sidebar.classList.remove("expanded");
       }
     }, 300);
   }
 
   toggleTheme() {
     const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    
+    const currentTheme = html.getAttribute("data-theme") || "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    html.setAttribute("data-theme", newTheme);
+
     // Update theme toggle icon
-    const themeIcon = document.querySelector('#theme-toggle .action-icon');
+    const themeIcon = document.querySelector("#theme-toggle .action-icon");
     if (themeIcon) {
-      themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      themeIcon.textContent = newTheme === "dark" ? "☀️" : "🌙";
     }
   }
 
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.warn('Fullscreen request failed:', err);
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.warn("Fullscreen request failed:", err);
       });
     } else {
       document.exitFullscreen();
@@ -203,15 +203,15 @@ class NavigationBar {
   }
 
   injectStyles() {
-    const styleId = 'sidebar-nav-styles';
-    
+    const styleId = "sidebar-nav-styles";
+
     // Remove existing styles
     const existingStyles = document.getElementById(styleId);
     if (existingStyles) {
       existingStyles.remove();
     }
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = styleId;
     style.textContent = `
       /* Sidebar Navigation Styles */
@@ -507,14 +507,17 @@ class NavigationBar {
 
   // Public method to update active page
   setActivePage(page) {
-    const sidebar = document.getElementById('sidebar-nav');
+    const sidebar = document.getElementById("sidebar-nav");
     if (sidebar) {
-      sidebar.querySelectorAll('.sidebar-link').forEach(link => {
-        link.classList.remove('active');
-        const tempAnchor = document.createElement('a');
-        tempAnchor.href = link.getAttribute('href');
-        if (page === tempAnchor.pathname || link.getAttribute('data-page') === page) {
-          link.classList.add('active');
+      sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
+        link.classList.remove("active");
+        const tempAnchor = document.createElement("a");
+        tempAnchor.href = link.getAttribute("href");
+        if (
+          page === tempAnchor.pathname ||
+          link.getAttribute("data-page") === page
+        ) {
+          link.classList.add("active");
         }
       });
     }
@@ -522,8 +525,8 @@ class NavigationBar {
 }
 
 // Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
     window.sidebarNav = new NavigationBar();
   });
 } else {
@@ -531,13 +534,13 @@ if (document.readyState === 'loading') {
 }
 
 // Global function to update active page
-window.updateNavbarActivePage = function(page) {
+window.updateNavbarActivePage = function (page) {
   if (window.sidebarNav) {
     window.sidebarNav.setActivePage(page);
   }
 };
 
 // Mark module as loaded for loading system
-if (typeof window.markModuleLoaded === 'function') {
-  window.markModuleLoaded('navbar');
+if (typeof window.markModuleLoaded === "function") {
+  window.markModuleLoaded("navbar");
 }

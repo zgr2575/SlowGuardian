@@ -765,9 +765,10 @@ if (typeof module !== "undefined") {
   whenReady(() => {
     if (!window.moveableButtons) {
       // Check if moveable buttons feature is enabled
-      const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
-                                    localStorage.getItem("feature-moveable-buttons") === "true";
-      
+      const moveableButtonsEnabled =
+        getCookie("feature-moveable-buttons") === "true" ||
+        localStorage.getItem("feature-moveable-buttons") === "true";
+
       if (moveableButtonsEnabled) {
         console.log("🎛️ Creating MoveableButtons instance...");
         window.moveableButtons = new MoveableButtons();

@@ -41,7 +41,10 @@ self.addEventListener("fetch", (event) => {
         return await fetch(event.request);
       } catch (error) {
         // Only log critical navigation errors, not routine fetch failures
-        if (event.request.mode === "navigate" || error.message.includes("register")) {
+        if (
+          event.request.mode === "navigate" ||
+          error.message.includes("register")
+        ) {
           console.error("Service worker fetch error:", error);
         }
 

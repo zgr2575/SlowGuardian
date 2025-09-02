@@ -5,7 +5,7 @@ window.addEventListener("load", async () => {
       console.log("Registering service workers...");
 
       // Wait a moment for DOM to be fully ready
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Register Ultraviolet service worker for proxy functionality
       try {
@@ -16,18 +16,20 @@ window.addEventListener("load", async () => {
             uvConfigReady = true;
             break;
           }
-          await new Promise(resolve => setTimeout(resolve, 50));
+          await new Promise((resolve) => setTimeout(resolve, 50));
         }
 
         if (!uvConfigReady) {
-          console.warn("⚠️ UV config not available, UV service worker registration may fail");
+          console.warn(
+            "⚠️ UV config not available, UV service worker registration may fail"
+          );
         }
 
         const uvRegistration = await navigator.serviceWorker.register(
           "/a/sw.js",
           {
             scope: "/a/",
-            updateViaCache: "none"
+            updateViaCache: "none",
           }
         );
         console.log(
@@ -39,7 +41,9 @@ window.addEventListener("load", async () => {
           "❌ Failed to register Ultraviolet service worker:",
           uvError
         );
-        console.warn("⚠️ Proxy functionality may be limited without UV service worker");
+        console.warn(
+          "⚠️ Proxy functionality may be limited without UV service worker"
+        );
       }
 
       // Register main service worker for general functionality
@@ -48,7 +52,7 @@ window.addEventListener("load", async () => {
           "/sw.js",
           {
             scope: "/",
-            updateViaCache: "none"
+            updateViaCache: "none",
           }
         );
         console.log(
@@ -65,10 +69,13 @@ window.addEventListener("load", async () => {
       // Wait for service worker to be ready with timeout
       try {
         const readyPromise = navigator.serviceWorker.ready;
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error("Service worker ready timeout")), 10000)
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Service worker ready timeout")),
+            10000
+          )
         );
-        
+
         await Promise.race([readyPromise, timeoutPromise]);
         console.log("✅ Service workers are ready");
       } catch (readyError) {

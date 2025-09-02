@@ -522,9 +522,10 @@ if (typeof module !== "undefined") {
   whenReady(() => {
     if (!window.pluginSystem) {
       // Check if plugins are enabled by user preference
-      const pluginsEnabled = getCookie("feature-plugins") === "true" || 
-                            localStorage.getItem("feature-plugins") === "true";
-      
+      const pluginsEnabled =
+        getCookie("feature-plugins") === "true" ||
+        localStorage.getItem("feature-plugins") === "true";
+
       if (pluginsEnabled) {
         console.log("🔌 Creating PluginSystem instance...");
         window.pluginSystem = new PluginSystem();

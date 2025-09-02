@@ -343,6 +343,174 @@ function setupCustomEndpoints(app, config) {
     }
   });
 
+  // Ad placement tracking endpoint
+  app.post("/api/ads/track-placement", (req, res) => {
+    try {
+      const {
+        containerId,
+        size,
+        provider,
+        timestamp,
+        url,
+        userAgent,
+        viewportSize,
+      } = req.body;
+
+      // Log ad placement for analytics
+      console.log(
+        `📢 [Ad Placement] ${provider} ${size} in ${containerId} at ${timestamp}`
+      );
+
+      // In production, save to database or analytics service
+      res.json({
+        success: true,
+        message: "Ad placement tracked successfully",
+      });
+    } catch (error) {
+      console.error("Failed to track ad placement:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to track ad placement",
+      });
+    }
+  });
+
+  // AdSense configuration endpoint
+  app.get("/api/adsense-config", (req, res) => {
+    try {
+      // Return AdSense configuration from environment or config
+      const adsenseConfig = config.adsense || {
+        publisherId: "",
+        autoAds: true,
+        testMode: true,
+        slots: {
+          header: "",
+          sidebar: "",
+          footer: "",
+          content: "",
+          mobile: "",
+          video: "",
+        },
+        settings: {
+          enableLazyLoading: true,
+          enableResponsive: true,
+          enablePageLevel: true,
+        },
+        tracking: {
+          enableAnalytics: true,
+          customEvents: true,
+          revenueTracking: true,
+        },
+      };
+
+      res.json(adsenseConfig);
+    } catch (error) {
+      logger.error("Failed to load AdSense config:", error);
+      res.status(500).json({ error: "Failed to load AdSense configuration" });
+    }
+  });
+
+  // AdSense configuration update endpoint (admin only)
+  app.post("/api/adsense-config", express.json(), (req, res) => {
+    try {
+      // Check if user is admin/developer
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !isAuthorizedUser(authHeader, config)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      // Update AdSense configuration
+      const updatedConfig = req.body;
+
+      // Validate publisher ID format if provided
+      if (
+        updatedConfig.publisherId &&
+        !updatedConfig.publisherId.startsWith("ca-pub-")
+      ) {
+        return res.status(400).json({ error: "Invalid publisher ID format" });
+      }
+
+      // In production, save to persistent storage
+      // For now, log the update
+      console.log("📢 AdSense configuration updated:", updatedConfig);
+
+      res.json({
+        success: true,
+        message: "AdSense configuration updated successfully",
+      });
+    } catch (error) {
+      logger.error("Failed to update AdSense config:", error);
+      res.status(500).json({ error: "Failed to update AdSense configuration" });
+    }
+  });
+
+  // Ad metrics endpoint
+  app.get("/api/ads/metrics", (req, res) => {
+    try {
+      // Return mock metrics for now
+      // In production, fetch from analytics database
+      const metrics = {
+        totalImpressions: 12547,
+        totalClicks: 234,
+        ctr: 1.87,
+        revenue: 45.67,
+        topPerformingSlots: [
+          { slot: "header", impressions: 4521, clicks: 89, ctr: 1.97 },
+          { slot: "sidebar", impressions: 3876, clicks: 71, ctr: 1.83 },
+          { slot: "footer", impressions: 4150, clicks: 74, ctr: 1.78 },
+        ],
+        period: "30d",
+        lastUpdated: new Date().toISOString(),
+      };
+
+      res.json(metrics);
+    } catch (error) {
+      logger.error("Failed to load ad metrics:", error);
+      res.status(500).json({ error: "Failed to load ad metrics" });
+    }
+  });
+
+  // Revenue report endpoint (admin only)
+  app.get("/api/ads/revenue", (req, res) => {
+    try {
+      // Check if user is admin/developer
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !isAuthorizedUser(authHeader, config)) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const period = req.query.period || "30d";
+
+      // Return mock revenue data for now
+      // In production, fetch from AdSense API or database
+      const revenueData = {
+        period,
+        totalRevenue: 1247.89,
+        dailyRevenue: [
+          { date: "2024-01-01", revenue: 42.15 },
+          { date: "2024-01-02", revenue: 38.92 },
+          { date: "2024-01-03", revenue: 45.67 },
+          // ... more daily data
+        ],
+        topPerformingPages: [
+          { page: "/", revenue: 234.56 },
+          { page: "/games", revenue: 189.23 },
+          { page: "/apps", revenue: 156.78 },
+        ],
+        projections: {
+          monthly: 1890.45,
+          yearly: 22685.4,
+        },
+        lastUpdated: new Date().toISOString(),
+      };
+
+      res.json(revenueData);
+    } catch (error) {
+      logger.error("Failed to load revenue report:", error);
+      res.status(500).json({ error: "Failed to load revenue report" });
+    }
+  });
+
   // User preferences endpoint
   app.post("/api/preferences", express.json(), (req, res) => {
     try {
@@ -402,4 +570,30 @@ async function fetchExternalContent(req, res, baseUrls, path) {
   }
 
   res.status(404).json({ error: "External content not found" });
+}
+
+/**
+ * Check if user is authorized (admin/developer)
+ */
+function isAuthorizedUser(authHeader, config) {
+  // Simple authorization check - in production use proper JWT or session validation
+  if (!config.developerMode?.enabled) {
+    return false;
+  }
+
+  // Check for basic auth or token
+  if (authHeader.startsWith("Basic ")) {
+    const credentials = Buffer.from(authHeader.slice(6), "base64")
+      .toString()
+      .split(":");
+    const [username, password] = credentials;
+
+    return (
+      username === config.developerMode.defaultAdminCredentials.username &&
+      password === config.developerMode.defaultAdminCredentials.password
+    );
+  }
+
+  // Could also check for session tokens, API keys, etc.
+  return false;
 }

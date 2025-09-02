@@ -338,9 +338,10 @@ if (typeof module !== "undefined") {
   whenReady(() => {
     if (!window.performanceMode) {
       // Check if performance mode feature is enabled
-      const performanceModeEnabled = getCookie("feature-performance-mode") === "true" || 
-                                   localStorage.getItem("feature-performance-mode") === "true";
-      
+      const performanceModeEnabled =
+        getCookie("feature-performance-mode") === "true" ||
+        localStorage.getItem("feature-performance-mode") === "true";
+
       if (performanceModeEnabled) {
         console.log("⚡ Creating PerformanceMode instance...");
         window.performanceMode = new PerformanceMode();

@@ -455,7 +455,8 @@
   padding: 4px 8px;
 }
 
-.error-text, .no-data {
+.error-text,
+.no-data {
   text-align: center;
   color: var(--text-secondary);
   padding: 20px;

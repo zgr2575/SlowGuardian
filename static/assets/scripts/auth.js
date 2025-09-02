@@ -35,15 +35,15 @@ class AuthSystem {
     } catch (error) {
       console.warn("Failed to load auth config:", error);
       // Use fallback configuration when server is unavailable
-      this.config = { 
-        challenge: false, 
+      this.config = {
+        challenge: false,
         users: {},
         version: 9,
         developerMode: { enabled: false },
         features: {
           plugins: true,
-          localAssets: true
-        }
+          localAssets: true,
+        },
       };
     }
   }
