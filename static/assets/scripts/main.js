@@ -185,6 +185,19 @@ window.toggleAboutBlank = function (enabled) {
   }
 };
 
+// Simple notification fallback for pages without notification system
+function safeNotification(message, type = "info") {
+  if (typeof window.showNotification === "function") {
+    window.showNotification(message, type);
+  } else {
+    // Fallback to console and alert for critical messages
+    console.log(`[${type.toUpperCase()}] ${message}`);
+    if (type === "error") {
+      alert(message);
+    }
+  }
+}
+
 // Enhanced about:blank popup function - Manual only, no auto-popup
 window.AB = function () {
   let inFrame;
@@ -202,7 +215,7 @@ window.AB = function () {
       popup = window.open("about:blank", "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error("Failed to create popup:", error);
-      showNotification(
+      safeNotification(
         "Popup blocked. Please allow popups for this site.",
         "error"
       );
@@ -211,7 +224,7 @@ window.AB = function () {
 
     if (!popup || popup.closed) {
       console.log("Popup blocked - please allow popups");
-      showNotification(
+      safeNotification(
         "Popup blocked. Please allow popups to use about:blank mode.",
         "warning"
       );
@@ -255,7 +268,7 @@ window.AB = function () {
       } catch (error) {
         console.error("Error setting up about:blank popup:", error);
         popup.close();
-        showNotification("Failed to setup about:blank mode", "error");
+        safeNotification("Failed to setup about:blank mode", "error");
       }
     }, 100);
   }
