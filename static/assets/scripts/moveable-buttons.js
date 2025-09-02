@@ -761,11 +761,19 @@ class MoveableButtons {
 if (typeof module !== "undefined") {
   module.exports = MoveableButtons;
 } else {
-  // Initialize moveable buttons when script loads
+  // Initialize moveable buttons when script loads - only if enabled
   whenReady(() => {
     if (!window.moveableButtons) {
-      console.log("🎛️ Creating MoveableButtons instance...");
-      window.moveableButtons = new MoveableButtons();
+      // Check if moveable buttons feature is enabled
+      const moveableButtonsEnabled = getCookie("feature-moveable-buttons") === "true" || 
+                                    localStorage.getItem("feature-moveable-buttons") === "true";
+      
+      if (moveableButtonsEnabled) {
+        console.log("🎛️ Creating MoveableButtons instance...");
+        window.moveableButtons = new MoveableButtons();
+      } else {
+        console.log("🎛️ Moveable Buttons disabled by user preference");
+      }
     }
   }, ["cookie-utils"]);
 }

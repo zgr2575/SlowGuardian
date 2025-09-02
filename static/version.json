@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "246aedb-1756823362197",
-  "buildDate": "2025-09-02T14:29:22.197Z",
-  "buildTimestamp": 1756823362198,
+  "buildId": "34e52a6-1756826060677",
+  "buildDate": "2025-09-02T15:14:20.677Z",
+  "buildTimestamp": 1756826060677,
   "git": {
-    "commit": "246aedb09957c80596a0747ac5a89a0d59335435",
-    "commitShort": "246aedb",
+    "commit": "34e52a618f8d105b41217e8953494d2396eba608",
+    "commitShort": "34e52a6",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-02T14:16:39Z",
-    "commitMessage": "🔧 Add centralized navbar to games.html for complete navigation consistency"
+    "commitDate": "2025-09-02T14:30:10Z",
+    "commitMessage": "🎯 Enhanced navigation hiding, interactive tutorial, and IP-based session tracking for developer commands"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

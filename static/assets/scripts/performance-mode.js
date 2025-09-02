@@ -334,11 +334,19 @@ class PerformanceMode {
 if (typeof module !== "undefined") {
   module.exports = PerformanceMode;
 } else {
-  // Initialize performance mode when script loads
+  // Initialize performance mode when script loads - only if enabled
   whenReady(() => {
     if (!window.performanceMode) {
-      console.log("⚡ Creating PerformanceMode instance...");
-      window.performanceMode = new PerformanceMode();
+      // Check if performance mode feature is enabled
+      const performanceModeEnabled = getCookie("feature-performance-mode") === "true" || 
+                                   localStorage.getItem("feature-performance-mode") === "true";
+      
+      if (performanceModeEnabled) {
+        console.log("⚡ Creating PerformanceMode instance...");
+        window.performanceMode = new PerformanceMode();
+      } else {
+        console.log("⚡ Performance Mode disabled by user preference");
+      }
     }
   }, ["cookie-utils"]);
 }

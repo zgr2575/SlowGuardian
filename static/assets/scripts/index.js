@@ -24,7 +24,7 @@ window.addEventListener("load", async () => {
         }
 
         const uvRegistration = await navigator.serviceWorker.register(
-          "/m/sw.js",
+          "/a/sw.js",
           {
             scope: "/a/",
             updateViaCache: "none"

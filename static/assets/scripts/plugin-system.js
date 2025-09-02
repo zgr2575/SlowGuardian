@@ -518,11 +518,19 @@ window.pluginSystem.registerPlugin('your-plugin-name', new YourPlugin());
 if (typeof module !== "undefined") {
   module.exports = PluginSystem;
 } else {
-  // Initialize plugin system when script loads
+  // Initialize plugin system when script loads - only if enabled
   whenReady(() => {
     if (!window.pluginSystem) {
-      console.log("🔌 Creating PluginSystem instance...");
-      window.pluginSystem = new PluginSystem();
+      // Check if plugins are enabled by user preference
+      const pluginsEnabled = getCookie("feature-plugins") === "true" || 
+                            localStorage.getItem("feature-plugins") === "true";
+      
+      if (pluginsEnabled) {
+        console.log("🔌 Creating PluginSystem instance...");
+        window.pluginSystem = new PluginSystem();
+      } else {
+        console.log("🔌 Plugin System disabled by user preference");
+      }
     }
   }, ["cookie-utils"]);
 }

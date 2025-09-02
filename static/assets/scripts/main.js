@@ -198,7 +198,7 @@ function safeNotification(message, type = "info") {
   }
 }
 
-// Enhanced about:blank popup function - Manual only, no auto-popup
+// About:blank popup function - Simple and reliable
 window.AB = function () {
   let inFrame;
   try {
@@ -207,70 +207,42 @@ window.AB = function () {
     inFrame = true;
   }
 
-  // Only allow manual activation, never auto-popup
   if (!inFrame && !navigator.userAgent.includes("Firefox")) {
-    // Create popup window with better error handling
-    let popup;
-    try {
-      popup = window.open("about:blank", "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to create popup:", error);
-      safeNotification(
-        "Popup blocked. Please allow popups for this site.",
-        "error"
-      );
-      return;
-    }
-
+    const popup = open("about:blank", "_blank");
     if (!popup || popup.closed) {
       console.log("Popup blocked - please allow popups");
-      safeNotification(
-        "Popup blocked. Please allow popups to use about:blank mode.",
-        "warning"
-      );
       return;
     }
 
-    // Wait for popup to be ready
-    setTimeout(() => {
-      try {
-        const doc = popup.document;
-        const iframe = doc.createElement("iframe");
-        const style = iframe.style;
-        const link = doc.createElement("link");
+    const doc = popup.document;
+    const iframe = doc.createElement("iframe");
+    const style = iframe.style;
+    const link = doc.createElement("link");
 
-        const name =
-          getCookie("name") ||
-          localStorage.getItem("name") ||
-          "My Drive - Google Drive";
-        const icon =
-          getCookie("icon") ||
-          localStorage.getItem("icon") ||
-          "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+    const name =
+      getCookie("name") ||
+      localStorage.getItem("name") ||
+      "My Drive - Google Drive";
+    const icon =
+      getCookie("icon") ||
+      localStorage.getItem("icon") ||
+      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
 
-        doc.title = name;
-        link.rel = "icon";
-        link.href = icon;
+    doc.title = name;
+    link.rel = "icon";
+    link.href = icon;
 
-        iframe.src = location.href;
-        style.position = "fixed";
-        style.top = style.bottom = style.left = style.right = 0;
-        style.border = style.outline = "none";
-        style.width = style.height = "100%";
+    iframe.src = location.href;
+    style.position = "fixed";
+    style.top = style.bottom = style.left = style.right = 0;
+    style.border = style.outline = "none";
+    style.width = style.height = "100%";
 
-        doc.head.appendChild(link);
-        doc.body.appendChild(iframe);
+    doc.head.appendChild(link);
+    doc.body.appendChild(iframe);
 
-        // Redirect to NASA to hide from browser history
-        setTimeout(() => {
-          window.location.replace("https://www.nasa.gov/");
-        }, 500);
-      } catch (error) {
-        console.error("Error setting up about:blank popup:", error);
-        popup.close();
-        safeNotification("Failed to setup about:blank mode", "error");
-      }
-    }, 100);
+    // Redirect to NASA to hide from browser history
+    window.location.replace("https://www.nasa.gov/");
   }
 };
 
