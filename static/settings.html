@@ -489,10 +489,60 @@
               </div>
             </div>
 
-            <!-- Proxy Choice -->
+            <!-- Enhanced Proxy System -->
             <div class="card settings-card">
               <div class="card-header">
-                <h3 class="card-title">Choose your <b>Pr</b>oxy</h3>
+                <h3 class="card-title">🔄 Enhanced Proxy System</h3>
+                <p class="card-description">
+                  Choose your preferred proxy backend and configure advanced stealth settings for better performance and detection resistance.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="form-group">
+                  <label for="proxy-backend">Proxy Backend</label>
+                  <select id="proxy-backend" class="form-select">
+                    <option value="ultraviolet">Ultraviolet (Default)</option>
+                    <option value="dynamic">Dynamic</option>
+                    <option value="rammerhead">Rammerhead (Advanced)</option>
+                    <option value="epoxy">Epoxy Transport</option>
+                    <option value="libcurl">LibCurl Transport</option>
+                    <option value="auto">Auto-Select Best</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="stealth-mode" />
+                    <span class="checkbox-custom"></span>
+                    Enable Stealth Mode
+                  </label>
+                  <p class="setting-description">
+                    Enhances proxy stealth with custom encoding, randomized paths, and anti-detection measures
+                  </p>
+                </div>
+                
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="auto-failover" />
+                    <span class="checkbox-custom"></span>
+                    Automatic Failover
+                  </label>
+                  <p class="setting-description">
+                    Automatically switch to backup proxies if the primary fails
+                  </p>
+                </div>
+                
+                <div class="proxy-status" id="proxy-status" style="margin-top: 16px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                  <strong>Proxy Status:</strong>
+                  <div id="proxy-status-content">Loading...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legacy Proxy Choice -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Choose your <b>Pr</b>oxy (Legacy)</h3>
                 <p class="card-description">
                   Ultra<xn>vio</xn>let is the main <xn>pro</xn>xy, but Dynamic is faster and supports more sites!
                   (Dynamic is still in beta, so it has some bugs.)
@@ -1049,6 +1099,10 @@
     <!-- Centralized Navigation Bar -->
     <script src="assets/scripts/navbar.js?v=1"></script>
 
+    <!-- Enhanced Proxy System -->
+    <script src="assets/scripts/stealth-config.js?v=1"></script>
+    <script src="assets/scripts/multi-proxy.js?v=1"></script>
+    
     <!-- New v9 Systems -->
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
@@ -1217,6 +1271,93 @@
         // Update status when admin panel state changes
         setInterval(updateAdsStatus, 5000);
       }
+      
+      // Enhanced Proxy System Settings
+      function initEnhancedProxySettings() {
+        const proxyBackendSelect = document.getElementById('proxy-backend');
+        const stealthModeCheckbox = document.getElementById('stealth-mode');
+        const autoFailoverCheckbox = document.getElementById('auto-failover');
+        const proxyStatusContent = document.getElementById('proxy-status-content');
+        
+        if (!proxyBackendSelect || !stealthModeCheckbox || !autoFailoverCheckbox || !proxyStatusContent) {
+          console.log('Enhanced proxy settings not available on this page');
+          return;
+        }
+        
+        // Load saved settings
+        const savedProxy = localStorage.getItem('preferred-proxy') || 'ultraviolet';
+        const stealthMode = localStorage.getItem('stealth-mode') === 'true';
+        const autoFailover = localStorage.getItem('auto-failover') !== 'false'; // Default to true
+        
+        proxyBackendSelect.value = savedProxy;
+        stealthModeCheckbox.checked = stealthMode;
+        autoFailoverCheckbox.checked = autoFailover;
+        
+        // Update proxy status
+        function updateProxyStatus() {
+          if (window.multiProxy) {
+            const status = window.multiProxy.getProxyStatus();
+            proxyStatusContent.innerHTML = `
+              <div>Current: <strong>${status.current}</strong></div>
+              <div>Available: ${status.available.join(', ')}</div>
+              ${status.failed.length > 0 ? `<div style="color: #ff6b6b;">Failed: ${status.failed.join(', ')}</div>` : ''}
+            `;
+          } else {
+            proxyStatusContent.innerHTML = '<div style="color: #ffa500;">Multi-proxy system loading...</div>';
+          }
+        }
+        
+        // Event listeners
+        proxyBackendSelect.addEventListener('change', function() {
+          const selectedProxy = this.value;
+          localStorage.setItem('preferred-proxy', selectedProxy);
+          
+          if (window.multiProxy) {
+            if (selectedProxy === 'auto') {
+              // Let the system auto-select
+              console.log('Auto-selection enabled');
+            } else {
+              window.multiProxy.setPreferredProxy(selectedProxy);
+            }
+            updateProxyStatus();
+          }
+          
+          showNotification('Proxy backend updated to ' + selectedProxy);
+        });
+        
+        stealthModeCheckbox.addEventListener('change', function() {
+          const enabled = this.checked;
+          localStorage.setItem('stealth-mode', enabled);
+          
+          if (window.multiProxy && enabled) {
+            window.multiProxy.enableStealthMode();
+            updateProxyStatus();
+          }
+          
+          showNotification('Stealth mode ' + (enabled ? 'enabled' : 'disabled'));
+        });
+        
+        autoFailoverCheckbox.addEventListener('change', function() {
+          const enabled = this.checked;
+          localStorage.setItem('auto-failover', enabled);
+          showNotification('Auto-failover ' + (enabled ? 'enabled' : 'disabled'));
+        });
+        
+        // Initial status update
+        updateProxyStatus();
+        
+        // Update status every 10 seconds
+        setInterval(updateProxyStatus, 10000);
+        
+        console.log('✅ Enhanced proxy settings initialized');
+      }
+      
+      // Initialize enhanced proxy settings when page loads
+      document.addEventListener('DOMContentLoaded', initEnhancedProxySettings);
+      
+      // Also try to initialize after a delay in case multiProxy isn't ready
+      setTimeout(initEnhancedProxySettings, 2000);
+      
     </script>
 
     <div id="adv"></div>
