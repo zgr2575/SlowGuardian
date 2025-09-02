@@ -107,9 +107,16 @@ class NavigationBar {
     const sidebar = document.getElementById('sidebar-nav');
     const trigger = sidebar.querySelector('.sidebar-trigger');
     
-    // Hover to show
+    // Hover to show - expanded trigger area
     sidebar.addEventListener('mouseenter', () => {
       this.showSidebar();
+    });
+
+    // Also trigger on hover near left edge of screen
+    document.addEventListener('mousemove', (e) => {
+      if (e.clientX <= 50 && !sidebar.classList.contains('expanded')) {
+        this.showSidebar();
+      }
     });
 
     // Hide when leaving
@@ -219,7 +226,7 @@ class NavigationBar {
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         z-index: 10000;
-        transform: translateX(-220px);
+        transform: translateX(-280px);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
       }
@@ -239,11 +246,37 @@ class NavigationBar {
       .sidebar-trigger {
         position: absolute;
         top: 0;
-        right: -20px;
-        width: 20px;
+        right: -40px;
+        width: 40px;
         height: 100%;
         background: transparent;
         cursor: pointer;
+        z-index: 10001;
+      }
+
+      /* Add hover indicator */
+      .sidebar-nav::after {
+        content: '▶';
+        position: absolute;
+        top: 50%;
+        right: -25px;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        width: 20px;
+        height: 40px;
+        border-radius: 0 10px 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+        z-index: 10000;
+      }
+
+      .sidebar-nav:hover::after {
+        opacity: 0;
       }
 
       /* Brand Section */
@@ -388,7 +421,7 @@ class NavigationBar {
       @media (max-width: 768px) {
         .sidebar-nav {
           width: 260px;
-          transform: translateX(-200px);
+          transform: translateX(-260px);
         }
         
         .sidebar-content {
@@ -397,6 +430,18 @@ class NavigationBar {
         
         .sidebar-brand {
           margin-bottom: 30px;
+        }
+
+        .sidebar-trigger {
+          right: -35px;
+          width: 35px;
+        }
+
+        .sidebar-nav::after {
+          right: -20px;
+          width: 18px;
+          height: 35px;
+          font-size: 10px;
         }
       }
 

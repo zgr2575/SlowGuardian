@@ -399,3 +399,71 @@
 .admin-list::-webkit-scrollbar-thumb:hover {
   background: var(--accent-primary);
 }
+
+/* Enhanced IP Session Tracking Styles */
+.session-item {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.session-item:hover {
+  border-color: var(--accent-primary);
+  background: rgba(var(--accent-primary-rgb), 0.05);
+}
+
+.session-details {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(var(--text-primary-rgb), 0.02);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.session-details small {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.ip-info {
+  background: rgba(var(--accent-secondary-rgb), 0.1);
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(var(--accent-secondary-rgb), 0.2);
+}
+
+.ip-info strong {
+  color: var(--accent-secondary);
+  font-size: 12px;
+}
+
+.session-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.session-actions .btn {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.error-text, .no-data {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+  font-style: italic;
+}
+
+.loading-text {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+}

@@ -55,6 +55,37 @@ class OnboardingSystem {
         buttons: ["Previous", "Continue"],
       },
       {
+        title: "Navigate with Ease 🧭",
+        content: `
+          <div class="onboarding-navigation">
+            <h3>Discover the Hidden Navigation Bar!</h3>
+            <div class="nav-demo">
+              <div class="demo-instruction">
+                <p>Move your mouse to the <strong>left edge</strong> of the screen to reveal the navigation sidebar:</p>
+                <div class="demo-visualization">
+                  <div class="demo-screen">
+                    <div class="demo-sidebar">
+                      <div class="demo-brand">🛡️ SlowGuardian</div>
+                      <div class="demo-links">
+                        <div class="demo-link">🏠 Home</div>
+                        <div class="demo-link">📱 Apps</div>
+                        <div class="demo-link">🎮 Games</div>
+                        <div class="demo-link">🌐 Browser</div>
+                        <div class="demo-link">⚙️ Settings</div>
+                      </div>
+                    </div>
+                    <div class="demo-content">Content Area</div>
+                  </div>
+                </div>
+                <p class="demo-tip">💡 <strong>Try it now!</strong> Move your mouse to the left edge to see the real navigation in action.</p>
+              </div>
+            </div>
+          </div>
+        `,
+        buttons: ["Previous", "Continue"],
+        onShow: () => this.demoNavigation(),
+      },
+      {
         title: "Privacy & Security Settings 🔒",
         content: `
           <div class="onboarding-security">
@@ -295,6 +326,11 @@ class OnboardingSystem {
 
     // Update buttons
     this.updateButtons(step.buttons);
+    
+    // Execute onShow callback if it exists
+    if (step.onShow && typeof step.onShow === 'function') {
+      setTimeout(step.onShow, 100); // Small delay to ensure DOM is updated
+    }
   }
 
   updateButtons(buttons) {
@@ -420,6 +456,50 @@ class OnboardingSystem {
 
       document.head.appendChild(themeEle);
     }
+  }
+
+  demoNavigation() {
+    // Temporarily show the navigation demo animation
+    const demoSidebar = document.querySelector('.demo-sidebar');
+    if (demoSidebar) {
+      // Animate the demo sidebar to show hover effect
+      setTimeout(() => {
+        demoSidebar.style.transform = 'translateX(0)';
+        demoSidebar.style.opacity = '1';
+      }, 500);
+      
+      setTimeout(() => {
+        demoSidebar.style.transform = 'translateX(-220px)';
+        demoSidebar.style.opacity = '0.7';
+      }, 3000);
+    }
+
+    // Add hover listeners to trigger actual sidebar when user moves mouse to left
+    const showNavHint = (e) => {
+      if (e.clientX <= 50) {
+        // Briefly show the real navbar to demonstrate
+        const realNavbar = document.getElementById('sidebar-nav');
+        if (realNavbar && window.sidebarNav) {
+          window.sidebarNav.showSidebar();
+          
+          // Auto-hide after a moment
+          setTimeout(() => {
+            window.sidebarNav.hideSidebar();
+          }, 2000);
+        }
+        
+        // Remove this listener after first trigger
+        document.removeEventListener('mousemove', showNavHint);
+      }
+    };
+
+    // Add the listener for this step only
+    document.addEventListener('mousemove', showNavHint);
+    
+    // Clean up listener if user moves to next step without triggering
+    setTimeout(() => {
+      document.removeEventListener('mousemove', showNavHint);
+    }, 30000); // 30 seconds
   }
 
   completeOnboarding() {

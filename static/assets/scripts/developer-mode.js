@@ -809,52 +809,65 @@ class DeveloperMode {
     // Load real statistics
     this.loadSessionStatistics();
 
-    // Load mock session data
-    setTimeout(() => {
+    // Load real session data
+    setTimeout(async () => {
       const sessionContent = document.getElementById("session-list-content");
       if (sessionContent) {
-        const mockSessions = [
-          {
-            id: "sess001",
-            userId: "user001",
-            started: "2024-01-10 14:30",
-            duration: "25m",
-            pages: 8,
-          },
-          {
-            id: "sess002",
-            userId: "user002",
-            started: "2024-01-10 15:15",
-            duration: "12m",
-            pages: 3,
-          },
-          {
-            id: "sess003",
-            userId: "user003",
-            started: "2024-01-10 15:45",
-            duration: "8m",
-            pages: 2,
-          },
-        ];
+        try {
+          const response = await fetch("/api/admin/sessions", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("admin-token") || ""}`
+            }
+          });
 
-        sessionContent.innerHTML = mockSessions
-          .map(
-            (session) => `
-          <div class="session-item">
-            <div class="session-info">
-              <strong>${session.id}</strong>
-              <small>User: ${session.userId} | Started: ${session.started}</small>
-              <small>Duration: ${session.duration} | Pages: ${session.pages}</small>
-            </div>
-            <div class="session-actions">
-              <button class="btn btn-sm btn-danger" onclick="developerMode.terminateSession('${session.id}')">
-                Terminate
-              </button>
-            </div>
-          </div>
-        `
-          )
-          .join("");
+          if (response.ok) {
+            const data = await response.json();
+            const sessions = data.users || [];
+
+            if (sessions.length === 0) {
+              sessionContent.innerHTML = '<div class="no-data">No active sessions</div>';
+              return;
+            }
+
+            sessionContent.innerHTML = sessions
+              .map(
+                (session) => `
+              <div class="session-item">
+                <div class="session-info">
+                  <strong>Session: ${session.sessionId.substring(0, 12)}...</strong>
+                  <div class="session-details">
+                    <div class="ip-info">
+                      <strong>🌐 Primary IP:</strong> ${session.ip || session.originalIP || 'Unknown'}
+                      ${session.forwardedFor ? `<br><small>📡 Forwarded: ${session.forwardedFor}</small>` : ''}
+                      ${session.realIP ? `<br><small>🔗 Real IP: ${session.realIP}</small>` : ''}
+                      ${session.cfConnectingIP ? `<br><small>☁️ CloudFlare: ${session.cfConnectingIP}</small>` : ''}
+                    </div>
+                    <small>👤 User: ${session.username}</small>
+                    <small>🕒 Joined: ${new Date(session.joinedAt).toLocaleString()}</small>
+                    <small>⏰ Last Seen: ${new Date(session.lastSeen).toLocaleString()}</small>
+                    <small>🖥️ User Agent: ${session.userAgent ? session.userAgent.substring(0, 60) + '...' : 'Unknown'}</small>
+                  </div>
+                </div>
+                <div class="session-actions">
+                  <button class="btn btn-sm btn-danger" onclick="developerMode.terminateSession('${session.sessionId}')">
+                    🚫 Terminate
+                  </button>
+                  <button class="btn btn-sm btn-warning" onclick="developerMode.blockSession('${session.sessionId}')">
+                    🔒 Block IP
+                  </button>
+                </div>
+              </div>
+            `
+              )
+              .join("");
+          } else {
+            // Fallback to mock data if API fails
+            sessionContent.innerHTML = '<div class="error-text">Failed to load sessions. Using offline mode.</div>';
+          }
+        } catch (error) {
+          console.error("Failed to load sessions:", error);
+          sessionContent.innerHTML = '<div class="error-text">Error loading sessions. Check console for details.</div>';
+        }
       }
     }, 500);
 

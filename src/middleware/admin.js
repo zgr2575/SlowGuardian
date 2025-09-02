@@ -87,7 +87,11 @@ class AdminStore {
           sessionId,
           userId: session.userId,
           username: session.username || "Anonymous",
-          ip: session.ip,
+          ip: session.primaryIP || session.ip, // Prioritize primaryIP for IP-based tracking
+          originalIP: session.ipInfo?.originalIP || session.ip,
+          forwardedFor: session.ipInfo?.forwardedFor,
+          realIP: session.ipInfo?.realIP,
+          cfConnectingIP: session.ipInfo?.cfConnectingIP,
           userAgent: session.userAgent,
           lastSeen: session.lastSeen,
           joinedAt: session.joinedAt,
@@ -219,28 +223,41 @@ class AdminStore {
 const adminStore = new AdminStore();
 
 /**
- * Middleware to track user sessions
+ * Middleware to track user sessions using IP-based identification
  */
 export function sessionTracker(req, res, next) {
-  // Generate or get session ID
-  let sessionId =
-    req.headers["x-session-id"] ||
-    req.ip + "_" + (req.headers["user-agent"] || "").slice(0, 50);
+  // Use IP address as primary session identifier for developer commands
+  const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress || 
+                   (req.connection.socket ? req.connection.socket.remoteAddress : '127.0.0.1');
+  
+  // Create a more robust IP-based session ID
+  const userAgent = req.headers["user-agent"] || "";
+  const sessionId = `ip_${clientIP}_${userAgent.slice(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}`;
 
-  // Update session
+  // Update session with detailed IP tracking info
   const userData = {
     userId: sessionId,
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
+    primaryIP: clientIP,
+    ip: clientIP, // Keep for backward compatibility
+    userAgent: userAgent,
     joinedAt: new Date(),
+    // Additional IP tracking details for developer commands
+    ipInfo: {
+      originalIP: clientIP,
+      forwardedFor: req.headers['x-forwarded-for'] || null,
+      realIP: req.headers['x-real-ip'] || null,
+      cfConnectingIP: req.headers['cf-connecting-ip'] || null
+    }
   };
 
   adminStore.addSession(sessionId, userData);
 
-  // Add session ID to response headers
+  // Add IP tracking headers to response for developer debugging
   res.setHeader("X-Session-ID", sessionId);
+  res.setHeader("X-Client-IP", clientIP);
 
   req.sessionId = sessionId;
+  req.clientIP = clientIP;
   req.adminStore = adminStore;
 
   next();
