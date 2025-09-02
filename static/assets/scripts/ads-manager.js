@@ -167,7 +167,7 @@ class AdsManager {
     script.crossOrigin = "anonymous";
 
     script.onerror = () => {
-      console.warn("📢 Google Ads failed to load");
+      // Silently disable Google Ads on load failure - external service issue
       this.adProviders.google.enabled = false;
     };
 

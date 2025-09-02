@@ -476,7 +476,7 @@
         try {
           if ("serviceWorker" in navigator) {
             console.log("Registering Ultraviolet service worker...");
-            await navigator.serviceWorker.register("/m/sw.js", {
+            await navigator.serviceWorker.register("/a/sw.js", {
               scope: "/a/",
             });
             console.log("✅ Ultraviolet service worker registered successfully");
