@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "b425502-1756926278560",
-  "buildDate": "2025-09-03T19:04:38.560Z",
-  "buildTimestamp": 1756926278560,
+  "buildId": "391a056-1756926330832",
+  "buildDate": "2025-09-03T19:05:30.832Z",
+  "buildTimestamp": 1756926330832,
   "git": {
-    "commit": "b4255028f8a65ec6eb7b6a607cb411b943509c4c",
-    "commitShort": "b425502",
+    "commit": "391a056ba4188c41ee73cc56e4870d45de44fa78",
+    "commitShort": "391a056",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-03T18:42:49Z",
-    "commitMessage": "🔧 Fix critical bare server configuration and Ultraviolet service worker script evaluation"
+    "commitDate": "2025-09-03T19:05:18Z",
+    "commitMessage": "📱 Fix onboarding continue button and enhance mobile navbar responsiveness"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",
