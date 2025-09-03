@@ -2,18 +2,32 @@
 try {
   importScripts("/dy/config.js");
   importScripts("/dy/worker.js");
-  importScripts("/m/bundle.js");
+  importScripts("/m/bundle.js");  
   importScripts("/m/config.js");
-  importScripts(__uv$config.sw || "/a/sw.js");
 } catch (error) {
   console.error("Failed to import scripts:", error);
 }
 
-const uv = new UVServiceWorker();
-const dynamic = new Dynamic();
+let uv, dynamic;
 
-let userKey = new URL(location).searchParams.get("userkey");
-self.dynamic = dynamic;
+try {
+  // Initialize UV service worker only if Ultraviolet is available
+  if (typeof UVServiceWorker !== 'undefined') {
+    uv = new UVServiceWorker();
+  }
+} catch (error) {
+  console.warn("Ultraviolet not available:", error);
+}
+
+try {
+  // Initialize Dynamic only if available
+  if (typeof Dynamic !== 'undefined') {
+    dynamic = new Dynamic();
+    self.dynamic = dynamic;
+  }
+} catch (error) {
+  console.warn("Dynamic not available:", error);
+}
 
 // Enhanced fetch event handler with better error handling
 self.addEventListener("fetch", (event) => {
@@ -22,13 +36,13 @@ self.addEventListener("fetch", (event) => {
       try {
         const url = new URL(event.request.url);
 
-        // Handle Dynamic proxy requests (/a/q/)
-        if (await dynamic.route(event)) {
+        // Handle Dynamic proxy requests (/a/q/) if available
+        if (dynamic && await dynamic.route(event)) {
           return await dynamic.fetch(event);
         }
 
-        // Handle Ultraviolet proxy requests (/a/)
-        if (event.request.url.startsWith(location.origin + "/a/")) {
+        // Handle Ultraviolet proxy requests (/a/) if available
+        if (uv && event.request.url.startsWith(location.origin + "/a/")) {
           return await uv.fetch(event);
         }
 

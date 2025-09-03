@@ -229,6 +229,9 @@ window.AB = function () {
       "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
 
     doc.title = name;
+    
+    // Change the current tab title to "Nasa" when popup works
+    document.title = "Nasa";
     link.rel = "icon";
     link.href = icon;
 
