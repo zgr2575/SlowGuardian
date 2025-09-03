@@ -107,23 +107,47 @@ window.addEventListener("load", function () {
     }
     console.log("Loading URL:", GoUrl);
     if (iframe) {
-      // Show loading indicators
-      showLoadingProgress();
+      // Function to actually load the URL
+      const loadUrl = () => {
+        // Show loading indicators
+        showLoadingProgress();
 
-      // Check if ads are enabled and show video ad before loading
-      const adsEnabled = getCookie && getCookie("ads-enabled") !== "false";
-      const performanceMode =
-        getCookie && getCookie("performance-mode") === "true";
+        // Check if ads are enabled and show video ad before loading
+        const adsEnabled = getCookie && getCookie("ads-enabled") !== "false";
+        const performanceMode =
+          getCookie && getCookie("performance-mode") === "true";
 
-      if (adsEnabled && !performanceMode && window.adsManager) {
-        console.log("📢 Showing video ad before proxy load...");
-        window.adsManager.showProxyVideoAd(GoUrl, (url) => {
-          console.log("📢 Video ad completed, loading proxy:", url);
-          iframe.src = url;
-        });
+        if (adsEnabled && !performanceMode && window.adsManager) {
+          console.log("📢 Showing video ad before proxy load...");
+          window.adsManager.showProxyVideoAd(GoUrl, (url) => {
+            console.log("📢 Video ad completed, loading proxy:", url);
+            iframe.src = url;
+          });
+        } else {
+          // Load directly without ad
+          console.log("📢 Loading proxy URL:", GoUrl);
+          iframe.src = GoUrl;
+        }
+      };
+
+      // Check if service worker is ready
+      if (window.uvServiceWorkerReady) {
+        console.log("🔧 Service worker ready, loading URL immediately");
+        loadUrl();
       } else {
-        // Load directly without ad
-        iframe.src = GoUrl;
+        console.log("⏳ Waiting for service worker to be ready...");
+        window.addEventListener('uvReady', () => {
+          console.log("🔧 Service worker now ready, loading URL");
+          loadUrl();
+        }, { once: true });
+        
+        // Fallback timeout in case service worker fails
+        setTimeout(() => {
+          if (!window.uvServiceWorkerReady) {
+            console.warn("⚠️ Service worker timeout, attempting to load anyway");
+            loadUrl();
+          }
+        }, 5000);
       }
     }
   } else {

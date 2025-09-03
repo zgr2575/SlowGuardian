@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "33fedf2-1756837774096",
-  "buildDate": "2025-09-02T18:29:34.096Z",
-  "buildTimestamp": 1756837774096,
+  "buildId": "e467e25-1756922239360",
+  "buildDate": "2025-09-03T17:57:19.360Z",
+  "buildTimestamp": 1756922239361,
   "git": {
-    "commit": "33fedf250a379e407059b7217fd6749e15720f6d",
-    "commitShort": "33fedf2",
+    "commit": "e467e2595ce519bce3af9b12b09abe127a6a6103",
+    "commitShort": "e467e25",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-02T18:19:14Z",
-    "commitMessage": "🔧 Fix about:blank popup, hide plugin buttons when disabled, and completely hide navbar"
+    "commitDate": "2025-09-03T17:41:03Z",
+    "commitMessage": "🚀 Comprehensive fixes: service worker 404s, about:blank history, premium ad system with multi-placement strategy"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

@@ -491,15 +491,50 @@
 
     <!-- Service Worker Registration -->
     <script>
-      // Register Ultraviolet service worker
+      // Global flag to track service worker readiness
+      window.uvServiceWorkerReady = false;
+      
+      // Register Ultraviolet service worker and wait for it to be ready
       (async function () {
         try {
           if ("serviceWorker" in navigator) {
             console.log("Registering Ultraviolet service worker...");
-            await navigator.serviceWorker.register("/a/sw.js", {
+            
+            const registration = await navigator.serviceWorker.register("/a/sw.js", {
               scope: "/a/",
             });
-            console.log("✅ Ultraviolet service worker registered successfully");
+            
+            // Wait for service worker to become active
+            if (registration.installing) {
+              await new Promise((resolve) => {
+                registration.installing.addEventListener('statechange', function() {
+                  if (this.state === 'activated') {
+                    resolve();
+                  }
+                });
+              });
+            } else if (registration.waiting) {
+              // Service worker is waiting, activate it
+              registration.waiting.postMessage({type: 'SKIP_WAITING'});
+              await new Promise((resolve) => {
+                navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
+              });
+            } else if (registration.active) {
+              // Service worker is already active
+            }
+            
+            // Ensure we're controlled by the service worker
+            if (!navigator.serviceWorker.controller) {
+              await new Promise((resolve) => {
+                navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
+              });
+            }
+            
+            window.uvServiceWorkerReady = true;
+            console.log("✅ Ultraviolet service worker registered and ready");
+            
+            // Trigger any pending URL loads
+            window.dispatchEvent(new Event('uvReady'));
           } else {
             console.warn("⚠️ Service worker not supported in this browser");
           }
