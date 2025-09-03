@@ -119,10 +119,45 @@ class NavigationBar {
       }
     });
 
+    // Touch support for mobile devices
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      
+      // Show sidebar if touch starts within 20px of left edge
+      if (touchStartX <= 20 && !sidebar.classList.contains("expanded")) {
+        this.showSidebar();
+      }
+    }, { passive: true });
+    
+    document.addEventListener("touchmove", (e) => {
+      if (!sidebar.classList.contains("expanded")) return;
+      
+      const touchX = e.touches[0].clientX;
+      const deltaX = touchX - touchStartX;
+      
+      // Allow swipe right to keep sidebar open, swipe left to close
+      if (deltaX < -50) {
+        this.hideSidebar();
+      }
+    }, { passive: true });
+
     // Hide when leaving
     sidebar.addEventListener("mouseleave", () => {
       this.hideSidebar();
     });
+    
+    // Hide when touching outside on mobile
+    document.addEventListener("touchstart", (e) => {
+      if (sidebar.classList.contains("expanded") && 
+          !sidebar.contains(e.target) && 
+          e.touches[0].clientX > 240) {
+        this.hideSidebar();
+      }
+    }, { passive: true });
 
     // Theme toggle
     const themeToggle = sidebar.querySelector("#theme-toggle");
@@ -421,28 +456,163 @@ class NavigationBar {
       /* Responsive Design */
       @media (max-width: 768px) {
         .sidebar-nav {
-          width: 260px;
-          transform: translateX(-260px);
+          width: 240px;
+          transform: translateX(-240px);
         }
         
         .sidebar-content {
-          padding: 16px;
+          padding: 12px;
         }
         
         .sidebar-brand {
-          margin-bottom: 30px;
+          margin-bottom: 20px;
+          padding: 8px;
+        }
+        
+        .brand-name {
+          font-size: 16px;
+        }
+        
+        .sidebar-link {
+          padding: 12px 14px;
+          gap: 10px;
+        }
+        
+        .link-icon {
+          font-size: 16px;
+          width: 18px;
+        }
+        
+        .link-text {
+          font-size: 13px;
         }
 
         .sidebar-trigger {
-          right: -35px;
-          width: 35px;
+          right: -30px;
+          width: 30px;
         }
 
         .sidebar-nav::after {
-          right: -20px;
-          width: 18px;
-          height: 35px;
+          right: -18px;
+          width: 16px;
+          height: 30px;
+          font-size: 8px;
+        }
+        
+        .sidebar-action {
+          padding: 10px 14px;
+          gap: 10px;
+        }
+        
+        .action-icon {
+          font-size: 14px;
+          width: 16px;
+        }
+        
+        .action-text {
+          font-size: 12px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .sidebar-nav {
+          width: 220px;
+          transform: translateX(-220px);
+        }
+        
+        .sidebar-content {
+          padding: 10px;
+        }
+        
+        .sidebar-brand {
+          flex-direction: column;
+          text-align: center;
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+        
+        .brand-icon {
+          font-size: 28px;
+        }
+        
+        .brand-name {
+          font-size: 14px;
+        }
+        
+        .brand-version {
           font-size: 10px;
+        }
+        
+        .sidebar-link {
+          padding: 10px 12px;
+          flex-direction: column;
+          text-align: center;
+          gap: 6px;
+        }
+        
+        .link-icon {
+          font-size: 18px;
+          width: auto;
+        }
+        
+        .link-text {
+          font-size: 11px;
+        }
+        
+        .sidebar-action {
+          padding: 8px 12px;
+          flex-direction: column;
+          text-align: center;
+          gap: 6px;
+        }
+        
+        .action-icon {
+          font-size: 16px;
+          width: auto;
+        }
+        
+        .action-text {
+          font-size: 10px;
+        }
+      }
+      
+      /* Touch device improvements */
+      @media (hover: none) and (pointer: coarse) {
+        .sidebar-nav {
+          /* Larger touch targets on touch devices */
+        }
+        
+        .sidebar-link,
+        .sidebar-action {
+          min-height: 44px; /* Apple's recommended minimum touch target */
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+        
+        .sidebar-trigger {
+          width: 44px; /* Larger touch area */
+        }
+        
+        /* Show navigation hint on touch devices */
+        .sidebar-nav::after {
+          opacity: 0.3;
+          content: '☰';
+          font-size: 14px;
+          background: rgba(99, 102, 241, 0.8);
+        }
+        
+        /* Wider trigger area on very left edge for touch */
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 20px;
+          height: 100vh;
+          z-index: 9999;
+          background: transparent;
+          pointer-events: auto;
         }
       }
 

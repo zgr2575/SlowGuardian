@@ -399,8 +399,8 @@ class OnboardingSystem {
     switch (buttonText) {
       case "Get Started":
       case "Continue":
-        if (this.currentStep === 2) {
-          // Save privacy settings
+        if (this.currentStep === 3) {
+          // Save privacy settings (step 3 is Privacy & Security Settings)
           this.savePrivacySettings();
         }
         this.nextStep();

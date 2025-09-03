@@ -352,32 +352,46 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .onboarding-modal {
-    padding: 10px;
+    padding: 8px;
   }
 
   .onboarding-container {
-    width: calc(100% - 20px);
-    max-height: calc(100vh - 20px);
+    width: calc(100% - 16px);
+    max-height: calc(100vh - 16px);
     min-height: 300px;
     height: auto;
   }
 
   .onboarding-header {
-    padding: 16px 16px 12px;
+    padding: 12px 12px 8px;
+  }
+  
+  .onboarding-header h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
   }
 
   .onboarding-content {
-    padding: 16px;
-    max-height: calc(100vh - 150px);
+    padding: 12px;
+    max-height: calc(100vh - 140px);
   }
 
   .onboarding-footer {
-    padding: 12px 16px 16px;
+    padding: 8px 12px 12px;
   }
 
   .theme-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
+  }
+  
+  .theme-option {
+    padding: 8px;
+  }
+  
+  .theme-preview {
+    width: 32px;
+    height: 32px;
   }
 
   .onboarding-buttons {
@@ -387,28 +401,181 @@
 
   .onboarding-buttons .btn {
     width: 100%;
-    padding: 14px;
+    padding: 14px !important;
+    font-size: 16px !important; /* Larger for touch */
+    min-height: 44px !important; /* Apple's recommended touch target */
+  }
+  
+  .setting-item {
+    padding: 12px;
+    margin: 12px 0;
+  }
+  
+  .setting-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .demo-visualization {
+    height: 150px;
+  }
+  
+  .demo-sidebar {
+    width: 150px;
+    padding: 10px;
+    transform: translateX(-100px);
+  }
+  
+  .demo-brand {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .demo-link {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-modal {
+    padding: 4px;
+  }
+
+  .onboarding-container {
+    width: calc(100% - 8px);
+    max-height: calc(100vh - 8px);
+    border-radius: 12px;
+  }
+
+  .onboarding-header {
+    padding: 10px 10px 6px;
+  }
+  
+  .onboarding-header h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .onboarding-content {
+    padding: 10px;
+    max-height: calc(100vh - 120px);
+  }
+
+  .onboarding-footer {
+    padding: 6px 10px 10px;
+  }
+
+  .theme-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .theme-option {
+    padding: 6px;
+  }
+  
+  .theme-option span {
+    font-size: 11px;
+  }
+  
+  .theme-preview {
+    width: 28px;
+    height: 28px;
+  }
+
+  .feature-list li {
+    font-size: 14px;
+    padding: 6px 0;
+  }
+  
+  .setting-item {
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .setting-text {
+    font-size: 14px;
+  }
+  
+  .completion-summary {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .completion-summary li {
+    font-size: 13px;
+    padding: 4px 0;
+  }
+  
+  .demo-visualization {
+    height: 120px;
+  }
+  
+  .demo-sidebar {
+    width: 120px;
+    padding: 8px;
+    transform: translateX(-80px);
+  }
+  
+  .demo-brand {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .demo-link {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
+  
+  .demo-content {
+    font-size: 12px;
   }
 }
 
 @media (max-height: 600px) {
   .onboarding-container {
-    max-height: calc(100vh - 20px);
+    max-height: calc(100vh - 10px);
     min-height: 250px;
     height: auto;
   }
 
   .onboarding-content {
-    padding: 12px 24px;
-    max-height: calc(100vh - 120px);
+    padding: 8px 16px;
+    max-height: calc(100vh - 100px);
   }
 
   .onboarding-header {
-    padding: 12px 24px 8px;
+    padding: 8px 16px 6px;
+  }
+  
+  .onboarding-header h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 
   .onboarding-footer {
-    padding: 8px 24px 12px;
+    padding: 6px 16px 8px;
+  }
+  
+  .theme-grid {
+    gap: 8px;
+    margin: 12px 0;
+  }
+  
+  .setting-item {
+    margin: 8px 0;
+    padding: 8px;
+  }
+  
+  .completion-summary {
+    margin: 12px 0;
+    padding: 12px;
+  }
+  
+  .demo-visualization {
+    height: 100px;
+    margin: 10px 0;
   }
 }
 
