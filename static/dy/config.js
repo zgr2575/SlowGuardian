@@ -7,7 +7,7 @@ self.__dynamic$config = {
   logLevel: 0,
   bare: {
     version: 2,
-    path: "/bare/",
+    path: "/o/",
   },
   tab: {
     title: "Service",

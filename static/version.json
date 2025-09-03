@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "e467e25-1756922239360",
-  "buildDate": "2025-09-03T17:57:19.360Z",
-  "buildTimestamp": 1756922239361,
+  "buildId": "66a0643-1756924659950",
+  "buildDate": "2025-09-03T18:37:39.950Z",
+  "buildTimestamp": 1756924659950,
   "git": {
-    "commit": "e467e2595ce519bce3af9b12b09abe127a6a6103",
-    "commitShort": "e467e25",
+    "commit": "66a0643bf8b1ec861bb2e0d706852dbac3a18a3c",
+    "commitShort": "66a0643",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-03T17:41:03Z",
-    "commitMessage": "🚀 Comprehensive fixes: service worker 404s, about:blank history, premium ad system with multi-placement strategy"
+    "commitDate": "2025-09-03T17:57:52Z",
+    "commitMessage": "🔧 Fix critical proxy service worker issues and implement proper registration waiting"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

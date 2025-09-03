@@ -68,7 +68,7 @@ self.__uv$config = {
   sw: stealthConfig.uvPrefix + stealthConfig.serviceWorkerName,
   bare: {
     version: 2,
-    path: "/bare/",
+    path: "/o/",
   },
   // Additional stealth options
   stealth: {
@@ -87,7 +87,7 @@ self.__dynamic$config = {
   logLevel: 0, // Suppress all logging
   bare: {
     version: 2,
-    path: "/bare/",
+    path: "/o/",
   },
   tab: {
     title: "New Tab",
