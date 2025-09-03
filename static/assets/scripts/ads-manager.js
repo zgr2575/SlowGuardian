@@ -112,6 +112,9 @@ class AdsManager {
     this.loadAdProviders();
     this.setupAdContainers();
     this.setupVideoAds();
+    this.initPremiumSystem();
+    this.setupStrategicAdPlacements();
+    this.initServerSideAds();
 
     console.log("📢 SlowGuardian Ads Manager initialized");
 
@@ -1582,6 +1585,456 @@ class AdsManager {
       console.log("📢 Video ad completed, loading proxy...");
       if (callback) callback(url);
     });
+  }
+
+  // Initialize Premium Subscription System
+  initPremiumSystem() {
+    this.premiumFeatures = {
+      adFree: false,
+      unlimitedBandwidth: false,
+      priorityServers: false,
+      customThemes: false,
+      advancedSettings: false,
+      downloadManager: false,
+      cloudSave: false,
+      dedicatedSupport: false
+    };
+
+    // Check if user has premium subscription
+    this.checkPremiumStatus();
+    this.setupPremiumUI();
+  }
+
+  checkPremiumStatus() {
+    const premium = localStorage.getItem('slowguardian-premium');
+    const premiumExpiry = localStorage.getItem('slowguardian-premium-expiry');
+    
+    if (premium === 'true' && premiumExpiry) {
+      const expiryDate = new Date(premiumExpiry);
+      if (expiryDate > new Date()) {
+        this.activatePremiumFeatures();
+        return true;
+      } else {
+        // Premium expired
+        localStorage.removeItem('slowguardian-premium');
+        localStorage.removeItem('slowguardian-premium-expiry');
+      }
+    }
+    return false;
+  }
+
+  activatePremiumFeatures() {
+    this.premiumFeatures = {
+      adFree: true,
+      unlimitedBandwidth: true,
+      priorityServers: true,
+      customThemes: true,
+      advancedSettings: true,
+      downloadManager: true,
+      cloudSave: true,
+      dedicatedSupport: true
+    };
+
+    // Disable ads for premium users
+    this.adsEnabled = false;
+    
+    console.log("🌟 SlowGuardian+ Premium activated!");
+    this.showPremiumWelcome();
+  }
+
+  setupPremiumUI() {
+    if (!this.checkPremiumStatus()) {
+      this.showPremiumUpgradePrompts();
+    }
+  }
+
+  showPremiumWelcome() {
+    if (window.showNotification) {
+      window.showNotification(
+        "🌟 Welcome to SlowGuardian+ Premium! Enjoy ad-free browsing and premium features.",
+        "success"
+      );
+    }
+  }
+
+  showPremiumUpgradePrompts() {
+    // Add premium upgrade buttons throughout the UI
+    this.addPremiumBadges();
+    this.createUpgradeModal();
+  }
+
+  addPremiumBadges() {
+    // Add "Get Premium" buttons to various UI elements
+    const upgradeButton = document.createElement('div');
+    upgradeButton.className = 'premium-upgrade-btn';
+    upgradeButton.innerHTML = `
+      <div class="premium-badge">
+        <span class="premium-icon">⭐</span>
+        <span class="premium-text">Upgrade to Premium</span>
+        <span class="premium-benefit">Ad-Free Experience</span>
+      </div>
+    `;
+    upgradeButton.onclick = () => this.showUpgradeModal();
+
+    // Add to main navigation if available
+    const nav = document.querySelector('.navbar, .nav-menu, .main-nav');
+    if (nav) {
+      nav.appendChild(upgradeButton);
+    }
+  }
+
+  createUpgradeModal() {
+    const modal = document.createElement('div');
+    modal.id = 'premium-upgrade-modal';
+    modal.className = 'premium-modal hidden';
+    modal.innerHTML = `
+      <div class="premium-modal-content">
+        <div class="premium-modal-header">
+          <h2>🌟 Upgrade to SlowGuardian+ Premium</h2>
+          <button class="premium-close" onclick="this.parentElement.parentElement.parentElement.classList.add('hidden')">&times;</button>
+        </div>
+        <div class="premium-features">
+          <div class="feature-grid">
+            <div class="feature-item">
+              <span class="feature-icon">🚫</span>
+              <h3>Ad-Free Experience</h3>
+              <p>Browse without any advertisements</p>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">⚡</span>
+              <h3>Priority Servers</h3>
+              <p>Access to fastest proxy servers</p>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🎨</span>
+              <h3>Custom Themes</h3>
+              <p>Personalize your browsing experience</p>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📦</span>
+              <h3>Download Manager</h3>
+              <p>Advanced file download capabilities</p>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">☁️</span>
+              <h3>Cloud Save</h3>
+              <p>Sync settings across devices</p>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🛟</span>
+              <h3>Premium Support</h3>
+              <p>Priority customer service</p>
+            </div>
+          </div>
+        </div>
+        <div class="premium-pricing">
+          <div class="pricing-plan">
+            <h3>Monthly</h3>
+            <div class="price">$4.99<span>/month</span></div>
+            <button class="premium-btn" onclick="window.adsManager.initiatePurchase('monthly')">Get Premium</button>
+          </div>
+          <div class="pricing-plan featured">
+            <h3>Yearly</h3>
+            <div class="price">$39.99<span>/year</span></div>
+            <div class="savings">Save 33%!</div>
+            <button class="premium-btn" onclick="window.adsManager.initiatePurchase('yearly')">Get Premium</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  showUpgradeModal() {
+    const modal = document.getElementById('premium-upgrade-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
+  }
+
+  initiatePurchase(plan) {
+    console.log(`🌟 Initiating premium purchase: ${plan}`);
+    // In a real implementation, this would integrate with payment processors
+    alert(`Premium ${plan} plan selected! Payment integration would be implemented here.`);
+  }
+
+  // Strategic Ad Placement System
+  setupStrategicAdPlacements() {
+    this.adPlacements = {
+      header: { enabled: true, frequency: 'always' },
+      sidebar: { enabled: true, frequency: 'always' },
+      content: { enabled: true, frequency: 'every-3-items' },
+      footer: { enabled: true, frequency: 'always' },
+      interstitial: { enabled: true, frequency: 'every-5-pages' },
+      games: { enabled: true, frequency: 'every-5-items' },
+      apps: { enabled: true, frequency: 'every-5-items' }
+    };
+
+    this.currentAdCount = 0;
+    this.targetAdsPerPage = 4; // Minimum 4 ads per page
+
+    this.injectStrategicAds();
+  }
+
+  injectStrategicAds() {
+    if (this.checkPremiumStatus()) {
+      console.log("📢 Premium user detected - skipping ad injection");
+      return;
+    }
+
+    // Inject ads in different locations
+    this.injectHeaderAd();
+    this.injectSidebarAd();
+    this.injectContentAds();
+    this.injectFooterAd();
+    this.injectGamePageAds();
+    this.ensureMinimumAdCount();
+  }
+
+  injectHeaderAd() {
+    const header = document.querySelector('.header, .navbar, .top-bar');
+    if (header && this.currentAdCount < this.targetAdsPerPage) {
+      const adContainer = this.createAdContainer('header-ad', 'leaderboard');
+      header.appendChild(adContainer);
+      this.currentAdCount++;
+    }
+  }
+
+  injectSidebarAd() {
+    const sidebar = document.querySelector('.sidebar, .nav-sidebar');
+    if (sidebar && this.currentAdCount < this.targetAdsPerPage) {
+      const adContainer = this.createAdContainer('sidebar-ad', 'skyscraper');
+      sidebar.appendChild(adContainer);
+      this.currentAdCount++;
+    }
+  }
+
+  injectContentAds() {
+    const contentAreas = document.querySelectorAll('.content, .main-content, .page-content');
+    contentAreas.forEach((content, index) => {
+      if (this.currentAdCount < this.targetAdsPerPage) {
+        const adContainer = this.createAdContainer(`content-ad-${index}`, 'rectangle');
+        content.appendChild(adContainer);
+        this.currentAdCount++;
+      }
+    });
+  }
+
+  injectFooterAd() {
+    const footer = document.querySelector('.footer, .bottom-bar');
+    if (footer && this.currentAdCount < this.targetAdsPerPage) {
+      const adContainer = this.createAdContainer('footer-ad', 'leaderboard');
+      footer.appendChild(adContainer);
+      this.currentAdCount++;
+    }
+  }
+
+  injectGamePageAds() {
+    // Special handling for games and apps pages
+    const gameGrid = document.getElementById('games-grid');
+    const appGrid = document.getElementById('apps-grid');
+    
+    if (gameGrid) {
+      this.injectGridAds(gameGrid, 'game');
+    }
+    
+    if (appGrid) {
+      this.injectGridAds(appGrid, 'app');
+    }
+  }
+
+  injectGridAds(grid, type) {
+    const items = grid.children;
+    const adEvery = 5; // Every 5 items
+
+    for (let i = adEvery; i < items.length; i += adEvery + 1) {
+      const adContainer = this.createAdContainer(`${type}-grid-ad-${i}`, 'medium-rectangle');
+      adContainer.classList.add('grid-ad-item');
+      
+      // Insert ad after every 5th item
+      if (items[i]) {
+        grid.insertBefore(adContainer, items[i]);
+        this.currentAdCount++;
+      }
+    }
+  }
+
+  ensureMinimumAdCount() {
+    // If we don't have enough ads, add more
+    while (this.currentAdCount < this.targetAdsPerPage) {
+      const mainContent = document.querySelector('.main-content, .content, body');
+      if (mainContent) {
+        const adContainer = this.createAdContainer(`fallback-ad-${this.currentAdCount}`, 'rectangle');
+        mainContent.appendChild(adContainer);
+        this.currentAdCount++;
+      } else {
+        break; // Avoid infinite loop if no content area found
+      }
+    }
+    
+    console.log(`📢 Injected ${this.currentAdCount} strategic ad placements`);
+  }
+
+  createAdContainer(id, format) {
+    const container = document.createElement('div');
+    container.id = id;
+    container.className = `ad-container ad-${format}`;
+    container.setAttribute('data-ad-format', format);
+    
+    // Add styling for different ad formats
+    const styles = {
+      'leaderboard': 'width: 728px; height: 90px; margin: 10px auto;',
+      'skyscraper': 'width: 160px; height: 600px; margin: 10px;',
+      'rectangle': 'width: 336px; height: 280px; margin: 10px;',
+      'medium-rectangle': 'width: 300px; height: 250px; margin: 10px;'
+    };
+    
+    container.style.cssText = styles[format] || styles['rectangle'];
+    
+    // Add responsive behavior
+    container.style.maxWidth = '100%';
+    container.style.overflow = 'hidden';
+    
+    // Placeholder content when ads don't load
+    container.innerHTML = `
+      <div class="ad-placeholder" style="
+        width: 100%; 
+        height: 100%; 
+        background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #666;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      ">
+        Advertisement
+      </div>
+    `;
+    
+    return container;
+  }
+
+  // Server-side ad serving for ad blocker detection
+  initServerSideAds() {
+    if (this.adBlockDetected) {
+      this.loadServerSideAds();
+      this.showAdBlockerMessage();
+    }
+  }
+
+  loadServerSideAds() {
+    console.log("📢 Loading server-side ads due to ad blocker detection");
+    
+    // Replace client-side ads with server-rendered alternatives
+    document.querySelectorAll('.ad-container').forEach(container => {
+      this.loadServerSideAd(container);
+    });
+  }
+
+  loadServerSideAd(container) {
+    // In a real implementation, this would fetch ads from your server
+    fetch('/api/server-ads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        format: container.getAttribute('data-ad-format'),
+        placement: container.id
+      })
+    })
+    .then(response => response.json())
+    .then(ad => {
+      if (ad && ad.content) {
+        container.innerHTML = ad.content;
+      }
+    })
+    .catch(() => {
+      // Fallback to promotional content
+      this.loadPromotionalContent(container);
+    });
+  }
+
+  loadPromotionalContent(container) {
+    // Show promotional content when external ads fail
+    container.innerHTML = `
+      <div class="promotional-content" style="
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      ">
+        <h3 style="margin: 0 0 10px 0; font-size: 18px;">🌟 Upgrade to Premium</h3>
+        <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.9;">
+          Remove all ads and unlock premium features
+        </p>
+        <button onclick="window.adsManager.showUpgradeModal()" style="
+          background: white;
+          color: #667eea;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-weight: 600;
+          cursor: pointer;
+        ">
+          Learn More
+        </button>
+      </div>
+    `;
+  }
+
+  showAdBlockerMessage() {
+    // Create a polite ad blocker notification
+    const notification = document.createElement('div');
+    notification.className = 'adblocker-notification';
+    notification.innerHTML = `
+      <div class="adblocker-content">
+        <h3>🛡️ Ad Blocker Detected</h3>
+        <p>We noticed you're using an ad blocker. Please consider:</p>
+        <div class="adblocker-options">
+          <button onclick="this.parentElement.parentElement.parentElement.style.display='none'">
+            Continue with ads blocked
+          </button>
+          <button onclick="window.adsManager.showUpgradeModal()">
+            🌟 Get Ad-Free Premium
+          </button>
+        </div>
+      </div>
+    `;
+    
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10000;
+      max-width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+      }
+    }, 10000);
   }
 }
 

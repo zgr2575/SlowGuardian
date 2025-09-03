@@ -835,6 +835,10 @@ function AB() {
       style.width = style.height = "100%";
       doc.head.appendChild(link);
       doc.body.appendChild(iframe);
+      
+      // Change current tab title to "Nasa" when popup works successfully
+      document.title = "Nasa";
+      
       const pLink =
         localStorage.getItem(encodeURI("pLink")) || "https://www.nasa.gov/";
       location.replace(pLink);
