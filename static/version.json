@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "084f364-1756945778720",
-  "buildDate": "2025-09-04T00:29:38.720Z",
-  "buildTimestamp": 1756945778720,
+  "buildId": "06af72e-1756946727033",
+  "buildDate": "2025-09-04T00:45:27.033Z",
+  "buildTimestamp": 1756946727033,
   "git": {
-    "commit": "084f3644f8909c45fddfa77f55974c1c46d53895",
-    "commitShort": "084f364",
+    "commit": "06af72e8b0872b69659edd62965c846cca19ece3",
+    "commitShort": "06af72e",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-04T00:21:50Z",
-    "commitMessage": "🔧 Fix Ultraviolet proxy configuration - add missing bare server path"
+    "commitDate": "2025-09-04T00:44:39Z",
+    "commitMessage": "🔧 Fix critical proxy system, settings UI z-index, add music player, update dates, and modernize TOS"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",
