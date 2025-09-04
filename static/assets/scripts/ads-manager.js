@@ -1776,8 +1776,57 @@ class AdsManager {
 
   initiatePurchase(plan) {
     console.log(`🌟 Initiating premium purchase: ${plan}`);
-    // In a real implementation, this would integrate with payment processors
-    alert(`Premium ${plan} plan selected! Payment integration would be implemented here.`);
+    
+    // Create payment method selection modal
+    const paymentModal = document.createElement('div');
+    paymentModal.className = 'premium-modal';
+    paymentModal.innerHTML = `
+      <div class="premium-modal-content">
+        <div class="premium-modal-header">
+          <h2>💳 Payment Method</h2>
+          <button class="premium-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+          <h3>Select Payment Method for ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan</h3>
+          <p style="color: #666; margin-bottom: 30px;">
+            Price: ${plan === 'monthly' ? '$4.99/month' : '$39.99/year (Save 33%)'}
+          </p>
+          
+          <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="window.adsManager.initiatePayment('cashapp', '${plan}')" 
+                    style="background: #00d632; color: white; border: none; padding: 15px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; min-width: 150px;">
+              💰 CashApp
+            </button>
+            <button onclick="window.adsManager.initiatePayment('paypal', '${plan}')" 
+                    style="background: #0070ba; color: white; border: none; padding: 15px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; min-width: 150px;">
+              🏦 PayPal
+            </button>
+          </div>
+          
+          <p style="font-size: 12px; color: #999; margin-top: 20px;">
+            Secure payment processing via "Pay a Friend" feature
+          </p>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(paymentModal);
+  }
+
+  initiatePayment(method, plan) {
+    const price = plan === 'monthly' ? '$4.99' : '$39.99';
+    
+    if (method === 'cashapp') {
+      alert(`CashApp Payment Selected!\n\nPlan: ${plan}\nAmount: ${price}\n\nYou will be redirected to CashApp to complete the "Pay a Friend" transaction. After payment, contact support with your transaction ID for account upgrade.`);
+    } else if (method === 'paypal') {
+      alert(`PayPal Payment Selected!\n\nPlan: ${plan}\nAmount: ${price}\n\nYou will be redirected to PayPal to complete the "Pay a Friend" transaction. After payment, contact support with your transaction ID for account upgrade.`);
+    }
+    
+    // Remove payment modal
+    const paymentModal = document.querySelector('.premium-modal');
+    if (paymentModal) {
+      paymentModal.remove();
+    }
   }
 
   // Strategic Ad Placement System
@@ -1980,12 +2029,12 @@ class AdsManager {
   }
 
   loadPromotionalContent(container) {
-    // Show promotional content when external ads fail
+    // Show non-premium promotional content when external ads fail
     container.innerHTML = `
       <div class="promotional-content" style="
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         color: white;
         display: flex;
         flex-direction: column;
@@ -1996,13 +2045,13 @@ class AdsManager {
         border-radius: 8px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       ">
-        <h3 style="margin: 0 0 10px 0; font-size: 18px;">🌟 Upgrade to Premium</h3>
+        <h3 style="margin: 0 0 10px 0; font-size: 18px;">🚀 Support SlowGuardian</h3>
         <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.9;">
-          Remove all ads and unlock premium features
+          Help us keep this service free and accessible
         </p>
-        <button onclick="window.adsManager.showUpgradeModal()" style="
+        <button onclick="window.open('https://github.com/zgr2575/SlowGuardian', '_blank')" style="
           background: white;
-          color: #667eea;
+          color: #4f46e5;
           border: none;
           padding: 8px 16px;
           border-radius: 4px;

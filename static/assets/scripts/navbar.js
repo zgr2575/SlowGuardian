@@ -97,6 +97,10 @@ class NavigationBar {
             <div class="action-icon">⛶</div>
             <span class="action-text">Fullscreen</span>
           </button>
+          <button class="sidebar-action premium-nav-btn" id="premium-upgrade" title="Upgrade to Premium">
+            <div class="action-icon">⭐</div>
+            <span class="action-text">Premium</span>
+          </button>
         </div>
       </div>
 
@@ -186,6 +190,19 @@ class NavigationBar {
     if (fullscreenToggle) {
       fullscreenToggle.addEventListener("click", () => {
         this.toggleFullscreen();
+      });
+    }
+
+    // Premium upgrade button
+    const premiumButton = sidebar.querySelector("#premium-upgrade");
+    if (premiumButton) {
+      premiumButton.addEventListener("click", () => {
+        if (window.adsManager && window.adsManager.showUpgradeModal) {
+          window.adsManager.showUpgradeModal();
+        } else {
+          // Fallback if ads manager not available
+          alert("Premium upgrade coming soon!");
+        }
       });
     }
 
