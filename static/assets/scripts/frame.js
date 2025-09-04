@@ -102,17 +102,22 @@ window.addEventListener("load", function () {
       if (dyValue === "true" || dyValue === "auto") {
         // Use Dynamic proxy encoding
         GoUrl = "/dy/q/" + GoUrl;
+        console.log("🔄 Using Dynamic proxy for:", GoUrl);
       } else {
         // Use Ultraviolet proxy encoding
         GoUrl = "/a/" + GoUrl;
+        console.log("🔄 Using Ultraviolet proxy for:", GoUrl);
       }
     }
-    console.log("Loading URL:", GoUrl);
+    
     if (iframe) {
       // Function to actually load the URL
       const loadUrl = () => {
         // Show loading indicators
         showLoadingProgress();
+        
+        // Display status message
+        displayProxyStatus("Connecting to proxy server...");
 
         // Check if ads are enabled and show video ad before loading
         const adsEnabled = getCookie && getCookie("ads-enabled") !== "false";
@@ -123,21 +128,49 @@ window.addEventListener("load", function () {
           console.log("📢 Showing video ad before proxy load...");
           window.adsManager.showProxyVideoAd(GoUrl, (url) => {
             console.log("📢 Video ad completed, loading proxy:", url);
-            iframe.src = url;
+            loadProxyUrl(url);
           });
         } else {
           // Load directly without ad
-          console.log("📢 Loading proxy URL:", GoUrl);
-          iframe.src = GoUrl;
+          console.log("🔧 Loading proxy URL:", GoUrl);
+          loadProxyUrl(GoUrl);
         }
+      };
+      
+      // Enhanced proxy URL loading with error handling
+      const loadProxyUrl = (url) => {
+        displayProxyStatus("Loading website...");
+        
+        // Set iframe src with error handling
+        iframe.onerror = () => {
+          console.error("❌ Iframe load error for:", url);
+          displayProxyError("Failed to load the website. Please check the URL and try again.");
+        };
+        
+        iframe.onload = () => {
+          console.log("✅ Iframe loaded successfully");
+          hideProxyStatus();
+          hideLoadingProgress();
+        };
+        
+        iframe.src = url;
+        
+        // Timeout fallback
+        setTimeout(() => {
+          if (iframe.src === url) {
+            hideLoadingProgress();
+          }
+        }, 10000);
       };
 
       // Check if service worker is ready
-      if (window.uvServiceWorkerReady) {
+      if (window.uvServiceWorkerReady || window.mainServiceWorkerReady) {
         console.log("🔧 Service worker ready, loading URL immediately");
         loadUrl();
       } else {
         console.log("⏳ Waiting for service worker to be ready...");
+        displayProxyStatus("Initializing proxy services...");
+        
         window.addEventListener('uvReady', () => {
           console.log("🔧 Service worker now ready, loading URL");
           loadUrl();
@@ -145,11 +178,12 @@ window.addEventListener("load", function () {
         
         // Fallback timeout in case service worker fails
         setTimeout(() => {
-          if (!window.uvServiceWorkerReady) {
+          if (!window.uvServiceWorkerReady && !window.mainServiceWorkerReady) {
             console.warn("⚠️ Service worker timeout, attempting to load anyway");
+            displayProxyStatus("Service worker timeout - attempting direct load...");
             loadUrl();
           }
-        }, 5000);
+        }, 8000);
       }
     }
   } else {
@@ -633,3 +667,86 @@ window.onload = function () {
     console.error("Error during iframe initialization:", error);
   }
 };
+
+// Proxy status display functions
+function displayProxyStatus(message) {
+  console.log("📋 Status:", message);
+  
+  // Update loading overlay title if available
+  const loadingTitle = document.getElementById('loading-title');
+  if (loadingTitle) {
+    loadingTitle.textContent = message;
+  }
+  
+  // Update loading tip if available
+  const loadingTip = document.getElementById('loading-tip');
+  if (loadingTip) {
+    loadingTip.textContent = "Please wait while we establish a secure connection...";
+  }
+}
+
+function hideProxyStatus() {
+  console.log("✅ Proxy status cleared");
+  
+  // Hide loading overlay if available
+  const loadingOverlay = document.getElementById('loading-overlay');
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('active');
+  }
+}
+
+function displayProxyError(message) {
+  console.error("❌ Proxy Error:", message);
+  
+  // Update loading overlay with error message
+  const loadingTitle = document.getElementById('loading-title');
+  if (loadingTitle) {
+    loadingTitle.textContent = "Connection Error";
+    loadingTitle.style.color = "#ef4444";
+  }
+  
+  const loadingTip = document.getElementById('loading-tip');
+  if (loadingTip) {
+    loadingTip.textContent = message;
+    loadingTip.style.color = "#ef4444";
+  }
+  
+  // Hide loading spinner
+  const loadingSpinner = document.querySelector('.loading-spinner');
+  if (loadingSpinner) {
+    loadingSpinner.style.display = 'none';
+  }
+  
+  // Show error state for a few seconds, then hide
+  setTimeout(() => {
+    hideProxyStatus();
+  }, 5000);
+}
+
+function showLoadingProgress() {
+  console.log("🔄 Showing loading progress");
+  
+  const loadingOverlay = document.getElementById('loading-overlay');
+  if (loadingOverlay) {
+    loadingOverlay.classList.add('active');
+  }
+  
+  const loadingBar = document.getElementById('loading-bar');
+  if (loadingBar) {
+    loadingBar.classList.add('active');
+  }
+}
+
+function hideLoadingProgress() {
+  console.log("✅ Hiding loading progress");
+  
+  const loadingOverlay = document.getElementById('loading-overlay');
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('active');
+  }
+  
+  const loadingBar = document.getElementById('loading-bar');
+  if (loadingBar) {
+    loadingBar.classList.remove('active');
+  }
+}

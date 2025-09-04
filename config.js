@@ -30,7 +30,7 @@ const config = {
     enabled: true, // Enable developer/admin features
     defaultAdminCredentials: {
       username: "admin",
-      password: "SlowGuardian2024!", // CHANGE THIS IN PRODUCTION!
+      password: "SlowGuardian2025!", // CHANGE THIS IN PRODUCTION!
     },
     features: {
       userTracking: true, // Track online users and sessions
