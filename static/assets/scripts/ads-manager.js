@@ -1664,20 +1664,45 @@ class AdsManager {
   }
 
   addPremiumBadges() {
-    // Add "Get Premium" buttons to various UI elements
-    const upgradeButton = document.createElement('div');
-    upgradeButton.className = 'premium-upgrade-btn';
-    upgradeButton.innerHTML = `
-      <div class="premium-badge">
-        <span class="premium-icon">⭐</span>
-        <span class="premium-text">Upgrade to Premium</span>
-        <span class="premium-benefit">Ad-Free Experience</span>
-      </div>
-    `;
-    upgradeButton.onclick = () => this.showUpgradeModal();
-
-    // Add to body instead of navbar to avoid layout issues
-    document.body.appendChild(upgradeButton);
+    // Add "Get Premium" button to the sidebar navigation
+    const sidebar = document.querySelector('.sidebar-nav .nav-links');
+    
+    if (sidebar) {
+      // Create premium button for sidebar
+      const premiumButton = document.createElement('button');
+      premiumButton.className = 'nav-link premium-nav-btn';
+      premiumButton.innerHTML = `
+        <div class="nav-icon">⭐</div>
+        <span class="nav-text">Get Premium</span>
+      `;
+      premiumButton.onclick = () => this.showUpgradeModal();
+      
+      // Add premium button at the bottom of navigation
+      sidebar.appendChild(premiumButton);
+    } else {
+      // Fallback: Add floating button if sidebar not found
+      const upgradeButton = document.createElement('div');
+      upgradeButton.className = 'premium-upgrade-btn';
+      upgradeButton.innerHTML = `
+        <div class="premium-badge">
+          <span class="premium-icon">⭐</span>
+          <span class="premium-text">Get Premium</span>
+          <span class="premium-benefit">Ad-Free Experience</span>
+        </div>
+      `;
+      upgradeButton.onclick = () => this.showUpgradeModal();
+      
+      // Position as floating button in bottom-right
+      upgradeButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        cursor: pointer;
+      `;
+      
+      document.body.appendChild(upgradeButton);
+    }
   }
 
   createUpgradeModal() {

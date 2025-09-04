@@ -31,6 +31,11 @@ try {
 
 // Enhanced fetch event handler with better error handling
 self.addEventListener("fetch", (event) => {
+  // Skip non-HTTP requests and extension requests
+  if (!event.request.url.startsWith('http')) {
+    return;
+  }
+
   event.respondWith(
     (async function () {
       try {
@@ -38,40 +43,86 @@ self.addEventListener("fetch", (event) => {
 
         // Handle Dynamic proxy requests (/dy/) if available
         if (dynamic && url.pathname.startsWith("/dy/")) {
-          return await dynamic.fetch(event);
+          try {
+            return await dynamic.fetch(event);
+          } catch (err) {
+            console.warn("Dynamic proxy error:", err);
+            // Fallback to regular fetch
+            return await fetch(event.request);
+          }
         }
 
         // Handle Ultraviolet proxy requests (/a/) if available
         if (uv && url.pathname.startsWith("/a/")) {
-          return await uv.fetch(event);
+          try {
+            return await uv.fetch(event);
+          } catch (err) {
+            console.warn("Ultraviolet proxy error:", err);
+            // Fallback to regular fetch
+            return await fetch(event.request);
+          }
         }
 
         // Handle bare server requests (/o/) - pass through to origin server
         if (url.pathname.startsWith("/o/")) {
-          // Create new request to origin server for bare server
-          const bareRequest = new Request(event.request.url, {
-            method: event.request.method,
-            headers: event.request.headers,
-            body: event.request.body,
-            mode: 'cors',
-            credentials: 'omit'
-          });
-          return await fetch(bareRequest);
+          try {
+            // Create new request to origin server for bare server
+            const bareRequest = new Request(event.request.url, {
+              method: event.request.method,
+              headers: event.request.headers,
+              body: event.request.body,
+              mode: 'cors',
+              credentials: 'omit'
+            });
+            return await fetch(bareRequest);
+          } catch (err) {
+            console.warn("Bare server error:", err);
+            return new Response('Bare server unavailable', { status: 503 });
+          }
         }
 
-        // Default: pass through to network
-        return await fetch(event.request);
+        // Default: pass through to network with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+        
+        try {
+          const response = await fetch(event.request, { 
+            signal: controller.signal 
+          });
+          clearTimeout(timeoutId);
+          return response;
+        } catch (err) {
+          clearTimeout(timeoutId);
+          throw err;
+        }
       } catch (error) {
         console.error("Service worker fetch error:", error);
 
-        // Fallback for failed requests
+        // Better fallback for failed requests
         if (event.request.mode === "navigate") {
-          return Response.redirect("/", 302);
+          // Instead of redirecting, return a simple error page
+          return new Response(`
+            <!DOCTYPE html>
+            <html>
+            <head><title>Connection Error</title></head>
+            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+              <h1>Connection Error</h1>
+              <p>Unable to load the requested page. Please try again.</p>
+              <button onclick="history.back()">Go Back</button>
+              <button onclick="location.reload()">Retry</button>
+            </body>
+            </html>
+          `, {
+            status: 503,
+            statusText: "Service Unavailable",
+            headers: { 'Content-Type': 'text/html' }
+          });
         }
 
+        // For non-navigation requests, return a simple error response
         return new Response("Service Worker Error", {
-          status: 500,
-          statusText: "Internal Server Error",
+          status: 503,
+          statusText: "Service Unavailable",
         });
       }
     })()

@@ -13,6 +13,8 @@
   padding: var(--space-6);
   margin-bottom: var(--space-6);
   backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1; /* Ensure sections have lower z-index than dropdowns */
 }
 
 .settings-section h3 {
@@ -42,12 +44,15 @@
   color: var(--text-primary);
   font-size: var(--font-size-base);
   transition: all var(--transition-base);
+  position: relative;
+  z-index: 10000; /* Ensure dropdowns appear above other elements */
 }
 
 .form-select:focus {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  z-index: 10001; /* Higher z-index when focused */
 }
 
 .form-checkbox {
@@ -314,6 +319,24 @@
     padding: var(--space-4);
   }
 
+  .settings-section h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .form-select {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: var(--space-4);
+  }
+
+  .form-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: var(--space-4);
+  }
+
+  .card-description {
+    font-size: var(--font-size-sm);
+  }
+
   .theme-selector {
     flex-direction: column;
     align-items: stretch;
@@ -343,6 +366,41 @@
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-container {
+    padding: var(--space-2);
+  }
+
+  .settings-section {
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .settings-section h3 {
+    font-size: var(--font-size-base);
+  }
+
+  .card-description {
+    font-size: var(--font-size-xs);
+  }
+
+  .form-select, .form-input {
+    font-size: 16px;
+    padding: var(--space-3);
+  }
+
+  .btn {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+
+  .modal-header h3 {
+    font-size: var(--font-size-lg);
+  }
+}
   }
 
   .modal-footer {
