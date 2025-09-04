@@ -537,6 +537,124 @@
           quoteText.textContent = `"${dailyQuote.text}"`;
           quoteAuthor.textContent = `- ${dailyQuote.author}`;
         }
+
+        // Search Autocomplete Implementation
+        const searchInput = document.getElementById("is");
+        const suggestionsContainer = document.getElementById("suggestions");
+        
+        // Popular search suggestions
+        const searchSuggestions = [
+          "youtube.com", "google.com", "discord.com", "reddit.com", "netflix.com",
+          "instagram.com", "twitter.com", "facebook.com", "tiktok.com", "snapchat.com",
+          "gmail.com", "amazon.com", "wikipedia.org", "spotify.com", "twitch.tv",
+          "github.com", "stackoverflow.com", "coolmathgames.com", "kahoot.it",
+          "canvas", "google classroom", "schoology", "blackboard", "zoom.us"
+        ];
+
+        let currentSuggestionIndex = -1;
+        let filteredSuggestions = [];
+
+        function showSuggestions(input) {
+          const query = input.toLowerCase().trim();
+          
+          if (query.length < 1) {
+            hideSuggestions();
+            return;
+          }
+
+          // Filter suggestions based on input
+          filteredSuggestions = searchSuggestions.filter(suggestion => 
+            suggestion.toLowerCase().includes(query)
+          ).slice(0, 6); // Limit to 6 suggestions
+
+          if (filteredSuggestions.length === 0) {
+            hideSuggestions();
+            return;
+          }
+
+          // Create suggestion elements
+          suggestionsContainer.innerHTML = "";
+          filteredSuggestions.forEach((suggestion, index) => {
+            const suggestionElement = document.createElement("div");
+            suggestionElement.className = "suggestion-item";
+            suggestionElement.textContent = suggestion;
+            suggestionElement.dataset.index = index;
+            
+            suggestionElement.addEventListener("click", () => {
+              searchInput.value = suggestion;
+              hideSuggestions();
+              searchInput.focus();
+            });
+
+            suggestionElement.addEventListener("mouseenter", () => {
+              currentSuggestionIndex = index;
+              highlightSuggestion();
+            });
+
+            suggestionsContainer.appendChild(suggestionElement);
+          });
+
+          suggestionsContainer.style.display = "block";
+          currentSuggestionIndex = -1;
+        }
+
+        function hideSuggestions() {
+          suggestionsContainer.style.display = "none";
+          suggestionsContainer.innerHTML = "";
+          currentSuggestionIndex = -1;
+        }
+
+        function highlightSuggestion() {
+          const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item");
+          suggestions.forEach((item, index) => {
+            item.classList.toggle("highlighted", index === currentSuggestionIndex);
+          });
+        }
+
+        // Search input event listeners
+        if (searchInput && suggestionsContainer) {
+          searchInput.addEventListener("input", (e) => {
+            showSuggestions(e.target.value);
+          });
+
+          searchInput.addEventListener("keydown", (e) => {
+            const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item");
+            
+            switch(e.key) {
+              case "ArrowDown":
+                e.preventDefault();
+                currentSuggestionIndex = Math.min(currentSuggestionIndex + 1, suggestions.length - 1);
+                highlightSuggestion();
+                break;
+              case "ArrowUp":
+                e.preventDefault();
+                currentSuggestionIndex = Math.max(currentSuggestionIndex - 1, -1);
+                highlightSuggestion();
+                break;
+              case "Enter":
+                if (currentSuggestionIndex >= 0 && suggestions[currentSuggestionIndex]) {
+                  e.preventDefault();
+                  searchInput.value = suggestions[currentSuggestionIndex].textContent;
+                  hideSuggestions();
+                }
+                break;
+              case "Escape":
+                hideSuggestions();
+                break;
+            }
+          });
+
+          searchInput.addEventListener("blur", () => {
+            // Delay hiding to allow click events on suggestions
+            setTimeout(hideSuggestions, 200);
+          });
+
+          searchInput.addEventListener("focus", () => {
+            if (searchInput.value.trim()) {
+              showSuggestions(searchInput.value);
+            }
+          });
+        }
       });
     </script>
 

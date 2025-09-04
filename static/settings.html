@@ -99,6 +99,160 @@
         border-bottom: none;
       }
 
+      /* Premium Key Activation Styles */
+      .premium-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .premium-activation {
+        margin-bottom: 20px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .input-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .form-input {
+        padding: 12px;
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .premium-info {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .premium-note {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Premium Activation Animation */
+      .premium-animation-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        pointer-events: none;
+      }
+
+      .animation-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1f 100%);
+        opacity: 0;
+        animation: fadeInOverlay 1s ease-in-out forwards;
+      }
+
+      .rocket-animation {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 0;
+        animation: fadeInRocket 0.5s ease-in-out 0.5s forwards;
+      }
+
+      .rocket {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+        animation: rocketBlastOff 3s ease-in-out 1s forwards;
+        transform: translateY(0);
+      }
+
+      .planet {
+        font-size: 6rem;
+        opacity: 0;
+        animation: planetAppear 1s ease-in-out 3s forwards;
+        position: absolute;
+        top: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .success-message {
+        margin-top: 3rem;
+        opacity: 0;
+        animation: messageAppear 1s ease-in-out 4s forwards;
+      }
+
+      .success-message h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .success-message p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+      }
+
+      @keyframes fadeInOverlay {
+        0% { opacity: 0; }
+        100% { opacity: 0.95; }
+      }
+
+      @keyframes fadeInRocket {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes rocketBlastOff {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-50px) scale(1.1); }
+        100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+      }
+
+      @keyframes planetAppear {
+        0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      }
+
+      @keyframes messageAppear {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
       .info-label {
         font-size: 14px;
         color: var(--text-secondary);
@@ -335,6 +489,72 @@
                     <strong>Note:</strong> Ads help keep SlowGuardian free for everyone. Premium users enjoy an ad-free
                     experience plus faster speeds and priority support.
                   </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium Key Activation -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">⭐ Premium Key Activation</h3>
+                <p class="card-description">
+                  Activate your SlowGuardian Premium subscription with your premium key
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="premium-status" id="premium-status">
+                  <div class="status-indicator">
+                    <div class="status-dot" id="premium-status-dot"></div>
+                    <span class="status-text" id="premium-status-text">Premium not activated</span>
+                  </div>
+                </div>
+
+                <div class="premium-activation" id="premium-activation">
+                  <div class="input-group">
+                    <label for="premium-key-input">Premium Key:</label>
+                    <input 
+                      type="text" 
+                      id="premium-key-input" 
+                      class="form-input" 
+                      placeholder="Enter your premium key..."
+                      style="margin-bottom: 10px;"
+                    />
+                    <button id="activate-premium-btn" class="btn btn-primary">🚀 Activate Premium</button>
+                  </div>
+                </div>
+
+                <div class="premium-info" id="premium-info" style="display: none;">
+                  <div class="info-item">
+                    <span>Status:</span>
+                    <span id="premium-plan-type">Premium Active</span>
+                  </div>
+                  <div class="info-item">
+                    <span>Expires:</span>
+                    <span id="premium-expiry-date">Never</span>
+                  </div>
+                  <div class="info-item">
+                    <span>Key:</span>
+                    <span id="premium-key-display">••••••••</span>
+                  </div>
+                </div>
+
+                <div class="premium-note">
+                  <small>
+                    <strong>Note:</strong> Premium keys are provided after purchase. Contact support@slowguardian.com if you need assistance.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium Activation Animation Container -->
+            <div id="premium-animation-container" class="premium-animation-container" style="display: none;">
+              <div class="animation-overlay"></div>
+              <div class="rocket-animation">
+                <div class="rocket">🚀</div>
+                <div class="planet">⭐</div>
+                <div class="success-message">
+                  <h2>🎉 Welcome to Premium!</h2>
+                  <p>Thank you for your purchase! Premium features are now active.</p>
                 </div>
               </div>
             </div>
@@ -1261,6 +1481,101 @@
             showNotification("Premium upgrade coming soon!", "info");
           }
         });
+
+        // Premium Key Activation
+        const premiumKeyInput = document.getElementById("premium-key-input");
+        const activatePremiumBtn = document.getElementById("activate-premium-btn");
+        const premiumStatusDot = document.getElementById("premium-status-dot");
+        const premiumStatusText = document.getElementById("premium-status-text");
+        const premiumInfo = document.getElementById("premium-info");
+        const premiumActivation = document.getElementById("premium-activation");
+        const premiumPlanType = document.getElementById("premium-plan-type");
+        const premiumExpiryDate = document.getElementById("premium-expiry-date");
+        const premiumKeyDisplay = document.getElementById("premium-key-display");
+
+        // Check premium status on load
+        function updatePremiumStatus() {
+          const premiumKey = getCookie("premium-key");
+          const premiumActive = getCookie("premium-active") === "true";
+          const premiumExpiry = getCookie("premium-expiry");
+
+          if (premiumActive && premiumKey) {
+            // Premium is active
+            premiumStatusDot.classList.remove("disabled");
+            premiumStatusDot.style.background = "#10b981";
+            premiumStatusText.textContent = "Premium Active";
+            premiumInfo.style.display = "block";
+            premiumActivation.style.display = "none";
+            
+            premiumKeyDisplay.textContent = premiumKey.substring(0, 4) + "••••";
+            premiumExpiryDate.textContent = premiumExpiry || "Never";
+          } else {
+            // Premium not active
+            premiumStatusDot.classList.add("disabled");
+            premiumStatusDot.style.background = "#ef4444";
+            premiumStatusText.textContent = "Premium not activated";
+            premiumInfo.style.display = "none";
+            premiumActivation.style.display = "block";
+          }
+        }
+
+        // Activate premium key
+        activatePremiumBtn.addEventListener("click", function () {
+          const enteredKey = premiumKeyInput.value.trim();
+          
+          if (!enteredKey) {
+            showNotification("Please enter a premium key", "error");
+            return;
+          }
+
+          // Check if the key is valid (for now, just "TESTPREM")
+          if (enteredKey === "TESTPREM") {
+            // Play activation animation
+            playPremiumActivationAnimation();
+            
+            // Set premium status
+            setCookie("premium-key", enteredKey, 365);
+            setCookie("premium-active", "true", 365);
+            setCookie("premium-expiry", "Never", 365);
+            
+            // Clear input
+            premiumKeyInput.value = "";
+            
+            // Update UI after animation
+            setTimeout(() => {
+              updatePremiumStatus();
+              showNotification("Premium activated successfully! 🎉", "success");
+            }, 5000);
+          } else {
+            showNotification("Invalid premium key. Please check and try again.", "error");
+          }
+        });
+
+        function playPremiumActivationAnimation() {
+          const animationContainer = document.getElementById("premium-animation-container");
+          animationContainer.style.display = "block";
+          animationContainer.style.pointerEvents = "auto";
+          
+          // Hide animation after 5 seconds
+          setTimeout(() => {
+            animationContainer.style.opacity = "0";
+            setTimeout(() => {
+              animationContainer.style.display = "none";
+              animationContainer.style.pointerEvents = "none";
+              animationContainer.style.opacity = "1";
+            }, 500);
+          }, 5000);
+        }
+
+        // Allow Enter key to activate premium
+        premiumKeyInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            activatePremiumBtn.click();
+          }
+        });
+
+        // Initial premium status update
+        updatePremiumStatus();
 
         // Initial status update
         updateAdsStatus();

@@ -19,6 +19,7 @@ class NavigationBar {
     if (path.includes("/apps")) return "apps";
     if (path.includes("/games")) return "games";
     if (path.includes("/music")) return "music";
+    if (path.includes("/premium")) return "premium";
     if (path.includes("/tabs")) return "tabs";
     if (path.includes("/settings")) return "settings";
     if (path.includes("/go") || path.includes("/p/")) return "browser";
@@ -73,9 +74,9 @@ class NavigationBar {
             <div class="link-icon">🎵</div>
             <span class="link-text">Music</span>
           </a>
-          <a href="/go" class="sidebar-link ${this.currentPage === "browser" ? "active" : ""}" data-page="browser">
-            <div class="link-icon">🌐</div>
-            <span class="link-text">Browser</span>
+          <a href="/premium" class="sidebar-link ${this.currentPage === "premium" ? "active" : ""}" data-page="premium">
+            <div class="link-icon">⭐</div>
+            <span class="link-text">Get Premium</span>
           </a>
           <a href="/tabs" class="sidebar-link ${this.currentPage === "tabs" ? "active" : ""}" data-page="tabs">
             <div class="link-icon">🗂️</div>

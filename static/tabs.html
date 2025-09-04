@@ -317,8 +317,9 @@
 
       /* Fullscreen mode */
       .fullscreen .navbar,
-      .fullscreen .browser-toolbar {
-        display: none;
+      .fullscreen .browser-toolbar,
+      .fullscreen .sidebar-nav {
+        display: none !important;
       }
 
       .fullscreen .browser-iframe {
@@ -328,6 +329,11 @@
         width: 100%;
         height: 100%;
         z-index: var(--z-modal);
+      }
+
+      /* Hide sidebar completely in fullscreen mode */
+      .fullscreen .browser-container {
+        padding-left: 0 !important;
       }
     </style>
 

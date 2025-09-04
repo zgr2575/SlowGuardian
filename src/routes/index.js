@@ -179,6 +179,7 @@ function setupFrontendRoutes(app) {
     { path: "/games", file: "games.html" }, // Alternative route
     { path: "/m", file: "music.html" },
     { path: "/music", file: "music.html" }, // Music player page
+    { path: "/premium", file: "premium.html" }, // Premium page
     { path: "/s", file: "settings.html" },
     { path: "/settings", file: "settings.html" }, // Alternative route
     { path: "/p", file: "go.html" },

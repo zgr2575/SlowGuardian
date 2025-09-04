@@ -349,6 +349,44 @@ body {
   margin-top: var(--space-2);
   box-shadow: var(--shadow-lg);
   z-index: var(--z-dropdown);
+  backdrop-filter: blur(10px);
+  display: none;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+  background: var(--bg-accent);
+  color: var(--text-primary);
+  transform: translateX(4px);
+}
+
+.suggestion-item::before {
+  content: "🔍";
+  font-size: var(--font-size-sm);
+  opacity: 0.6;
+}
+
+/* Hide suggestions container initially */
+#suggestions:empty {
+  display: none !important;
+}
   display: none;
   max-height: 300px;
   overflow-y: auto;
