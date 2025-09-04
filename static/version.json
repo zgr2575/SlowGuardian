@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "b00b37f-1756945121121",
-  "buildDate": "2025-09-04T00:18:41.121Z",
-  "buildTimestamp": 1756945121121,
+  "buildId": "084f364-1756945778720",
+  "buildDate": "2025-09-04T00:29:38.720Z",
+  "buildTimestamp": 1756945778720,
   "git": {
-    "commit": "b00b37f623e28f79683ad8af1ae02b89b98e30f5",
-    "commitShort": "b00b37f",
+    "commit": "084f3644f8909c45fddfa77f55974c1c46d53895",
+    "commitShort": "084f364",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-03T19:08:27Z",
-    "commitMessage": "✅ Complete mobile navbar and onboarding fixes with successful testing"
+    "commitDate": "2025-09-04T00:21:50Z",
+    "commitMessage": "🔧 Fix Ultraviolet proxy configuration - add missing bare server path"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

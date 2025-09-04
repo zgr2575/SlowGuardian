@@ -1676,11 +1676,8 @@ class AdsManager {
     `;
     upgradeButton.onclick = () => this.showUpgradeModal();
 
-    // Add to main navigation if available
-    const nav = document.querySelector('.navbar, .nav-menu, .main-nav');
-    if (nav) {
-      nav.appendChild(upgradeButton);
-    }
+    // Add to body instead of navbar to avoid layout issues
+    document.body.appendChild(upgradeButton);
   }
 
   createUpgradeModal() {
