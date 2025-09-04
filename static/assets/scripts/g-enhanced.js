@@ -154,7 +154,7 @@ function createGameElement(app, index) {
   const isHidden = getHiddenGames().includes(index);
   
   const gameDiv = document.createElement("div");
-  gameDiv.classList.add("column");
+  gameDiv.classList.add("game-item"); // Changed from "column" to "game-item" to match CSS
   gameDiv.setAttribute("data-category", app.categories ? app.categories.join(" ") : "all");
   gameDiv.setAttribute("data-index", index);
   
@@ -217,12 +217,14 @@ function createGameElement(app, index) {
 
   // Game image and link
   const link = document.createElement("a");
+  link.classList.add("game-link");
   link.onclick = function(e) {
     e.preventDefault();
     handleClick(app);
   };
 
   const image = document.createElement("img");
+  image.classList.add("game-image");
   image.width = 145;
   image.height = 145;
   image.src = app.image;
@@ -273,7 +275,7 @@ function hideAllOptionsMenus() {
 // Create add custom game button
 function createAddCustomGameButton() {
   const addDiv = document.createElement("div");
-  addDiv.classList.add("add-custom-game", "column");
+  addDiv.classList.add("add-custom-game", "game-item");
   addDiv.setAttribute("data-category", "all");
   
   addDiv.innerHTML = `
@@ -402,7 +404,7 @@ function toggleHiddenGames() {
 function search_bar() {
   const input = document.getElementById("searchbarbottom");
   const filter = input.value.toLowerCase();
-  const games = document.querySelectorAll(".column");
+  const games = document.querySelectorAll(".game-item");
 
   games.forEach(game => {
     const nameElement = game.querySelector("p, .game-title");
@@ -416,7 +418,7 @@ function search_bar() {
 // Category filter
 function show_category() {
   const selectedCategory = document.getElementById("category").value;
-  const games = document.querySelectorAll(".column");
+  const games = document.querySelectorAll(".game-item");
 
   games.forEach(game => {
     const categories = game.getAttribute("data-category");
