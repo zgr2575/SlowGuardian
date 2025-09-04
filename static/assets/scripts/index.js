@@ -11,17 +11,17 @@ window.addEventListener("load", async () => {
       try {
         // Check if UV config is available first
         let uvConfigReady = false;
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 50; i++) {
           if (typeof __uv$config !== "undefined") {
             uvConfigReady = true;
             break;
           }
-          await new Promise((resolve) => setTimeout(resolve, 50));
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
         if (!uvConfigReady) {
           console.warn(
-            "⚠️ UV config not available, UV service worker registration may fail"
+            "⚠️ UV config not available, attempting registration anyway"
           );
         }
 
@@ -32,10 +32,27 @@ window.addEventListener("load", async () => {
             updateViaCache: "none",
           }
         );
+        
+        // Wait for the service worker to activate
+        if (uvRegistration.installing) {
+          await new Promise((resolve) => {
+            uvRegistration.installing.addEventListener('statechange', function() {
+              if (this.state === 'activated') {
+                resolve();
+              }
+            });
+          });
+        }
+        
         console.log(
           "✅ Ultraviolet service worker registered successfully:",
           uvRegistration
         );
+        
+        // Send skip waiting message if needed
+        if (uvRegistration.waiting) {
+          uvRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
       } catch (uvError) {
         console.error(
           "❌ Failed to register Ultraviolet service worker:",
