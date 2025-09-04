@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "59f6446-1756995284901",
-  "buildDate": "2025-09-04T14:14:44.901Z",
-  "buildTimestamp": 1756995284901,
+  "buildId": "ae3eab9-1756999465520",
+  "buildDate": "2025-09-04T15:24:25.520Z",
+  "buildTimestamp": 1756999465521,
   "git": {
-    "commit": "59f6446bf4d61c6ae1d3259083761c66fbdaacb3",
-    "commitShort": "59f6446",
+    "commit": "ae3eab9a2f25e7a9c5cf70578a586e94f56a82e9",
+    "commitShort": "ae3eab9",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-04T05:04:14Z",
-    "commitMessage": "🎵 Enhanced music player with onboarding, album covers, lyrics, and fixed premium placement"
+    "commitDate": "2025-09-04T15:23:33Z",
+    "commitMessage": "🔧 Implement comprehensive proxy system recode and navbar fixes"
   },
   "environment": "development",
   "nodeVersion": "v20.19.4",

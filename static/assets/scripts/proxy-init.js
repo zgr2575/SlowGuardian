@@ -236,19 +236,33 @@ class SlowGuardianProxy {
   }
 
   // Public method to encode URLs for proxying
-  encodeUrl(url, proxy = 'ultraviolet') {
+  encodeUrl(url, proxy = 'auto') {
     if (!url) return '';
     
     try {
       const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-      const encoded = btoa(fullUrl).replace(/[+/=]/g, c => ({'+': '-', '/': '_', '=': ''}[c] || c));
+      
+      // Auto-select proxy based on availability
+      if (proxy === 'auto') {
+        if (this.status.dynamic) {
+          proxy = 'dynamic';
+        } else if (this.status.ultraviolet) {
+          proxy = 'ultraviolet';
+        } else {
+          throw new Error('No proxy systems available');
+        }
+      }
       
       if (proxy === 'dynamic' && this.status.dynamic) {
+        // Dynamic proxy encoding
+        const encoded = btoa(fullUrl).replace(/[+/=]/g, c => ({'+': '-', '/': '_', '=': ''}[c] || c));
         return `/dy/${encoded}`;
-      } else if (this.status.ultraviolet) {
+      } else if (proxy === 'ultraviolet' && this.status.ultraviolet) {
+        // Ultraviolet proxy encoding
+        const encoded = btoa(fullUrl).replace(/[+/=]/g, c => ({'+': '-', '/': '_', '=': ''}[c] || c));
         return `/a/${encoded}`;
       } else {
-        throw new Error('No proxy systems available');
+        throw new Error(`Proxy system '${proxy}' not available`);
       }
     } catch (error) {
       this.log('error', 'ENCODE', 'URL encoding failed:', error.message);
