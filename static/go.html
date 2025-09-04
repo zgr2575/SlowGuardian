@@ -491,57 +491,80 @@
 
     <!-- Service Worker Registration -->
     <script>
-      // Global flag to track service worker readiness
+      // Global flags to track service worker readiness
       window.uvServiceWorkerReady = false;
+      window.mainServiceWorkerReady = false;
       
-      // Register Ultraviolet service worker and wait for it to be ready
+      // Enhanced service worker registration with proper coordination
       (async function () {
         try {
           if ("serviceWorker" in navigator) {
-            console.log("Registering Ultraviolet service worker...");
+            console.log("🔧 Registering service workers...");
             
-            const registration = await navigator.serviceWorker.register("/a/sw.js", {
+            // Register main service worker first
+            try {
+              const mainRegistration = await navigator.serviceWorker.register("/sw.js", {
+                scope: "/",
+              });
+              
+              await waitForServiceWorkerActivation(mainRegistration);
+              window.mainServiceWorkerReady = true;
+              console.log("✅ Main service worker registered and ready");
+            } catch (mainError) {
+              console.warn("⚠️ Main service worker registration failed:", mainError);
+            }
+            
+            // Register Ultraviolet service worker
+            const uvRegistration = await navigator.serviceWorker.register("/a/sw.js", {
               scope: "/a/",
             });
             
-            // Wait for service worker to become active
-            if (registration.installing) {
-              await new Promise((resolve) => {
-                registration.installing.addEventListener('statechange', function() {
-                  if (this.state === 'activated') {
-                    resolve();
-                  }
-                });
-              });
-            } else if (registration.waiting) {
-              // Service worker is waiting, activate it
-              registration.waiting.postMessage({type: 'SKIP_WAITING'});
-              await new Promise((resolve) => {
-                navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
-              });
-            } else if (registration.active) {
-              // Service worker is already active
-            }
-            
-            // Ensure we're controlled by the service worker
-            if (!navigator.serviceWorker.controller) {
-              await new Promise((resolve) => {
-                navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
-              });
-            }
-            
+            await waitForServiceWorkerActivation(uvRegistration);
             window.uvServiceWorkerReady = true;
             console.log("✅ Ultraviolet service worker registered and ready");
             
             // Trigger any pending URL loads
             window.dispatchEvent(new Event('uvReady'));
+            
           } else {
             console.warn("⚠️ Service worker not supported in this browser");
+            // Still allow loading without service worker
+            window.uvServiceWorkerReady = true;
+            window.dispatchEvent(new Event('uvReady'));
           }
         } catch (error) {
-          console.error("❌ Failed to register service worker:", error);
+          console.error("❌ Service worker registration failed:", error);
+          // Allow fallback loading
+          window.uvServiceWorkerReady = true;
+          window.dispatchEvent(new Event('uvReady'));
         }
       })();
+      
+      // Helper function to wait for service worker activation
+      async function waitForServiceWorkerActivation(registration) {
+        if (registration.installing) {
+          await new Promise((resolve) => {
+            registration.installing.addEventListener('statechange', function() {
+              if (this.state === 'activated') {
+                resolve();
+              }
+            });
+          });
+        } else if (registration.waiting) {
+          // Service worker is waiting, activate it
+          registration.waiting.postMessage({type: 'SKIP_WAITING'});
+          await new Promise((resolve) => {
+            navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
+          });
+        }
+        
+        // Ensure we're controlled by the service worker
+        if (!navigator.serviceWorker.controller) {
+          await new Promise((resolve) => {
+            navigator.serviceWorker.addEventListener('controllerchange', resolve, {once: true});
+          });
+        }
+      }
     </script>
 
     <!-- URL extraction for direct /p/encoded_url access -->

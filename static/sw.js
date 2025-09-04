@@ -5,7 +5,7 @@ try {
   importScripts("/m/bundle.js");  
   importScripts("/m/config.js");
 } catch (error) {
-  console.error("Failed to import scripts:", error);
+  console.warn("Some proxy scripts not available:", error);
 }
 
 let uv, dynamic;
@@ -36,31 +36,33 @@ self.addEventListener("fetch", (event) => {
       try {
         const url = new URL(event.request.url);
 
-        // Handle Dynamic proxy requests (/a/q/) if available
-        if (dynamic && await dynamic.route(event)) {
+        // Handle Dynamic proxy requests (/dy/) if available
+        if (dynamic && url.pathname.startsWith("/dy/")) {
           return await dynamic.fetch(event);
         }
 
         // Handle Ultraviolet proxy requests (/a/) if available
-        if (uv && event.request.url.startsWith(location.origin + "/a/")) {
+        if (uv && url.pathname.startsWith("/a/")) {
           return await uv.fetch(event);
         }
 
-        // Handle bare server requests (/o/)
-        if (event.request.url.startsWith(location.origin + "/o/")) {
-          return await fetch(event.request);
+        // Handle bare server requests (/o/) - pass through to origin server
+        if (url.pathname.startsWith("/o/")) {
+          // Create new request to origin server for bare server
+          const bareRequest = new Request(event.request.url, {
+            method: event.request.method,
+            headers: event.request.headers,
+            body: event.request.body,
+            mode: 'cors',
+            credentials: 'omit'
+          });
+          return await fetch(bareRequest);
         }
 
         // Default: pass through to network
         return await fetch(event.request);
       } catch (error) {
-        // Only log critical navigation errors, not routine fetch failures
-        if (
-          event.request.mode === "navigate" ||
-          error.message.includes("register")
-        ) {
-          console.error("Service worker fetch error:", error);
-        }
+        console.error("Service worker fetch error:", error);
 
         // Fallback for failed requests
         if (event.request.mode === "navigate") {

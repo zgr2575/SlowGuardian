@@ -64,7 +64,7 @@
   border-bottom-right-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 9999;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);

@@ -105,7 +105,7 @@
   --transition-bounce: 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   /* Z-index */
-  --z-dropdown: 1000;
+  --z-dropdown: 9999;
   --z-sticky: 1020;
   --z-fixed: 1030;
   --z-modal: 1040;

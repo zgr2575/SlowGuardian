@@ -157,7 +157,7 @@ npm run build
 
 - **URL**: `http://localhost:8080/developer`
 - **Username**: `admin`
-- **Password**: `SlowGuardian2024!`
+- **Password**: `SlowGuardian2025!`
 
 ## ⚙️ Configuration
 
@@ -173,7 +173,7 @@ const config = {
   // Security & Authentication
   challenge: false,
   users: {
-    admin: "SlowGuardian2024!",
+    admin: "SlowGuardian2025!",
   },
 
   // Features
@@ -439,7 +439,7 @@ NODE_ENV=production
 
 # Optional
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=SlowGuardian2024!
+ADMIN_PASSWORD=SlowGuardian2025!
 DEBUG=false
 ENABLE_ANALYTICS=true
 PLUGIN_SYSTEM=true

@@ -100,8 +100,10 @@ window.addEventListener("load", function () {
 
     if (!GoUrl.startsWith("/e/")) {
       if (dyValue === "true" || dyValue === "auto") {
-        GoUrl = "/a/q/" + GoUrl;
+        // Use Dynamic proxy encoding
+        GoUrl = "/dy/q/" + GoUrl;
       } else {
+        // Use Ultraviolet proxy encoding
         GoUrl = "/a/" + GoUrl;
       }
     }
