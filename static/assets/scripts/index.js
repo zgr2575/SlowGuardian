@@ -1,116 +1,69 @@
+/**
+ * SlowGuardian v9 - Main Homepage Script
+ * Updated to use the new proxy system
+ */
+
+// Load the new proxy initialization script
+(function loadProxyInit() {
+  const script = document.createElement('script');
+  script.src = '/assets/scripts/proxy-init.js';
+  script.onload = () => {
+    console.log('✅ Proxy initialization script loaded');
+  };
+  script.onerror = () => {
+    console.error('❌ Failed to load proxy initialization script');
+  };
+  document.head.appendChild(script);
+})();
+
 window.addEventListener("load", async () => {
   try {
-    // Enhanced service worker registration with comprehensive error handling
-    if ("serviceWorker" in navigator) {
-      console.log("Registering service workers...");
+    console.log("🚀 SlowGuardian v9 homepage initializing...");
 
-      // Wait a moment for DOM to be fully ready
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // Register Ultraviolet service worker for proxy functionality
+    // Wait for proxy system to be ready
+    if (window.slowGuardianProxy) {
       try {
-        // Check if UV config is available first
-        let uvConfigReady = false;
-        for (let i = 0; i < 50; i++) {
-          if (typeof __uv$config !== "undefined") {
-            uvConfigReady = true;
-            break;
-          }
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-
-        if (!uvConfigReady) {
-          console.warn(
-            "⚠️ UV config not available, attempting registration anyway"
-          );
-        }
-
-        const uvRegistration = await navigator.serviceWorker.register(
-          "/a/sw.js",
-          {
-            scope: "/a/",
-            updateViaCache: "none",
-          }
-        );
+        console.log("Initializing proxy system...");
+        await window.slowGuardianProxy.initialize();
+        console.log("✅ Proxy system ready");
         
-        // Wait for the service worker to activate
-        if (uvRegistration.installing) {
-          await new Promise((resolve) => {
-            uvRegistration.installing.addEventListener('statechange', function() {
-              if (this.state === 'activated') {
-                resolve();
-              }
-            });
-          });
+        // Display status for debugging
+        const status = window.slowGuardianProxy.getStatus();
+        console.log("📊 Proxy status:", status);
+        
+        // Test connectivity
+        const testResult = await window.slowGuardianProxy.testProxy('https://httpbin.org/get');
+        if (testResult) {
+          console.log("✅ Proxy connectivity test passed");
+        } else {
+          console.warn("⚠️ Proxy connectivity test failed");
         }
         
-        console.log(
-          "✅ Ultraviolet service worker registered successfully:",
-          uvRegistration
-        );
-        
-        // Send skip waiting message if needed
-        if (uvRegistration.waiting) {
-          uvRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
-        }
-      } catch (uvError) {
-        console.error(
-          "❌ Failed to register Ultraviolet service worker:",
-          uvError
-        );
-        console.warn(
-          "⚠️ Proxy functionality may be limited without UV service worker"
-        );
+      } catch (error) {
+        console.error("❌ Proxy system initialization failed:", error);
+        console.warn("⚠️ Continuing without full proxy functionality");
       }
-
-      // Register main service worker for general functionality
-      try {
-        const mainRegistration = await navigator.serviceWorker.register(
-          "/sw.js",
-          {
-            scope: "/",
-            updateViaCache: "none",
-          }
-        );
-        console.log(
-          "✅ Main service worker registered successfully:",
-          mainRegistration
-        );
-      } catch (swError) {
-        console.warn(
-          "⚠️ Main service worker registration failed (non-critical):",
-          swError
-        );
-      }
-
-      // Wait for service worker to be ready with timeout
-      try {
-        const readyPromise = navigator.serviceWorker.ready;
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Service worker ready timeout")),
-            10000
-          )
-        );
-
-        await Promise.race([readyPromise, timeoutPromise]);
-        console.log("✅ Service workers are ready");
-      } catch (readyError) {
-        console.warn("⚠️ Service worker ready check failed:", readyError);
-      }
-
-      // Handle service worker updates
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        console.log("Service worker controller changed");
-      });
     } else {
-      console.warn("⚠️ Service worker not supported");
+      console.warn("⚠️ Proxy system not available, waiting...");
+      // Wait a bit more for the script to load
+      setTimeout(async () => {
+        if (window.slowGuardianProxy) {
+          try {
+            await window.slowGuardianProxy.initialize();
+            console.log("✅ Proxy system ready (delayed)");
+          } catch (error) {
+            console.error("❌ Delayed proxy initialization failed:", error);
+          }
+        }
+      }, 1000);
     }
+
   } catch (error) {
-    console.error("❌ Service worker setup failed:", error);
+    console.error("❌ Homepage initialization failed:", error);
   }
 });
 
+// Form handling for URL submission
 const form = document.getElementById("fs");
 const input = document.getElementById("is");
 
@@ -153,15 +106,35 @@ async function processUrl(value, path) {
     // If performance mode is enabled and launching from games/apps, skip browser interface
     if (performanceMode && isFromGamesOrApps && !path) {
       console.log("Performance mode: Direct proxy navigation");
-      // Skip browser interface and go directly to proxy
       path = null; // This will go directly to the encoded URL
     } else if (isFromGamesOrApps && !performanceMode) {
       console.log("Browser mode: Using browser interface");
-      // Force browser interface for games/apps unless performance mode is on
       path = path || "/go";
     }
 
-    // Ensure UV config is available before proceeding
+    // Use new proxy system for URL encoding
+    if (window.slowGuardianProxy) {
+      try {
+        await window.slowGuardianProxy.initialize();
+        const encodedUrl = window.slowGuardianProxy.encodeUrl(url);
+        console.log("New proxy encoding:", url, "→", encodedUrl);
+        
+        if (path) {
+          sessionStorage.setItem("GoUrl", url);
+          location.href = path;
+        } else {
+          location.href = encodedUrl;
+        }
+        return;
+      } catch (proxyError) {
+        console.warn("New proxy system failed, falling back:", proxyError);
+      }
+    }
+
+    // Fallback to old system if new proxy not available
+    console.log("Using fallback URL processing...");
+    
+    // Wait for old UV config as fallback
     let retryCount = 0;
     const maxRetries = 10;
 
@@ -174,48 +147,32 @@ async function processUrl(value, path) {
       retryCount++;
     }
 
-    if (typeof __uv$config === "undefined" || !__uv$config.encodeUrl) {
-      console.error("Ultraviolet config not available after retries");
-      // Fallback: try to load without encoding
+    if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
+      const encodedUrl = __uv$config.encodeUrl(url);
+      console.log("Fallback encoding:", url, "→", encodedUrl);
+
+      if (path) {
+        sessionStorage.setItem("GoUrl", url);
+        location.href = path;
+      } else {
+        location.href = encodedUrl;
+      }
+    } else {
+      console.error("Fallback: No proxy system available");
       sessionStorage.setItem("GoUrl", url);
       location.href = path || "/go";
-      return;
     }
 
-    // Wait for service worker to be ready
-    if ("serviceWorker" in navigator) {
-      try {
-        await navigator.serviceWorker.ready;
-        console.log("Service worker ready for proxy request");
-      } catch (swError) {
-        console.warn("Service worker not ready, proceeding anyway:", swError);
-      }
-    }
-
-    const encodedUrl = __uv$config.encodeUrl(url);
-    console.log("Encoding URL:", url, "→", encodedUrl);
-
-    sessionStorage.setItem("GoUrl", encodedUrl);
-
-    const dy = localStorage.getItem("dy");
-
-    if (path) {
-      location.href = path;
-    } else if (dy === "true") {
-      window.location.href = "/a/q/" + encodedUrl;
-    } else {
-      window.location.href = "/a/" + encodedUrl;
-    }
   } catch (error) {
     console.error("Error processing URL:", error);
-    // Fallback handling
+    // Final fallback handling
     sessionStorage.setItem("GoUrl", value);
     location.href = path || "/go";
   }
 }
 
 function go(value) {
-  processUrl(value, "/p");
+  processUrl(value, "/go");
 }
 
 function blank(value) {
@@ -223,7 +180,7 @@ function blank(value) {
 }
 
 function dy(value) {
-  // Direct navigation for Ultraviolet proxy
+  // Direct navigation using new proxy system
   try {
     let url = value.trim();
 
@@ -235,13 +192,27 @@ function dy(value) {
       url = "https://" + url;
     }
 
+    // Use new proxy system if available
+    if (window.slowGuardianProxy) {
+      try {
+        const encodedUrl = window.slowGuardianProxy.encodeUrl(url);
+        console.log("DY new proxy encoding:", url, "→", encodedUrl);
+        sessionStorage.setItem("GoUrl", url);
+        window.location.href = encodedUrl;
+        return;
+      } catch (proxyError) {
+        console.warn("DY: New proxy failed, falling back:", proxyError);
+      }
+    }
+
+    // Fallback to old system
     if (typeof __uv$config !== "undefined" && __uv$config.encodeUrl) {
       const encodedUrl = __uv$config.encodeUrl(url);
-      console.log("DY encoding URL:", url, "→", encodedUrl);
-      sessionStorage.setItem("GoUrl", encodedUrl);
+      console.log("DY fallback encoding:", url, "→", encodedUrl);
+      sessionStorage.setItem("GoUrl", url);
       window.location.href = "/a/" + encodedUrl;
     } else {
-      console.error("Ultraviolet config not available for dy function");
+      console.error("DY: No proxy system available");
       // Fallback to processUrl
       processUrl(value, "/go");
     }

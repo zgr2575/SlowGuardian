@@ -74,7 +74,7 @@ class NavigationBar {
             <div class="link-icon">🎵</div>
             <span class="link-text">Music</span>
           </a>
-          <a href="/premium" class="sidebar-link ${this.currentPage === "premium" ? "active" : ""}" data-page="premium">
+          <a href="/premium" class="sidebar-link premium-gradient-link ${this.currentPage === "premium" ? "active" : ""}" data-page="premium">
             <div class="link-icon">⭐</div>
             <span class="link-text">Get Premium</span>
           </a>
@@ -97,10 +97,6 @@ class NavigationBar {
           <button class="sidebar-action" id="fullscreen-toggle" title="Toggle fullscreen">
             <div class="action-icon">⛶</div>
             <span class="action-text">Fullscreen</span>
-          </button>
-          <button class="sidebar-action premium-nav-btn" id="premium-upgrade" title="Upgrade to Premium">
-            <div class="action-icon">⭐</div>
-            <span class="action-text">Premium</span>
           </button>
         </div>
       </div>
@@ -194,18 +190,7 @@ class NavigationBar {
       });
     }
 
-    // Premium upgrade button
-    const premiumButton = sidebar.querySelector("#premium-upgrade");
-    if (premiumButton) {
-      premiumButton.addEventListener("click", () => {
-        if (window.adsManager && window.adsManager.showUpgradeModal) {
-          window.adsManager.showUpgradeModal();
-        } else {
-          // Fallback if ads manager not available
-          alert("Premium upgrade coming soon!");
-        }
-      });
-    }
+    // Premium upgrade button - removed as per user request
 
     // Navigation links
     sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
@@ -287,6 +272,8 @@ class NavigationBar {
         transform: translateX(-290px);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
 
       .sidebar-nav.expanded {
@@ -299,6 +286,7 @@ class NavigationBar {
         flex-direction: column;
         padding: 20px;
         position: relative;
+        min-height: 0; /* Allow flex children to shrink */
       }
 
       .sidebar-trigger {
@@ -379,6 +367,8 @@ class NavigationBar {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        overflow-y: auto; /* Allow scrolling if content overflows */
+        max-height: calc(100vh - 250px); /* Ensure content fits within viewport */
       }
 
       .sidebar-link {
@@ -434,14 +424,63 @@ class NavigationBar {
         line-height: 1;
       }
 
+      /* Premium link with gradient animation */
+      .premium-gradient-link {
+        background: linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+        background-size: 400% 400%;
+        animation: gradientShift 3s ease infinite;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .premium-gradient-link:hover {
+        animation-duration: 1.5s;
+        transform: translateX(4px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+      }
+
+      .premium-gradient-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .premium-gradient-link:hover::before {
+        left: 100%;
+      }
+
+      .premium-gradient-link .link-icon {
+        animation: starPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      @keyframes starPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+      }
+
       /* Actions Section */
       .sidebar-actions {
         display: flex;
         flex-direction: column;
         gap: 8px;
-        margin-top: 20px;
+        margin-top: auto; /* Push to bottom */
         padding-top: 20px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0; /* Prevent shrinking */
       }
 
       .sidebar-action {
