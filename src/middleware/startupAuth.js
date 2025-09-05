@@ -79,8 +79,13 @@ export function createAuthGate() {
       return next();
     }
     
-    // Allow health checks and login page  
-    if (url === '/health' || url.startsWith('/api/auth/') || url === '/login.html' || url.startsWith('/login.html?')) {
+    // Allow health checks and auth pages (login/signup)
+    if (
+      url === '/health' ||
+      url.startsWith('/api/auth/') ||
+      url === '/login.html' || url.startsWith('/login.html?') || url === '/li' || url.startsWith('/li?') ||
+      url === '/signup.html' || url.startsWith('/signup.html?') || url === '/su' || url.startsWith('/su?')
+    ) {
       return next();
     }
     
@@ -124,16 +129,20 @@ export function createAuthGate() {
         return next();
       }
       
-      // If we're already on login page or redirect contains login page, don't redirect again
-      if (pathname === '/login.html' || pathname.startsWith('/login.html') || 
-          (parsedUrl.searchParams.get('redirect') && 
-           parsedUrl.searchParams.get('redirect').includes('/login.html'))) {
+      // If we're already on login/signup page or redirect contains them, don't redirect again
+      if (
+        pathname === '/login.html' || pathname.startsWith('/login.html') ||
+        pathname === '/signup.html' || pathname.startsWith('/signup.html') ||
+        (parsedUrl.searchParams.get('redirect') &&
+          (parsedUrl.searchParams.get('redirect').includes('/login.html') ||
+           parsedUrl.searchParams.get('redirect').includes('/signup.html')))
+      ) {
         logger.debug(`Preventing redirect loop for: ${req.url}`);
         return next();
       }
       
       // Also prevent if the current request is already a redirect chain to login
-      if (req.url.includes('%2Flogin.html') || req.url.includes('/login.html')) {
+  if (req.url.includes('%2Flogin.html') || req.url.includes('/login.html') || req.url.includes('/signup.html')) {
         logger.debug(`Preventing complex redirect loop for: ${req.url}`);
         return next();
       }

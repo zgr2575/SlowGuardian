@@ -203,6 +203,8 @@ function setupFrontendRoutes(app) {
     { path: "/dev", file: "developer.html" }, // Short alias for developer mode
     { path: "/li", file: "login.html" },
     { path: "/login", file: "login.html" }, // Alternative route
+  { path: "/su", file: "signup.html" },
+  { path: "/signup", file: "signup.html" }, // Alternative route
     { path: "/tos", file: "tos.html" },
     { path: "/terms", file: "tos.html" }, // Alternative route
     // Legacy routes for backward compatibility
@@ -213,8 +215,8 @@ function setupFrontendRoutes(app) {
     app.get(route.path, (req, res) => {
       const filePath = join(staticDir, route.file);
 
-      // If requesting login while already authenticated, redirect home to avoid loops
-      if (route.file === 'login.html') {
+  // If requesting login/signup while already authenticated, redirect home to avoid loops
+  if (route.file === 'login.html' || route.file === 'signup.html') {
         const hasAuth = Boolean((req.cookies && req.cookies.sg_auth) || (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')));
         if (hasAuth) {
           return res.redirect('/');
