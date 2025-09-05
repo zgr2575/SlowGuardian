@@ -79,16 +79,41 @@ async function initializeProxies() {
   try {
     log('debug', 'UV', 'Loading Ultraviolet scripts...');
     
-    // Import scripts with timeout
-    await Promise.race([
-      importScripts("/a/bundle.js"),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-    ]);
+    // Import scripts with better error handling
+    try {
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          try {
+            importScripts("/a/bundle.js");
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading bundle.js')), 10000))
+      ]);
+    } catch (error) {
+      throw new Error(`Failed to load bundle.js: ${error.message}`);
+    }
     
-    await Promise.race([
-      importScripts("/a/config.js"),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-    ]);
+    try {
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          try {
+            importScripts("/a/config.js");
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading config.js')), 10000))
+      ]);
+    } catch (error) {
+      throw new Error(`Failed to load config.js: ${error.message}`);
+    }
+
+    // Wait a moment for scripts to initialize
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Verify UV is available
     if (typeof UVServiceWorker !== 'undefined' && typeof self.__uv$config !== 'undefined') {
@@ -96,7 +121,7 @@ async function initializeProxies() {
       proxyInitialized.ultraviolet = true;
       log('info', 'UV', '✅ Ultraviolet proxy initialized successfully');
     } else {
-      throw new Error('UVServiceWorker or config not available');
+      throw new Error('UVServiceWorker or config not available after script loading');
     }
   } catch (error) {
     log('error', 'UV', '❌ Failed to initialize Ultraviolet:', error.message);
@@ -107,15 +132,40 @@ async function initializeProxies() {
   try {
     log('debug', 'DY', 'Loading Dynamic scripts...');
     
-    await Promise.race([
-      importScripts("/dy/config.js"),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-    ]);
+    try {
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          try {
+            importScripts("/dy/config.js");
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading config.js')), 10000))
+      ]);
+    } catch (error) {
+      throw new Error(`Failed to load Dynamic config.js: ${error.message}`);
+    }
     
-    await Promise.race([
-      importScripts("/dy/worker.js"),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-    ]);
+    try {
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          try {
+            importScripts("/dy/worker.js");
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading worker.js')), 10000))
+      ]);
+    } catch (error) {
+      throw new Error(`Failed to load Dynamic worker.js: ${error.message}`);
+    }
+
+    // Wait a moment for scripts to initialize
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Verify Dynamic is available
     if (typeof Dynamic !== 'undefined' && typeof self.__dynamic$config !== 'undefined') {
@@ -124,7 +174,7 @@ async function initializeProxies() {
       proxyInitialized.dynamic = true;
       log('info', 'DY', '✅ Dynamic proxy initialized successfully');
     } else {
-      throw new Error('Dynamic or config not available');
+      throw new Error('Dynamic or config not available after script loading');
     }
   } catch (error) {
     log('error', 'DY', '❌ Failed to initialize Dynamic:', error.message);
