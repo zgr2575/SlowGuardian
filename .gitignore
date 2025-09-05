@@ -61,6 +61,10 @@ temp/
 # Plugin directories
 plugins/*/node_modules/
 
+# Vendored scram/scramjet artifacts used for local testing
+static/scram/
+static/scramjet/
+
 # Cache directories
 .cache/
 
