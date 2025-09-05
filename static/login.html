@@ -23,88 +23,182 @@
     <link rel="stylesheet" href="assets/styles/auth.css" />
     
     <style>
+      :root {
+        --gradient-1: #667eea;
+        --gradient-2: #764ba2;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #1a202c;
+        --text-secondary: #718096;
+        --primary-color: #667eea;
+        --primary-hover: #5a67d8;
+        --input-bg: rgba(255, 255, 255, 0.9);
+        --border-color: rgba(224, 224, 234, 0.8);
+        --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-xl: 0 30px 60px -12px rgba(0, 0, 0, 0.35);
+      }
+      
+      [data-theme="dark"] {
+        --card-bg: rgba(26, 32, 44, 0.95);
+        --text-primary: #f7fafc;
+        --text-secondary: #a0aec0;
+        --input-bg: rgba(45, 55, 72, 0.9);
+        --border-color: rgba(74, 85, 104, 0.8);
+      }
+      
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, var(--gradient-1) 0%, var(--gradient-2) 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      
       .auth-container {
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, var(--primary-gradient));
         padding: 2rem;
+        position: relative;
+      }
+      
+      .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zM0 30c0-11.046 8.954-20 20-20s20 8.954 20 20-8.954 20-20 20S0 41.046 0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        opacity: 0.1;
+        pointer-events: none;
       }
       
       .auth-card {
-        background: var(--bg-secondary);
+        background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 16px;
+        border-radius: 24px;
         padding: 3rem;
-        max-width: 400px;
+        max-width: 420px;
         width: 100%;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-xl);
+        backdrop-filter: blur(20px);
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+      }
+      
+      .auth-card:hover {
+        box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.4);
+        transform: translateY(-5px);
       }
       
       .auth-header {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
       }
       
       .auth-logo {
-        font-size: 2rem;
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary-color), #9f7aea);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+      }
+      
+      .auth-title {
+        font-size: 1.75rem;
         font-weight: 700;
-        color: var(--primary-color);
+        color: var(--text-primary);
         margin-bottom: 0.5rem;
       }
       
       .auth-subtitle {
         color: var(--text-secondary);
-        margin-bottom: 2rem;
+        font-size: 1rem;
+        font-weight: 400;
       }
       
       .form-group {
         margin-bottom: 1.5rem;
+        position: relative;
       }
       
       .form-group label {
         display: block;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
         color: var(--text-primary);
-        font-weight: 500;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
       
       .form-group input {
         width: 100%;
-        padding: 12px 16px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        background: var(--bg-primary);
+        padding: 16px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--input-bg);
         color: var(--text-primary);
         font-size: 1rem;
+        font-weight: 500;
         transition: all 0.3s ease;
+        box-sizing: border-box;
       }
       
       .form-group input:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 1);
+        transform: scale(1.02);
       }
       
       .auth-button {
         width: 100%;
-        padding: 12px 16px;
-        background: var(--primary-color);
+        padding: 16px 20px;
+        background: linear-gradient(135deg, var(--primary-color), #9f7aea);
         color: white;
         border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .auth-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+      
+      .auth-button:hover::before {
+        left: 100%;
       }
       
       .auth-button:hover {
-        background: var(--primary-hover);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+      }
+      
+      .auth-button:active {
+        transform: translateY(-1px);
       }
       
       .auth-button:disabled {
@@ -115,9 +209,10 @@
       
       .auth-divider {
         text-align: center;
-        margin: 2rem 0;
+        margin: 2.5rem 0;
         position: relative;
         color: var(--text-secondary);
+        font-weight: 500;
       }
       
       .auth-divider::before {
@@ -127,15 +222,18 @@
         left: 0;
         right: 0;
         height: 1px;
-        background: var(--border-color);
+        background: linear-gradient(90deg, transparent, var(--border-color), transparent);
         z-index: 1;
       }
       
       .auth-divider span {
-        background: var(--bg-secondary);
-        padding: 0 1rem;
+        background: var(--card-bg);
+        padding: 0 1.5rem;
         position: relative;
         z-index: 2;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
       
       .auth-links {
@@ -145,63 +243,162 @@
       .auth-links a {
         color: var(--primary-color);
         text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
       }
       
-      .auth-links a:hover {
-        color: var(--primary-hover);
+      .auth-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+      }
+      
+      .auth-links a:hover::after {
+        width: 100%;
       }
       
       .error-message {
-        background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        color: #ef4444;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 1rem;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #dc2626;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
         font-size: 0.9rem;
+        font-weight: 500;
+        animation: shake 0.5s ease-in-out;
       }
       
       .success-message {
-        background: rgba(34, 197, 94, 0.1);
-        border: 1px solid rgba(34, 197, 94, 0.2);
-        color: #22c55e;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 1rem;
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #059669;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
         font-size: 0.9rem;
+        font-weight: 500;
+        animation: slideInDown 0.5s ease-out;
       }
       
       .toggle-form {
-        margin-top: 1rem;
+        margin-top: 1.5rem;
         text-align: center;
       }
       
       .checkbox-group {
         display: flex;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        gap: 0.75rem;
       }
       
       .checkbox-group input[type="checkbox"] {
-        width: auto;
-        margin-right: 0.5rem;
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary-color);
+      }
+      
+      .checkbox-group label {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: normal;
+      }
+      
+      .theme-toggle {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+      
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      
+      @keyframes slideInDown {
+        0% { 
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        100% { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      
+      .auth-card {
+        animation: fadeIn 0.5s ease-out;
       }
       
       @media (max-width: 768px) {
         .auth-card {
           padding: 2rem;
           margin: 1rem;
+          border-radius: 20px;
+        }
+        
+        .auth-logo {
+          font-size: 2.5rem;
+        }
+        
+        .theme-toggle {
+          top: 1rem;
+          right: 1rem;
+          width: 45px;
+          height: 45px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .auth-container {
+          padding: 1rem;
+        }
+        
+        .auth-card {
+          padding: 1.5rem;
         }
       }
     </style>
   </head>
   <body>
+    <div class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</div>
+    
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-header">
-          <div class="auth-logo">🛡️ SlowGuardian</div>
+          <div class="auth-logo">🛡️</div>
+          <div class="auth-title">SlowGuardian</div>
           <div class="auth-subtitle">Secure access to your dashboard</div>
         </div>
         
@@ -288,6 +485,21 @@
       const showLogin = document.getElementById('show-login');
       const errorMessage = document.getElementById('error-message');
       const successMessage = document.getElementById('success-message');
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      // Theme toggle functionality
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+      
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      });
       
       showRegister.addEventListener('click', (e) => {
         e.preventDefault();
@@ -361,7 +573,20 @@
             // Redirect after a short delay
             setTimeout(() => {
               const urlParams = new URLSearchParams(window.location.search);
-              const redirect = urlParams.get('redirect') || '/';
+              let redirect = urlParams.get('redirect') || '/';
+              
+              // Prevent redirect loops - don't redirect to login page
+              if (redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+                redirect = '/';
+              }
+              
+              // Decode URL if it's encoded
+              try {
+                redirect = decodeURIComponent(redirect);
+              } catch (e) {
+                redirect = '/';
+              }
+              
               window.location.href = redirect;
             }, 1500);
           } else {
@@ -412,7 +637,20 @@
             // Redirect after a short delay
             setTimeout(() => {
               const urlParams = new URLSearchParams(window.location.search);
-              const redirect = urlParams.get('redirect') || '/';
+              let redirect = urlParams.get('redirect') || '/';
+              
+              // Prevent redirect loops - don't redirect to login page
+              if (redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+                redirect = '/';
+              }
+              
+              // Decode URL if it's encoded
+              try {
+                redirect = decodeURIComponent(redirect);
+              } catch (e) {
+                redirect = '/';
+              }
+              
               window.location.href = redirect;
             }, 1500);
           } else {
@@ -445,7 +683,20 @@
           if (result.success && result.valid) {
             // User is already logged in, redirect
             const urlParams = new URLSearchParams(window.location.search);
-            const redirect = urlParams.get('redirect') || '/';
+            let redirect = urlParams.get('redirect') || '/';
+            
+            // Prevent redirect loops - don't redirect to login page
+            if (redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+              redirect = '/';
+            }
+            
+            // Decode URL if it's encoded
+            try {
+              redirect = decodeURIComponent(redirect);
+            } catch (e) {
+              redirect = '/';
+            }
+            
             window.location.href = redirect;
           }
         })

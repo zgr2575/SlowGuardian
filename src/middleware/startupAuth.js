@@ -102,8 +102,21 @@ export function createAuthGate() {
     
     // Redirect web requests to login page (prevent infinite loops)
     if (method === 'GET' && req.accepts('html')) {
-      // Prevent redirect loops - if we're already being redirected to login, don't redirect again
-      if (url.startsWith('/login.html')) {
+      // Enhanced redirect loop prevention
+      const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const pathname = parsedUrl.pathname;
+      
+      // If we're already on login page or redirect contains login page, don't redirect again
+      if (pathname === '/login.html' || pathname.startsWith('/login.html') || 
+          (parsedUrl.searchParams.get('redirect') && 
+           parsedUrl.searchParams.get('redirect').includes('/login.html'))) {
+        logger.debug(`Preventing redirect loop for: ${req.url}`);
+        return next();
+      }
+      
+      // Also prevent if the current request is already a redirect chain to login
+      if (req.url.includes('%2Flogin.html') || req.url.includes('/login.html')) {
+        logger.debug(`Preventing complex redirect loop for: ${req.url}`);
         return next();
       }
       
