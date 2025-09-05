@@ -30,6 +30,35 @@
     <link rel="stylesheet" href="assets/styles/admin.css" />
     <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
 
+    <!-- Emergency CSS to prevent white screen if loading system fails -->
+    <style>
+      /* Show content if loading overlay is missing or broken */
+      body {
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      /* Force content to be visible after 10 seconds regardless */
+      @keyframes force-show-content {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+      
+      .main-content {
+        animation: force-show-content 1s ease-in-out 10s both;
+      }
+      
+      /* Hide loading overlay after 15 seconds as absolute fallback */
+      #slowguardian-loading-overlay {
+        animation: force-hide-loading 1s ease-in-out 15s forwards;
+      }
+      
+      @keyframes force-hide-loading {
+        0% { opacity: 1; visibility: visible; }
+        100% { opacity: 0; visibility: hidden; }
+      }
+    </style>
+
     <!-- Ads Management Styles -->
     <style>
       .ads-status {

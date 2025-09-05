@@ -18,8 +18,8 @@ class LoadingSystem {
     this.checkAndAddModule("ads-manager", "ads-enabled");
 
     this.loadingStartTime = Date.now();
-    this.minLoadingTime = 800; // Minimum loading time for UX
-    this.maxLoadingTime = 10000; // Maximum loading time before timeout
+    this.minLoadingTime = 500; // Reduced minimum loading time
+    this.maxLoadingTime = 5000; // Reduced maximum loading time to 5 seconds
 
     this.createLoadingScreen();
     this.startInitializationCheck();
@@ -33,6 +33,7 @@ class LoadingSystem {
 
     if (isEnabled) {
       this.expectedModules.push(moduleName);
+      console.log(`📦 Module ${moduleName} enabled and will be expected`);
     } else {
       console.log(`📦 Module ${moduleName} disabled by user preference`);
     }
@@ -325,8 +326,18 @@ class LoadingSystem {
       if (document.getElementById("slowguardian-loading-overlay")) {
         const loadedCount = this.loadedModules.size;
         const totalCount = this.expectedModules.length;
-
-        if (loadedCount >= Math.floor(totalCount * 0.7)) {
+        
+        // Check if critical modules are loaded
+        const criticalModules = ["cookie-utils", "main", "navbar"];
+        const criticalLoaded = criticalModules.filter(m => this.loadedModules.has(m)).length;
+        
+        if (criticalLoaded >= 3) {
+          // All critical modules are loaded, proceed regardless of optional modules
+          console.log(
+            `⏰ Loading timeout reached, but all critical modules loaded (${criticalLoaded}/3) - proceeding`
+          );
+          this.hideLoading();
+        } else if (loadedCount >= Math.floor(totalCount * 0.7)) {
           // If we have at least 70% of modules loaded, proceed
           console.log(
             `⏰ Loading timeout reached, but ${loadedCount}/${totalCount} modules loaded - proceeding`
@@ -340,6 +351,7 @@ class LoadingSystem {
           console.warn(
             `⏰ Loading timeout reached with only ${loadedCount}/${totalCount} modules loaded. Missing: ${missing.join(", ")}`
           );
+          console.warn("Critical modules status:", criticalModules.map(m => `${m}: ${this.loadedModules.has(m) ? '✅' : '❌'}`).join(', '));
           this.hideLoading();
         }
       }
@@ -352,6 +364,15 @@ class LoadingSystem {
         this.hideLoading();
       }
     }, this.maxLoadingTime + 5000);
+
+    // Ultra-emergency timeout - remove loading overlay no matter what
+    setTimeout(() => {
+      const overlay = document.getElementById("slowguardian-loading-overlay");
+      if (overlay) {
+        console.error("💥 CRITICAL: Force removing stuck loading overlay");
+        overlay.remove();
+      }
+    }, 20000);
   }
 
   checkModuleAvailability() {
@@ -475,6 +496,40 @@ if (typeof window !== "undefined" && document.body) {
 window.markModuleLoaded = function (moduleName) {
   if (window.slowGuardianLoader) {
     window.slowGuardianLoader.markModuleLoaded(moduleName);
+  }
+};
+
+// Global function to force hide loading screen (for debugging)
+window.forceHideLoading = function () {
+  console.log("🔧 Manually forcing loading screen to hide...");
+  const overlay = document.getElementById("slowguardian-loading-overlay");
+  if (overlay) {
+    overlay.remove();
+    console.log("✅ Loading overlay removed");
+  } else {
+    console.log("ℹ️ No loading overlay found");
+  }
+  
+  // Clear any timeouts
+  if (window.slowGuardianLoader) {
+    if (window.slowGuardianLoader.checkInterval) {
+      clearInterval(window.slowGuardianLoader.checkInterval);
+    }
+    console.log("✅ Loading system cleaned up");
+  }
+};
+
+// Global function to check loading status (for debugging)
+window.checkLoadingStatus = function () {
+  if (window.slowGuardianLoader) {
+    const loader = window.slowGuardianLoader;
+    console.log("🔍 Loading Status:");
+    console.log("Expected modules:", loader.expectedModules);
+    console.log("Loaded modules:", Array.from(loader.loadedModules));
+    console.log("Missing modules:", loader.expectedModules.filter(m => !loader.loadedModules.has(m)));
+    console.log("Loading overlay present:", !!document.getElementById("slowguardian-loading-overlay"));
+  } else {
+    console.log("❌ SlowGuardian loader not found");
   }
 };
 
