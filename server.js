@@ -2,6 +2,9 @@
  * SlowGuardian v9 - Main Server Entry Point
  * A modern, secure, and extensible web proxy with plugin system
  */
+// Load environment variables from .env in development
+import dotenv from "dotenv";
+dotenv.config();
 
 import express from "express";
 import { createServer } from "node:http";
