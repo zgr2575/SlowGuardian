@@ -1658,12 +1658,22 @@ class AdsManager {
   }
 
   showPremiumUpgradePrompts() {
+    // Don't show premium prompts if user already has premium
+    if (typeof window.isPremiumActive === 'function' && window.isPremiumActive()) {
+      return;
+    }
+    
     // Add premium upgrade buttons throughout the UI
     this.addPremiumBadges();
     this.createUpgradeModal();
   }
 
   addPremiumBadges() {
+    // Don't show premium branding if user already has premium
+    if (typeof window.isPremiumActive === 'function' && window.isPremiumActive()) {
+      return;
+    }
+    
     // Add "Get Premium" button to the sidebar navigation
     const sidebar = document.querySelector('.sidebar-nav .nav-links');
     

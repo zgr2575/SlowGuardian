@@ -45,6 +45,14 @@ class NavigationBar {
     navbar.className = "sidebar-nav";
     navbar.id = "sidebar-nav";
 
+    // Check if premium is active to determine whether to show Get Premium link
+    const isPremium = typeof window.isPremiumActive === 'function' && window.isPremiumActive();
+    const premiumLink = isPremium ? '' : `
+          <a href="/premium" class="sidebar-link premium-gradient-link ${this.currentPage === "premium" ? "active" : ""}" data-page="premium">
+            <div class="link-icon">⭐</div>
+            <span class="link-text">Get Premium</span>
+          </a>`;
+
     navbar.innerHTML = `
       <div class="sidebar-content">
         <!-- Brand Section -->
@@ -73,11 +81,7 @@ class NavigationBar {
           <a href="/music" class="sidebar-link ${this.currentPage === "music" ? "active" : ""}" data-page="music">
             <div class="link-icon">🎵</div>
             <span class="link-text">Music</span>
-          </a>
-          <a href="/premium" class="sidebar-link premium-gradient-link ${this.currentPage === "premium" ? "active" : ""}" data-page="premium">
-            <div class="link-icon">⭐</div>
-            <span class="link-text">Get Premium</span>
-          </a>
+          </a>${premiumLink}
           <a href="/tabs" class="sidebar-link ${this.currentPage === "tabs" ? "active" : ""}" data-page="tabs">
             <div class="link-icon">🗂️</div>
             <span class="link-text">Tabs</span>

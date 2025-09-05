@@ -457,6 +457,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.style.backgroundImage = "url('" + savedBackgroundImage + "')";
   }
 
+  // Initialize global music player if it exists
+  if (typeof GlobalMusicPlayer !== 'undefined' && !window.globalMusicPlayer) {
+    window.globalMusicPlayer = new GlobalMusicPlayer();
+  }
+
   // Mark main module as loaded
   if (typeof window.markModuleLoaded === "function") {
     window.markModuleLoaded("main");

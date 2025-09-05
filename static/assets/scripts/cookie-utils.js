@@ -21,10 +21,18 @@ function deleteCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
+// Premium status checking utility
+function isPremiumActive() {
+  const premiumKey = getCookie("premium-key");
+  const premiumActive = getCookie("premium-active") === "true";
+  return premiumActive && premiumKey;
+}
+
 // Make functions globally available
 window.getCookie = getCookie;
 window.setCookie = setCookie;
 window.deleteCookie = deleteCookie;
+window.isPremiumActive = isPremiumActive;
 
 // Mark module as loaded
 if (typeof window.markModuleLoaded === "function") {

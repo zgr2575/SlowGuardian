@@ -529,6 +529,7 @@
     <script src="assets/scripts/performance-mode.js?v=1"></script>
     <script src="assets/scripts/moveable-buttons.js?v=1"></script>
     <script src="assets/scripts/ads-manager.js?v=1"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
     <script src="assets/scripts/main.js?v=31"></script>
 
     <!-- Music Player Script -->
@@ -668,6 +669,11 @@
           input.value = '';
           this.showNotification('Playlist imported successfully!', 'success');
           this.updateImportSummary();
+          
+          // Auto-advance to next screen after successful import
+          setTimeout(() => {
+            this.nextOnboardingStep();
+          }, 1500); // Wait 1.5 seconds to show success message
         }
 
         nextOnboardingStep() {
@@ -951,24 +957,35 @@
         }
 
         extractAlbumCover(url) {
-          // Extract album cover from URL when possible
+          // Use local color-based placeholders instead of external service
           if (url.includes('spotify.com/playlist/')) {
-            return 'https://via.placeholder.com/150x150/1DB954/ffffff?text=Spotify';
+            return this.createLocalPlaceholder('Spotify', '#1DB954');
           } else if (url.includes('youtube.com')) {
-            return 'https://via.placeholder.com/150x150/FF0000/ffffff?text=YouTube';
+            return this.createLocalPlaceholder('YouTube', '#FF0000');
           } else if (url.includes('music.apple.com')) {
-            return 'https://via.placeholder.com/150x150/FC3C44/ffffff?text=Apple';
+            return this.createLocalPlaceholder('Apple', '#FC3C44');
           }
-          return 'https://via.placeholder.com/150x150/667eea/ffffff?text=Music';
+          return this.createLocalPlaceholder('Music', '#667eea');
         }
 
         getDefaultAlbumCover(platform) {
           const covers = {
-            spotify: 'https://via.placeholder.com/150x150/1DB954/ffffff?text=Spotify',
-            youtube: 'https://via.placeholder.com/150x150/FF0000/ffffff?text=YouTube',
-            apple: 'https://via.placeholder.com/150x150/FC3C44/ffffff?text=Apple'
+            spotify: this.createLocalPlaceholder('Spotify', '#1DB954'),
+            youtube: this.createLocalPlaceholder('YouTube', '#FF0000'),
+            apple: this.createLocalPlaceholder('Apple', '#FC3C44')
           };
-          return covers[platform] || 'https://via.placeholder.com/150x150/667eea/ffffff?text=Music';
+          return covers[platform] || this.createLocalPlaceholder('Music', '#667eea');
+        }
+
+        createLocalPlaceholder(text, color) {
+          // Create a data URI SVG placeholder
+          const svg = `
+            <svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+              <rect width="150" height="150" fill="${color}"/>
+              <text x="75" y="80" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="white" text-anchor="middle">${text}</text>
+            </svg>
+          `;
+          return 'data:image/svg+xml;base64,' + btoa(svg);
         }
 
         convertToEmbedUrl(url) {
@@ -1077,6 +1094,11 @@
           // Update play button
           document.getElementById('play-button').textContent = '⏸';
           this.isPlaying = true;
+
+          // Also start playing in global music player for cross-page playback
+          if (window.globalMusicPlayer) {
+            window.globalMusicPlayer.playPlaylist(playlist);
+          }
 
           console.log(`🎵 Playing: ${playlist.name}`);
         }
