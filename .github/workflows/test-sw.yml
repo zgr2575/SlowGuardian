@@ -1,0 +1,140 @@
+name: Service Worker Tests
+
+on:
+  push:
+    branches: [ main, copilot/**, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-service-worker:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        # Skip puppeteer browser download in CI
+        export PUPPETEER_SKIP_DOWNLOAD=true
+        npm ci
+        
+    - name: Create CI environment configuration
+      run: |
+        cp .env.example .env
+        echo "CI=true" >> .env
+        echo "MONGODB_SKIP=true" >> .env
+        echo "SKIP_AUTH=true" >> .env
+        echo "NODE_ENV=test" >> .env
+        echo "PORT=8787" >> .env
+        
+    - name: Start SlowGuardian server
+      run: |
+        npm start &
+        SERVER_PID=$!
+        echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
+        
+        # Wait for server to be ready
+        timeout 30 bash -c 'until curl -f http://localhost:8787/health > /dev/null 2>&1; do sleep 1; done'
+        echo "Server is ready"
+        
+    - name: Run service worker health checks
+      run: |
+        echo "Testing basic endpoint availability..."
+        curl -f http://localhost:8787/ > /dev/null
+        curl -f http://localhost:8787/sw.js > /dev/null
+        curl -f http://localhost:8787/test.html > /dev/null
+        curl -f http://localhost:8787/version.json > /dev/null
+        echo "Basic endpoints OK"
+        
+    - name: Test proxy system endpoints
+      run: |
+        echo "Testing proxy system endpoints..."
+        curl -f http://localhost:8787/a/bundle.js > /dev/null
+        curl -f http://localhost:8787/a/config.js > /dev/null
+        curl -f http://localhost:8787/dy/config.js > /dev/null
+        curl -f http://localhost:8787/dy/worker.js > /dev/null
+        curl -f http://localhost:8787/o/ > /dev/null
+        echo "Proxy endpoints OK"
+        
+    - name: Run comprehensive service worker tests
+      run: |
+        TEST_BASE=http://localhost:8787 npm run test-sw-simple
+        
+    - name: Test authentication system (when enabled)
+      run: |
+        echo "Testing authentication system..."
+        # Test that auth endpoints are available
+        curl -f http://localhost:8787/api/auth/status > /dev/null || echo "Auth endpoint not available (expected in CI)"
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        if [ ! -z "$SERVER_PID" ]; then
+          kill $SERVER_PID || true
+        fi
+        
+  test-with-puppeteer:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' # Only run on PRs to save resources
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install Chrome for Puppeteer
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser
+        
+    - name: Install dependencies with Puppeteer
+      run: |
+        # Install with puppeteer browser download
+        npm ci
+        
+    - name: Create CI environment configuration
+      run: |
+        cp .env.example .env
+        echo "CI=true" >> .env
+        echo "MONGODB_SKIP=true" >> .env
+        echo "SKIP_AUTH=true" >> .env
+        echo "NODE_ENV=test" >> .env
+        echo "PORT=8787" >> .env
+        
+    - name: Start SlowGuardian server
+      run: |
+        npm start &
+        SERVER_PID=$!
+        echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
+        
+        # Wait for server to be ready
+        timeout 30 bash -c 'until curl -f http://localhost:8787/health > /dev/null 2>&1; do sleep 1; done'
+        echo "Server is ready"
+        
+    - name: Run Puppeteer service worker tests
+      run: |
+        TEST_BASE=http://localhost:8787 npm run test-sw-headless
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        if [ ! -z "$SERVER_PID" ]; then
+          kill $SERVER_PID || true
+        fi

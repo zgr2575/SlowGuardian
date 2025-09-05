@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 const base = process.env.TEST_BASE || 'http://localhost:8787';
 

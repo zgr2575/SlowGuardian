@@ -75,22 +75,39 @@ function isScramjetAllowed(request) {
     // Premium-only: check cookie header for sg_premium=1
     const cookieHeader = request.headers && request.headers.get ? request.headers.get('cookie') : null;
     const cookies = parseCookies(cookieHeader);
-    if (cookies['sg_premium'] !== '1') return false;
+    
+    // Strict premium requirement - must have premium cookie set to "1"
+    if (cookies['sg_premium'] !== '1') {
+      log('debug', 'BETA', 'Scramjet access denied - premium subscription required');
+      return false;
+    }
 
     // Explicit opt-in via query param or cookie
     try {
       const url = new URL(request.url);
-      if (url.searchParams.get('sg_beta') === 'scramjet') return true;
+      if (url.searchParams.get('sg_beta') === 'scramjet') {
+        log('debug', 'BETA', 'Scramjet enabled via query param');
+        return true;
+      }
     } catch (e) {}
 
-    if (cookies['sg_beta'] === 'scramjet') return true;
+    if (cookies['sg_beta'] === 'scramjet') {
+      log('debug', 'BETA', 'Scramjet enabled via cookie');
+      return true;
+    }
 
-    // Percentage-based rollout
+    // Percentage-based rollout (only for premium users)
     const pct = Number(self.__scram_beta.pct || 0);
     if (pct >= 100) return true;
     if (pct <= 0) return false;
-    return (Math.random() * 100) < pct;
+    
+    const allowed = (Math.random() * 100) < pct;
+    if (allowed) {
+      log('debug', 'BETA', `Scramjet enabled via rollout (${pct}%)`);
+    }
+    return allowed;
   } catch (e) {
+    log('error', 'BETA', 'Error checking Scramjet eligibility:', e && e.message);
     return false;
   }
 }
@@ -189,31 +206,39 @@ async function initializeProxies() {
     } else {
       log('debug', 'UV', 'Loading Ultraviolet scripts...');
 
-      // Only import Ultraviolet scripts if they are not already present to avoid redefinition
+      // Enhanced import guards to prevent redefinition errors
       try {
+        // Guard against multiple UV bundle imports
         if (typeof UVServiceWorker === 'undefined') {
           try {
+            log('debug', 'UV', 'Importing UV bundle...');
             importScripts(PROXY_CONFIGS.ultraviolet.bundle || '/a/bundle.js');
-            log('debug', 'UV', 'Imported UV bundle');
-          } catch (e) { log('warn', 'UV', 'Failed to import UV bundle (ignored):', e && e.message); }
+            log('debug', 'UV', 'UV bundle imported successfully');
+          } catch (e) { 
+            log('warn', 'UV', 'Failed to import UV bundle (ignored):', e && e.message); 
+          }
         } else {
           log('debug', 'UV', 'UVServiceWorker already defined; skipping bundle import');
         }
 
+        // Guard against multiple config imports  
         if (typeof self.__uv$config === 'undefined') {
           try {
+            log('debug', 'UV', 'Importing UV config...');
             importScripts(PROXY_CONFIGS.ultraviolet.config || '/a/config.js');
-            log('debug', 'UV', 'Imported UV config');
-          } catch (e) { log('warn', 'UV', 'Failed to import UV config (ignored):', e && e.message); }
+            log('debug', 'UV', 'UV config imported successfully');
+          } catch (e) { 
+            log('warn', 'UV', 'Failed to import UV config (ignored):', e && e.message); 
+          }
         } else {
           log('debug', 'UV', '__uv$config already present; skipping config import');
         }
       } catch (e) {
-        log('warn', 'UV', 'UV import pass encountered error (continuing):', e && e.message);
+        log('warn', 'UV', 'UV import phase encountered error (continuing):', e && e.message);
       }
 
-      // Small pause to let imported scripts execute (if any)
-      await new Promise(r => setTimeout(r, 50));
+      // Wait longer for imported scripts and configs to be ready
+      await new Promise(r => setTimeout(r, 150));
 
       // Verify UV is available
       if (typeof UVServiceWorker !== 'undefined' && typeof self.__uv$config !== 'undefined') {
@@ -237,19 +262,39 @@ async function initializeProxies() {
   try {
     log('debug', 'DY', 'Loading Dynamic scripts...');
 
-    // Only import Dynamic scripts if they are not already present to avoid property redefinition errors
+    // Enhanced import guards to prevent property redefinition errors
     try {
+      // Guard against multiple config imports
       if (typeof self.__dynamic$config === 'undefined') {
-        try { importScripts(PROXY_CONFIGS.dynamic.config || '/dy/config.js'); log('debug','DY','Imported dynamic config'); } catch(e){ log('warn','DY','Failed to import dynamic config (ignored):', e && e.message); }
-      } else log('debug','DY','__dynamic$config already present; skipping import');
+        try { 
+          log('debug', 'DY', 'Importing Dynamic config...');
+          importScripts(PROXY_CONFIGS.dynamic.config || '/dy/config.js'); 
+          log('debug','DY','Dynamic config imported successfully'); 
+        } catch(e){ 
+          log('warn','DY','Failed to import dynamic config (ignored):', e && e.message); 
+        }
+      } else {
+        log('debug','DY','__dynamic$config already present; skipping import');
+      }
 
+      // Guard against multiple worker imports
       if (typeof Dynamic === 'undefined') {
-        try { importScripts(PROXY_CONFIGS.dynamic.worker || '/dy/worker.js'); log('debug','DY','Imported dynamic worker'); } catch(e){ log('warn','DY','Failed to import dynamic worker (ignored):', e && e.message); }
-      } else log('debug','DY','Dynamic global already present; skipping worker import');
-    } catch(e){ log('warn','DY','Dynamic import pass encountered error (continuing):', e && e.message); }
+        try { 
+          log('debug', 'DY', 'Importing Dynamic worker...');
+          importScripts(PROXY_CONFIGS.dynamic.worker || '/dy/worker.js'); 
+          log('debug','DY','Dynamic worker imported successfully'); 
+        } catch(e){ 
+          log('warn','DY','Failed to import dynamic worker (ignored):', e && e.message); 
+        }
+      } else {
+        log('debug','DY','Dynamic global already present; skipping worker import');
+      }
+    } catch(e){ 
+      log('warn','DY','Dynamic import phase encountered error (continuing):', e && e.message); 
+    }
 
-    // Small pause to let imported scripts execute
-    await new Promise(r => setTimeout(r, 50));
+    // Wait longer for imported scripts to be ready
+    await new Promise(r => setTimeout(r, 150));
 
     // Verify Dynamic is available
     if (typeof Dynamic !== 'undefined' && typeof self.__dynamic$config !== 'undefined') {
@@ -751,46 +796,65 @@ self.addEventListener('fetch', (event) => {
         if (p.startsWith(PROXY_CONFIGS.ultraviolet.prefix) || p.startsWith('/scramjet/') || p.startsWith(PROXY_CONFIGS.dynamic.prefix)) {
           event.respondWith((async () => {
             const target = q;
-            log('info', 'FAST-PROXY', `Passthrough proxying ${target} for ${p}`);
-            // Timeout + abort support to avoid hanging the worker on slow upstreams
+            const reqId = `passthrough-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+            
+            log('info', 'FAST-PROXY', `[${reqId}] Starting passthrough proxy to ${target} for ${p}`);
+            
+            // Enhanced timeout + abort support to avoid hanging the worker
             const controller = new AbortController();
-            const timeoutMs = 8000; // 8s timeout for passthrough
-            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+            const timeoutMs = 10000; // 10s timeout for passthrough (increased)
+            const timeoutHandle = setTimeout(() => {
+              log('warn', 'FAST-PROXY', `[${reqId}] Request timed out after ${timeoutMs}ms`);
+              controller.abort();
+            }, timeoutMs);
 
             let upstream;
             try {
               upstream = await fetch(target, {
                 method: event.request.method,
-                headers: { 'User-Agent': 'SlowGuardian-Proxy' },
+                headers: { 
+                  'User-Agent': 'SlowGuardian-Proxy/9.0',
+                  'X-Requested-With': 'SlowGuardian'
+                },
                 redirect: 'follow',
                 credentials: 'omit',
                 signal: controller.signal
               });
-              clearTimeout(timeout);
+              clearTimeout(timeoutHandle);
+              log('debug', 'FAST-PROXY', `[${reqId}] Upstream responded with ${upstream.status}`);
             } catch (err) {
-              clearTimeout(timeout);
-              // Distinguish abort vs network errors where possible
+              clearTimeout(timeoutHandle);
+              // Clear and specific error reporting
               const reason = err && err.name === 'AbortError' ? 'timeout' : (err && err.message ? err.message : String(err));
-              log('error', 'FAST-PROXY', `Passthrough fetch failed for ${target}: ${reason}`);
-              return createErrorResponse('Passthrough proxy error', `Upstream fetch failed: ${reason}`);
+              log('error', 'FAST-PROXY', `[${reqId}] Passthrough fetch failed: ${reason}`);
+              return createErrorResponse('Passthrough Proxy Error', `Failed to reach upstream server: ${reason}`);
             }
 
             try {
               const body = await upstream.arrayBuffer().catch(() => null);
               const headers = new Headers(upstream.headers || {});
               headers.set('x-sg-passthrough', '1');
-              // Preserve upstream status and statusText
-              if (!upstream.ok) log('warn', 'FAST-PROXY', `Upstream returned ${upstream.status} for ${target}`);
+              headers.set('x-sg-reqid', reqId);
+              
+              // Log status for debugging
+              if (!upstream.ok) {
+                log('warn', 'FAST-PROXY', `[${reqId}] Upstream returned non-OK status ${upstream.status} for ${target}`);
+              } else {
+                log('debug', 'FAST-PROXY', `[${reqId}] Successfully proxied ${target}`);
+              }
+              
               return new Response(body, { status: upstream.status, statusText: upstream.statusText, headers });
             } catch (err) {
-              log('error', 'FAST-PROXY', `Failed to build passthrough response for ${target}:`, err && err.message);
-              return createErrorResponse('Passthrough proxy error', String(err && err.message || err));
+              log('error', 'FAST-PROXY', `[${reqId}] Failed to build passthrough response:`, err && err.message);
+              return createErrorResponse('Passthrough Response Error', `Failed to process upstream response: ${String(err && err.message || err)}`);
             }
           })());
           return;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      log('error', 'FAST-PROXY', 'Passthrough proxy setup failed:', e && e.message);
+    }
 
     // If scramjet is available as a first-class runtime, route with it directly for best fidelity
     try {

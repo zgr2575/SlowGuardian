@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import cookieParser from "cookie-parser";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -19,6 +20,7 @@ import config from "./config.js";
 import { setupSecurity } from "./src/middleware/security.js";
 import { setupAuth } from "./src/middleware/auth.js";
 import { setupEnhancedAuth } from "./src/auth/middleware.js";
+import { setupStartupAuth } from "./src/middleware/startupAuth.js";
 import { setupLogging } from "./src/middleware/logging.js";
 import {
   sessionTracker,
@@ -110,10 +112,12 @@ async function createSlowGuardianServer() {
   // Basic middleware
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+  app.use(cookieParser()); // Cookie parsing for authentication
 
   // Custom middleware
   setupLogging(app);
   setupSecurity(app, config);
+  setupStartupAuth(app); // Startup authentication gate
   setupAuth(app, config); // Legacy auth for backward compatibility
   setupEnhancedAuth(app); // New MongoDB-based auth
 
