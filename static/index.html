@@ -52,6 +52,7 @@
     <link rel="stylesheet" href="assets/styles/onboarding.css" />
     <link rel="stylesheet" href="assets/styles/auth.css" />
     <link rel="stylesheet" href="assets/styles/premium.css" />
+  <link rel="stylesheet" href="assets/styles/v9/beta-banner.css" />
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -94,6 +95,17 @@
     <link rel="canonical" href="https://slowguardian.com/" />
   </head>
   <body>
+    <!-- Beta opt-in banner (premium-only testing) -->
+    <div id="beta-banner" class="beta-banner" style="display:none;">
+      <div class="beta-inner">
+        <div class="beta-text">Join the Scramjet Beta (premium users only) — try the new proxy backend</div>
+        <div class="beta-actions">
+          <button id="beta-opt-in" class="beta-btn">Opt In (Test)</button>
+          <button id="beta-opt-out" class="beta-btn secondary">Opt Out</button>
+          <button id="beta-hide" class="beta-btn ghost">Hide</button>
+        </div>
+      </div>
+    </div>
     <!-- Skip to main content for accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -213,6 +225,43 @@
         </div>
       </section>
     </main>
+
+    <script>
+      // Beta banner logic (minimal, for QA only)
+      (function(){
+        function setCookie(name, value, days){
+          const expires = new Date(Date.now() + (days||7)*24*60*60*1000).toUTCString();
+          document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; expires=' + expires;
+        }
+        function getCookie(name){
+          return document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith(name+'='))?.split('=')[1];
+        }
+
+        const banner = document.getElementById('beta-banner');
+        const optIn = document.getElementById('beta-opt-in');
+        const optOut = document.getElementById('beta-opt-out');
+        const hide = document.getElementById('beta-hide');
+
+        // Show banner if ?show_beta=1 or user is premium cookie
+        const url = new URL(location.href);
+        const show = url.searchParams.get('show_beta') === '1' || getCookie('sg_premium') === '1';
+        if(show){ banner.style.display = 'block'; }
+
+        optIn?.addEventListener('click', ()=>{
+          setCookie('sg_beta','scramjet',365);
+          setCookie('sg_premium','1',365);
+          alert('Beta enabled for this browser (test mode)');
+        });
+
+        optOut?.addEventListener('click', ()=>{
+          setCookie('sg_beta','',-1);
+          setCookie('sg_premium','0',365);
+          alert('Beta disabled');
+        });
+
+        hide?.addEventListener('click', ()=>{ banner.style.display = 'none'; });
+      })();
+    </script>
 
     <!-- Footer -->
     <footer class="footer">

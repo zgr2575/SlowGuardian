@@ -1,0 +1,17 @@
+/* Minimal beta banner styles */
+.beta-banner{
+  position:fixed;
+  left:0;right:0;top:0;
+  background:linear-gradient(90deg,#111827cc,#0f172acc);
+  color:#fff;
+  z-index:9999;
+  padding:10px 20px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.beta-inner{max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.beta-text{font-size:14px}
+.beta-actions{display:flex;gap:8px}
+.beta-btn{background:#6366f1;border:none;padding:8px 12px;border-radius:8px;color:#fff;cursor:pointer;font-weight:600}
+.beta-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.12)}
+.beta-btn.ghost{background:transparent;color:rgba(255,255,255,0.6)}
