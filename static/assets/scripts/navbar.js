@@ -8,6 +8,7 @@ class NavigationBar {
     this.currentPage = this.detectCurrentPage();
     this.isHovered = false;
     this.hideTimeout = null;
+    this.currentUser = null;
 
     this.init();
   }
@@ -27,10 +28,40 @@ class NavigationBar {
     return "home"; // default
   }
 
-  init() {
+  async init() {
+    await this.loadUserInfo();
     this.createNavbar();
     this.attachEventListeners();
     this.injectStyles();
+  }
+
+  async loadUserInfo() {
+    try {
+      // Check for authentication tokens/cookies
+      const hasAuthCookie = document.cookie.includes('sg_auth=') || 
+                           document.cookie.includes('sg_session=') ||
+                           localStorage.getItem('sg_auth_token') ||
+                           sessionStorage.getItem('sg_auth_token');
+
+      if (hasAuthCookie) {
+        const response = await fetch('/api/auth/profile', {
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.user) {
+            this.currentUser = data.user;
+          }
+        }
+      }
+    } catch (error) {
+      console.debug('Could not load user info:', error.message);
+      // Not an error - user may not be logged in
+    }
   }
 
   createNavbar() {
@@ -63,6 +94,9 @@ class NavigationBar {
             <div class="brand-version">v9</div>
           </div>
         </div>
+
+        <!-- User Account Section -->
+        ${this.currentUser ? this.renderUserSection() : this.renderLoginSection()}
 
         <!-- Navigation Links -->
         <div class="sidebar-links">
@@ -111,6 +145,60 @@ class NavigationBar {
 
     // Insert at the beginning of body
     document.body.insertBefore(navbar, document.body.firstChild);
+  }
+
+  renderUserSection() {
+    const user = this.currentUser;
+    const isPremium = user.isPremium || user.isActivePremium;
+    const premiumBadge = isPremium ? '<span class="premium-badge">⭐ Premium</span>' : '';
+    
+    return `
+      <div class="user-section">
+        <div class="user-info" id="user-info">
+          <div class="user-avatar">
+            <span>${(user.firstName?.[0] || user.username?.[0] || 'U').toUpperCase()}</span>
+          </div>
+          <div class="user-details">
+            <div class="user-name">${user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.username}</div>
+            <div class="user-meta">
+              <span class="user-role">${user.role || 'User'}</span>
+              ${premiumBadge}
+            </div>
+          </div>
+          <div class="user-dropdown-arrow">▼</div>
+        </div>
+        
+        <div class="user-dropdown" id="user-dropdown" style="display: none;">
+          <a href="/settings" class="dropdown-item">
+            <span class="dropdown-icon">⚙️</span>
+            <span>Account Settings</span>
+          </a>
+          <a href="/settings#premium" class="dropdown-item">
+            <span class="dropdown-icon">⭐</span>
+            <span>${isPremium ? 'Premium Status' : 'Upgrade to Premium'}</span>
+          </a>
+          <div class="dropdown-separator"></div>
+          <button class="dropdown-item logout-btn" id="logout-btn">
+            <span class="dropdown-icon">🚪</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderLoginSection() {
+    return `
+      <div class="login-section">
+        <a href="/login" class="login-btn">
+          <div class="login-icon">🔐</div>
+          <div class="login-text">
+            <div class="login-title">Sign In</div>
+            <div class="login-subtitle">Access your account</div>
+          </div>
+        </a>
+      </div>
+    `;
   }
 
   attachEventListeners() {
@@ -203,6 +291,72 @@ class NavigationBar {
         window.location.href = link.getAttribute("href");
       });
     });
+
+    // User dropdown functionality
+    this.setupUserDropdown(sidebar);
+  }
+
+  setupUserDropdown(sidebar) {
+    const userInfo = sidebar.querySelector("#user-info");
+    const userDropdown = sidebar.querySelector("#user-dropdown");
+    const logoutBtn = sidebar.querySelector("#logout-btn");
+
+    if (userInfo && userDropdown) {
+      // Toggle dropdown on click
+      userInfo.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isVisible = userDropdown.style.display !== "none";
+        userDropdown.style.display = isVisible ? "none" : "block";
+        userInfo.classList.toggle("active", !isVisible);
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!userInfo.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.style.display = "none";
+          userInfo.classList.remove("active");
+        }
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await this.handleLogout();
+      });
+    }
+  }
+
+  async handleLogout() {
+    try {
+      // Show loading state
+      const logoutBtn = document.querySelector("#logout-btn");
+      if (logoutBtn) {
+        logoutBtn.innerHTML = '<span class="dropdown-icon">⏳</span><span>Signing out...</span>';
+        logoutBtn.disabled = true;
+      }
+
+      // Call logout endpoint
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      // Clear local storage/session storage
+      localStorage.removeItem('sg_auth_token');
+      sessionStorage.removeItem('sg_auth_token');
+      sessionStorage.removeItem('sg-authenticated');
+
+      // Redirect to login or home page
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Fallback - force reload to clear session
+      window.location.reload();
+    }
   }
 
   showSidebar() {
@@ -736,6 +890,263 @@ class NavigationBar {
       [data-theme="light"] .sidebar-actions {
         border-top-color: rgba(0, 0, 0, 0.1);
       }
+
+      /* User Section Styles */
+      .user-section, .login-section {
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 20px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .user-info:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .user-info.active {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      .user-details {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .user-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.2;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .user-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .user-role {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .premium-badge {
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        color: #1a1a2e;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        animation: premiumGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes premiumGlow {
+        0% { box-shadow: 0 0 4px rgba(255, 215, 0, 0.3); }
+        100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+      }
+
+      .user-dropdown-arrow {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .user-info.active .user-dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .user-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(30, 30, 60, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 8px 0;
+        margin-top: 4px;
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        background: none;
+        font-size: 14px;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+
+      .dropdown-item.logout-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .dropdown-icon {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .dropdown-separator {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 4px 0;
+      }
+
+      /* Login Section Styles */
+      .login-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .login-btn:hover {
+        background: linear-gradient(135deg, #5b5cf5, #9333ea);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+      }
+
+      .login-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .login-text {
+        flex: 1;
+      }
+
+      .login-title {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 2px;
+      }
+
+      .login-subtitle {
+        font-size: 12px;
+        opacity: 0.8;
+        line-height: 1;
+      }
+
+      /* Light theme adjustments for user section */
+      [data-theme="light"] .user-section,
+      [data-theme="light"] .login-section {
+        border-bottom-color: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="light"] .user-info {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="light"] .user-info:hover {
+        background: rgba(0, 0, 0, 0.08);
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+
+      [data-theme="light"] .user-info.active {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: rgba(99, 102, 241, 0.3);
+      }
+
+      [data-theme="light"] .user-name {
+        color: #1a1a2e;
+      }
+
+      [data-theme="light"] .user-meta {
+        color: rgba(0, 0, 0, 0.7);
+      }
+
+      [data-theme="light"] .user-role {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="light"] .user-dropdown-arrow {
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      [data-theme="light"] .user-dropdown {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="light"] .dropdown-item {
+        color: rgba(0, 0, 0, 0.8);
+      }
+
+      [data-theme="light"] .dropdown-item:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #000000;
+      }
+
+      [data-theme="light"] .dropdown-separator {
+        background: rgba(0, 0, 0, 0.1);
+      }
     `;
 
     document.head.appendChild(style);
@@ -762,7 +1173,7 @@ class NavigationBar {
 
 // Auto-initialize when DOM is ready
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     window.sidebarNav = new NavigationBar();
   });
 } else {

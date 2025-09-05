@@ -169,10 +169,27 @@ function log(level, category, message, ...args) {
 }
 
 /**
+ * Helper function for async script imports with error handling
+ */
+function importScriptsAsync(url) {
+  return new Promise((resolve, reject) => {
+    try {
+      importScripts(url);
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+/**
  * Initialize proxy systems with error handling
  */
 async function initializeProxies() {
   log('info', 'INIT', 'Starting proxy system initialization...');
+
+  // Wait briefly for any config scripts to load
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   // Initialize Ultraviolet
   try {
@@ -212,7 +229,7 @@ async function initializeProxies() {
         if (typeof UVServiceWorker === 'undefined') {
           try {
             log('debug', 'UV', 'Importing UV bundle...');
-            importScripts(PROXY_CONFIGS.ultraviolet.bundle || '/a/bundle.js');
+            await importScriptsAsync(PROXY_CONFIGS.ultraviolet.bundle || '/a/bundle.js');
             log('debug', 'UV', 'UV bundle imported successfully');
           } catch (e) { 
             log('warn', 'UV', 'Failed to import UV bundle (ignored):', e && e.message); 
@@ -225,7 +242,7 @@ async function initializeProxies() {
         if (typeof self.__uv$config === 'undefined') {
           try {
             log('debug', 'UV', 'Importing UV config...');
-            importScripts(PROXY_CONFIGS.ultraviolet.config || '/a/config.js');
+            await importScriptsAsync(PROXY_CONFIGS.ultraviolet.config || '/a/config.js');
             log('debug', 'UV', 'UV config imported successfully');
           } catch (e) { 
             log('warn', 'UV', 'Failed to import UV config (ignored):', e && e.message); 
@@ -233,6 +250,9 @@ async function initializeProxies() {
         } else {
           log('debug', 'UV', '__uv$config already present; skipping config import');
         }
+
+        // Additional wait for config to settle
+        await new Promise(resolve => setTimeout(resolve, 100));
       } catch (e) {
         log('warn', 'UV', 'UV import phase encountered error (continuing):', e && e.message);
       }
@@ -268,7 +288,7 @@ async function initializeProxies() {
       if (typeof self.__dynamic$config === 'undefined') {
         try { 
           log('debug', 'DY', 'Importing Dynamic config...');
-          importScripts(PROXY_CONFIGS.dynamic.config || '/dy/config.js'); 
+          await importScriptsAsync(PROXY_CONFIGS.dynamic.config || '/dy/config.js'); 
           log('debug','DY','Dynamic config imported successfully'); 
         } catch(e){ 
           log('warn','DY','Failed to import dynamic config (ignored):', e && e.message); 
@@ -281,7 +301,7 @@ async function initializeProxies() {
       if (typeof Dynamic === 'undefined') {
         try { 
           log('debug', 'DY', 'Importing Dynamic worker...');
-          importScripts(PROXY_CONFIGS.dynamic.worker || '/dy/worker.js'); 
+          await importScriptsAsync(PROXY_CONFIGS.dynamic.worker || '/dy/worker.js'); 
           log('debug','DY','Dynamic worker imported successfully'); 
         } catch(e){ 
           log('warn','DY','Failed to import dynamic worker (ignored):', e && e.message); 
@@ -289,6 +309,9 @@ async function initializeProxies() {
       } else {
         log('debug','DY','Dynamic global already present; skipping worker import');
       }
+
+      // Additional wait for Dynamic to settle
+      await new Promise(resolve => setTimeout(resolve, 100));
     } catch(e){ 
       log('warn','DY','Dynamic import phase encountered error (continuing):', e && e.message); 
     }
