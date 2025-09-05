@@ -1,9 +1,9 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "34a9629-1757050605194",
-  "buildDate": "2025-09-05T05:36:45.194Z",
-  "buildTimestamp": 1757050605194,
+  "buildId": "34a9629-1757051854695",
+  "buildDate": "2025-09-05T05:57:34.695Z",
+  "buildTimestamp": 1757051854696,
   "git": {
     "commit": "34a962979c8c0dfd522c9d8288788951f01b4b4b",
     "commitShort": "34a9629",
@@ -12,7 +12,7 @@
     "commitMessage": "✨ Implement premium branding removal and cross-page music system"
   },
   "environment": "development",
-  "nodeVersion": "v20.19.4",
+  "nodeVersion": "v22.17.0",
   "platform": "linux",
   "arch": "x64"
 }

@@ -42,6 +42,26 @@ let proxyInstances = {
   dynamic: null
 };
 
+// Preload core proxy runtime scripts at initial evaluation.
+// Some bundled proxy scripts register service worker event handlers on import;
+// those handlers must be registered during initial evaluation to avoid warnings
+// and ReferenceErrors (UVServiceWorker defined in /m/sw.js).
+try {
+  importScripts('/m/sw.js');
+  self.__uv_core_loaded = true;
+  log('info', 'SW', 'Preloaded /m/sw.js (UV core)');
+} catch (e) {
+  log('warn', 'SW', 'Failed to preload /m/sw.js:', e && e.message ? e.message : e);
+}
+
+try {
+  importScripts('/dy/config.js', '/dy/worker.js');
+  self.__dynamic_core_loaded = true;
+  log('info', 'SW', 'Preloaded /dy/config.js and /dy/worker.js (Dynamic core)');
+} catch (e) {
+  log('warn', 'SW', 'Failed to preload Dynamic core scripts:', e && e.message ? e.message : e);
+}
+
 /**
  * Enhanced logging with timestamp and categories
  */
@@ -79,37 +99,73 @@ async function initializeProxies() {
   try {
     log('debug', 'UV', 'Loading Ultraviolet scripts...');
     
-    // Import scripts with better error handling
-    try {
-      await Promise.race([
-        new Promise((resolve, reject) => {
-          try {
-            importScripts("/a/bundle.js");
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading bundle.js')), 10000))
-      ]);
-    } catch (error) {
-      throw new Error(`Failed to load bundle.js: ${error.message}`);
+    // Import scripts with better error handling, skip if core preloaded
+    if (!self.__uv_core_loaded) {
+      try {
+        await Promise.race([
+          new Promise((resolve, reject) => {
+            try {
+              importScripts("/a/bundle.js");
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
+          }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading bundle.js')), 10000))
+        ]);
+      } catch (error) {
+        throw new Error(`Failed to load bundle.js: ${error.message}`);
+      }
+      
+      try {
+        await Promise.race([
+          new Promise((resolve, reject) => {
+            try {
+              importScripts("/a/config.js");
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
+          }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading config.js')), 10000))
+        ]);
+      } catch (error) {
+        throw new Error(`Failed to load config.js: ${error.message}`);
+      }
+    } else {
+      log('debug', 'UV', 'Skipping UV bundle/config import because core already preloaded');
     }
-    
+
+    // Ensure the Ultraviolet service-worker script is loaded so UVServiceWorker is available
     try {
       await Promise.race([
         new Promise((resolve, reject) => {
           try {
-            importScripts("/a/config.js");
+            importScripts(PROXY_CONFIGS.ultraviolet.sw || "/a/sw.js");
             resolve();
           } catch (error) {
             reject(error);
           }
         }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading config.js')), 10000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading sw.js')), 10000))
       ]);
     } catch (error) {
-      throw new Error(`Failed to load config.js: ${error.message}`);
+      // Try fallback to the core m/sw.js which defines UVServiceWorker in some setups
+      try {
+        await Promise.race([
+          new Promise((resolve, reject) => {
+            try {
+              importScripts("/m/sw.js");
+              resolve();
+            } catch (err) {
+              reject(err);
+            }
+          }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout loading m/sw.js')), 10000))
+        ]);
+      } catch (err) {
+        throw new Error(`Failed to load ultraviolet sw (tried configured and fallback): ${error.message}; ${err.message}`);
+      }
     }
 
     // Wait a moment for scripts to initialize
@@ -414,11 +470,24 @@ self.addEventListener('message', (event) => {
   log('debug', 'MSG', 'Received message:', event.data);
   
   if (event.data && event.data.type === 'GET_STATUS') {
-    event.ports[0].postMessage({
-      version: SW_VERSION,
-      proxies: proxyInitialized,
-      timestamp: Date.now()
-    });
+    if (event.ports && event.ports[0]) {
+      event.ports[0].postMessage({
+        version: SW_VERSION,
+        proxies: proxyInitialized,
+        timestamp: Date.now()
+      });
+    } else if (event.source) {
+      // fallback: postMessage to the source client
+      try {
+        event.source.postMessage({
+          version: SW_VERSION,
+          proxies: proxyInitialized,
+          timestamp: Date.now()
+        });
+      } catch (e) {
+        log('warn', 'MSG', 'Unable to reply to GET_STATUS message:', e.message);
+      }
+    }
   }
 });
 
