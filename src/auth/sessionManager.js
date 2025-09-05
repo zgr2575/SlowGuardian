@@ -21,10 +21,13 @@ class SessionManager {
    */
   async createSession(user) {
     try {
+      // Generate a session id that we will use for both JWT and DB _id
+      const sessionId = new ObjectId().toString();
+
       // Generate JWT token with user info
       const token = jwt.sign(
         {
-          sessionId: new ObjectId().toString(), // Generate a session ID
+          sessionId,
           userId: user._id.toString(),
           username: user.username,
           role: user.role,
@@ -38,8 +41,10 @@ class SessionManager {
       if (dbConnection.isReady()) {
         const collection = dbConnection.getCollection("sessions");
         
+        const sessionObjectId = new ObjectId(sessionId);
         const sessionData = {
-          _id: new ObjectId(),
+          _id: sessionObjectId,
+          sessionId, // explicit field to satisfy unique index
           userId: new ObjectId(user._id),
           username: user.username,
           email: user.email,
@@ -58,7 +63,7 @@ class SessionManager {
         
         return {
           token,
-          sessionId: sessionData._id,
+          sessionId, // return string id used in JWT/DB
           expiresAt: sessionData.expiresAt,
         };
       } else {
@@ -67,13 +72,33 @@ class SessionManager {
         
         return {
           token,
-          sessionId: null,
+          sessionId, // still provide id used in JWT even if not stored
           expiresAt: new Date(Date.now() + this.sessionExpiry),
         };
       }
     } catch (error) {
       logger.error("Failed to create session:", error);
       throw error;
+    }
+  }
+
+  /**
+   * Normalize existing sessions: ensure sessionId field exists and matches _id
+   */
+  async normalizeSessions() {
+    if (!dbConnection.isReady()) return;
+    try {
+      const collection = dbConnection.getCollection("sessions");
+      // Set sessionId to string(_id) where missing or null
+      const result = await collection.updateMany(
+        { $or: [ { sessionId: { $exists: false } }, { sessionId: null } ] },
+        [ { $set: { sessionId: { $toString: "$_id" } } } ]
+      );
+      if (result.modifiedCount > 0) {
+        logger.info(`Normalized ${result.modifiedCount} session documents missing sessionId`);
+      }
+    } catch (error) {
+      logger.warn("Failed to normalize sessions:", error.message);
     }
   }
 

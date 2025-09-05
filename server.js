@@ -53,6 +53,13 @@ async function createSlowGuardianServer() {
   try {
     await dbConnection.connect();
     logger.info("Database connection established");
+    // Normalize any inconsistent session documents
+    try {
+      const sessionMgr = (await import("./src/auth/sessionManager.js")).default;
+      await sessionMgr.normalizeSessions();
+    } catch (normErr) {
+      logger.warn("Session normalization skipped:", normErr.message);
+    }
   } catch (error) {
     logger.warn("Database connection failed, continuing without MongoDB features:", error.message);
   }

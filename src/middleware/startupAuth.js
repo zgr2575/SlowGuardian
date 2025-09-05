@@ -61,6 +61,18 @@ export function createAuthGate() {
     if (url.startsWith('/o/') || url.startsWith('/a/') || url.startsWith('/dy/') || url.startsWith('/scramjet/')) {
       return next();
     }
+
+    // Allow static assets (styles, scripts, images, fonts) so the login page can load correctly
+    // This prevents redirecting asset requests to /login.html which causes MIME type errors in the browser
+    const isStaticAsset =
+      url.startsWith('/assets/') ||
+      url === '/favicon.png' ||
+      url === '/robots.txt' ||
+      url === '/sitemap.xml' ||
+      /\.(css|js|mjs|map|png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|eot)$/i.test(url);
+    if (isStaticAsset) {
+      return next();
+    }
     
     // Allow service worker to load
     if (url === '/sw.js' || url === '/sw-new.js') {
@@ -83,9 +95,9 @@ export function createAuthGate() {
     
     // Check for session cookies or JWT tokens
     const sessionCookie = req.cookies && req.cookies.session;
-    const authCookie = req.cookies && req.cookies.sg_auth;
+  const authCookie = req.cookies && req.cookies.sg_auth;
     
-    if (token || sessionCookie || authCookie) {
+  if (token || sessionCookie || authCookie) {
       // Authentication present, allow access
       return next();
     }
@@ -105,6 +117,12 @@ export function createAuthGate() {
       // Enhanced redirect loop prevention
       const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
       const pathname = parsedUrl.pathname;
+      const hasAuth = Boolean(token || sessionCookie || authCookie);
+
+      // If requesting root and we have auth, allow access (don't redirect)
+      if (pathname === '/' && hasAuth) {
+        return next();
+      }
       
       // If we're already on login page or redirect contains login page, don't redirect again
       if (pathname === '/login.html' || pathname.startsWith('/login.html') || 
@@ -120,7 +138,8 @@ export function createAuthGate() {
         return next();
       }
       
-      const redirectUrl = '/login.html?redirect=' + encodeURIComponent(req.url);
+  const redirectTarget = parsedUrl.pathname === '/' ? '/' : req.url;
+  const redirectUrl = '/login.html?redirect=' + encodeURIComponent(redirectTarget);
       logger.debug(`Redirecting unauthenticated request: ${req.url} -> ${redirectUrl}`);
       return res.redirect(redirectUrl);
     }

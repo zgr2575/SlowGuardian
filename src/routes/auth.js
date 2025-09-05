@@ -24,7 +24,7 @@ const logger = new Logger("AuthRoutes");
  */
 router.post("/register", validateRegistration, handleValidationErrors, async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName } = req.body;
+  const { username, email, password, firstName, lastName } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findByUsername(username) || await User.findByEmail(email);
@@ -51,6 +51,16 @@ router.post("/register", validateRegistration, handleValidationErrors, async (re
 
     logger.info(`New user registered: ${username}`);
 
+    // Set auth cookie so server recognizes authenticated user on subsequent page loads
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true, // Codespaces uses HTTPS; ensure cookie is sent
+      sameSite: 'None', // allow across navigations reliably
+      path: '/',
+      expires: new Date(session.expiresAt),
+    };
+    res.cookie('sg_auth', session.token, cookieOptions);
+
     res.status(201).json({
       success: true,
       message: "Registration successful",
@@ -73,7 +83,7 @@ router.post("/register", validateRegistration, handleValidationErrors, async (re
  */
 router.post("/login", validateLogin, handleValidationErrors, async (req, res) => {
   try {
-    const { usernameOrEmail, password, rememberMe } = req.body;
+  const { usernameOrEmail, password, rememberMe } = req.body;
 
     // Authenticate user
     const authResult = await User.authenticate(usernameOrEmail, password);
@@ -94,6 +104,18 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res) =>
     }
 
     logger.info(`User logged in: ${authResult.user.username}`);
+
+    // Set auth cookie so server recognizes authenticated user on subsequent page loads
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      path: '/',
+      // If rememberMe, persist for 30 days; otherwise session cookie via no maxAge (but we'll set to expiresAt for consistency)
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : undefined,
+      expires: new Date(session.expiresAt),
+    };
+    res.cookie('sg_auth', session.token, cookieOptions);
 
     res.json({
       success: true,
@@ -122,7 +144,10 @@ router.post("/logout", authenticateToken, async (req, res) => {
 
     logger.info(`User logged out: ${req.user.username}`);
 
-    res.json({
+  // Clear auth cookie
+  res.clearCookie('sg_auth', { path: '/', sameSite: 'None', secure: true });
+
+  res.json({
       success: true,
       message: "Logout successful",
     });
@@ -146,7 +171,10 @@ router.post("/logout-all", authenticateToken, async (req, res) => {
 
     logger.info(`User logged out from all devices: ${req.user.username}`);
 
-    res.json({
+  // Clear auth cookie
+  res.clearCookie('sg_auth', { path: '/', sameSite: 'None', secure: true });
+
+  res.json({
       success: true,
       message: `Logged out from ${destroyedCount} devices`,
     });
@@ -461,6 +489,16 @@ router.post("/validate", async (req, res) => {
     }
 
     const validation = await sessionManager.validateSession(token);
+
+    // If valid, set the auth cookie so subsequent page loads are recognized by the server
+    if (validation.isValid && validation.session) {
+      res.cookie('sg_auth', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        path: '/',
+      });
+    }
 
     res.json({
       success: validation.isValid,

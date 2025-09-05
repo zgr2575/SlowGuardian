@@ -392,6 +392,13 @@
     </style>
   </head>
   <body>
+    <script>
+      // Set dark theme ASAP to avoid flash of light theme
+      (function(){
+        var savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
     <div class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</div>
     
     <div class="auth-container">
@@ -488,7 +495,7 @@
       const themeToggle = document.getElementById('theme-toggle');
       
       // Theme toggle functionality
-      const savedTheme = localStorage.getItem('theme') || 'light';
+  const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
       themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
       
@@ -565,30 +572,35 @@
           const result = await response.json();
           
           if (result.success) {
-            // Store token in localStorage
-            localStorage.setItem('authToken', result.token);
-            
-            showSuccess('Login successful! Redirecting...');
-            
-            // Redirect after a short delay
-            setTimeout(() => {
-              const urlParams = new URLSearchParams(window.location.search);
-              let redirect = urlParams.get('redirect') || '/';
-              
-              // Prevent redirect loops - don't redirect to login page
-              if (redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
-                redirect = '/';
-              }
-              
-              // Decode URL if it's encoded
-              try {
-                redirect = decodeURIComponent(redirect);
-              } catch (e) {
-                redirect = '/';
-              }
-              
-              window.location.href = redirect;
-            }, 1500);
+                // Store token in localStorage (server also set an httpOnly cookie)
+                localStorage.setItem('authToken', result.token);
+
+                showSuccess('Login successful! Redirecting...');
+
+                // Redirect after a short delay
+                setTimeout(() => {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  let redirect = urlParams.get('redirect') || '/';
+
+                  // Prevent redirect loops - don't redirect to login page
+                  if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+                    redirect = '/';
+                  }
+
+                  // Decode URL if it's encoded
+                  try {
+                    redirect = decodeURIComponent(redirect);
+                  } catch (e) {
+                    redirect = '/';
+                  }
+
+                  // As a final guard, if we somehow land back at login, go home
+                  if (new URL(redirect, window.location.origin).pathname.includes('/login.html')) {
+                    redirect = '/';
+                  }
+
+                  window.location.href = redirect;
+                }, 800);
           } else {
             showError(result.error || 'Login failed');
           }
@@ -684,9 +696,11 @@
             // User is already logged in, redirect
             const urlParams = new URLSearchParams(window.location.search);
             let redirect = urlParams.get('redirect') || '/';
+            // Set lightweight signal cookie for UI (server relies on httpOnly cookie)
+            document.cookie = 'sg_auth_ui=1; path=/; SameSite=None; Secure';
             
             // Prevent redirect loops - don't redirect to login page
-            if (redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+            if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
               redirect = '/';
             }
             
@@ -697,7 +711,10 @@
               redirect = '/';
             }
             
-            window.location.href = redirect;
+            // If current path is login, navigate away; otherwise do nothing
+            if (location.pathname.includes('/login.html')) {
+              window.location.href = redirect;
+            }
           }
         })
         .catch(() => {

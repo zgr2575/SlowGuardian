@@ -203,7 +203,7 @@ class User {
 
       // Check if account is locked
       if (user.lockUntil && user.lockUntil > new Date()) {
-        return { success: false, error: "Account temporarily locked due to too many failed login attempts" };
+        return { success: false, error: "Account temporarily locked due to too many failed login attempts. Please contact support to resolve if you've forgotten your password." };
       }
 
       // Verify password
@@ -241,8 +241,8 @@ class User {
   async incrementLoginAttempts() {
     try {
       const collection = dbConnection.getCollection("users");
-      const maxAttempts = 5;
-      const lockTime = 15 * 60 * 1000; // 15 minutes
+  const maxAttempts = 15; // allow more attempts before lockout
+  const lockTime = 5 * 60 * 1000; // 5 minutes lock instead of 15
 
       this.loginAttempts = (this.loginAttempts || 0) + 1;
 

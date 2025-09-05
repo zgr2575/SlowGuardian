@@ -14,13 +14,21 @@ const logger = new Logger("AuthMiddleware");
  * Rate limiting for authentication endpoints
  */
 export const authRateLimit = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
-  message: {
-    error: "Too many authentication attempts, please try again later",
-  },
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: process.env.NODE_ENV === 'production' || process.env.AUTH_RATE_LIMIT === 'true' ? 50 : Number.MAX_SAFE_INTEGER,
+  message: { error: "Too many authentication attempts, please try again later" },
   standardHeaders: true,
   legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  // Only rate-limit POST /api/auth/login and /api/auth/register
+  skip: (req) => {
+    const isProdOrForced = process.env.NODE_ENV === 'production' || process.env.AUTH_RATE_LIMIT === 'true';
+    if (!isProdOrForced) return true; // disabled outside production unless forced
+    const p = (req.baseUrl || '') + (req.path || '');
+    const isAuthLogin = req.method === 'POST' && p.endsWith('/login');
+    const isAuthRegister = req.method === 'POST' && p.endsWith('/register');
+    return !(isAuthLogin || isAuthRegister);
+  },
 });
 
 /**

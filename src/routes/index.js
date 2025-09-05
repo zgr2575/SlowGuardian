@@ -213,6 +213,14 @@ function setupFrontendRoutes(app) {
     app.get(route.path, (req, res) => {
       const filePath = join(staticDir, route.file);
 
+      // If requesting login while already authenticated, redirect home to avoid loops
+      if (route.file === 'login.html') {
+        const hasAuth = Boolean((req.cookies && req.cookies.sg_auth) || (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')));
+        if (hasAuth) {
+          return res.redirect('/');
+        }
+      }
+
       res.sendFile(filePath, (err) => {
         if (err) {
           logger.error(`Error serving ${route.file} for ${route.path}:`, err);
