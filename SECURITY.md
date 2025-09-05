@@ -2,8 +2,8 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Use this section to tell people about which versions of your project are currently being supported
+with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -14,4 +14,5 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Create an issue and label it with security and how severe, describe the issue, and show steps to reproduce or exploit the flaw.
+Create an issue and label it with security and how severe, describe the issue, and show steps to
+reproduce or exploit the flaw.

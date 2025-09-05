@@ -2,81 +2,664 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="SlowGuardian" />
+    <meta name="version" content="9.0.0" />
+
+    <!-- AdSense Meta Tags for Approval -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="msapplication-navbutton-color" content="#1a1a2e" />
+    <meta
+      name="description"
+      content="SlowGuardian v9 - Advanced web proxy and unblocking solution with modern interface, multiple proxy backends, and enhanced privacy features."
+    />
+    <meta name="keywords" content="proxy, unblock, privacy, web browsing, security, vpn, anonymity" />
+    <meta name="author" content="SlowGuardian Team" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="SlowGuardian v9 - Advanced Web Proxy" />
+    <meta
+      property="og:description"
+      content="Advanced web proxy and unblocking solution with modern interface and enhanced privacy features."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SlowGuardian" />
+
+    <title id="tab-title">SlowGuardian v9</title>
+
+    <!-- Favicon -->
     <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <link rel="stylesheet" href="assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/v9/settings.css" />
+    <link rel="stylesheet" href="assets/styles/onboarding.css" />
+    <link rel="stylesheet" href="assets/styles/auth.css" />
+    <link rel="stylesheet" href="assets/styles/premium.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Structured Data for AdSense Approval -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SlowGuardian",
+        "alternateName": "SlowGuardian v9",
+        "description": "Advanced web proxy and unblocking solution with modern interface, multiple proxy backends, and enhanced privacy features.",
+        "url": "https://slowguardian.com",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "SlowGuardian Team"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SlowGuardian Team"
+        }
+      }
+    </script>
+
+    <!-- Additional Meta Tags for SEO and AdSense -->
+    <meta name="language" content="English" />
+    <meta name="copyright" content="SlowGuardian Team" />
+    <meta name="rating" content="General" />
+    <meta name="distribution" content="Global" />
+    <meta name="category" content="Internet, Technology, Proxy, Privacy" />
+    <link rel="canonical" href="https://slowguardian.com/" />
   </head>
-  <body class="center" onload="SplashT">
-    <div class="fixed-nav-bar"></div>
-    <div id="particles-js">
-      <script
-        rel="preload"
-        src="https://cdn.jsdelivr.net/particles.js/2.0.0/"
-      ></script>
-      <div class="main">
-        <h1 class="title"><xn>Slow</xn>Guardian</h1>
-        <br>
-        <p style="color:white;" id="splash">Unknown</p>
-        <!-- <div style="color:white;"id="countdown"></div> -->
-        <br>
-      
-        <div style="color:white;" class="search-container">
-          <form id="fs" method="POST">
-            <input
-              id="is"
-              class="main-search"
-              placeholder="Search with Google or enter address"
-              type="text"
-            />
-          </form>
+  <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Main Content (navbar will be injected by navbar.js) -->
+    <main class="main-content with-sidebar" id="main-content">
+      <!-- Home Page -->
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              <span class="title-primary">Slow</span><span class="title-secondary">Guardian</span>
+              <span class="title-glow"></span>
+            </h1>
+
+            <p class="hero-subtitle">Your gateway to unrestricted web browsing</p>
+
+            <div class="hero-quote">
+              <blockquote class="motivational-quote" id="daily-quote">
+                <div class="quote-text">"The way to get started is to quit talking and begin doing."</div>
+                <div class="quote-author">- Walt Disney</div>
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- Search Section -->
+          <div class="search-section">
+            <form class="search-form" id="fs">
+              <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input
+                  type="text"
+                  class="search-input"
+                  id="is"
+                  placeholder="Enter website URL or search term..."
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button type="submit" class="search-btn" id="search-submit-btn">
+                  <span>Browse</span>
+                  <i class="arrow">→</i>
+                </button>
+              </div>
+
+              <div class="search-suggestions" id="suggestions"></div>
+            </form>
+
+            <!-- Quick Access -->
+            <div class="quick-access">
+              <div class="quick-title">Quick Access</div>
+              <div class="quick-grid">
+                <a href="#" class="quick-item" data-url="https://google.com">
+                  <div class="quick-icon">🔍</div>
+                  <div class="quick-label">Google</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://youtube.com">
+                  <div class="quick-icon">📺</div>
+                  <div class="quick-label">YouTube</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://github.com">
+                  <div class="quick-icon">🐙</div>
+                  <div class="quick-label">GitHub</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://tiktok.com">
+                  <div class="quick-icon">🎵</div>
+                  <div class="quick-label">TikTok</div>
+                </a>
+                <a href="#" class="quick-item" data-url="https://snapchat.com">
+                  <div class="quick-icon">👻</div>
+                  <div class="quick-label">Snapchat</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Apps Page -->
+      <section class="page" id="page-apps">
+        <div class="page-header">
+          <h2 class="page-title">Applications</h2>
+          <p class="page-subtitle">Access your favorite web applications</p>
+        </div>
+
+        <div class="content-grid" id="apps-grid">
+          <!-- Apps will be loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- Games Page -->
+      <section class="page" id="page-games">
+        <div class="page-header">
+          <h2 class="page-title">Games</h2>
+          <p class="page-subtitle">Play unblocked games</p>
+        </div>
+
+        <div class="content-grid" id="games-grid">
+          <!-- Games will be loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- Settings Page -->
+      <section class="page" id="page-settings">
+        <div class="page-header">
+          <h2 class="page-title">Settings</h2>
+          <p class="page-subtitle">Customize your experience</p>
+        </div>
+
+        <div class="settings-container" id="settings-container">
+          <!-- Settings will be loaded dynamically -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
         </div>
       </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+        <p class="version-info" id="footer-version">
+          <span id="footer-version-text">v9.0.0</span>
+          <span id="footer-build-info" class="build-info">Loading build info...</span>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
     </div>
-    <script src="assets/scripts/h.js?v=16"></script>
-    <script src="assets/scripts/index.js?v=14"></script>
+
+    <!-- Loading System (Load first) -->
+    <script src="assets/scripts/loading-system.js?v=1"></script>
+
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+
+    <!-- Ultraviolet Configuration (Load early) -->
     <script src="./m/bundle.js?v=5"></script>
     <script src="./m/config.js?v=5"></script>
-    <script
-      src="https://kit.fontawesome.com/1237c86ba0.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="assets/scripts/main.js?v=31"></script>
-    <!-- <script>
-      var end = new Date("05/24/2024 2:35 PM");
 
-      var _second = 1000;
-      var _minute = _second * 60;
-      var _hour = _minute * 60;
-      var _day = _hour * 24;
-      var timer;
+    <!-- Core utility scripts -->
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/storage-wrapper.js?v=1"></script>
 
-      function showRemaining() {
-        var now = new Date();
-        var distance = end - now;
-        if (distance < 0) {
-          clearInterval(timer);
-          document.getElementById("countdown").innerHTML = "EXPIRED!";
+    <!-- Global notification system -->
+    <script>
+      // Global notification system
+      window.showNotification = function (message, type = "info", duration = 5000) {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === "error" ? "#ef4444" : type === "success" ? "#10b981" : "#3b82f6"};
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease-out;
+          max-width: 300px;
+        `;
+        notification.textContent = message;
 
-          return;
+        if (!document.getElementById("notification-styles")) {
+          const style = document.createElement("style");
+          style.id = "notification-styles";
+          style.textContent = `
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+              from { transform: translateX(0); opacity: 1; }
+              to { transform: translateX(100%); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
         }
-        var days = Math.floor(distance / _day);
-        var hours = Math.floor((distance % _day) / _hour);
-        var minutes = Math.floor((distance % _hour) / _minute);
-        var seconds = Math.floor((distance % _minute) / _second);
 
-        document.getElementById("countdown").innerHTML = days + " days ";
-        document.getElementById("countdown").innerHTML += hours + " hours ";
-        document.getElementById("countdown").innerHTML += minutes + " minutes and ";
-        document.getElementById("countdown").innerHTML += seconds + " seconds left until summer";
-      }
+        document.body.appendChild(notification);
 
-      timer = setInterval(showRemaining, 1000);
-    </script> -->
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease-in forwards";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, duration);
+      };
 
-    <div id="adv"></div>
+      // Global proxy handler functions for legacy compatibility
+      window.go = function (url) {
+        if (window.SlowGuardian?.handleProxyRequest) {
+          window.SlowGuardian.handleProxyRequest(url);
+        } else {
+          // Fallback for direct navigation
+          sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+          window.location.href = "/go";
+        }
+      };
+
+      window.blank = function (url) {
+        if (window.SlowGuardian?.handleProxyRequest) {
+          window.SlowGuardian.handleProxyRequest(url, true);
+        } else {
+          // Fallback for about:blank popup
+          const win = window.open("about:blank");
+          if (win) {
+            const htmlContent =
+              `<html><head><title>My Drive - Google Drive</title></head><body><sc` +
+              `ript>sessionStorage.setItem("GoUrl","${__uv$config.encodeUrl(url)}");window.location.href="/go";</sc` +
+              `ript></body></html>`;
+            win.document.write(htmlContent);
+          }
+        }
+      };
+
+      window.dy = function (url) {
+        sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+        window.location.href = "/a/q/" + __uv$config.encodeUrl(url);
+      };
+
+      // About:blank popup function
+      window.AB = function () {
+        const popup = window.open("about:blank", "_blank");
+        if (popup) {
+          popup.document.title = "My Drive - Google Drive";
+          const htmlContent = `<!DOCTYPE html><html><head><title>My Drive - Google Drive</title><link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"></head><body style="margin:0;"><iframe src="${window.location.origin}" style="border:none;width:100%;height:100vh;"></iframe></body></html>`;
+          popup.document.write(htmlContent);
+        }
+      };
+    </script>
+
+    <!-- Legacy form handler and service worker -->
+    <script src="assets/scripts/index.js?v=14"></script>
+
+    <!-- SlowGuardian v9 Application -->
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/v9/router.js" type="module"></script>
+    <script src="assets/scripts/v9/proxy.js" type="module"></script>
+    <script src="assets/scripts/v9/ui.js" type="module"></script>
+    <script src="assets/scripts/v9/app.js" type="module"></script>
+
+    <!-- Main utilities (includes changeTheme for loading detection) -->
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
+    <script src="assets/scripts/main.js?v=31"></script>
+
+    <!-- Centralized Navigation Bar -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+
+    <!-- Enhanced Features System -->
+    <script src="assets/scripts/v9/features.js"></script>
+
+    <!-- Script Loader for dependency management -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+
+    <!-- Legacy compatibility (loaded after v9) -->
+    <script src="assets/scripts/auth.js?v=1"></script>
+    <script src="assets/scripts/onboarding.js?v=1"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+
+    <!-- Ads Manager System -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
+    <!-- Initialize v9 Systems after DOM load -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Systems now initialize themselves based on user preferences
+        // This block removed to prevent duplicate initialization
+        console.log("🎯 v9 Systems will initialize based on user preferences");
+      });
+    </script>
+
+    <!-- Legacy Theme Support & Auto-Actions -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Quick Access event listeners
+        document.querySelectorAll(".quick-item[data-url]").forEach((item) => {
+          item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const url = this.getAttribute("data-url");
+            if (url && typeof window.go === "function") {
+              window.go(url);
+            }
+          });
+        });
+
+        // Auto About:Blank Popup on page load if enabled
+        const abEnabled = localStorage.getItem("ab");
+        if (abEnabled === "true") {
+          // Only auto-popup on main pages to avoid interference
+          // Prevent infinite loops when page is loaded in iframe
+          if (
+            !window.location.pathname.includes("/settings") &&
+            !window.location.pathname.includes("/go") &&
+            window.top === window.self
+          ) {
+            // Not in iframe
+            setTimeout(() => {
+              if (typeof AB === "function") {
+                AB();
+              }
+            }, 1500); // Delay to ensure page is fully loaded
+          }
+        }
+
+        // Quick focus on search with / key
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "/" && e.target === document.body && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            const searchInput = document.getElementById("is") || document.getElementById("url-input");
+            if (searchInput) {
+              searchInput.focus();
+            }
+          }
+        });
+
+        // Initialize legacy theme system with enhanced loading
+        function initThemes() {
+          const themeid = localStorage.getItem("theme");
+          if (themeid && themeid !== "default") {
+            const themeEle = document.createElement("link");
+            themeEle.rel = "stylesheet";
+
+            // Modern themes
+            const themeMap = {
+              catppuccinMocha: "/assets/styles/themes/catppuccin/mocha.css?v=1",
+              catppuccinMacchiato: "/assets/styles/themes/catppuccin/macchiato.css?v=1",
+              catppuccinFrappe: "/assets/styles/themes/catppuccin/frappe.css?v=1",
+              catppuccinLatte: "/assets/styles/themes/catppuccin/latte.css?v=1",
+              cyberpunk: "/assets/styles/themes/cyberpunk.css?v=1",
+              ocean: "/assets/styles/themes/ocean.css?v=1",
+              sunset: "/assets/styles/themes/sunset.css?v=1",
+            };
+
+            if (themeMap[themeid]) {
+              themeEle.href = themeMap[themeid];
+              document.head.appendChild(themeEle);
+            }
+          }
+        }
+
+        // Initialize tab cloaking
+        function initTabCloaking() {
+          const icon = document.getElementById("tab-favicon");
+          const title = document.getElementById("tab-title");
+          const selectedValue = localStorage.getItem("selectedOption");
+
+          function setCloak(nameValue, iconUrl) {
+            const customName = localStorage.getItem("CustomName");
+            const customIcon = localStorage.getItem("CustomIcon");
+
+            if (customName) nameValue = customName;
+            if (customIcon) iconUrl = customIcon;
+
+            if (title) title.textContent = nameValue;
+            if (icon) icon.href = iconUrl;
+          }
+
+          const cloakOptions = {
+            Google: ["Google", "https://www.google.com/favicon.ico"],
+            Drive: ["My Drive - Google Drive", "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"],
+            Classroom: ["Home", "https://ssl.gstatic.com/classroom/favicon.png"],
+            Gmail: ["Gmail", "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"],
+            Netflix: ["Netflix", "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico"],
+          };
+
+          if (selectedValue && cloakOptions[selectedValue]) {
+            const [name, iconUrl] = cloakOptions[selectedValue];
+            setCloak(name, iconUrl);
+          }
+        }
+
+        // Initialize all legacy systems
+        initThemes();
+        initTabCloaking();
+
+        // Motivational quotes rotation
+        const quotes = [
+          { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+          { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+          {
+            text: "The future belongs to those who believe in the beauty of their dreams.",
+            author: "Eleanor Roosevelt",
+          },
+          { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+          { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
+          { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+          {
+            text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            author: "Winston Churchill",
+          },
+          { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+          { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+          { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" },
+        ];
+
+        const dailyQuote = quotes[new Date().getDate() % quotes.length];
+        const quoteText = document.querySelector(".quote-text");
+        const quoteAuthor = document.querySelector(".quote-author");
+
+        if (quoteText && quoteAuthor) {
+          quoteText.textContent = `"${dailyQuote.text}"`;
+          quoteAuthor.textContent = `- ${dailyQuote.author}`;
+        }
+
+        // Search Autocomplete Implementation
+        const searchInput = document.getElementById("is");
+        const suggestionsContainer = document.getElementById("suggestions");
+        
+        // Popular search suggestions
+        const searchSuggestions = [
+          "youtube.com", "google.com", "discord.com", "reddit.com", "netflix.com",
+          "instagram.com", "twitter.com", "facebook.com", "tiktok.com", "snapchat.com",
+          "gmail.com", "amazon.com", "wikipedia.org", "spotify.com", "twitch.tv",
+          "github.com", "stackoverflow.com", "coolmathgames.com", "kahoot.it",
+          "canvas", "google classroom", "schoology", "blackboard", "zoom.us"
+        ];
+
+        let currentSuggestionIndex = -1;
+        let filteredSuggestions = [];
+
+        function showSuggestions(input) {
+          const query = input.toLowerCase().trim();
+          
+          if (query.length < 1) {
+            hideSuggestions();
+            return;
+          }
+
+          // Filter suggestions based on input
+          filteredSuggestions = searchSuggestions.filter(suggestion => 
+            suggestion.toLowerCase().includes(query)
+          ).slice(0, 6); // Limit to 6 suggestions
+
+          if (filteredSuggestions.length === 0) {
+            hideSuggestions();
+            return;
+          }
+
+          // Create suggestion elements
+          suggestionsContainer.innerHTML = "";
+          filteredSuggestions.forEach((suggestion, index) => {
+            const suggestionElement = document.createElement("div");
+            suggestionElement.className = "suggestion-item";
+            suggestionElement.textContent = suggestion;
+            suggestionElement.dataset.index = index;
+            
+            suggestionElement.addEventListener("click", () => {
+              searchInput.value = suggestion;
+              hideSuggestions();
+              searchInput.focus();
+            });
+
+            suggestionElement.addEventListener("mouseenter", () => {
+              currentSuggestionIndex = index;
+              highlightSuggestion();
+            });
+
+            suggestionsContainer.appendChild(suggestionElement);
+          });
+
+          suggestionsContainer.style.display = "block";
+          currentSuggestionIndex = -1;
+        }
+
+        function hideSuggestions() {
+          suggestionsContainer.style.display = "none";
+          suggestionsContainer.innerHTML = "";
+          currentSuggestionIndex = -1;
+        }
+
+        function highlightSuggestion() {
+          const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item");
+          suggestions.forEach((item, index) => {
+            item.classList.toggle("highlighted", index === currentSuggestionIndex);
+          });
+        }
+
+        // Search input event listeners
+        if (searchInput && suggestionsContainer) {
+          searchInput.addEventListener("input", (e) => {
+            showSuggestions(e.target.value);
+          });
+
+          searchInput.addEventListener("keydown", (e) => {
+            const suggestions = suggestionsContainer.querySelectorAll(".suggestion-item");
+            
+            switch(e.key) {
+              case "ArrowDown":
+                e.preventDefault();
+                currentSuggestionIndex = Math.min(currentSuggestionIndex + 1, suggestions.length - 1);
+                highlightSuggestion();
+                break;
+              case "ArrowUp":
+                e.preventDefault();
+                currentSuggestionIndex = Math.max(currentSuggestionIndex - 1, -1);
+                highlightSuggestion();
+                break;
+              case "Enter":
+                if (currentSuggestionIndex >= 0 && suggestions[currentSuggestionIndex]) {
+                  e.preventDefault();
+                  searchInput.value = suggestions[currentSuggestionIndex].textContent;
+                  hideSuggestions();
+                }
+                break;
+              case "Escape":
+                hideSuggestions();
+                break;
+            }
+          });
+
+          searchInput.addEventListener("blur", () => {
+            // Delay hiding to allow click events on suggestions
+            setTimeout(hideSuggestions, 200);
+          });
+
+          searchInput.addEventListener("focus", () => {
+            if (searchInput.value.trim()) {
+              showSuggestions(searchInput.value);
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- First Boot Setup System -->
+    <script src="assets/scripts/first-boot-setup.js?v=1"></script>
   </body>
 </html>

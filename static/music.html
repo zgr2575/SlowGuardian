@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Music Player</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
+
+    <!-- Music Player Styles -->
+    <style>
+      .music-container {
+        padding: var(--space-6) var(--space-4);
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 90px;
+        transition: padding-left 0.3s ease;
+      }
+
+      body:has(.sidebar-nav:hover) .music-container {
+        padding-left: 300px;
+      }
+
+      .music-header {
+        text-align: center;
+        margin-bottom: var(--space-8);
+      }
+
+      .music-title {
+        font-size: var(--font-size-4xl);
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: var(--space-3);
+      }
+
+      .music-subtitle {
+        font-size: var(--font-size-lg);
+        color: var(--text-secondary);
+      }
+
+      .music-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-6);
+        margin-bottom: var(--space-8);
+      }
+
+      .music-section {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        transition: all var(--transition-base);
+      }
+
+      .music-section:hover {
+        border-color: var(--accent-primary);
+        background: var(--bg-tertiary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .section-title {
+        font-size: var(--font-size-xl);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-4);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .section-icon {
+        font-size: var(--font-size-2xl);
+      }
+
+      .music-input-group {
+        margin-bottom: var(--space-4);
+      }
+
+      .music-input-group label {
+        display: block;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: var(--space-2);
+      }
+
+      .music-input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+        transition: all var(--transition-base);
+      }
+
+      .music-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: var(--bg-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .music-input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .music-button {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: var(--space-3) var(--space-6);
+        border-radius: var(--radius-lg);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-base);
+        width: 100%;
+        margin-top: var(--space-3);
+      }
+
+      .music-button:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .music-button:active {
+        transform: translateY(0);
+      }
+
+      .music-button.secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+      }
+
+      .music-button.secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--accent-primary);
+      }
+
+      .playlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-4);
+        margin-top: var(--space-6);
+      }
+
+      .playlist-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        transition: all var(--transition-base);
+        cursor: pointer;
+      }
+
+      .playlist-card:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .playlist-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-2);
+      }
+
+      .playlist-description {
+        color: var(--text-secondary);
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--space-3);
+      }
+
+      .playlist-actions {
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .playlist-button {
+        padding: var(--space-2) var(--space-3);
+        background: var(--accent-primary);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        cursor: pointer;
+        transition: all var(--transition-base);
+        flex: 1;
+      }
+
+      .playlist-button:hover {
+        background: var(--accent-secondary);
+      }
+
+      .playlist-button.remove {
+        background: var(--error, #ef4444);
+      }
+
+      .playlist-button.remove:hover {
+        background: #dc2626;
+      }
+
+      .spotify-embed {
+        width: 100%;
+        height: 400px;
+        border: none;
+        border-radius: var(--radius-lg);
+        background: var(--bg-tertiary);
+        margin-top: var(--space-4);
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: var(--space-4) 0;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-2) 0;
+        color: var(--text-secondary);
+      }
+
+      .feature-icon {
+        color: var(--accent-primary);
+        font-size: var(--font-size-lg);
+      }
+
+      .music-player-controls {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        text-align: center;
+        margin-top: var(--space-6);
+      }
+
+      .now-playing {
+        margin-bottom: var(--space-4);
+      }
+
+      .track-title {
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--space-2);
+      }
+
+      .track-artist {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+      }
+
+      .player-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-4);
+        margin: var(--space-4) 0;
+      }
+
+      .control-button {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: var(--font-size-2xl);
+        cursor: pointer;
+        padding: var(--space-2);
+        border-radius: var(--radius-full);
+        transition: all var(--transition-base);
+      }
+
+      .control-button:hover {
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--accent-primary);
+      }
+
+      .control-button.play {
+        background: var(--accent-primary);
+        color: white;
+        font-size: var(--font-size-3xl);
+      }
+
+      .control-button.play:hover {
+        background: var(--accent-secondary);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .music-container {
+          padding-left: var(--space-4);
+        }
+
+        .music-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .playlist-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .music-title {
+          font-size: var(--font-size-2xl);
+        }
+
+        .player-controls {
+          gap: var(--space-2);
+        }
+
+        .control-button {
+          font-size: var(--font-size-xl);
+        }
+
+        .control-button.play {
+          font-size: var(--font-size-2xl);
+        }
+      }
+
+      /* Loading Animation */
+      .loading-spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(79, 70, 229, 0.1);
+        border-left: 3px solid var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: var(--space-4) auto;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .success-message {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #10b981;
+        padding: var(--space-3);
+        border-radius: var(--radius-lg);
+        margin-top: var(--space-3);
+      }
+
+      .error-message {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+        padding: var(--space-3);
+        border-radius: var(--radius-lg);
+        margin-top: var(--space-3);
+      }
+    </style>
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="music-container">
+      <!-- Header -->
+      <div class="music-header">
+        <h1 class="music-title">🎵 Music Player</h1>
+        <p class="music-subtitle">Connect your Spotify account or add custom playlists to enjoy music while browsing</p>
+      </div>
+
+      <!-- Music Integration Grid -->
+      <div class="music-grid">
+        <!-- Spotify Integration -->
+        <div class="music-section">
+          <h2 class="section-title">
+            <span class="section-icon">🎧</span>
+            Spotify Integration
+          </h2>
+          
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              Connect your Spotify account
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              Access your playlists and liked songs
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              Control playback directly from SlowGuardian
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              Sync across all your devices
+            </li>
+          </ul>
+
+          <button class="music-button" id="connect-spotify">
+            🔗 Connect Spotify Account
+          </button>
+          
+          <div id="spotify-status" class="hidden"></div>
+        </div>
+
+        <!-- Custom Playlists -->
+        <div class="music-section">
+          <h2 class="section-title">
+            <span class="section-icon">📝</span>
+            Custom Playlists
+          </h2>
+          
+          <div class="music-input-group">
+            <label for="playlist-name">Playlist Name</label>
+            <input 
+              type="text" 
+              id="playlist-name" 
+              class="music-input" 
+              placeholder="My Awesome Playlist"
+            />
+          </div>
+          
+          <div class="music-input-group">
+            <label for="playlist-url">Spotify/YouTube/Apple Music URL</label>
+            <input 
+              type="url" 
+              id="playlist-url" 
+              class="music-input" 
+              placeholder="https://open.spotify.com/playlist/..."
+            />
+          </div>
+          
+          <button class="music-button secondary" id="add-playlist">
+            ➕ Add Playlist
+          </button>
+          
+          <div id="playlist-status" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Saved Playlists -->
+      <div class="music-section">
+        <h2 class="section-title">
+          <span class="section-icon">🎶</span>
+          Your Playlists
+        </h2>
+        
+        <div id="playlists-grid" class="playlist-grid">
+          <div class="playlist-card">
+            <div class="playlist-title">🎵 Getting Started</div>
+            <div class="playlist-description">Add your first playlist to start enjoying music on SlowGuardian</div>
+            <div class="playlist-actions">
+              <button class="playlist-button" disabled>No playlists yet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Music Player Controls -->
+      <div class="music-player-controls">
+        <div class="now-playing">
+          <div class="track-title" id="current-track">No track selected</div>
+          <div class="track-artist" id="current-artist">Connect a music service to start listening</div>
+        </div>
+        
+        <div class="player-controls">
+          <button class="control-button" id="prev-button" title="Previous">⏮</button>
+          <button class="control-button play" id="play-button" title="Play/Pause">▶</button>
+          <button class="control-button" id="next-button" title="Next">⏭</button>
+        </div>
+        
+        <div id="current-embed" class="hidden"></div>
+      </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Core Scripts -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+    <script src="assets/scripts/loading-system.js?v=1"></script>
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+
+    <!-- Navigation -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+
+    <!-- Enhanced Features -->
+    <script src="assets/scripts/v9/features.js?v=1"></script>
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
+    <script src="assets/scripts/main.js?v=31"></script>
+
+    <!-- Music Player Script -->
+    <script>
+      class MusicPlayer {
+        constructor() {
+          this.playlists = JSON.parse(localStorage.getItem('sg-playlists') || '[]');
+          this.currentPlaylist = null;
+          this.isPlaying = false;
+          this.spotifyConnected = false;
+          this.hasCompletedOnboarding = localStorage.getItem('sg-music-onboarding') === 'true';
+          this.proxyMode = localStorage.getItem('sg-music-proxy-mode') === 'true';
+          
+          this.init();
+        }
+
+        init() {
+          console.log('🎵 Initializing Music Player...');
+          
+          // Show onboarding if first time
+          if (!this.hasCompletedOnboarding) {
+            this.showOnboarding();
+          } else {
+            this.showMainInterface();
+          }
+          
+          console.log('✅ Music Player ready');
+        }
+
+        showOnboarding() {
+          const container = document.querySelector('.music-container');
+          container.innerHTML = `
+            <div class="music-onboarding">
+              <div class="onboarding-header">
+                <h1 class="music-title">🎵 Welcome to Music Player</h1>
+                <p class="music-subtitle">Let's set up your music experience</p>
+              </div>
+
+              <div class="onboarding-steps">
+                <div class="onboarding-step active" data-step="1">
+                  <div class="step-icon">🎧</div>
+                  <h3>Choose Your Mode</h3>
+                  <p>How would you like to use the music player?</p>
+                  
+                  <div class="mode-options">
+                    <button class="mode-option" onclick="musicPlayer.setProxyMode(false)">
+                      <div class="mode-icon">🎵</div>
+                      <div class="mode-title">Direct Mode</div>
+                      <div class="mode-desc">Access music services directly (recommended)</div>
+                    </button>
+                    <button class="mode-option" onclick="musicPlayer.setProxyMode(true)">
+                      <div class="mode-icon">🔒</div>
+                      <div class="mode-title">Proxy Mode</div>
+                      <div class="mode-desc">Access music through proxy (if blocked)</div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="onboarding-step" data-step="2">
+                  <div class="step-icon">📝</div>
+                  <h3>Import Your Music</h3>
+                  <p>Add your favorite playlists to get started</p>
+                  
+                  <div class="import-options">
+                    <div class="import-option">
+                      <h4>🎧 Spotify Playlists</h4>
+                      <input type="url" class="import-input" placeholder="https://open.spotify.com/playlist/..." data-platform="spotify">
+                      <button onclick="musicPlayer.importFromOnboarding('spotify')">Import</button>
+                    </div>
+                    <div class="import-option">
+                      <h4>📺 YouTube Playlists</h4>
+                      <input type="url" class="import-input" placeholder="https://youtube.com/playlist?list=..." data-platform="youtube">
+                      <button onclick="musicPlayer.importFromOnboarding('youtube')">Import</button>
+                    </div>
+                    <div class="import-option">
+                      <h4>🍎 Apple Music</h4>
+                      <input type="url" class="import-input" placeholder="https://music.apple.com/..." data-platform="apple">
+                      <button onclick="musicPlayer.importFromOnboarding('apple')">Import</button>
+                    </div>
+                  </div>
+                  
+                  <button class="skip-btn" onclick="musicPlayer.completeOnboarding()">Skip for Now</button>
+                </div>
+
+                <div class="onboarding-step" data-step="3">
+                  <div class="step-icon">✅</div>
+                  <h3>You're All Set!</h3>
+                  <p>Your music player is ready to use</p>
+                  
+                  <div class="completion-summary">
+                    <div id="import-summary">No playlists imported yet</div>
+                    <div id="mode-summary">Mode: <span id="selected-mode">Direct</span></div>
+                  </div>
+                  
+                  <button class="complete-btn" onclick="musicPlayer.completeOnboarding()">Start Listening</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        setProxyMode(enabled) {
+          this.proxyMode = enabled;
+          localStorage.setItem('sg-music-proxy-mode', enabled.toString());
+          document.getElementById('selected-mode').textContent = enabled ? 'Proxy' : 'Direct';
+          this.nextOnboardingStep();
+        }
+
+        importFromOnboarding(platform) {
+          const input = document.querySelector(`[data-platform="${platform}"]`);
+          const url = input.value.trim();
+          
+          if (!url) {
+            this.showNotification('Please enter a valid URL', 'error');
+            return;
+          }
+
+          const embedUrl = this.convertToEmbedUrl(url);
+          if (!embedUrl) {
+            this.showNotification('Invalid URL format', 'error');
+            return;
+          }
+
+          const playlist = {
+            id: Date.now(),
+            name: `${platform.charAt(0).toUpperCase() + platform.slice(1)} Playlist`,
+            url: url,
+            embedUrl: embedUrl,
+            platform: this.detectPlatform(url),
+            addedAt: new Date().toLocaleDateString(),
+            albumCover: this.getDefaultAlbumCover(platform)
+          };
+
+          this.playlists.push(playlist);
+          this.savePlaylists();
+          
+          input.value = '';
+          this.showNotification('Playlist imported successfully!', 'success');
+          this.updateImportSummary();
+          
+          // Auto-advance to next screen after successful import
+          setTimeout(() => {
+            this.nextOnboardingStep();
+          }, 1500); // Wait 1.5 seconds to show success message
+        }
+
+        nextOnboardingStep() {
+          const currentStep = document.querySelector('.onboarding-step.active');
+          const nextStep = currentStep.nextElementSibling;
+          
+          if (nextStep && nextStep.classList.contains('onboarding-step')) {
+            currentStep.classList.remove('active');
+            nextStep.classList.add('active');
+          }
+        }
+
+        updateImportSummary() {
+          const summary = document.getElementById('import-summary');
+          if (this.playlists.length > 0) {
+            summary.textContent = `${this.playlists.length} playlist(s) imported`;
+          }
+        }
+
+        completeOnboarding() {
+          localStorage.setItem('sg-music-onboarding', 'true');
+          this.hasCompletedOnboarding = true;
+          this.showMainInterface();
+        }
+
+        showMainInterface() {
+          const container = document.querySelector('.music-container');
+          container.innerHTML = this.getMainInterfaceHTML();
+          this.setupEventListeners();
+          this.renderPlaylists();
+          this.checkSpotifyStatus();
+        }
+
+        getMainInterfaceHTML() {
+          return `
+            <!-- Header -->
+            <div class="music-header">
+              <h1 class="music-title">🎵 Music Player</h1>
+              <p class="music-subtitle">Connect your Spotify account or add custom playlists to enjoy music while browsing</p>
+              <div class="music-mode-indicator">
+                Mode: <span class="mode-badge ${this.proxyMode ? 'proxy' : 'direct'}">${this.proxyMode ? '🔒 Proxy' : '🎵 Direct'}</span>
+                <button class="change-mode-btn" onclick="musicPlayer.changeMode()">Change</button>
+              </div>
+            </div>
+
+            <!-- Music Integration Grid -->
+            <div class="music-grid">
+              <!-- Spotify Integration -->
+              <div class="music-section">
+                <h2 class="section-title">
+                  <span class="section-icon">🎧</span>
+                  Spotify Integration
+                </h2>
+                
+                <ul class="feature-list">
+                  <li class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    Connect your Spotify account
+                  </li>
+                  <li class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    Access your playlists and liked songs
+                  </li>
+                  <li class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    Control playback directly from SlowGuardian
+                  </li>
+                  <li class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    Sync across all your devices
+                  </li>
+                </ul>
+
+                <button class="music-button" id="connect-spotify">
+                  🔗 Connect Spotify Account
+                </button>
+                
+                <div id="spotify-status" class="hidden"></div>
+              </div>
+
+              <!-- Custom Playlists -->
+              <div class="music-section">
+                <h2 class="section-title">
+                  <span class="section-icon">📝</span>
+                  Custom Playlists
+                </h2>
+                
+                <div class="music-input-group">
+                  <label for="playlist-name">Playlist Name</label>
+                  <input 
+                    type="text" 
+                    id="playlist-name" 
+                    class="music-input" 
+                    placeholder="My Awesome Playlist"
+                  />
+                </div>
+                
+                <div class="music-input-group">
+                  <label for="playlist-url">Spotify/YouTube/Apple Music URL</label>
+                  <input 
+                    type="url" 
+                    id="playlist-url" 
+                    class="music-input" 
+                    placeholder="https://open.spotify.com/playlist/..."
+                  />
+                </div>
+                
+                <button class="music-button secondary" id="add-playlist">
+                  ➕ Add Playlist
+                </button>
+                
+                <div id="playlist-status" class="hidden"></div>
+              </div>
+            </div>
+
+            <!-- Saved Playlists -->
+            <div class="music-section">
+              <h2 class="section-title">
+                <span class="section-icon">🎶</span>
+                Your Playlists
+              </h2>
+              
+              <div id="playlists-grid" class="playlist-grid">
+                <div class="playlist-card">
+                  <div class="playlist-title">🎵 Getting Started</div>
+                  <div class="playlist-description">Add your first playlist to start enjoying music on SlowGuardian</div>
+                  <div class="playlist-actions">
+                    <button class="playlist-button" disabled>No playlists yet</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Music Player Controls -->
+            <div class="music-player-controls">
+              <div class="player-display">
+                <div class="album-cover-container">
+                  <img id="current-album-cover" src="" alt="Album Cover" class="album-cover hidden">
+                  <div class="no-track-cover">🎵</div>
+                </div>
+                
+                <div class="track-info">
+                  <div class="track-title" id="current-track">No track selected</div>
+                  <div class="track-artist" id="current-artist">Connect a music service to start listening</div>
+                  <div class="track-album" id="current-album"></div>
+                </div>
+                
+                <div class="player-controls">
+                  <button class="control-button" id="prev-button" title="Previous">⏮</button>
+                  <button class="control-button play" id="play-button" title="Play/Pause">▶</button>
+                  <button class="control-button" id="next-button" title="Next">⏭</button>
+                  <button class="control-button" id="lyrics-button" title="Show Lyrics">📝</button>
+                </div>
+              </div>
+              
+              <div id="current-embed" class="hidden"></div>
+              <div id="lyrics-panel" class="lyrics-panel hidden">
+                <div class="lyrics-header">
+                  <h3>Lyrics</h3>
+                  <button class="close-lyrics" onclick="musicPlayer.closeLyrics()">×</button>
+                </div>
+                <div class="lyrics-content" id="lyrics-content">
+                  <p>Lyrics will appear here when available</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        setupEventListeners() {
+          // Connect Spotify button
+          document.getElementById('connect-spotify').addEventListener('click', () => {
+            this.connectSpotify();
+          });
+
+          // Add playlist button
+          document.getElementById('add-playlist').addEventListener('click', () => {
+            this.addCustomPlaylist();
+          });
+
+          // Player controls
+          document.getElementById('play-button').addEventListener('click', () => {
+            this.togglePlayPause();
+          });
+
+          document.getElementById('prev-button').addEventListener('click', () => {
+            this.previousTrack();
+          });
+
+          document.getElementById('next-button').addEventListener('click', () => {
+            this.nextTrack();
+          });
+
+          document.getElementById('lyrics-button').addEventListener('click', () => {
+            this.showLyrics();
+          });
+
+          // Enter key for adding playlists
+          document.getElementById('playlist-url').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              this.addCustomPlaylist();
+            }
+          });
+        }
+
+        changeMode() {
+          this.proxyMode = !this.proxyMode;
+          localStorage.setItem('sg-music-proxy-mode', this.proxyMode.toString());
+          
+          const modeBadge = document.querySelector('.mode-badge');
+          modeBadge.className = `mode-badge ${this.proxyMode ? 'proxy' : 'direct'}`;
+          modeBadge.textContent = this.proxyMode ? '🔒 Proxy' : '🎵 Direct';
+          
+          this.showNotification(`Switched to ${this.proxyMode ? 'Proxy' : 'Direct'} mode`, 'success');
+        }
+
+        connectSpotify() {
+          const statusDiv = document.getElementById('spotify-status');
+          statusDiv.className = '';
+          statusDiv.innerHTML = '<div class="loading-spinner"></div>';
+
+          // Simulate Spotify connection process
+          setTimeout(() => {
+            // Note: This is a demo implementation
+            // Real Spotify integration would require API keys and OAuth
+            statusDiv.innerHTML = `
+              <div class="error-message">
+                <strong>Demo Mode:</strong> Spotify integration requires API keys and OAuth setup. 
+                For now, you can use the custom playlist feature with Spotify embed URLs.
+              </div>
+            `;
+          }, 2000);
+        }
+
+        addCustomPlaylist() {
+          const nameInput = document.getElementById('playlist-name');
+          const urlInput = document.getElementById('playlist-url');
+          const statusDiv = document.getElementById('playlist-status');
+
+          const name = nameInput.value.trim();
+          const url = urlInput.value.trim();
+
+          if (!name || !url) {
+            statusDiv.className = '';
+            statusDiv.innerHTML = '<div class="error-message">Please enter both playlist name and URL</div>';
+            return;
+          }
+
+          // Validate and convert URL
+          const embedUrl = this.convertToEmbedUrl(url);
+          if (!embedUrl) {
+            statusDiv.className = '';
+            statusDiv.innerHTML = '<div class="error-message">Invalid URL. Please use Spotify, YouTube, or Apple Music links.</div>';
+            return;
+          }
+
+          // Add to playlists
+          const playlist = {
+            id: Date.now(),
+            name: name,
+            url: url,
+            embedUrl: embedUrl,
+            platform: this.detectPlatform(url),
+            addedAt: new Date().toLocaleDateString(),
+            albumCover: this.extractAlbumCover(url)
+          };
+
+          this.playlists.push(playlist);
+          this.savePlaylists();
+          this.renderPlaylists();
+
+          // Clear inputs and show success
+          nameInput.value = '';
+          urlInput.value = '';
+          statusDiv.className = '';
+          statusDiv.innerHTML = '<div class="success-message">✅ Playlist added successfully!</div>';
+
+          setTimeout(() => {
+            statusDiv.innerHTML = '';
+          }, 3000);
+        }
+
+        extractAlbumCover(url) {
+          // Use local color-based placeholders instead of external service
+          if (url.includes('spotify.com/playlist/')) {
+            return this.createLocalPlaceholder('Spotify', '#1DB954');
+          } else if (url.includes('youtube.com')) {
+            return this.createLocalPlaceholder('YouTube', '#FF0000');
+          } else if (url.includes('music.apple.com')) {
+            return this.createLocalPlaceholder('Apple', '#FC3C44');
+          }
+          return this.createLocalPlaceholder('Music', '#667eea');
+        }
+
+        getDefaultAlbumCover(platform) {
+          const covers = {
+            spotify: this.createLocalPlaceholder('Spotify', '#1DB954'),
+            youtube: this.createLocalPlaceholder('YouTube', '#FF0000'),
+            apple: this.createLocalPlaceholder('Apple', '#FC3C44')
+          };
+          return covers[platform] || this.createLocalPlaceholder('Music', '#667eea');
+        }
+
+        createLocalPlaceholder(text, color) {
+          // Create a data URI SVG placeholder
+          const svg = `
+            <svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+              <rect width="150" height="150" fill="${color}"/>
+              <text x="75" y="80" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="white" text-anchor="middle">${text}</text>
+            </svg>
+          `;
+          return 'data:image/svg+xml;base64,' + btoa(svg);
+        }
+
+        convertToEmbedUrl(url) {
+          // Spotify
+          if (url.includes('spotify.com/playlist/')) {
+            const playlistId = url.split('/playlist/')[1].split('?')[0];
+            return this.proxyMode ? `/go#${encodeURIComponent(`https://open.spotify.com/embed/playlist/${playlistId}`)}` : `https://open.spotify.com/embed/playlist/${playlistId}`;
+          }
+          
+          if (url.includes('spotify.com/album/')) {
+            const albumId = url.split('/album/')[1].split('?')[0];
+            return this.proxyMode ? `/go#${encodeURIComponent(`https://open.spotify.com/embed/album/${albumId}`)}` : `https://open.spotify.com/embed/album/${albumId}`;
+          }
+
+          // YouTube
+          if (url.includes('youtube.com/playlist')) {
+            const playlistId = url.split('list=')[1].split('&')[0];
+            const embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
+            return this.proxyMode ? `/go#${encodeURIComponent(embedUrl)}` : embedUrl;
+          }
+
+          // YouTube Music
+          if (url.includes('music.youtube.com')) {
+            const embedUrl = url.replace('music.youtube.com', 'www.youtube.com/embed');
+            return this.proxyMode ? `/go#${encodeURIComponent(embedUrl)}` : embedUrl;
+          }
+
+          return null;
+        }
+
+        detectPlatform(url) {
+          if (url.includes('spotify.com')) return 'Spotify';
+          if (url.includes('youtube.com') || url.includes('music.youtube.com')) return 'YouTube';
+          if (url.includes('music.apple.com')) return 'Apple Music';
+          return 'Unknown';
+        }
+
+        renderPlaylists() {
+          const grid = document.getElementById('playlists-grid');
+          
+          if (this.playlists.length === 0) {
+            grid.innerHTML = `
+              <div class="playlist-card">
+                <div class="playlist-title">🎵 Getting Started</div>
+                <div class="playlist-description">Add your first playlist to start enjoying music on SlowGuardian</div>
+                <div class="playlist-actions">
+                  <button class="playlist-button" disabled>No playlists yet</button>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          grid.innerHTML = this.playlists.map(playlist => `
+            <div class="playlist-card" data-id="${playlist.id}">
+              <div class="playlist-cover">
+                <img src="${playlist.albumCover}" alt="${playlist.name}" class="cover-image">
+              </div>
+              <div class="playlist-info">
+                <div class="playlist-title">${playlist.platform} • ${playlist.name}</div>
+                <div class="playlist-description">Added on ${playlist.addedAt}</div>
+                <div class="playlist-actions">
+                  <button class="playlist-button" onclick="musicPlayer.playPlaylist(${playlist.id})">
+                    ▶ Play
+                  </button>
+                  <button class="playlist-button remove" onclick="musicPlayer.removePlaylist(${playlist.id})">
+                    🗑 Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        playPlaylist(id) {
+          const playlist = this.playlists.find(p => p.id === id);
+          if (!playlist) return;
+
+          this.currentPlaylist = playlist;
+          
+          // Update now playing with album cover
+          document.getElementById('current-track').textContent = playlist.name;
+          document.getElementById('current-artist').textContent = `${playlist.platform} Playlist`;
+          document.getElementById('current-album').textContent = 'Custom Playlist';
+          
+          // Show album cover
+          const albumCover = document.getElementById('current-album-cover');
+          const noCover = document.querySelector('.no-track-cover');
+          albumCover.src = playlist.albumCover;
+          albumCover.classList.remove('hidden');
+          noCover.style.display = 'none';
+
+          // Show embed
+          const embedDiv = document.getElementById('current-embed');
+          embedDiv.innerHTML = `
+            <iframe 
+              src="${playlist.embedUrl}" 
+              class="spotify-embed"
+              frameborder="0" 
+              allowtransparency="true" 
+              allow="encrypted-media">
+            </iframe>
+          `;
+          embedDiv.classList.remove('hidden');
+
+          // Update play button
+          document.getElementById('play-button').textContent = '⏸';
+          this.isPlaying = true;
+
+          // Also start playing in global music player for cross-page playback
+          if (window.globalMusicPlayer) {
+            window.globalMusicPlayer.playPlaylist(playlist);
+          }
+
+          console.log(`🎵 Playing: ${playlist.name}`);
+        }
+
+        showLyrics() {
+          const lyricsPanel = document.getElementById('lyrics-panel');
+          const lyricsContent = document.getElementById('lyrics-content');
+          
+          if (!this.currentPlaylist) {
+            this.showNotification('Please select a track first', 'error');
+            return;
+          }
+
+          // Demo lyrics - in real implementation, this would fetch from lyrics API
+          lyricsContent.innerHTML = `
+            <div class="lyrics-search">
+              <p>🎵 Searching for lyrics for "${this.currentPlaylist.name}"...</p>
+              <div class="loading-spinner"></div>
+            </div>
+          `;
+          
+          lyricsPanel.classList.remove('hidden');
+          
+          // Simulate lyrics loading
+          setTimeout(() => {
+            lyricsContent.innerHTML = `
+              <div class="lyrics-text">
+                <p><strong>Demo Lyrics</strong></p>
+                <p>🎵 This is where lyrics would appear</p>
+                <p>For the currently playing track</p>
+                <p>"${this.currentPlaylist.name}"</p>
+                <br>
+                <p>Integration with lyrics APIs like:</p>
+                <p>• Genius API</p>
+                <p>• Musixmatch API</p>
+                <p>• Lyrics.ovh API</p>
+                <br>
+                <p><em>Would provide real-time lyrics here</em></p>
+              </div>
+            `;
+          }, 2000);
+        }
+
+        closeLyrics() {
+          document.getElementById('lyrics-panel').classList.add('hidden');
+        }
+
+        removePlaylist(id) {
+          if (confirm('Are you sure you want to remove this playlist?')) {
+            this.playlists = this.playlists.filter(p => p.id !== id);
+            this.savePlaylists();
+            this.renderPlaylists();
+
+            // Stop playing if this was the current playlist
+            if (this.currentPlaylist && this.currentPlaylist.id === id) {
+              this.stopPlayback();
+            }
+          }
+        }
+
+        togglePlayPause() {
+          if (!this.currentPlaylist) {
+            this.showNotification('Please select a playlist first', 'error');
+            return;
+          }
+
+          const playButton = document.getElementById('play-button');
+          if (this.isPlaying) {
+            playButton.textContent = '▶';
+            this.isPlaying = false;
+            // Note: Cannot actually control embedded players due to CORS
+          } else {
+            playButton.textContent = '⏸';
+            this.isPlaying = true;
+          }
+        }
+
+        stopPlayback() {
+          document.getElementById('current-track').textContent = 'No track selected';
+          document.getElementById('current-artist').textContent = 'Connect a music service to start listening';
+          document.getElementById('current-album').textContent = '';
+          
+          // Hide album cover
+          const albumCover = document.getElementById('current-album-cover');
+          const noCover = document.querySelector('.no-track-cover');
+          albumCover.classList.add('hidden');
+          noCover.style.display = 'flex';
+          
+          document.getElementById('current-embed').classList.add('hidden');
+          document.getElementById('play-button').textContent = '▶';
+          this.isPlaying = false;
+          this.currentPlaylist = null;
+        }
+
+        previousTrack() {
+          // Note: Cannot control embedded players directly
+          console.log('⏮ Previous track (embedded player controls required)');
+          this.showNotification('Use the embedded player controls for track navigation', 'info');
+        }
+
+        nextTrack() {
+          // Note: Cannot control embedded players directly  
+          console.log('⏭ Next track (embedded player controls required)');
+          this.showNotification('Use the embedded player controls for track navigation', 'info');
+        }
+
+        showNotification(message, type = 'info') {
+          const notification = document.createElement('div');
+          notification.className = `notification ${type}`;
+          notification.innerHTML = `
+            <div class="notification-content">
+              <span class="notification-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+              <span class="notification-text">${message}</span>
+            </div>
+          `;
+          
+          notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease;
+          `;
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+          }, 3000);
+        }
+
+        savePlaylists() {
+          localStorage.setItem('sg-playlists', JSON.stringify(this.playlists));
+        }
+
+        checkSpotifyStatus() {
+          // Check if user has connected Spotify previously
+          const spotifyToken = localStorage.getItem('spotify-token');
+          if (spotifyToken) {
+            this.spotifyConnected = true;
+            document.getElementById('connect-spotify').textContent = '✅ Spotify Connected';
+            document.getElementById('connect-spotify').disabled = true;
+          }
+        }
+      }
+
+      // Initialize music player when page loads
+      let musicPlayer;
+      document.addEventListener('DOMContentLoaded', () => {
+        musicPlayer = new MusicPlayer();
+      });
+
+      // Additional styles for new features
+      const enhancedStyles = document.createElement('style');
+      enhancedStyles.textContent = `
+        /* Onboarding Styles */
+        .music-onboarding {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: var(--space-6);
+        }
+
+        .onboarding-steps {
+          margin-top: var(--space-8);
+        }
+
+        .onboarding-step {
+          display: none;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--radius-xl);
+          padding: var(--space-8);
+          text-align: center;
+        }
+
+        .onboarding-step.active {
+          display: block;
+        }
+
+        .step-icon {
+          font-size: 4rem;
+          margin-bottom: var(--space-4);
+        }
+
+        .mode-options {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: var(--space-4);
+          margin-top: var(--space-6);
+        }
+
+        .mode-option {
+          background: var(--bg-tertiary);
+          border: 2px solid var(--border-primary);
+          border-radius: var(--radius-lg);
+          padding: var(--space-6);
+          cursor: pointer;
+          transition: all var(--transition-base);
+          text-align: center;
+        }
+
+        .mode-option:hover {
+          border-color: var(--accent-primary);
+          background: var(--bg-secondary);
+        }
+
+        .mode-icon {
+          font-size: 2rem;
+          margin-bottom: var(--space-3);
+        }
+
+        .mode-title {
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: var(--space-2);
+        }
+
+        .mode-desc {
+          font-size: var(--font-size-sm);
+          color: var(--text-secondary);
+        }
+
+        .import-options {
+          display: grid;
+          gap: var(--space-4);
+          margin-top: var(--space-6);
+        }
+
+        .import-option {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--radius-lg);
+          padding: var(--space-4);
+        }
+
+        .import-option h4 {
+          margin-bottom: var(--space-3);
+          color: var(--text-primary);
+        }
+
+        .import-input {
+          width: 100%;
+          padding: var(--space-2) var(--space-3);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--radius-md);
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          margin-bottom: var(--space-3);
+        }
+
+        .import-option button {
+          background: var(--accent-primary);
+          color: white;
+          border: none;
+          padding: var(--space-2) var(--space-4);
+          border-radius: var(--radius-md);
+          cursor: pointer;
+        }
+
+        .skip-btn, .complete-btn {
+          background: var(--gradient-primary);
+          color: white;
+          border: none;
+          padding: var(--space-3) var(--space-6);
+          border-radius: var(--radius-lg);
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: var(--space-6);
+        }
+
+        /* Mode Indicator */
+        .music-mode-indicator {
+          margin-top: var(--space-4);
+          display: flex;
+          align-items: center;
+          gap: var(--space-3);
+          justify-content: center;
+        }
+
+        .mode-badge {
+          padding: var(--space-1) var(--space-3);
+          border-radius: var(--radius-full);
+          font-size: var(--font-size-sm);
+          font-weight: 500;
+        }
+
+        .mode-badge.direct {
+          background: rgba(16, 185, 129, 0.1);
+          color: #10b981;
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .mode-badge.proxy {
+          background: rgba(239, 68, 68, 0.1);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .change-mode-btn {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border-primary);
+          color: var(--text-primary);
+          padding: var(--space-1) var(--space-3);
+          border-radius: var(--radius-md);
+          font-size: var(--font-size-sm);
+          cursor: pointer;
+        }
+
+        /* Enhanced Player Controls */
+        .player-display {
+          display: grid;
+          grid-template-columns: 150px 1fr 200px;
+          gap: var(--space-4);
+          align-items: center;
+          margin-bottom: var(--space-4);
+        }
+
+        .album-cover-container {
+          position: relative;
+          width: 150px;
+          height: 150px;
+        }
+
+        .album-cover {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-md);
+        }
+
+        .no-track-cover {
+          width: 100%;
+          height: 100%;
+          background: var(--bg-tertiary);
+          border: 2px dashed var(--border-primary);
+          border-radius: var(--radius-lg);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          color: var(--text-secondary);
+        }
+
+        .track-info {
+          padding: var(--space-4);
+        }
+
+        .track-album {
+          color: var(--text-secondary);
+          font-size: var(--font-size-sm);
+          margin-top: var(--space-1);
+        }
+
+        /* Playlist Cards with Covers */
+        .playlist-card {
+          display: grid;
+          grid-template-columns: 80px 1fr;
+          gap: var(--space-3);
+          align-items: center;
+        }
+
+        .playlist-cover {
+          width: 80px;
+          height: 80px;
+        }
+
+        .cover-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-sm);
+        }
+
+        /* Lyrics Panel */
+        .lyrics-panel {
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: var(--radius-lg);
+          margin-top: var(--space-4);
+          max-height: 400px;
+          overflow-y: auto;
+        }
+
+        .lyrics-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: var(--space-4);
+          border-bottom: 1px solid var(--border-primary);
+        }
+
+        .lyrics-header h3 {
+          margin: 0;
+          color: var(--text-primary);
+        }
+
+        .close-lyrics {
+          background: none;
+          border: none;
+          color: var(--text-secondary);
+          font-size: var(--font-size-xl);
+          cursor: pointer;
+          padding: var(--space-1);
+        }
+
+        .lyrics-content {
+          padding: var(--space-4);
+          color: var(--text-primary);
+          line-height: 1.6;
+        }
+
+        .lyrics-search {
+          text-align: center;
+          color: var(--text-secondary);
+        }
+
+        .lyrics-text p {
+          margin-bottom: var(--space-2);
+        }
+
+        /* Notification Animations */
+        @keyframes slideInRight {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .mode-options {
+            grid-template-columns: 1fr;
+          }
+
+          .player-display {
+            grid-template-columns: 1fr;
+            text-align: center;
+          }
+
+          .album-cover-container {
+            justify-self: center;
+          }
+
+          .playlist-card {
+            grid-template-columns: 1fr;
+            text-align: center;
+          }
+
+          .playlist-cover {
+            justify-self: center;
+          }
+        }
+      `;
+      document.head.appendChild(enhancedStyles);
+
+      // Particles background
+      function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        if (!particlesContainer) return;
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.style.cssText = `
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(79, 70, 229, 0.6);
+            border-radius: 50%;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+          `;
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Add particle animation CSS
+      const particleStyles = document.createElement('style');
+      particleStyles.textContent = `
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); opacity: 0.6; }
+          50% { transform: translateY(-20px); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(particleStyles);
+
+      // Initialize particles
+      createParticles();
+    </script>
+  </body>
+</html>
