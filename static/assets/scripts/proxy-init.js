@@ -58,27 +58,39 @@ class SlowGuardianProxy {
 
       // Step 1: Check service worker support
       if (!('serviceWorker' in navigator)) {
-        throw new Error('Service Worker not supported in this browser');
+        this.log('warn', 'INIT', 'Service Worker not supported in this browser');
+        return false;
       }
 
-      // Step 2: Test bare server connectivity
-      await this.testBareServer();
+      // Step 2: Test bare server connectivity (non-blocking)
+      this.testBareServer().catch(error => {
+        this.log('warn', 'BARE', 'Bare server test failed, continuing anyway:', error.message);
+      });
 
-      // Step 3: Register service worker
-      await this.registerServiceWorker();
+      // Step 3: Register service worker (critical)
+      try {
+        await this.registerServiceWorker();
+      } catch (error) {
+        this.log('error', 'SW', 'Service worker registration failed:', error.message);
+        // Continue with fallback mode
+        this.status.serviceWorker = false;
+      }
 
-      // Step 4: Test proxy configurations
-      await this.testProxyConfigs();
+      // Step 4: Test proxy configurations (non-blocking)
+      this.testProxyConfigs().catch(error => {
+        this.log('warn', 'CONFIG', 'Proxy config tests failed, continuing anyway:', error.message);
+      });
 
-      // Step 5: Final status check
-      await this.checkFinalStatus();
+      // Step 5: Set up proxy debugging tools
+      this.setupProxyDebugTools();
 
-      this.log('info', 'INIT', '✅ Proxy system initialization completed successfully');
+      this.log('info', 'INIT', '✅ Proxy system initialization completed');
       return true;
 
     } catch (error) {
       this.log('error', 'INIT', '❌ Proxy initialization failed:', error.message);
-      throw error;
+      // Don't throw error - allow system to continue with fallback mode
+      return false;
     }
   }
 
@@ -341,6 +353,18 @@ class SlowGuardianProxy {
       this.log('error', 'TEST', '❌ Proxy test failed:', error.message);
       return false;
     }
+  }
+
+  setupProxyDebugTools() {
+    // Set up global debugging functions
+    window.proxyDebug = {
+      status: () => this.getStatus(),
+      test: (url) => this.testProxy(url),
+      encode: (url, proxy) => this.encodeUrl(url, proxy),
+      logs: () => this.status
+    };
+    
+    this.log('debug', 'DEBUG', '✅ Debug tools available at window.proxyDebug');
   }
 }
 

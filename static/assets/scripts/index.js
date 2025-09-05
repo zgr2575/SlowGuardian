@@ -20,34 +20,39 @@ window.addEventListener("load", async () => {
   try {
     console.log("🚀 SlowGuardian v9 homepage initializing...");
 
-    // Wait for proxy system to be ready
-    if (window.slowGuardianProxy) {
-      try {
-        console.log("Initializing proxy system...");
-        await window.slowGuardianProxy.initialize();
-        console.log("✅ Proxy system ready");
-        
-        // Display status for debugging
-        const status = window.slowGuardianProxy.getStatus();
-        console.log("📊 Proxy status:", status);
-        
-        // Test connectivity
-        const testResult = await window.slowGuardianProxy.testProxy('https://httpbin.org/get');
-        if (testResult) {
-          console.log("✅ Proxy connectivity test passed");
-        } else {
-          console.warn("⚠️ Proxy connectivity test failed");
+    // Wait for proxy system to be ready with timeout
+    const initializeProxy = async () => {
+      if (window.slowGuardianProxy) {
+        try {
+          console.log("Initializing proxy system...");
+          const result = await window.slowGuardianProxy.initialize();
+          
+          if (result) {
+            console.log("✅ Proxy system ready");
+            
+            // Display status for debugging
+            const status = window.slowGuardianProxy.getStatus();
+            console.log("📊 Proxy status:", status);
+          } else {
+            console.warn("⚠️ Proxy system initialization completed with warnings");
+          }
+          
+        } catch (error) {
+          console.error("❌ Proxy system initialization failed:", error);
+          console.warn("⚠️ Continuing without full proxy functionality");
         }
-        
-      } catch (error) {
-        console.error("❌ Proxy system initialization failed:", error);
-        console.warn("⚠️ Continuing without full proxy functionality");
+      } else {
+        console.warn("⚠️ Proxy system not available");
       }
-    } else {
-      console.warn("⚠️ Proxy system not available, waiting...");
-      // Wait a bit more for the script to load
-      setTimeout(async () => {
-        if (window.slowGuardianProxy) {
+    };
+
+    // Try to initialize immediately, with fallback
+    await initializeProxy();
+    
+    // If proxy not ready, try again after a delay
+    if (!window.slowGuardianProxy) {
+      setTimeout(initializeProxy, 2000);
+    }
           try {
             await window.slowGuardianProxy.initialize();
             console.log("✅ Proxy system ready (delayed)");

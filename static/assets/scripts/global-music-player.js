@@ -1,9 +1,16 @@
 /**
  * Global Music Player Service
  * Provides persistent music playback across all pages
+ * DEV TEST FEATURE - Only available in developer mode
  */
 class GlobalMusicPlayer {
   constructor() {
+    // Check if developer mode is enabled
+    if (!this.isDeveloperMode()) {
+      console.log('🎵 Global Music Player disabled - dev feature only');
+      return;
+    }
+    
     this.currentTrack = null;
     this.currentPlaylist = null;
     this.isPlaying = false;
@@ -18,7 +25,40 @@ class GlobalMusicPlayer {
     this.setupEventListeners();
   }
 
+  isDeveloperMode() {
+    // Check if admin panel is logged in
+    if (window.adminPanel && window.adminPanel.isLoggedIn) {
+      return true;
+    }
+
+    // Check for admin token in sessionStorage
+    const adminToken = sessionStorage.getItem("admin-token");
+    if (adminToken) {
+      return true;
+    }
+
+    // Check for developer mode cookie
+    const devMode = this.getCookie("developer-mode");
+    if (devMode === "true") {
+      return true;
+    }
+
+    return false;
+  }
+
+  getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
   initializeGlobalPlayer() {
+    // Only initialize if developer mode is enabled
+    if (!this.isDeveloperMode()) {
+      return;
+    }
+    
     // Create a fixed player widget that appears on all pages
     this.playerContainer = document.createElement('div');
     this.playerContainer.id = 'global-music-player';

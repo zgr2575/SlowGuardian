@@ -311,18 +311,18 @@ Environment: ${this.buildInfo.environment}
         const registration = await navigator.serviceWorker.register("/sw.js");
         console.log("ServiceWorker registered:", registration);
 
-        // Handle updates
-        registration.addEventListener("updatefound", () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener("statechange", () => {
-            if (
-              newWorker.state === "installed" &&
-              navigator.serviceWorker.controller
-            ) {
-              this.showUpdateAvailable();
-            }
-          });
-        });
+        // Handle updates - disabled to prevent false update notifications
+        // registration.addEventListener("updatefound", () => {
+        //   const newWorker = registration.installing;
+        //   newWorker.addEventListener("statechange", () => {
+        //     if (
+        //       newWorker.state === "installed" &&
+        //       navigator.serviceWorker.controller
+        //     ) {
+        //       this.showUpdateAvailable();
+        //     }
+        //   });
+        // });
       } catch (error) {
         console.log("ServiceWorker registration failed:", error);
       }

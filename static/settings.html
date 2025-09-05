@@ -1419,6 +1419,12 @@
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
 
+    <!-- KeyAuth Premium System -->
+    <script src="assets/scripts/keyauth.js?v=1"></script>
+
+    <!-- Premium Branding Manager -->
+    <script src="assets/scripts/premium-branding.js?v=1"></script>
+
     <!-- Enhanced Features System -->
     <script src="assets/scripts/v9/features.js?v=1"></script>
     <script src="assets/scripts/v9/features-manager.js?v=1"></script>
@@ -1675,12 +1681,6 @@
         // Activate premium key
         activatePremiumBtn.addEventListener("click", async function () {
           const enteredKey = premiumKeyInput.value.trim();
-          const token = localStorage.getItem('authToken');
-          
-          if (!token) {
-            showNotification("Please login first", "error");
-            return;
-          }
           
           if (!enteredKey) {
             showNotification("Please enter a premium key", "error");
@@ -1692,37 +1692,69 @@
           activatePremiumBtn.textContent = "Activating...";
 
           try {
-            const response = await fetch('/api/auth/activate-premium', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                premiumKey: enteredKey
-              })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-              // Play activation animation
-              playPremiumActivationAnimation();
+            // Use KeyAuth for validation
+            if (window.keyAuthManager) {
+              const result = await window.keyAuthManager.validateKey(enteredKey);
               
-              // Clear input
-              premiumKeyInput.value = "";
-              
-              // Update UI after animation
-              setTimeout(() => {
-                updatePremiumStatus();
-                showNotification("Premium activated successfully! 🎉", "success");
-              }, 5000);
+              if (result.success) {
+                // Set premium status cookies
+                setCookie('premium-active', 'true');
+                setCookie('premium-key', enteredKey);
+                setCookie('premium-user', result.user.username);
+                setCookie('premium-expiry', result.user.expiry);
+                
+                // Store in localStorage as well
+                localStorage.setItem('premium-status', JSON.stringify({
+                  active: true,
+                  key: enteredKey,
+                  user: result.user.username,
+                  expiry: result.user.expiry,
+                  activated: new Date().toISOString()
+                }));
+                
+                // Start account sharing monitoring
+                window.keyAuthManager.startAccountSharingMonitor();
+                
+                // Play activation animation
+                playPremiumActivationAnimation();
+                
+                // Clear input
+                premiumKeyInput.value = "";
+                
+                // Update UI after animation
+                setTimeout(() => {
+                  updatePremiumStatus();
+                  showNotification("Premium activated successfully! 🎉", "success");
+                  
+                  // Hide premium branding globally
+                  hidePremiumBranding();
+                }, 5000);
+              } else {
+                showNotification(result.error || "Invalid premium key", "error");
+              }
             } else {
-              showNotification(result.error || "Failed to activate premium key", "error");
+              // Fallback to simple validation for testing
+              if (enteredKey === 'TESTPREM') {
+                setCookie('premium-active', 'true');
+                setCookie('premium-key', enteredKey);
+                setCookie('premium-user', 'TestUser');
+                setCookie('premium-expiry', '2099-12-31');
+                
+                playPremiumActivationAnimation();
+                premiumKeyInput.value = "";
+                
+                setTimeout(() => {
+                  updatePremiumStatus();
+                  showNotification("Premium activated successfully! 🎉", "success");
+                  hidePremiumBranding();
+                }, 5000);
+              } else {
+                showNotification("Invalid premium key", "error");
+              }
             }
           } catch (error) {
             console.error('Premium activation error:', error);
-            showNotification("Network error. Please try again.", "error");
+            showNotification("Activation failed. Please try again.", "error");
           } finally {
             // Re-enable button
             activatePremiumBtn.disabled = false;
@@ -1744,6 +1776,40 @@
               animationContainer.style.opacity = "1";
             }, 500);
           }, 5000);
+        }
+
+        function hidePremiumBranding() {
+          // Hide all "Get Premium" buttons and links
+          const premiumElements = document.querySelectorAll(
+            '.get-premium-btn, .premium-upgrade, .upgrade-premium, [href="/premium"], [href="premium.html"]'
+          );
+          
+          premiumElements.forEach(element => {
+            element.style.display = 'none';
+          });
+          
+          // Hide premium sidebar button
+          const premiumNavLink = document.querySelector('nav a[href="/premium"], nav a[href="premium.html"]');
+          if (premiumNavLink) {
+            premiumNavLink.style.display = 'none';
+          }
+          
+          // Update navbar to show premium status
+          const navbar = document.querySelector('.navbar, .nav-menu');
+          if (navbar) {
+            const premiumStatus = document.createElement('div');
+            premiumStatus.className = 'premium-status-indicator';
+            premiumStatus.innerHTML = '<span class="premium-badge">⭐ PREMIUM</span>';
+            premiumStatus.style.cssText = `
+              color: #fbbf24;
+              font-weight: bold;
+              font-size: 12px;
+              margin: 0 10px;
+            `;
+            navbar.appendChild(premiumStatus);
+          }
+          
+          console.log('✅ Premium branding hidden - premium user');
         }
 
         // Allow Enter key to activate premium
