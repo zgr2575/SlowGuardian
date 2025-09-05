@@ -15,6 +15,7 @@ import config from "./config.js";
 // Utils and middleware
 import { setupSecurity } from "./src/middleware/security.js";
 import { setupAuth } from "./src/middleware/auth.js";
+import { setupEnhancedAuth } from "./src/auth/middleware.js";
 import { setupLogging } from "./src/middleware/logging.js";
 import {
   sessionTracker,
@@ -27,6 +28,10 @@ import { setupErrorHandling } from "./src/middleware/error.js";
 import { PluginManager } from "./src/plugins/manager.js";
 import { Logger } from "./src/utils/logger.js";
 
+// Database and authentication
+import dbConnection from "./src/database/connection.js";
+import spotifyManager from "./src/auth/spotify.js";
+
 // Constants
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,6 +43,21 @@ const logger = new Logger("Server");
  */
 async function createSlowGuardianServer() {
   logger.info(`Starting SlowGuardian v${config.version}...`);
+
+  // Initialize database connection
+  try {
+    await dbConnection.connect();
+    logger.info("Database connection established");
+  } catch (error) {
+    logger.warn("Database connection failed, continuing without MongoDB features:", error.message);
+  }
+
+  // Initialize Spotify API
+  if (spotifyManager.initialize()) {
+    logger.info("Spotify API integration enabled");
+  } else {
+    logger.warn("Spotify API integration disabled - missing credentials");
+  }
 
   // Make config globally available for admin middleware
   global.config = config;
@@ -91,7 +111,8 @@ async function createSlowGuardianServer() {
   // Custom middleware
   setupLogging(app);
   setupSecurity(app, config);
-  setupAuth(app, config);
+  setupAuth(app, config); // Legacy auth for backward compatibility
+  setupEnhancedAuth(app); // New MongoDB-based auth
 
   // Admin middleware for developer mode features
   app.use(sessionTracker);
@@ -156,16 +177,18 @@ async function createSlowGuardianServer() {
   });
 
   // Graceful shutdown handling
-  process.on("SIGTERM", () => {
+  process.on("SIGTERM", async () => {
     logger.info("Received SIGTERM, shutting down gracefully...");
+    await dbConnection.close();
     server.close(() => {
       logger.info("Server closed");
       process.exit(0);
     });
   });
 
-  process.on("SIGINT", () => {
+  process.on("SIGINT", async () => {
     logger.info("Received SIGINT, shutting down gracefully...");
+    await dbConnection.close();
     server.close(() => {
       logger.info("Server closed");
       process.exit(0);

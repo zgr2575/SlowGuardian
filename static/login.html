@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Login - SlowGuardian v9</title>
+    <link rel="shortcut icon" href="favicon.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/auth.css" />
+    
+    <style>
+      .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--primary-gradient));
+        padding: 2rem;
+      }
+      
+      .auth-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 3rem;
+        max-width: 400px;
+        width: 100%;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      
+      .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      
+      .auth-logo {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .auth-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+      }
+      
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      }
+      
+      .auth-button {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+      }
+      
+      .auth-button:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+      }
+      
+      .auth-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      .auth-divider {
+        text-align: center;
+        margin: 2rem 0;
+        position: relative;
+        color: var(--text-secondary);
+      }
+      
+      .auth-divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-color);
+        z-index: 1;
+      }
+      
+      .auth-divider span {
+        background: var(--bg-secondary);
+        padding: 0 1rem;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .auth-links {
+        text-align: center;
+      }
+      
+      .auth-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+      
+      .auth-links a:hover {
+        color: var(--primary-hover);
+      }
+      
+      .error-message {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .success-message {
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .toggle-form {
+        margin-top: 1rem;
+        text-align: center;
+      }
+      
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      
+      .checkbox-group input[type="checkbox"] {
+        width: auto;
+        margin-right: 0.5rem;
+      }
+      
+      @media (max-width: 768px) {
+        .auth-card {
+          padding: 2rem;
+          margin: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">🛡️ SlowGuardian</div>
+          <div class="auth-subtitle">Secure access to your dashboard</div>
+        </div>
+        
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+        
+        <!-- Login Form -->
+        <form id="login-form" style="display: block;">
+          <div class="form-group">
+            <label for="login-username">Username or Email</label>
+            <input type="text" id="login-username" name="usernameOrEmail" required autocomplete="username" />
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required autocomplete="current-password" />
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="remember-me" name="rememberMe" />
+            <label for="remember-me">Remember me for 30 days</label>
+          </div>
+          
+          <button type="submit" class="auth-button" id="login-button">
+            Sign In
+          </button>
+          
+          <div class="toggle-form">
+            <a href="#" id="show-register">Don't have an account? Create one</a>
+          </div>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="register-form" style="display: none;">
+          <div class="form-group">
+            <label for="register-username">Username</label>
+            <input type="text" id="register-username" name="username" required autocomplete="username" />
+          </div>
+          
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" name="email" required autocomplete="email" />
+          </div>
+          
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" name="password" required autocomplete="new-password" />
+          </div>
+          
+          <div class="form-group">
+            <label for="register-firstname">First Name (Optional)</label>
+            <input type="text" id="register-firstname" name="firstName" autocomplete="given-name" />
+          </div>
+          
+          <div class="form-group">
+            <label for="register-lastname">Last Name (Optional)</label>
+            <input type="text" id="register-lastname" name="lastName" autocomplete="family-name" />
+          </div>
+          
+          <button type="submit" class="auth-button" id="register-button">
+            Create Account
+          </button>
+          
+          <div class="toggle-form">
+            <a href="#" id="show-login">Already have an account? Sign in</a>
+          </div>
+        </form>
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <div class="auth-links">
+          <a href="/">← Back to SlowGuardian</a>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Form toggle functionality
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const showRegister = document.getElementById('show-register');
+      const showLogin = document.getElementById('show-login');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      
+      showRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        clearMessages();
+      });
+      
+      showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        clearMessages();
+      });
+      
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      }
+      
+      function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+      }
+      
+      function clearMessages() {
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+      }
+      
+      function setLoading(button, loading) {
+        if (loading) {
+          button.disabled = true;
+          button.textContent = 'Please wait...';
+        } else {
+          button.disabled = false;
+          button.textContent = button.id === 'login-button' ? 'Sign In' : 'Create Account';
+        }
+      }
+      
+      // Login form handler
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessages();
+        
+        const loginButton = document.getElementById('login-button');
+        setLoading(loginButton, true);
+        
+        const formData = new FormData(loginForm);
+        const data = Object.fromEntries(formData);
+        
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Store token in localStorage
+            localStorage.setItem('authToken', result.token);
+            
+            showSuccess('Login successful! Redirecting...');
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirect = urlParams.get('redirect') || '/';
+              window.location.href = redirect;
+            }, 1500);
+          } else {
+            showError(result.error || 'Login failed');
+          }
+        } catch (error) {
+          showError('Network error. Please try again.');
+        } finally {
+          setLoading(loginButton, false);
+        }
+      });
+      
+      // Register form handler
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessages();
+        
+        const registerButton = document.getElementById('register-button');
+        setLoading(registerButton, true);
+        
+        const formData = new FormData(registerForm);
+        const data = Object.fromEntries(formData);
+        
+        // Basic client-side validation
+        if (data.password.length < 8) {
+          showError('Password must be at least 8 characters long');
+          setLoading(registerButton, false);
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Store token in localStorage
+            localStorage.setItem('authToken', result.token);
+            
+            showSuccess('Account created successfully! Redirecting...');
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirect = urlParams.get('redirect') || '/';
+              window.location.href = redirect;
+            }, 1500);
+          } else {
+            if (result.details && Array.isArray(result.details)) {
+              showError(result.details.map(d => d.msg).join(', '));
+            } else {
+              showError(result.error || 'Registration failed');
+            }
+          }
+        } catch (error) {
+          showError('Network error. Please try again.');
+        } finally {
+          setLoading(registerButton, false);
+        }
+      });
+      
+      // Check if user is already logged in
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // Validate token
+        fetch('/api/auth/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.success && result.valid) {
+            // User is already logged in, redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect') || '/';
+            window.location.href = redirect;
+          }
+        })
+        .catch(() => {
+          // Token validation failed, remove invalid token
+          localStorage.removeItem('authToken');
+        });
+      }
+    </script>
+  </body>
+</html>

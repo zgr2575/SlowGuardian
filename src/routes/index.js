@@ -9,6 +9,8 @@ import { dirname, join } from "node:path";
 import { Logger } from "../utils/logger.js";
 import adminRoutes from "./admin.js";
 import keyauthRoutes, { initializeKeyAuth } from "./keyauth.js";
+import authRoutes from "./auth.js";
+import spotifyRoutes from "./spotify.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,6 +37,15 @@ export function setupRoutes(app, config) {
 
   // Admin API routes
   app.use("/api/admin", adminRoutes);
+
+  // Authentication API routes
+  app.use("/api/auth", authRoutes);
+
+  // Spotify API routes
+  app.use("/api/spotify", spotifyRoutes);
+
+  // Legacy KeyAuth routes (for backward compatibility)
+  app.use("/api/keyauth", keyauthRoutes);
 
   // Custom apps and settings endpoints
   setupCustomEndpoints(app, config);

@@ -559,6 +559,122 @@
               </div>
             </div>
 
+            <!-- Account Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">👤 Account Management</h3>
+                <p class="card-description">
+                  Manage your SlowGuardian account, profile, and login sessions
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div id="account-info" style="display: none;">
+                  <div class="premium-info">
+                    <div class="info-item">
+                      <span>Username:</span>
+                      <span id="account-username">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Email:</span>
+                      <span id="account-email">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Role:</span>
+                      <span id="account-role">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Member Since:</span>
+                      <span id="account-created">-</span>
+                    </div>
+                  </div>
+                  
+                  <div style="margin-top: 20px;">
+                    <button id="manage-sessions-btn" class="btn btn-secondary" style="margin-right: 10px;">
+                      📱 Manage Sessions
+                    </button>
+                    <button id="logout-all-btn" class="btn btn-warning" style="margin-right: 10px;">
+                      🚪 Logout All Devices
+                    </button>
+                    <button id="logout-btn" class="btn btn-secondary">
+                      👋 Logout
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="account-login-prompt" style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to view your account information
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spotify Integration -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🎵 Spotify Integration</h3>
+                <p class="card-description">
+                  Connect your Spotify account to access your playlists and music in SlowGuardian
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="premium-status" id="spotify-status">
+                  <div class="status-indicator">
+                    <div class="status-dot disabled" id="spotify-status-dot"></div>
+                    <span class="status-text" id="spotify-status-text">Checking connection...</span>
+                  </div>
+                </div>
+                
+                <div id="spotify-info" style="display: none;">
+                  <div class="premium-info">
+                    <div class="info-item">
+                      <span>Display Name:</span>
+                      <span id="spotify-display-name">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Followers:</span>
+                      <span id="spotify-followers">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Country:</span>
+                      <span id="spotify-country">-</span>
+                    </div>
+                  </div>
+                  
+                  <div style="margin-top: 15px;">
+                    <button id="disconnect-spotify-btn" class="btn btn-warning">
+                      🔌 Disconnect Spotify
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="spotify-connect" style="display: none;">
+                  <div style="margin-bottom: 15px;">
+                    <button id="connect-spotify-btn" class="btn btn-primary">
+                      🎵 Connect Spotify Account
+                    </button>
+                  </div>
+                  <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                    <p><strong>Benefits of connecting Spotify:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                      <li>Import and play your playlists</li>
+                      <li>Access your saved music</li>
+                      <li>Create new playlists</li>
+                      <li>See what's currently playing</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div id="spotify-login-required" style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to connect your Spotify account
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              </div>
+            </div>
+
             <!-- About:Blank -->
             <div class="card settings-card">
               <div class="card-header">
@@ -1495,60 +1611,122 @@
         const premiumKeyDisplay = document.getElementById("premium-key-display");
 
         // Check premium status on load
-        function updatePremiumStatus() {
-          const premiumKey = getCookie("premium-key");
-          const premiumActive = getCookie("premium-active") === "true";
-          const premiumExpiry = getCookie("premium-expiry");
-
-          if (premiumActive && premiumKey) {
-            // Premium is active
-            premiumStatusDot.classList.remove("disabled");
-            premiumStatusDot.style.background = "#10b981";
-            premiumStatusText.textContent = "Premium Active";
-            premiumInfo.style.display = "block";
-            premiumActivation.style.display = "none";
-            
-            premiumKeyDisplay.textContent = premiumKey.substring(0, 4) + "••••";
-            premiumExpiryDate.textContent = premiumExpiry || "Never";
-          } else {
-            // Premium not active
+        async function updatePremiumStatus() {
+          const token = localStorage.getItem('authToken');
+          
+          if (!token) {
+            // User not logged in - show login prompt
             premiumStatusDot.classList.add("disabled");
             premiumStatusDot.style.background = "#ef4444";
-            premiumStatusText.textContent = "Premium not activated";
+            premiumStatusText.textContent = "Login required";
             premiumInfo.style.display = "none";
-            premiumActivation.style.display = "block";
+            premiumActivation.innerHTML = `
+              <div style="text-align: center; padding: 20px;">
+                <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                  Please login to manage your premium subscription
+                </p>
+                <a href="/login" class="btn btn-primary">Login / Register</a>
+              </div>
+            `;
+            return;
+          }
+
+          try {
+            // Check premium status from server
+            const response = await fetch('/api/auth/premium-status', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success && result.isPremium) {
+              // Premium is active
+              premiumStatusDot.classList.remove("disabled");
+              premiumStatusDot.style.background = "#10b981";
+              premiumStatusText.textContent = "Premium Active";
+              premiumInfo.style.display = "block";
+              premiumActivation.style.display = "none";
+              
+              const premiumStatus = result.premiumStatus;
+              const expiryDate = premiumStatus.expiresAt ? 
+                new Date(premiumStatus.expiresAt).toLocaleDateString() : "Never";
+              
+              premiumKeyDisplay.textContent = premiumStatus.premiumKey ? 
+                premiumStatus.premiumKey.substring(0, 4) + "••••" : "••••••••";
+              premiumExpiryDate.textContent = expiryDate;
+            } else {
+              // Premium not active
+              premiumStatusDot.classList.add("disabled");
+              premiumStatusDot.style.background = "#ef4444";
+              premiumStatusText.textContent = "Premium not activated";
+              premiumInfo.style.display = "none";
+              premiumActivation.style.display = "block";
+            }
+          } catch (error) {
+            console.error('Failed to check premium status:', error);
+            premiumStatusDot.classList.add("disabled");
+            premiumStatusDot.style.background = "#ef4444";
+            premiumStatusText.textContent = "Status unavailable";
           }
         }
 
         // Activate premium key
-        activatePremiumBtn.addEventListener("click", function () {
+        activatePremiumBtn.addEventListener("click", async function () {
           const enteredKey = premiumKeyInput.value.trim();
+          const token = localStorage.getItem('authToken');
+          
+          if (!token) {
+            showNotification("Please login first", "error");
+            return;
+          }
           
           if (!enteredKey) {
             showNotification("Please enter a premium key", "error");
             return;
           }
 
-          // Check if the key is valid (for now, just "TESTPREM")
-          if (enteredKey === "TESTPREM") {
-            // Play activation animation
-            playPremiumActivationAnimation();
-            
-            // Set premium status
-            setCookie("premium-key", enteredKey, 365);
-            setCookie("premium-active", "true", 365);
-            setCookie("premium-expiry", "Never", 365);
-            
-            // Clear input
-            premiumKeyInput.value = "";
-            
-            // Update UI after animation
-            setTimeout(() => {
-              updatePremiumStatus();
-              showNotification("Premium activated successfully! 🎉", "success");
-            }, 5000);
-          } else {
-            showNotification("Invalid premium key. Please check and try again.", "error");
+          // Disable button during activation
+          activatePremiumBtn.disabled = true;
+          activatePremiumBtn.textContent = "Activating...";
+
+          try {
+            const response = await fetch('/api/auth/activate-premium', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                premiumKey: enteredKey
+              })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              // Play activation animation
+              playPremiumActivationAnimation();
+              
+              // Clear input
+              premiumKeyInput.value = "";
+              
+              // Update UI after animation
+              setTimeout(() => {
+                updatePremiumStatus();
+                showNotification("Premium activated successfully! 🎉", "success");
+              }, 5000);
+            } else {
+              showNotification(result.error || "Failed to activate premium key", "error");
+            }
+          } catch (error) {
+            console.error('Premium activation error:', error);
+            showNotification("Network error. Please try again.", "error");
+          } finally {
+            // Re-enable button
+            activatePremiumBtn.disabled = false;
+            activatePremiumBtn.textContent = "🚀 Activate Premium";
           }
         });
 
@@ -1577,6 +1755,224 @@
 
         // Initial premium status update
         updatePremiumStatus();
+
+        // Account Management System
+        async function initAccountManagement() {
+          const token = localStorage.getItem('authToken');
+          const accountInfo = document.getElementById('account-info');
+          const accountLoginPrompt = document.getElementById('account-login-prompt');
+          
+          if (!token) {
+            accountInfo.style.display = 'none';
+            accountLoginPrompt.style.display = 'block';
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/auth/profile', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              accountInfo.style.display = 'block';
+              accountLoginPrompt.style.display = 'none';
+              
+              document.getElementById('account-username').textContent = result.user.username || '-';
+              document.getElementById('account-email').textContent = result.user.email || '-';
+              document.getElementById('account-role').textContent = result.user.role || 'user';
+              document.getElementById('account-created').textContent = 
+                result.user.createdAt ? new Date(result.user.createdAt).toLocaleDateString() : '-';
+            } else {
+              accountInfo.style.display = 'none';
+              accountLoginPrompt.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Failed to load account info:', error);
+            accountInfo.style.display = 'none';
+            accountLoginPrompt.style.display = 'block';
+          }
+        }
+
+        // Logout functionality
+        document.getElementById('logout-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          try {
+            await fetch('/api/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            localStorage.removeItem('authToken');
+            window.location.href = '/login';
+          }
+        });
+
+        // Logout all devices
+        document.getElementById('logout-all-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          if (!confirm('This will log you out from all devices. Continue?')) {
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/auth/logout-all', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+              showNotification(result.message, 'success');
+              localStorage.removeItem('authToken');
+              setTimeout(() => {
+                window.location.href = '/login';
+              }, 2000);
+            }
+          } catch (error) {
+            console.error('Logout all error:', error);
+            showNotification('Failed to logout from all devices', 'error');
+          }
+        });
+
+        // Spotify Integration System
+        async function initSpotifyIntegration() {
+          const token = localStorage.getItem('authToken');
+          const spotifyStatus = document.getElementById('spotify-status');
+          const spotifyStatusDot = document.getElementById('spotify-status-dot');
+          const spotifyStatusText = document.getElementById('spotify-status-text');
+          const spotifyInfo = document.getElementById('spotify-info');
+          const spotifyConnect = document.getElementById('spotify-connect');
+          const spotifyLoginRequired = document.getElementById('spotify-login-required');
+          
+          if (!token) {
+            spotifyInfo.style.display = 'none';
+            spotifyConnect.style.display = 'none';
+            spotifyLoginRequired.style.display = 'block';
+            spotifyStatusText.textContent = 'Login required';
+            return;
+          }
+
+          spotifyLoginRequired.style.display = 'none';
+
+          try {
+            const response = await fetch('/api/spotify/status', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.connected) {
+              // Spotify is connected
+              spotifyStatusDot.classList.remove('disabled');
+              spotifyStatusDot.style.background = '#1db954'; // Spotify green
+              spotifyStatusText.textContent = 'Connected to Spotify';
+              spotifyInfo.style.display = 'block';
+              spotifyConnect.style.display = 'none';
+
+              if (result.profile) {
+                document.getElementById('spotify-display-name').textContent = 
+                  result.profile.displayName || result.profile.id || '-';
+                document.getElementById('spotify-followers').textContent = 
+                  result.profile.followers || '0';
+                document.getElementById('spotify-country').textContent = 
+                  result.profile.country || '-';
+              }
+            } else {
+              // Spotify not connected
+              spotifyStatusDot.classList.add('disabled');
+              spotifyStatusDot.style.background = '#ef4444';
+              spotifyStatusText.textContent = 'Not connected';
+              spotifyInfo.style.display = 'none';
+              spotifyConnect.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Failed to check Spotify status:', error);
+            spotifyStatusDot.classList.add('disabled');
+            spotifyStatusDot.style.background = '#ef4444';
+            spotifyStatusText.textContent = 'Status unavailable';
+            spotifyConnect.style.display = 'block';
+          }
+        }
+
+        // Connect Spotify
+        document.getElementById('connect-spotify-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            showNotification('Please login first', 'error');
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/spotify/auth', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              // Redirect to Spotify authorization
+              window.location.href = result.authUrl;
+            } else {
+              showNotification(result.error || 'Failed to connect to Spotify', 'error');
+            }
+          } catch (error) {
+            console.error('Spotify connection error:', error);
+            showNotification('Failed to connect to Spotify', 'error');
+          }
+        });
+
+        // Disconnect Spotify
+        document.getElementById('disconnect-spotify-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          if (!confirm('Are you sure you want to disconnect Spotify?')) {
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/spotify/disconnect', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              showNotification('Spotify disconnected successfully', 'success');
+              initSpotifyIntegration(); // Refresh status
+            } else {
+              showNotification(result.error || 'Failed to disconnect Spotify', 'error');
+            }
+          } catch (error) {
+            console.error('Spotify disconnect error:', error);
+            showNotification('Failed to disconnect Spotify', 'error');
+          }
+        });
+
+        // Initialize account and Spotify management
+        initAccountManagement();
+        initSpotifyIntegration();
 
         // Initial status update
         updateAdsStatus();
