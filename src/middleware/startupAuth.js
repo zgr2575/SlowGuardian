@@ -22,14 +22,19 @@ function shouldEnforceAuth() {
     return false;
   }
   
-  // Require auth if MongoDB is available (indicates production-like setup)
-  if (dbConnection.isReady()) {
-    return true;
-  }
-  
   // Require auth if specific environment variable is set
   if (process.env.REQUIRE_AUTH === 'true') {
     return true;
+  }
+  
+  // Require auth if MongoDB is available and actually connected (indicates production-like setup)
+  try {
+    if (dbConnection.isReady()) {
+      return true;
+    }
+  } catch (error) {
+    logger.warn("Database connection check failed, disabling auth enforcement:", error.message);
+    return false;
   }
   
   return false;
@@ -62,8 +67,8 @@ export function createAuthGate() {
       return next();
     }
     
-    // Allow health checks
-    if (url === '/health' || url.startsWith('/api/auth/') || url === '/login.html') {
+    // Allow health checks and login page  
+    if (url === '/health' || url.startsWith('/api/auth/') || url === '/login.html' || url.startsWith('/login.html?')) {
       return next();
     }
     
@@ -95,9 +100,16 @@ export function createAuthGate() {
       });
     }
     
-    // Redirect web requests to login page
+    // Redirect web requests to login page (prevent infinite loops)
     if (method === 'GET' && req.accepts('html')) {
-      return res.redirect('/login.html?redirect=' + encodeURIComponent(req.url));
+      // Prevent redirect loops - if we're already being redirected to login, don't redirect again
+      if (url.startsWith('/login.html')) {
+        return next();
+      }
+      
+      const redirectUrl = '/login.html?redirect=' + encodeURIComponent(req.url);
+      logger.debug(`Redirecting unauthenticated request: ${req.url} -> ${redirectUrl}`);
+      return res.redirect(redirectUrl);
     }
     
     // For other requests, return 401

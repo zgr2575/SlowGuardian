@@ -21,44 +21,56 @@ class SessionManager {
    */
   async createSession(user) {
     try {
-      const collection = dbConnection.getCollection("sessions");
-      
-      const sessionData = {
-        userId: new ObjectId(user._id),
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        isPremium: user.isActivePremium(),
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + this.sessionExpiry),
-        lastActivity: new Date(),
-        ipAddress: null, // Will be set by middleware
-        userAgent: null, // Will be set by middleware
-      };
-
-      const result = await collection.insertOne(sessionData);
-      sessionData._id = result.insertedId;
-
-      // Generate JWT token
+      // Generate JWT token with user info
       const token = jwt.sign(
         {
-          sessionId: sessionData._id.toString(),
+          sessionId: new ObjectId().toString(), // Generate a session ID
           userId: user._id.toString(),
           username: user.username,
           role: user.role,
-          isPremium: user.isActivePremium(),
+          isPremium: user.isActivePremium ? user.isActivePremium() : false,
         },
         this.jwtSecret,
         { expiresIn: "24h" }
       );
 
-      logger.info(`Session created for user: ${user.username}`);
-      
-      return {
-        token,
-        sessionId: sessionData._id,
-        expiresAt: sessionData.expiresAt,
-      };
+      // If database is available, store session in MongoDB
+      if (dbConnection.isReady()) {
+        const collection = dbConnection.getCollection("sessions");
+        
+        const sessionData = {
+          _id: new ObjectId(),
+          userId: new ObjectId(user._id),
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          isPremium: user.isActivePremium ? user.isActivePremium() : false,
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + this.sessionExpiry),
+          lastActivity: new Date(),
+          ipAddress: null, // Will be set by middleware
+          userAgent: null, // Will be set by middleware
+        };
+
+        await collection.insertOne(sessionData);
+        
+        logger.info(`Session created and stored for user: ${user.username}`);
+        
+        return {
+          token,
+          sessionId: sessionData._id,
+          expiresAt: sessionData.expiresAt,
+        };
+      } else {
+        // Database not available, return JWT-only session
+        logger.warn("Database not available, creating JWT-only session");
+        
+        return {
+          token,
+          sessionId: null,
+          expiresAt: new Date(Date.now() + this.sessionExpiry),
+        };
+      }
     } catch (error) {
       logger.error("Failed to create session:", error);
       throw error;
@@ -72,6 +84,22 @@ class SessionManager {
     try {
       // Verify JWT token
       const decoded = jwt.verify(token, this.jwtSecret);
+      
+      // If database is not available, return basic JWT validation
+      if (!dbConnection.isReady()) {
+        logger.warn("Database not available, using JWT-only validation");
+        return {
+          isValid: true,
+          session: {
+            sessionId: decoded.sessionId,
+            userId: decoded.userId,
+            username: decoded.username,
+            role: decoded.role || 'user',
+            isPremium: decoded.isPremium || false,
+            lastActivity: new Date(),
+          },
+        };
+      }
       
       // Check session in database
       const collection = dbConnection.getCollection("sessions");
@@ -117,6 +145,27 @@ class SessionManager {
         return { isValid: false, error: "Token expired" };
       }
       
+      // Handle database connection errors gracefully
+      if (error.message && error.message.includes("Database not connected")) {
+        logger.warn("Database connection lost during session validation, falling back to JWT validation");
+        try {
+          const decoded = jwt.verify(token, this.jwtSecret);
+          return {
+            isValid: true,
+            session: {
+              sessionId: decoded.sessionId,
+              userId: decoded.userId,
+              username: decoded.username,
+              role: decoded.role || 'user',
+              isPremium: decoded.isPremium || false,
+              lastActivity: new Date(),
+            },
+          };
+        } catch (jwtError) {
+          return { isValid: false, error: "Invalid token" };
+        }
+      }
+      
       logger.error("Session validation error:", error);
       return { isValid: false, error: "Session validation failed" };
     }
@@ -127,6 +176,11 @@ class SessionManager {
    */
   async destroySession(sessionId) {
     try {
+      if (!dbConnection.isReady()) {
+        logger.warn("Database not available, cannot destroy session in storage");
+        return true; // Consider it destroyed since we can't access storage
+      }
+      
       const collection = dbConnection.getCollection("sessions");
       const result = await collection.deleteOne({ _id: new ObjectId(sessionId) });
       
