@@ -38,24 +38,32 @@
         opacity: 1 !important;
       }
       
-      /* Force content to be visible after 10 seconds regardless */
-      @keyframes force-show-content {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
-      }
-      
+      /* Force main content to be visible immediately and always */
       .main-content {
-        animation: force-show-content 1s ease-in-out 10s both;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 1 !important;
       }
       
-      /* Hide loading overlay after 15 seconds as absolute fallback */
+      /* Force loading overlay to hide after 3 seconds maximum */
+      .loading-overlay {
+        animation: force-hide-loading 1s ease-in-out 3s forwards !important;
+      }
+      
+      /* Also handle SlowGuardian loading overlay */
       #slowguardian-loading-overlay {
-        animation: force-hide-loading 1s ease-in-out 15s forwards;
+        animation: force-hide-loading 1s ease-in-out 3s forwards !important;
       }
       
       @keyframes force-hide-loading {
         0% { opacity: 1; visibility: visible; }
-        100% { opacity: 0; visibility: hidden; }
+        100% { opacity: 0; visibility: hidden; display: none; }
+      }
+      
+      /* Ensure background is always visible */
+      .background {
+        visibility: visible !important;
+        opacity: 1 !important;
       }
     </style>
 

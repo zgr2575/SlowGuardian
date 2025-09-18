@@ -26,32 +26,44 @@
       :root {
         --gradient-1: #667eea;
         --gradient-2: #764ba2;
+        --gradient-3: #f093fb;
+        --gradient-4: #f5576c;
+        --card-bg: rgba(255, 255, 255, 0.15);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --primary-color: #667eea;
+        --primary-hover: #5a67d8;
+        --input-bg: rgba(255, 255, 255, 0.1);
+        --border-color: rgba(255, 255, 255, 0.2);
+        --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        --glow: 0 0 40px rgba(102, 126, 234, 0.3);
+      }
+      
+      [data-theme="light"] {
         --card-bg: rgba(255, 255, 255, 0.95);
         --text-primary: #1a202c;
         --text-secondary: #718096;
-        --primary-color: #667eea;
-        --primary-hover: #5a67d8;
         --input-bg: rgba(255, 255, 255, 0.9);
         --border-color: rgba(224, 224, 234, 0.8);
-        --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        --shadow-xl: 0 30px 60px -12px rgba(0, 0, 0, 0.35);
-      }
-      
-      [data-theme="dark"] {
-        --card-bg: rgba(26, 32, 44, 0.95);
-        --text-primary: #f7fafc;
-        --text-secondary: #a0aec0;
-        --input-bg: rgba(45, 55, 72, 0.9);
-        --border-color: rgba(74, 85, 104, 0.8);
+        --glow: 0 0 40px rgba(102, 126, 234, 0.2);
       }
       
       body, html {
         margin: 0;
         padding: 0;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-        background: linear-gradient(135deg, var(--gradient-1) 0%, var(--gradient-2) 100%);
         min-height: 100vh;
         overflow-x: hidden;
+        background: linear-gradient(135deg, var(--gradient-1) 0%, var(--gradient-2) 35%, var(--gradient-3) 65%, var(--gradient-4) 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+      
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
       
       .auth-container {
@@ -63,6 +75,7 @@
         position: relative;
       }
       
+      /* Floating particles background */
       .auth-container::before {
         content: '';
         position: absolute;
@@ -70,61 +83,95 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zM0 30c0-11.046 8.954-20 20-20s20 8.954 20 20-8.954 20-20 20S0 41.046 0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
-        opacity: 0.1;
+        background-image: 
+          radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        animation: floatingParticles 20s ease-in-out infinite;
         pointer-events: none;
+      }
+      
+      @keyframes floatingParticles {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
       }
       
       .auth-card {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 24px;
-        padding: 3rem;
-        max-width: 420px;
+        border-radius: 32px;
+        padding: 3.5rem;
+        max-width: 480px;
         width: 100%;
-        box-shadow: var(--shadow-xl);
-        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow-xl), var(--glow);
+        backdrop-filter: blur(30px);
         position: relative;
         z-index: 1;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+      
+      .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gradient-1), var(--gradient-3), var(--gradient-4));
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+      
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
       }
       
       .auth-card:hover {
-        box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.4);
-        transform: translateY(-5px);
+        transform: translateY(-8px);
+        box-shadow: 0 40px 80px -12px rgba(0, 0, 0, 0.6), var(--glow);
       }
       
       .auth-header {
         text-align: center;
-        margin-bottom: 2.5rem;
+        margin-bottom: 3rem;
       }
       
       .auth-logo {
-        font-size: 3rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, var(--primary-color), #9f7aea);
+        font-size: 4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-bottom: 0.5rem;
-        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+        margin-bottom: 1rem;
+        filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.3));
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
+      
+      @keyframes logoGlow {
+        0% { filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.3)); }
+        100% { filter: drop-shadow(2px 2px 16px rgba(102, 126, 234, 0.5)); }
       }
       
       .auth-title {
-        font-size: 1.75rem;
+        font-size: 2rem;
         font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       
       .auth-subtitle {
         color: var(--text-secondary);
-        font-size: 1rem;
-        font-weight: 400;
+        font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 1.6;
       }
       
       .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         position: relative;
       }
       
@@ -133,48 +180,55 @@
         margin-bottom: 0.75rem;
         color: var(--text-primary);
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
       }
       
       .form-group input {
         width: 100%;
-        padding: 16px 20px;
+        padding: 18px 24px;
         border: 2px solid var(--border-color);
-        border-radius: 12px;
+        border-radius: 16px;
         background: var(--input-bg);
         color: var(--text-primary);
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: 500;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
         box-sizing: border-box;
       }
       
       .form-group input:focus {
         outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3), 0 0 0 4px rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 0.2);
         transform: scale(1.02);
+      }
+      
+      .form-group input::placeholder {
+        color: var(--text-secondary);
+        font-weight: 400;
       }
       
       .auth-button {
         width: 100%;
-        padding: 16px 20px;
-        background: linear-gradient(135deg, var(--primary-color), #9f7aea);
+        padding: 18px 24px;
+        background: linear-gradient(135deg, var(--gradient-1), var(--gradient-3));
         color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 16px;
         font-size: 1.1rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.3s ease;
-        margin-bottom: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 2rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
       }
       
       .auth-button::before {
@@ -184,8 +238,8 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       }
       
       .auth-button:hover::before {
@@ -193,12 +247,13 @@
       }
       
       .auth-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, var(--gradient-3), var(--gradient-4));
       }
       
       .auth-button:active {
-        transform: translateY(-1px);
+        transform: translateY(-2px) scale(1.01);
       }
       
       .auth-button:disabled {
@@ -314,25 +369,75 @@
       }
       
       .theme-toggle {
-        position: absolute;
+        position: fixed;
         top: 2rem;
         right: 2rem;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 1.5rem;
+        color: var(--text-primary);
       }
       
       .theme-toggle:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.1) rotate(10deg);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .floating-shapes {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      
+      .shape {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .shape:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+      
+      .shape:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+      }
+      
+      .shape:nth-child(3) {
+        width: 60px;
+        height: 60px;
+        bottom: 25%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
       }
       
       @keyframes shake {
@@ -393,18 +498,21 @@
   </head>
   <body>
     <script>
-      // Set dark theme ASAP to avoid flash of light theme
+      // Set theme ASAP to avoid flash
       (function(){
         var savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
       })();
     </script>
-    <!-- Background to match main UI -->
-    <div class="background">
-      <div class="bg-gradient"></div>
-      <div class="bg-particles" id="particles"></div>
-      <div class="bg-overlay"></div>
+    
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
     </div>
+    
+    <!-- Theme Toggle -->
     <div class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</div>
     
     <div class="auth-container">
@@ -412,7 +520,7 @@
         <div class="auth-header">
           <div class="auth-logo">🛡️</div>
           <div class="auth-title">SlowGuardian</div>
-          <div class="auth-subtitle">Secure access to your dashboard</div>
+          <div class="auth-subtitle">Premium secure browsing platform</div>
         </div>
         
         <div id="error-message" class="error-message" style="display: none;"></div>
@@ -422,12 +530,12 @@
         <form id="login-form" style="display: block;">
           <div class="form-group">
             <label for="login-username">Username or Email</label>
-            <input type="text" id="login-username" name="usernameOrEmail" required autocomplete="username" />
+            <input type="text" id="login-username" name="usernameOrEmail" required autocomplete="username" placeholder="Enter your username or email" />
           </div>
           
           <div class="form-group">
             <label for="login-password">Password</label>
-            <input type="password" id="login-password" name="password" required autocomplete="current-password" />
+            <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
           </div>
           
           <div class="checkbox-group">
@@ -436,11 +544,15 @@
           </div>
           
           <button type="submit" class="auth-button" id="login-button">
-            Sign In
+            🚀 Sign In
           </button>
           
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+          
           <div class="toggle-form">
-            <a href="/signup" id="go-signup">Don't have an account? Create one</a>
+            <a href="/signup" id="go-signup">Don't have an account? Create one →</a>
           </div>
         </form>
         
@@ -466,8 +578,8 @@
       const successMessage = document.getElementById('success-message');
       const themeToggle = document.getElementById('theme-toggle');
       
-      // Theme toggle functionality
-  const savedTheme = localStorage.getItem('theme') || 'dark';
+      // Theme toggle functionality with enhanced animations
+      const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
       themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
       
@@ -475,9 +587,15 @@
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        // Add rotation animation to theme toggle
+        themeToggle.style.transform = 'scale(1.2) rotate(180deg)';
+        
+        setTimeout(() => {
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+          themeToggle.style.transform = 'scale(1) rotate(0deg)';
+        }, 150);
       });
       
       if (showRegister) {
