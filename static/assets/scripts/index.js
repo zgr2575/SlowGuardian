@@ -53,15 +53,6 @@ window.addEventListener("load", async () => {
     if (!window.slowGuardianProxy) {
       setTimeout(initializeProxy, 2000);
     }
-          try {
-            await window.slowGuardianProxy.initialize();
-            console.log("✅ Proxy system ready (delayed)");
-          } catch (error) {
-            console.error("❌ Delayed proxy initialization failed:", error);
-          }
-        }
-      }, 1000);
-    }
 
   } catch (error) {
     console.error("❌ Homepage initialization failed:", error);
