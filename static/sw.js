@@ -2,9 +2,9 @@
 try {
   importScripts("/dy/config.js");
   importScripts("/dy/worker.js");
-  importScripts("/a/bundle.js");
-  importScripts("/a/config.js");
-  importScripts("/a/sw.js");
+  importScripts("/m/bundle.js");
+  importScripts("/m/config.js");
+  importScripts(__uv$config.sw || "/a/sw.js");
 } catch (error) {
   console.error("Failed to import scripts:", error);
 }
@@ -21,38 +21,38 @@ self.addEventListener("fetch", (event) => {
     (async function () {
       try {
         const url = new URL(event.request.url);
-        
+
         // Handle Dynamic proxy requests (/a/q/)
         if (await dynamic.route(event)) {
-          console.log("Routing through Dynamic:", event.request.url);
           return await dynamic.fetch(event);
         }
 
         // Handle Ultraviolet proxy requests (/a/)
         if (event.request.url.startsWith(location.origin + "/a/")) {
-          console.log("Routing through Ultraviolet:", event.request.url);
           return await uv.fetch(event);
         }
 
         // Handle bare server requests (/o/)
         if (event.request.url.startsWith(location.origin + "/o/")) {
-          console.log("Routing to bare server:", event.request.url);
           return await fetch(event.request);
         }
 
         // Default: pass through to network
         return await fetch(event.request);
       } catch (error) {
-        console.error("Service worker fetch error:", error);
-        
-        // Fallback for failed requests
-        if (event.request.mode === 'navigate') {
-          return Response.redirect('/', 302);
+        // Only log critical navigation errors, not routine fetch failures
+        if (event.request.mode === "navigate" || error.message.includes("register")) {
+          console.error("Service worker fetch error:", error);
         }
-        
-        return new Response('Service Worker Error', { 
-          status: 500, 
-          statusText: 'Internal Server Error' 
+
+        // Fallback for failed requests
+        if (event.request.mode === "navigate") {
+          return Response.redirect("/", 302);
+        }
+
+        return new Response("Service Worker Error", {
+          status: 500,
+          statusText: "Internal Server Error",
         });
       }
     })()
@@ -75,7 +75,7 @@ self.addEventListener("activate", (event) => {
 
 // Message event handler for communication with main thread
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
