@@ -15,9 +15,9 @@ const config = {
 
   // KeyAuth API Configuration - NEW AUTHENTICATION SYSTEM
   keyauth: {
-    enabled: false, // Set to true to enable KeyAuth authentication
-    name: process.env.KEYAUTH_NAME || "SlowGuardian", // Your KeyAuth application name
-    ownerId: process.env.KEYAUTH_OWNER_ID || "", // Your KeyAuth owner ID
+    enabled: true, // Set to true to enable KeyAuth authentication
+    name: "slowguardian", // Your KeyAuth application name
+    ownerId: "TgewInK5Uy", // Your KeyAuth owner ID
     secret: process.env.KEYAUTH_SECRET || "", // Your KeyAuth application secret
     version: "1.0", // Your application version in KeyAuth
     requireLicense: false, // Set to true if users need license keys

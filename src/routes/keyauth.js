@@ -57,26 +57,67 @@ router.post("/login", checkKeyAuthEnabled, async (req, res) => {
       });
     }
 
+    // Get client IP and User-Agent for anti-sharing protection
+    const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    const userAgent = req.headers['user-agent'] || '';
+    const deviceFingerprint = Buffer.from(`${clientIP}:${userAgent}`).toString('base64');
+
     const result = await keyauth.login(username, password);
 
     if (result.success) {
-      // Create session token
+      // Account sharing protection: Check for concurrent sessions from different IPs
+      const existingSessions = global.activeSessions || new Map();
+      const userSessions = existingSessions.get(username) || [];
+      
+      // Allow maximum 2 concurrent sessions from different IPs
+      const uniqueIPs = new Set(userSessions.map(session => session.ip));
+      const differentIP = !userSessions.some(session => session.ip === clientIP);
+      
+      if (differentIP && uniqueIPs.size >= 2) {
+        logger.warn(`Account sharing detected for user ${username}: ${uniqueIPs.size + 1} different IPs`);
+        return res.status(429).json({
+          success: false,
+          error: "Account sharing detected. Maximum 2 concurrent sessions from different locations allowed.",
+        });
+      }
+
+      // Create session token with anti-sharing data
       const sessionToken = Buffer.from(
         JSON.stringify({
           username: result.user.username,
           loginTime: Date.now(),
           expires: result.user.expires,
+          ip: clientIP,
+          deviceFingerprint,
+          sessionId: Math.random().toString(36).substr(2, 9),
         })
       ).toString("base64");
 
-      // Log the login
-      await keyauth.log(username, "Logged into SlowGuardian");
+      // Track active session
+      const sessionData = { 
+        ip: clientIP, 
+        deviceFingerprint, 
+        loginTime: Date.now(),
+        userAgent: userAgent.substring(0, 100) // Truncate for storage
+      };
+      
+      if (!global.activeSessions) global.activeSessions = new Map();
+      const updatedSessions = userSessions.filter(s => Date.now() - s.loginTime < 24 * 60 * 60 * 1000); // Keep only last 24h
+      updatedSessions.push(sessionData);
+      global.activeSessions.set(username, updatedSessions);
+
+      // Log the login with IP info
+      await keyauth.log(username, `Logged into SlowGuardian from ${clientIP}`);
 
       res.json({
         success: true,
         token: sessionToken,
         user: result.user,
         message: "Login successful",
+        sessionInfo: {
+          activeSessions: updatedSessions.length,
+          maxSessions: 2
+        }
       });
     } else {
       res.status(401).json({
@@ -191,6 +232,11 @@ router.post("/validate", checkKeyAuthEnabled, async (req, res) => {
     // Decode and validate token
     const sessionData = JSON.parse(Buffer.from(token, "base64").toString());
     const now = Date.now();
+    
+    // Get current client info for validation
+    const clientIP = req.ip || req.connection.remoteAddress || req.headers['x-forwarded-for'];
+    const userAgent = req.headers['user-agent'] || '';
+    const currentFingerprint = Buffer.from(`${clientIP}:${userAgent}`).toString('base64');
 
     // Check if session has expired
     if (sessionData.expires && now > new Date(sessionData.expires).getTime()) {
@@ -212,6 +258,28 @@ router.post("/validate", checkKeyAuthEnabled, async (req, res) => {
       });
     }
 
+    // Account sharing protection: Verify IP and device consistency
+    if (sessionData.ip && sessionData.deviceFingerprint) {
+      const ipChanged = sessionData.ip !== clientIP;
+      const deviceChanged = sessionData.deviceFingerprint !== currentFingerprint;
+      
+      // Allow some flexibility but flag suspicious activity
+      if (ipChanged && deviceChanged) {
+        logger.warn(`Suspicious session validation for ${sessionData.username}: IP changed from ${sessionData.ip} to ${clientIP} and device fingerprint changed`);
+        
+        // Invalidate session if both IP and device changed (likely account sharing)
+        return res.status(401).json({
+          success: false,
+          error: "Session invalidated due to security concerns. Please log in again.",
+        });
+      }
+      
+      // Log IP changes for monitoring
+      if (ipChanged) {
+        logger.info(`IP change detected for ${sessionData.username}: ${sessionData.ip} -> ${clientIP}`);
+      }
+    }
+
     res.json({
       success: true,
       valid: true,
@@ -219,6 +287,8 @@ router.post("/validate", checkKeyAuthEnabled, async (req, res) => {
         username: sessionData.username,
         loginTime: sessionData.loginTime,
         expires: sessionData.expires,
+        ipMatch: sessionData.ip === clientIP,
+        deviceMatch: sessionData.deviceFingerprint === currentFingerprint
       },
     });
   } catch (error) {
@@ -265,6 +335,17 @@ router.post("/logout", checkKeyAuthEnabled, async (req, res) => {
         const sessionData = JSON.parse(Buffer.from(token, "base64").toString());
         if (sessionData.username) {
           await keyauth.log(sessionData.username, "Logged out of SlowGuardian");
+          
+          // Remove session from active sessions tracking
+          if (global.activeSessions && sessionData.sessionId) {
+            const userSessions = global.activeSessions.get(sessionData.username) || [];
+            const updatedSessions = userSessions.filter(s => s.sessionId !== sessionData.sessionId);
+            if (updatedSessions.length > 0) {
+              global.activeSessions.set(sessionData.username, updatedSessions);
+            } else {
+              global.activeSessions.delete(sessionData.username);
+            }
+          }
         }
       } catch (error) {
         // Ignore token parsing errors for logout
@@ -277,6 +358,73 @@ router.post("/logout", checkKeyAuthEnabled, async (req, res) => {
     });
   } catch (error) {
     logger.error("KeyAuth logout error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
+});
+
+// Session monitoring endpoint for account sharing detection
+router.get("/sessions", checkKeyAuthEnabled, async (req, res) => {
+  try {
+    const { token } = req.headers.authorization?.split(' ')[1] ? { token: req.headers.authorization.split(' ')[1] } : req.query;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        error: "Session token is required",
+      });
+    }
+
+    const sessionData = JSON.parse(Buffer.from(token, "base64").toString());
+    const username = sessionData.username;
+
+    if (!username) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid session token",
+      });
+    }
+
+    // Get user's active sessions
+    const activeSessions = global.activeSessions?.get(username) || [];
+    const currentTime = Date.now();
+    
+    // Filter out expired sessions (older than 24 hours)
+    const validSessions = activeSessions.filter(session => 
+      currentTime - session.loginTime < 24 * 60 * 60 * 1000
+    );
+
+    // Update the stored sessions
+    if (validSessions.length !== activeSessions.length) {
+      if (validSessions.length > 0) {
+        global.activeSessions.set(username, validSessions);
+      } else {
+        global.activeSessions.delete(username);
+      }
+    }
+
+    // Prepare session info for response (remove sensitive data)
+    const sessionInfo = validSessions.map(session => ({
+      loginTime: session.loginTime,
+      ip: session.ip,
+      location: session.ip, // Could be enhanced with IP geolocation
+      device: session.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop',
+      browser: session.userAgent.split(' ')[0]
+    }));
+
+    res.json({
+      success: true,
+      username,
+      totalSessions: sessionInfo.length,
+      maxAllowed: 2,
+      sessions: sessionInfo,
+      accountSharingDetected: sessionInfo.length > 2
+    });
+
+  } catch (error) {
+    logger.error("Session monitoring error:", error);
     res.status(500).json({
       success: false,
       error: "Internal server error",

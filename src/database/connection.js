@@ -30,9 +30,9 @@ class DatabaseConnection {
 
       logger.info(`Connecting to MongoDB: ${mongoUri.replace(/:[^:]*@/, ":***@")}`);
 
-      // In CI environments or when MONGODB_SKIP is set, use mock/fallback
-      if (process.env.CI || process.env.MONGODB_SKIP === 'true') {
-        logger.info("CI environment detected, using mock MongoDB fallback");
+      // In CI environments, Vercel, or when MONGODB_SKIP is set, use mock/fallback
+      if (process.env.CI || process.env.MONGODB_SKIP === 'true' || process.env.VERCEL || !mongoUri || mongoUri === "mongodb://localhost:27017") {
+        logger.info("Production/CI environment detected without MongoDB configured, using fallback mode");
         this.isConnected = false;
         return false;
       }

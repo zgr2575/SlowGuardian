@@ -12,8 +12,8 @@ const logger = new Logger("StartupAuth");
  * Check if authentication should be enforced
  */
 function shouldEnforceAuth() {
-  // Skip auth enforcement in CI environments
-  if (process.env.CI || process.env.SKIP_AUTH === 'true') {
+  // Skip auth enforcement in CI environments, Vercel, or when explicitly disabled
+  if (process.env.CI || process.env.SKIP_AUTH === 'true' || process.env.VERCEL) {
     return false;
   }
   
@@ -27,9 +27,9 @@ function shouldEnforceAuth() {
     return true;
   }
   
-  // Require auth if MongoDB is available and actually connected (indicates production-like setup)
+  // For production deployments, only require auth if MongoDB is properly configured and connected
   try {
-    if (dbConnection.isReady()) {
+    if (dbConnection.isReady() && process.env.MONGODB_URI && process.env.MONGODB_URI !== "mongodb://localhost:27017") {
       return true;
     }
   } catch (error) {
@@ -37,6 +37,7 @@ function shouldEnforceAuth() {
     return false;
   }
   
+  // Default to no auth enforcement for simpler deployments
   return false;
 }
 
