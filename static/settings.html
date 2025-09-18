@@ -885,17 +885,6 @@
 
                 <div class="form-group">
                   <label class="checkbox-label">
-                    <input type="checkbox" id="stealth-mode" />
-                    <span class="checkbox-custom"></span>
-                    Enable Stealth Mode
-                  </label>
-                  <p class="setting-description">
-                    Enhances proxy stealth with custom encoding, randomized paths, and anti-detection measures
-                  </p>
-                </div>
-
-                <div class="form-group">
-                  <label class="checkbox-label">
                     <input type="checkbox" id="auto-failover" />
                     <span class="checkbox-custom"></span>
                     Automatic Failover
@@ -1481,10 +1470,6 @@
     <!-- Centralized Navigation Bar -->
     <script src="assets/scripts/navbar.js?v=1"></script>
 
-    <!-- Enhanced Proxy System -->
-    <script src="assets/scripts/stealth-config.js?v=1"></script>
-    <script src="assets/scripts/multi-proxy.js?v=1"></script>
-
     <!-- New v9 Systems -->
     <script src="assets/scripts/plugin-system.js?v=1"></script>
     <script src="assets/scripts/performance-mode.js?v=1"></script>
@@ -1495,6 +1480,53 @@
 
     <!-- Ads Management Settings Script -->
     <script>
+      // Notification system
+      window.showNotification = function (message, type = "info", duration = 5000) {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === "error" ? "#ef4444" : type === "success" ? "#10b981" : type === "warning" ? "#f59e0b" : "#3b82f6"};
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease-out;
+          max-width: 300px;
+        `;
+        notification.textContent = message;
+
+        if (!document.getElementById("notification-styles")) {
+          const style = document.createElement("style");
+          style.id = "notification-styles";
+          style.textContent = `
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+              from { transform: translateX(0); opacity: 1; }
+              to { transform: translateX(100%); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease-in forwards";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, duration);
+      };
+
       document.addEventListener("DOMContentLoaded", function () {
         // Initialize ads management UI
         initAdsManagement();
@@ -2092,22 +2124,19 @@
       // Enhanced Proxy System Settings
       function initEnhancedProxySettings() {
         const proxyBackendSelect = document.getElementById("proxy-backend");
-        const stealthModeCheckbox = document.getElementById("stealth-mode");
         const autoFailoverCheckbox = document.getElementById("auto-failover");
         const proxyStatusContent = document.getElementById("proxy-status-content");
 
-        if (!proxyBackendSelect || !stealthModeCheckbox || !autoFailoverCheckbox || !proxyStatusContent) {
+        if (!proxyBackendSelect || !autoFailoverCheckbox || !proxyStatusContent) {
           console.log("Enhanced proxy settings not available on this page");
           return;
         }
 
         // Load saved settings
         const savedProxy = localStorage.getItem("preferred-proxy") || "ultraviolet";
-        const stealthMode = localStorage.getItem("stealth-mode") === "true";
         const autoFailover = localStorage.getItem("auto-failover") !== "false"; // Default to true
 
         proxyBackendSelect.value = savedProxy;
-        stealthModeCheckbox.checked = stealthMode;
         autoFailoverCheckbox.checked = autoFailover;
 
         // Update proxy status
@@ -2140,18 +2169,6 @@
           }
 
           showNotification("Proxy backend updated to " + selectedProxy);
-        });
-
-        stealthModeCheckbox.addEventListener("change", function () {
-          const enabled = this.checked;
-          localStorage.setItem("stealth-mode", enabled);
-
-          if (window.multiProxy && enabled) {
-            window.multiProxy.enableStealthMode();
-            updateProxyStatus();
-          }
-
-          showNotification("Stealth mode " + (enabled ? "enabled" : "disabled"));
         });
 
         autoFailoverCheckbox.addEventListener("change", function () {

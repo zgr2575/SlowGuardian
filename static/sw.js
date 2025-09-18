@@ -2,9 +2,9 @@
 try {
   importScripts("/dy/config.js");
   importScripts("/dy/worker.js");
-  importScripts("/m/bundle.js");
-  importScripts("/m/config.js");
-  importScripts(__uv$config.sw || "/m/sw.js");
+  importScripts("/a/bundle.js");
+  importScripts("/a/config.js");
+  importScripts("/a/sw.js");
 } catch (error) {
   console.error("Failed to import scripts:", error);
 }

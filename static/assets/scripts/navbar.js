@@ -38,17 +38,25 @@ class NavigationBar {
   async loadUserInfo() {
     try {
       // Check for authentication tokens/cookies
+      const authToken = localStorage.getItem('authToken');
       const hasAuthCookie = document.cookie.includes('sg_auth=') || 
                            document.cookie.includes('sg_session=') ||
-                           localStorage.getItem('sg_auth_token') ||
-                           sessionStorage.getItem('sg_auth_token');
+                           document.cookie.includes('sg_auth_ui=');
 
-      if (hasAuthCookie) {
+      if (authToken || hasAuthCookie) {
+        const headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        };
+
+        // Add Bearer token if available
+        if (authToken) {
+          headers['Authorization'] = `Bearer ${authToken}`;
+        }
+
         const response = await fetch('/api/auth/profile', {
           credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-          }
+          headers
         });
 
         if (response.ok) {
