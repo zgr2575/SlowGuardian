@@ -33,11 +33,38 @@ class NavigationBar {
     this.createNavbar();
     this.attachEventListeners();
     this.injectStyles();
+    
+    // Listen for KeyAuth status changes
+    window.addEventListener('keyauth-status-changed', (event) => {
+      this.loadUserInfo().then(() => {
+        this.createNavbar();
+        this.attachEventListeners();
+      });
+    });
   }
 
   async loadUserInfo() {
     try {
-      // Check for authentication tokens/cookies
+      // First check KeyAuth for user info
+      if (window.keyAuthManager && window.keyAuthManager.isAuthenticated()) {
+        const keyAuthUser = window.keyAuthManager.getUser();
+        if (keyAuthUser) {
+          this.currentUser = {
+            username: keyAuthUser.username || 'Premium User',
+            firstName: keyAuthUser.username || 'Premium',
+            lastName: 'User',
+            role: 'Premium',
+            isPremium: true,
+            isActivePremium: true,
+            email: keyAuthUser.email || '',
+            avatar: keyAuthUser.avatar || ''
+          };
+          console.log('✅ User loaded from KeyAuth:', this.currentUser.username);
+          return;
+        }
+      }
+
+      // Fallback to regular auth system
       const authToken = localStorage.getItem('authToken');
       const hasAuthCookie = document.cookie.includes('sg_auth=') || 
                            document.cookie.includes('sg_session=') ||
@@ -63,6 +90,7 @@ class NavigationBar {
           const data = await response.json();
           if (data.success && data.user) {
             this.currentUser = data.user;
+            console.log('✅ User loaded from API:', this.currentUser.username);
           }
         }
       }
@@ -344,22 +372,33 @@ class NavigationBar {
         logoutBtn.disabled = true;
       }
 
-      // Call logout endpoint
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      // Handle KeyAuth logout
+      if (window.keyAuthManager && window.keyAuthManager.isAuthenticated()) {
+        window.keyAuthManager.clearSession();
+      }
 
-      // Clear local storage/session storage
+      // Call regular logout endpoint
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+      } catch (e) {
+        // Ignore regular logout errors if KeyAuth is primary
+      }
+
+      // Clear all local storage/session storage
+      localStorage.removeItem('authToken');
       localStorage.removeItem('sg_auth_token');
+      localStorage.removeItem('keyauth_session');
       sessionStorage.removeItem('sg_auth_token');
       sessionStorage.removeItem('sg-authenticated');
 
-      // Redirect to login or home page
-      window.location.href = '/login';
+      // Redirect to login page
+      window.location.href = '/login.html';
     } catch (error) {
       console.error('Logout failed:', error);
       // Fallback - force reload to clear session

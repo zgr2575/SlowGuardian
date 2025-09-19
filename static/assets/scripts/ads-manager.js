@@ -6,18 +6,18 @@
 
 class AdsManager {
   constructor() {
-    this.adsEnabled = this.getAdsSetting();
+    this.adsEnabled = false; // Disabled due to banner issues
     this.adsenseConfig = this.loadAdsenseConfig();
     this.adProviders = {
       google: {
-        enabled: true,
+        enabled: false, // Disabled
         publisherId: this.adsenseConfig.publisherId,
-        autoAds: this.adsenseConfig.autoAds,
+        autoAds: false, // Disabled
         slots: new Map(),
         testMode: this.adsenseConfig.testMode,
       },
       media: {
-        enabled: true,
+        enabled: false, // Disabled
         networkId: "", // Custom network fallback
         slots: new Map(),
       },

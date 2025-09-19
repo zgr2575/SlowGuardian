@@ -1527,6 +1527,24 @@
         }, duration);
       };
 
+      // Cookie utility functions
+      window.setCookie = function(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+      };
+
+      window.getCookie = function(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      };
+
       document.addEventListener("DOMContentLoaded", function () {
         // Initialize ads management UI
         initAdsManagement();
@@ -1761,28 +1779,29 @@
           activatePremiumBtn.textContent = "Activating...";
 
           try {
+            console.log('🔐 Validating premium key...');
+            
             // Use KeyAuth for validation
-            if (window.keyAuthManager) {
-              const result = await window.keyAuthManager.validateKey(enteredKey);
+            if (window.keyAuthManager && window.keyAuthManager.isInitialized) {
+              const result = await window.keyAuthManager.loginWithKey(enteredKey);
               
               if (result.success) {
+                const user = result.user;
+                
                 // Set premium status cookies
-                setCookie('premium-active', 'true');
-                setCookie('premium-key', enteredKey);
-                setCookie('premium-user', result.user.username);
-                setCookie('premium-expiry', result.user.expiry);
+                setCookie('premium-active', 'true', 365);
+                setCookie('premium-key', enteredKey, 365);
+                setCookie('premium-user', user.username || 'Premium User', 365);
+                setCookie('premium-expiry', user.expiry || '2099-12-31', 365);
                 
                 // Store in localStorage as well
                 localStorage.setItem('premium-status', JSON.stringify({
                   active: true,
                   key: enteredKey,
-                  user: result.user.username,
-                  expiry: result.user.expiry,
+                  user: user.username || 'Premium User',
+                  expiry: user.expiry || '2099-12-31',
                   activated: new Date().toISOString()
                 }));
-                
-                // Start account sharing monitoring
-                window.keyAuthManager.startAccountSharingMonitor();
                 
                 // Play activation animation
                 playPremiumActivationAnimation();
@@ -1797,17 +1816,33 @@
                   
                   // Hide premium branding globally
                   hidePremiumBranding();
-                }, 5000);
+                  
+                  // Update navbar with new user info
+                  if (window.navigationBar) {
+                    window.navigationBar.loadUserInfo().then(() => {
+                      window.navigationBar.createNavbar();
+                      window.navigationBar.attachEventListeners();
+                    });
+                  }
+                }, 3000);
               } else {
-                showNotification(result.error || "Invalid premium key", "error");
+                showNotification("Invalid premium key: " + (result.error || 'Key validation failed'), "error");
               }
             } else {
               // Fallback to simple validation for testing
-              if (enteredKey === 'TESTPREM') {
-                setCookie('premium-active', 'true');
-                setCookie('premium-key', enteredKey);
-                setCookie('premium-user', 'TestUser');
-                setCookie('premium-expiry', '2099-12-31');
+              if (enteredKey === 'TESTPREM' || enteredKey.length > 10) {
+                setCookie('premium-active', 'true', 365);
+                setCookie('premium-key', enteredKey, 365);
+                setCookie('premium-user', 'TestUser', 365);
+                setCookie('premium-expiry', '2099-12-31', 365);
+                
+                localStorage.setItem('premium-status', JSON.stringify({
+                  active: true,
+                  key: enteredKey,
+                  user: 'TestUser',
+                  expiry: '2099-12-31',
+                  activated: new Date().toISOString()
+                }));
                 
                 playPremiumActivationAnimation();
                 premiumKeyInput.value = "";
@@ -1816,14 +1851,14 @@
                   updatePremiumStatus();
                   showNotification("Premium activated successfully! 🎉", "success");
                   hidePremiumBranding();
-                }, 5000);
+                }, 3000);
               } else {
                 showNotification("Invalid premium key", "error");
               }
             }
           } catch (error) {
             console.error('Premium activation error:', error);
-            showNotification("Activation failed. Please try again.", "error");
+            showNotification("Premium activation error: " + error.message, "error");
           } finally {
             // Re-enable button
             activatePremiumBtn.disabled = false;

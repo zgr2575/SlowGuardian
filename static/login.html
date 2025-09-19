@@ -68,11 +68,13 @@
       
       .auth-container {
         min-height: 100vh;
+        width: 100vw;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 2rem;
         position: relative;
+        box-sizing: border-box;
       }
       
       /* Floating particles background */
@@ -529,13 +531,16 @@
         <!-- Login Form -->
         <form id="login-form" style="display: block;">
           <div class="form-group">
-            <label for="login-username">Username or Email</label>
-            <input type="text" id="login-username" name="usernameOrEmail" required autocomplete="username" placeholder="Enter your username or email" />
+            <label for="login-username">Username / Email / License Key</label>
+            <input type="text" id="login-username" name="username" required autocomplete="username" placeholder="Enter username, email, or premium license key" />
+            <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+              💡 Premium users can enter their license key here (password not required)
+            </small>
           </div>
           
           <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
+            <label for="login-password">Password (optional for license keys)</label>
+            <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Enter your password" />
           </div>
           
           <div class="checkbox-group">
@@ -649,6 +654,49 @@
         const data = Object.fromEntries(formData);
         
         try {
+          // First try KeyAuth if available
+          if (window.keyAuthManager && window.keyAuthManager.isInitialized) {
+            // Check if input looks like a license key (typically longer and alphanumeric)
+            const isLicenseKey = data.username && data.username.length > 10 && /^[A-Za-z0-9-]+$/.test(data.username);
+            
+            if (isLicenseKey && !data.password) {
+              // Try license key authentication
+              try {
+                const keyAuthResult = await window.keyAuthManager.loginWithKey(data.username);
+                if (keyAuthResult.success) {
+                  showSuccess('Premium login successful! Redirecting...');
+                  setTimeout(() => {
+                    redirectAfterLogin();
+                  }, 1500);
+                  return;
+                } else {
+                  showError('Invalid license key: ' + keyAuthResult.error);
+                  setLoading(loginButton, false);
+                  return;
+                }
+              } catch (error) {
+                console.log('KeyAuth license failed, trying regular auth:', error.message);
+              }
+            } else if (data.username && data.password) {
+              // Try username/password with KeyAuth
+              try {
+                const keyAuthResult = await window.keyAuthManager.loginWithCredentials(data.username, data.password);
+                if (keyAuthResult.success) {
+                  showSuccess('Premium login successful! Redirecting...');
+                  setTimeout(() => {
+                    redirectAfterLogin();
+                  }, 1500);
+                  return;
+                } else {
+                  console.log('KeyAuth login failed, trying regular auth:', keyAuthResult.error);
+                }
+              } catch (error) {
+                console.log('KeyAuth login failed, trying regular auth:', error.message);
+              }
+            }
+          }
+          
+          // Fallback to regular authentication
           const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
@@ -660,22 +708,41 @@
           const result = await response.json();
           
           if (result.success) {
-                // Store token in localStorage (server also set an httpOnly cookie)
-                localStorage.setItem('authToken', result.token);
+            // Store token in localStorage (server also set an httpOnly cookie)
+            localStorage.setItem('authToken', result.token);
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => {
+              redirectAfterLogin();
+            }, 1500);
+          } else {
+            showError(result.error || 'Login failed');
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          showError('Login failed. Please try again.');
+        } finally {
+          setLoading(loginButton, false);
+        }
+      });
+      
+      function redirectAfterLogin() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let redirect = urlParams.get('redirect') || '/';
 
-                showSuccess('Login successful! Redirecting...');
+        // Prevent redirect loops - don't redirect to login page
+        if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+          redirect = '/';
+        }
 
-                // Redirect after a short delay
-                setTimeout(() => {
-                  const urlParams = new URLSearchParams(window.location.search);
-                  let redirect = urlParams.get('redirect') || '/';
+        // Decode URL if it's encoded
+        try {
+          redirect = decodeURIComponent(redirect);
+        } catch (e) {
+          redirect = '/';
+        }
 
-                  // Prevent redirect loops - don't redirect to login page
-                  if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
-                    redirect = '/';
-                  }
-
-                  // Decode URL if it's encoded
+        window.location.href = redirect;
+      }
                   try {
                     redirect = decodeURIComponent(redirect);
                   } catch (e) {

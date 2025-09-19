@@ -1,37 +1,151 @@
 /**
  * KeyAuth Integration for SlowGuardian Premium
- * Provides secure key validation and account sharing protection
+ * Based on official KeyAuth JavaScript implementation
  */
 
-class KeyAuthManager {
-  constructor() {
-    this.config = {
-      name: "slowguardian",
-      ownerid: "TgewInK5Uy",
-      version: "1.0"
-    };
-    
-    this.baseUrl = "https://keyauth.win/api/1.2/";
-    this.session = null;
-    this.userInfo = null;
-    this.deviceFingerprint = null;
-    
-    this.init();
+class KeyAuth {
+  constructor(name, ownerid, secret, version, url) {
+    this.name = name || "slowguardian";
+    this.ownerid = ownerid || "TgewInK5Uy";
+    this.secret = secret;
+    this.version = version || "1.0";
+    this.url = url || "https://keyauth.win/api/1.2/";
+    this.sessionid = null;
+    this.user_data = null;
+    this.numkeys = "";
+    this.numchat = "";
+    this.numchan = "";
+    this.numusers = "";
+    this.error = null;
+    this.response = "";
   }
 
   async init() {
-    // Generate device fingerprint for account sharing protection
-    this.deviceFingerprint = await this.generateDeviceFingerprint();
-    console.log('🔐 KeyAuth Manager initialized');
+    try {
+      const hwid = await this.gethwid();
+      const enckey = this.encrypta(this.name + this.ownerid + hwid);
+      
+      const postData = new URLSearchParams();
+      postData.append('type', 'init');
+      postData.append('ver', this.version);
+      postData.append('hash', this.sha256(this.getcurrentpathhash()));
+      postData.append('enckey', enckey);
+      postData.append('name', this.name);
+      postData.append('ownerid', this.ownerid);
+
+      const response = await fetch(this.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: postData
+      });
+
+      const data = await response.text();
+      this.response = this.decrypt(data, enckey);
+      const responseObj = JSON.parse(this.response);
+
+      if (responseObj.success) {
+        this.sessionid = responseObj.sessionid;
+        this.numkeys = responseObj.app_info.numkeys;
+        this.numchat = responseObj.app_info.numchat;
+        this.numchan = responseObj.app_info.numchan;
+        this.numusers = responseObj.app_info.numusers;
+        return true;
+      } else {
+        this.error = responseObj.message;
+        return false;
+      }
+    } catch (e) {
+      this.error = e.message;
+      return false;
+    }
   }
 
-  async generateDeviceFingerprint() {
-    // Create a unique device fingerprint based on browser characteristics
+  async login(username, password) {
+    try {
+      const hwid = await this.gethwid();
+      const enckey = this.encrypta(username + password + hwid);
+      
+      const postData = new URLSearchParams();
+      postData.append('type', 'login');
+      postData.append('username', username);
+      postData.append('pass', password);
+      postData.append('hwid', hwid);
+      postData.append('sessionid', this.sessionid);
+      postData.append('name', this.name);
+      postData.append('ownerid', this.ownerid);
+
+      const response = await fetch(this.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: postData
+      });
+
+      const data = await response.text();
+      this.response = this.decrypt(data, enckey);
+      const responseObj = JSON.parse(this.response);
+
+      if (responseObj.success) {
+        this.user_data = responseObj.info;
+        return true;
+      } else {
+        this.error = responseObj.message;
+        return false;
+      }
+    } catch (e) {
+      this.error = e.message;
+      return false;
+    }
+  }
+
+  async license(key) {
+    try {
+      const hwid = await this.gethwid();
+      const enckey = this.encrypta(key + hwid);
+      
+      const postData = new URLSearchParams();
+      postData.append('type', 'license');
+      postData.append('key', key);
+      postData.append('hwid', hwid);
+      postData.append('sessionid', this.sessionid);
+      postData.append('name', this.name);
+      postData.append('ownerid', this.ownerid);
+
+      const response = await fetch(this.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: postData
+      });
+
+      const data = await response.text();
+      this.response = this.decrypt(data, enckey);
+      const responseObj = JSON.parse(this.response);
+
+      if (responseObj.success) {
+        this.user_data = responseObj.info;
+        return true;
+      } else {
+        this.error = responseObj.message;
+        return false;
+      }
+    } catch (e) {
+      this.error = e.message;
+      return false;
+    }
+  }
+
+  async gethwid() {
+    // Generate hardware ID from browser fingerprint
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.textBaseline = 'top';
     ctx.font = '14px Arial';
-    ctx.fillText('SlowGuardian fingerprint', 2, 2);
+    ctx.fillText('KeyAuth hwid', 2, 2);
     
     const fingerprint = {
       userAgent: navigator.userAgent,
@@ -39,15 +153,214 @@ class KeyAuthManager {
       platform: navigator.platform,
       screenResolution: `${screen.width}x${screen.height}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      canvasFingerprint: canvas.toDataURL(),
-      hardwareConcurrency: navigator.hardwareConcurrency,
-      webgl: this.getWebGLFingerprint()
+      canvas: canvas.toDataURL(),
+      webgl: this.getWebGL()
     };
 
-    // Create hash of fingerprint data
-    const encoder = new TextEncoder();
-    const data = encoder.encode(JSON.stringify(fingerprint));
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hwid = await this.sha256(JSON.stringify(fingerprint));
+    return hwid;
+  }
+
+  getWebGL() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (gl) {
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+      }
+      return 'unknown';
+    } catch (e) {
+      return 'unknown';
+    }
+  }
+
+  async sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  getcurrentpathhash() {
+    return window.location.pathname + window.location.search;
+  }
+
+  encrypta(message) {
+    // Simple encryption for demo - in production use proper encryption
+    return btoa(message);
+  }
+
+  decrypt(message, key) {
+    try {
+      return atob(message);
+    } catch (e) {
+      return message; // Return as-is if not base64
+    }
+  }
+}
+
+// KeyAuth Manager for SlowGuardian integration
+class KeyAuthManager {
+  constructor() {
+    this.keyauth = new KeyAuth("slowguardian", "TgewInK5Uy", "", "1.0");
+    this.isInitialized = false;
+    this.currentUser = null;
+    this.sessionData = null;
+    
+    this.init();
+  }
+
+  async init() {
+    try {
+      const success = await this.keyauth.init();
+      if (success) {
+        this.isInitialized = true;
+        console.log('🔐 KeyAuth system loaded');
+        
+        // Check for saved session
+        await this.checkSavedSession();
+      } else {
+        console.warn('⚠️ KeyAuth initialization failed:', this.keyauth.error);
+      }
+    } catch (error) {
+      console.error('❌ KeyAuth init error:', error);
+    }
+  }
+
+  async checkSavedSession() {
+    const savedSession = localStorage.getItem('keyauth_session');
+    if (savedSession) {
+      try {
+        this.sessionData = JSON.parse(savedSession);
+        this.currentUser = this.sessionData.user_data;
+        
+        // Validate session is still active
+        if (this.isSessionValid()) {
+          this.updateUI();
+        } else {
+          this.clearSession();
+        }
+      } catch (e) {
+        this.clearSession();
+      }
+    }
+  }
+
+  async loginWithKey(licenseKey) {
+    if (!this.isInitialized) {
+      throw new Error('KeyAuth not initialized');
+    }
+
+    try {
+      const success = await this.keyauth.license(licenseKey);
+      if (success) {
+        this.currentUser = this.keyauth.user_data;
+        this.sessionData = {
+          user_data: this.currentUser,
+          timestamp: Date.now(),
+          hwid: await this.keyauth.gethwid()
+        };
+        
+        // Save session
+        localStorage.setItem('keyauth_session', JSON.stringify(this.sessionData));
+        localStorage.setItem('authToken', this.generateAuthToken());
+        
+        this.updateUI();
+        return { success: true, user: this.currentUser };
+      } else {
+        return { success: false, error: this.keyauth.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  async loginWithCredentials(username, password) {
+    if (!this.isInitialized) {
+      throw new Error('KeyAuth not initialized');
+    }
+
+    try {
+      const success = await this.keyauth.login(username, password);
+      if (success) {
+        this.currentUser = this.keyauth.user_data;
+        this.sessionData = {
+          user_data: this.currentUser,
+          timestamp: Date.now(),
+          hwid: await this.keyauth.gethwid()
+        };
+        
+        // Save session
+        localStorage.setItem('keyauth_session', JSON.stringify(this.sessionData));
+        localStorage.setItem('authToken', this.generateAuthToken());
+        
+        this.updateUI();
+        return { success: true, user: this.currentUser };
+      } else {
+        return { success: false, error: this.keyauth.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  generateAuthToken() {
+    // Generate a simple JWT-like token for local auth
+    const payload = {
+      user: this.currentUser?.username || 'unknown',
+      exp: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
+      iat: Date.now()
+    };
+    return btoa(JSON.stringify(payload));
+  }
+
+  isSessionValid() {
+    if (!this.sessionData) return false;
+    
+    // Check if session is less than 24 hours old
+    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+    return (Date.now() - this.sessionData.timestamp) < maxAge;
+  }
+
+  clearSession() {
+    this.currentUser = null;
+    this.sessionData = null;
+    localStorage.removeItem('keyauth_session');
+    localStorage.removeItem('authToken');
+    this.updateUI();
+  }
+
+  logout() {
+    this.clearSession();
+    window.location.href = '/login.html';
+  }
+
+  updateUI() {
+    // Update navbar with user info
+    if (window.navigationBar) {
+      window.navigationBar.currentUser = this.currentUser;
+      window.navigationBar.createNavbar();
+    }
+    
+    // Dispatch event for other components
+    window.dispatchEvent(new CustomEvent('keyauth-status-changed', {
+      detail: { user: this.currentUser, authenticated: !!this.currentUser }
+    }));
+  }
+
+  getUser() {
+    return this.currentUser;
+  }
+
+  isAuthenticated() {
+    return !!this.currentUser && this.isSessionValid();
+  }
+}
+
+// Initialize KeyAuth Manager
+window.keyAuthManager = new KeyAuthManager();
+console.log('🔐 KeyAuth Manager initialized');
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
