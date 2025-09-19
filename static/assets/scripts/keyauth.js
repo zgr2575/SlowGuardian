@@ -361,13 +361,6 @@ class KeyAuthManager {
 // Initialize KeyAuth Manager
 window.keyAuthManager = new KeyAuthManager();
 console.log('🔐 KeyAuth Manager initialized');
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    return hashHex.substring(0, 32); // Use first 32 chars as device ID
-  }
-
-  getWebGLFingerprint() {
     const gl = document.createElement('canvas').getContext('webgl');
     if (!gl) return 'none';
     

@@ -168,7 +168,7 @@ class SlowGuardianProxy {
       }
 
       // Register new service worker
-      const registration = await navigator.serviceWorker.register('/sw-new.js', {
+      const registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/',
         updateViaCache: 'none'
       });

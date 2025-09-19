@@ -6,6 +6,9 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: var(--space-4);
   padding: var(--space-4) 0;
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 300px);
 }
 
 /* Game Item */
@@ -323,6 +326,9 @@
   flex-wrap: unset !important;
   justify-content: unset !important;
   margin-top: var(--space-4) !important;
+  min-height: calc(100vh - 300px) !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .pinned-apps {
@@ -334,6 +340,8 @@
   justify-content: unset !important;
   margin-top: var(--space-4) !important;
   margin-bottom: var(--space-6) !important;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 /* Responsive Design */
