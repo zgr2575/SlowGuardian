@@ -529,7 +529,7 @@
         <div id="success-message" class="success-message" style="display: none;"></div>
         
         <!-- Login Form -->
-        <form id="login-form" style="display: block;" method="post" onsubmit="return false;">
+        <form id="login-form" style="display: block;" method="post" action="javascript:void(0);" autocomplete="off">
           <div class="form-group">
             <label for="login-username">Username / Email / License Key</label>
             <input type="text" id="login-username" name="username" required autocomplete="username" placeholder="Enter username, email, or premium license key" />
@@ -548,7 +548,7 @@
             <label for="remember-me">Remember me for 30 days</label>
           </div>
           
-          <button type="submit" class="auth-button" id="login-button">
+          <button type="button" class="auth-button" id="login-button">
             🚀 Sign In
           </button>
           
@@ -643,15 +643,21 @@
       }
       
       // Login form handler
-      loginForm.addEventListener('submit', async (e) => {
+      const loginButton = document.getElementById('login-button');
+      loginButton.addEventListener('click', async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         clearMessages();
         
         const loginButton = document.getElementById('login-button');
         setLoading(loginButton, true);
         
         const formData = new FormData(loginForm);
-        const data = Object.fromEntries(formData);
+        const data = {
+          username: document.getElementById('login-username').value,
+          password: document.getElementById('login-password').value,
+          rememberMe: document.getElementById('remember-me').checked
+        };
         
         try {
           // First try KeyAuth if available
@@ -752,15 +758,6 @@
 
         window.location.href = redirect;
       }
-          } else {
-            showError(result.error || 'Login failed');
-          }
-        } catch (error) {
-          showError('Network error. Please try again.');
-        } finally {
-          setLoading(loginButton, false);
-        }
-      });
       
   // Registration is handled on /signup
       

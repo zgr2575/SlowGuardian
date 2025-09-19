@@ -1,18 +1,18 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "ac706bf-1757093110290",
-  "buildDate": "2025-09-05T17:25:10.290Z",
-  "buildTimestamp": 1757093110290,
+  "buildId": "d36dcbb-1758305812853",
+  "buildDate": "2025-09-19T18:16:52.854Z",
+  "buildTimestamp": 1758305812854,
   "git": {
-    "commit": "ac706bf448c106c819a16c0b2a290e310ca05ad8",
-    "commitShort": "ac706bf",
+    "commit": "d36dcbb1c1d95c92adc13c8a440419d63e97ac0f",
+    "commitShort": "d36dcbb",
     "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
-    "commitDate": "2025-09-05T17:16:40Z",
-    "commitMessage": "🔐 Fix critical redirect loops, redesign authentication system, and resolve settings page white screen issue"
+    "commitDate": "2025-09-19T13:49:19Z",
+    "commitMessage": "🔧 Fix login page syntax errors, prevent credential URL exposure, enhance settings premium handling, and create production roadmap"
   },
   "environment": "development",
-  "nodeVersion": "v20.19.4",
+  "nodeVersion": "v20.19.5",
   "platform": "linux",
   "arch": "x64"
 }

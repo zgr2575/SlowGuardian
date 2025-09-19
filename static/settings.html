@@ -1702,6 +1702,12 @@
         const premiumPlanType = document.getElementById("premium-plan-type");
         const premiumExpiryDate = document.getElementById("premium-expiry-date");
         const premiumKeyDisplay = document.getElementById("premium-key-display");
+        
+        // Check if premium elements exist before proceeding
+        if (!premiumKeyInput || !activatePremiumBtn || !premiumStatusDot || !premiumStatusText) {
+          console.log('Premium UI elements not found, skipping premium activation setup');
+          return;
+        }
 
         // Check premium status on load
         async function updatePremiumStatus() {
@@ -1709,18 +1715,26 @@
           
           if (!token) {
             // User not logged in - show login prompt
-            premiumStatusDot.classList.add("disabled");
-            premiumStatusDot.style.background = "#ef4444";
-            premiumStatusText.textContent = "Login required";
-            premiumInfo.style.display = "none";
-            premiumActivation.innerHTML = `
-              <div style="text-align: center; padding: 20px;">
-                <p style="margin-bottom: 15px; color: var(--text-secondary);">
-                  Please login to manage your premium subscription
-                </p>
-                <a href="/login" class="btn btn-primary">Login / Register</a>
-              </div>
-            `;
+            if (premiumStatusDot) {
+              premiumStatusDot.classList.add("disabled");
+              premiumStatusDot.style.background = "#ef4444";
+            }
+            if (premiumStatusText) {
+              premiumStatusText.textContent = "Login required";
+            }
+            if (premiumInfo) {
+              premiumInfo.style.display = "none";
+            }
+            if (premiumActivation) {
+              premiumActivation.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to manage your premium subscription
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              `;
+            }
             return;
           }
 
@@ -1736,11 +1750,19 @@
             
             if (result.success && result.isPremium) {
               // Premium is active
-              premiumStatusDot.classList.remove("disabled");
-              premiumStatusDot.style.background = "#10b981";
-              premiumStatusText.textContent = "Premium Active";
-              premiumInfo.style.display = "block";
-              premiumActivation.style.display = "none";
+              if (premiumStatusDot) {
+                premiumStatusDot.classList.remove("disabled");
+                premiumStatusDot.style.background = "#10b981";
+              }
+              if (premiumStatusText) {
+                premiumStatusText.textContent = "Premium Active";
+              }
+              if (premiumInfo) {
+                premiumInfo.style.display = "block";
+              }
+              if (premiumActivation) {
+                premiumActivation.style.display = "none";
+              }
               
               const premiumStatus = result.premiumStatus;
               const expiryDate = premiumStatus.expiresAt ? 
@@ -1758,11 +1780,19 @@
               }
             } else {
               // Premium not active
-              premiumStatusDot.classList.add("disabled");
-              premiumStatusDot.style.background = "#ef4444";
-              premiumStatusText.textContent = "Premium not activated";
-              premiumInfo.style.display = "none";
-              premiumActivation.style.display = "block";
+              if (premiumStatusDot) {
+                premiumStatusDot.classList.add("disabled");
+                premiumStatusDot.style.background = "#ef4444";
+              }
+              if (premiumStatusText) {
+                premiumStatusText.textContent = "Premium not activated";
+              }
+              if (premiumInfo) {
+                premiumInfo.style.display = "none";
+              }
+              if (premiumActivation) {
+                premiumActivation.style.display = "block";
+              }
             }
           } catch (error) {
             console.error('Failed to check premium status:', error);
