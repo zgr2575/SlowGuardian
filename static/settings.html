@@ -1746,9 +1746,16 @@
               const expiryDate = premiumStatus.expiresAt ? 
                 new Date(premiumStatus.expiresAt).toLocaleDateString() : "Never";
               
-              premiumKeyDisplay.textContent = premiumStatus.premiumKey ? 
-                premiumStatus.premiumKey.substring(0, 4) + "••••" : "••••••••";
-              premiumExpiryDate.textContent = expiryDate;
+              if (premiumKeyDisplay) {
+                premiumKeyDisplay.textContent = premiumStatus.premiumKey ? 
+                  premiumStatus.premiumKey.substring(0, 4) + "••••" : "••••••••";
+              }
+              if (premiumExpiryDate) {
+                premiumExpiryDate.textContent = expiryDate;
+              }
+              if (premiumPlanType) {
+                premiumPlanType.textContent = "Premium Active";
+              }
             } else {
               // Premium not active
               premiumStatusDot.classList.add("disabled");

@@ -529,7 +529,7 @@
         <div id="success-message" class="success-message" style="display: none;"></div>
         
         <!-- Login Form -->
-        <form id="login-form" style="display: block;">
+        <form id="login-form" style="display: block;" method="post" onsubmit="return false;">
           <div class="form-group">
             <label for="login-username">Username / Email / License Key</label>
             <input type="text" id="login-username" name="username" required autocomplete="username" placeholder="Enter username, email, or premium license key" />
@@ -741,21 +741,17 @@
           redirect = '/';
         }
 
+        // As a final guard, if we somehow land back at login, go home
+        try {
+          if (new URL(redirect, window.location.origin).pathname.includes('/login.html')) {
+            redirect = '/';
+          }
+        } catch (e) {
+          redirect = '/';
+        }
+
         window.location.href = redirect;
       }
-                  try {
-                    redirect = decodeURIComponent(redirect);
-                  } catch (e) {
-                    redirect = '/';
-                  }
-
-                  // As a final guard, if we somehow land back at login, go home
-                  if (new URL(redirect, window.location.origin).pathname.includes('/login.html')) {
-                    redirect = '/';
-                  }
-
-                  window.location.href = redirect;
-                }, 800);
           } else {
             showError(result.error || 'Login failed');
           }
