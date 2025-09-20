@@ -1013,18 +1013,28 @@ class AdsManager {
     }
 
     const modal = document.getElementById("video-ad-modal");
+    if (!modal) {
+      console.warn("Video ad modal not found, skipping ad");
+      if (callback) callback();
+      return;
+    }
 
     modal.style.display = "block";
 
     // Store callback for when ad closes
     this.videoAdCallback = callback;
 
-    // Reset UI elements
-    document.getElementById("skip-countdown").textContent = "5";
-    document.getElementById("video-ad-skip").style.display = "block";
-    document.getElementById("video-ad-skip").innerHTML =
-      'Skip in <span id="skip-countdown">5</span>s';
-    document.getElementById("video-ad-close").style.display = "none";
+    // Reset UI elements with null checks
+    const skipCountdown = document.getElementById("skip-countdown");
+    const videoAdSkip = document.getElementById("video-ad-skip");
+    const videoAdClose = document.getElementById("video-ad-close");
+    
+    if (skipCountdown) skipCountdown.textContent = "5";
+    if (videoAdSkip) {
+      videoAdSkip.style.display = "block";
+      videoAdSkip.innerHTML = 'Skip in <span id="skip-countdown">5</span>s';
+    }
+    if (videoAdClose) videoAdClose.style.display = "none";
 
     // Start the countdown automatically
     this.startAdCountdown();
@@ -1032,6 +1042,10 @@ class AdsManager {
 
   closeVideoAd() {
     const modal = document.getElementById("video-ad-modal");
+    if (!modal) {
+      console.warn("Video ad modal not found");
+      return;
+    }
 
     modal.style.display = "none";
 

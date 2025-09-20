@@ -361,42 +361,6 @@ class KeyAuthManager {
 // Initialize KeyAuth Manager
 window.keyAuthManager = new KeyAuthManager();
 console.log('🔐 KeyAuth Manager initialized');
-    const gl = document.createElement('canvas').getContext('webgl');
-    if (!gl) return 'none';
-    
-    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-    if (!debugInfo) return 'basic';
-    
-    return {
-      vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
-      renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
-    };
-  }
-
-  async validateKey(key) {
-    try {
-      console.log('🔐 Validating premium key...');
-      
-      // For testing, accept TESTPREM immediately
-      if (key === 'TESTPREM') {
-        console.log('✅ Test premium key accepted');
-        return {
-          success: true,
-          user: {
-            username: 'TestUser',
-            subscription: 'Premium',
-            expiry: '2099-12-31',
-            hwid: this.deviceFingerprint
-          }
-        };
-      }
-
-      // Initialize session with KeyAuth
-      const initResponse = await this.makeKeyAuthRequest('init', {
-        name: this.config.name,
-        ownerid: this.config.ownerid,
-        version: this.config.version
-      });
 
       if (!initResponse.success) {
         throw new Error(initResponse.message || 'Failed to initialize KeyAuth session');

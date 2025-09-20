@@ -1,19 +1,42 @@
 // Enhanced service worker with comprehensive proxy support
-try {
-  importScripts("/dy/config.js");
-  importScripts("/dy/worker.js");
-  importScripts("/m/bundle.js");
-  importScripts("/m/config.js");
-  importScripts(__uv$config.sw || "/a/sw.js");
-} catch (error) {
-  console.error("Failed to import scripts:", error);
+let uv, dynamic;
+
+// Safe script import with error handling
+function safeImportScripts(scripts) {
+  for (const script of scripts) {
+    try {
+      importScripts(script);
+    } catch (error) {
+      console.warn(`Failed to import ${script}:`, error.message);
+    }
+  }
 }
 
-const uv = new UVServiceWorker();
-const dynamic = new Dynamic();
+// Import required scripts with error handling
+safeImportScripts([
+  "/dy/config.js",
+  "/dy/worker.js", 
+  "/m/bundle.js",
+  "/m/config.js"
+]);
 
-let userKey = new URL(location).searchParams.get("userkey");
-self.dynamic = dynamic;
+// Initialize proxy systems with error handling
+try {
+  if (typeof UVServiceWorker !== 'undefined') {
+    uv = new UVServiceWorker();
+  }
+} catch (error) {
+  console.warn("UV initialization failed:", error);
+}
+
+try {
+  if (typeof Dynamic !== 'undefined') {
+    dynamic = new Dynamic();
+    self.dynamic = dynamic;
+  }
+} catch (error) {
+  console.warn("Dynamic initialization failed:", error);
+}
 
 // Enhanced fetch event handler with better error handling
 self.addEventListener("fetch", (event) => {
@@ -22,13 +45,13 @@ self.addEventListener("fetch", (event) => {
       try {
         const url = new URL(event.request.url);
 
-        // Handle Dynamic proxy requests (/a/q/)
-        if (await dynamic.route(event)) {
+        // Handle Dynamic proxy requests (/dy/)
+        if (dynamic && await dynamic.route(event)) {
           return await dynamic.fetch(event);
         }
 
         // Handle Ultraviolet proxy requests (/a/)
-        if (event.request.url.startsWith(location.origin + "/a/")) {
+        if (uv && event.request.url.startsWith(location.origin + "/a/")) {
           return await uv.fetch(event);
         }
 
@@ -40,25 +63,17 @@ self.addEventListener("fetch", (event) => {
         // Default: pass through to network
         return await fetch(event.request);
       } catch (error) {
-        // Only log critical navigation errors, not routine fetch failures
-        if (event.request.mode === "navigate" || error.message.includes("register")) {
-          console.error("Service worker fetch error:", error);
-        }
-
         // Fallback for failed requests
         if (event.request.mode === "navigate") {
           return Response.redirect("/", 302);
         }
-
-        return new Response("Service Worker Error", {
-          status: 500,
-          statusText: "Internal Server Error",
-        });
+        
+        // Return a basic response for other failed requests
+        return new Response("Service unavailable", { status: 503 });
       }
     })()
   );
 });
-
 // Install event handler
 self.addEventListener("install", (event) => {
   console.log("Service worker installing...");
