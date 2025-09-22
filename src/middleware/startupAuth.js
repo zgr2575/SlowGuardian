@@ -84,6 +84,8 @@ export function createAuthGate() {
     if (
       url === '/health' ||
       url.startsWith('/api/auth/') ||
+      url === '/login' || url.startsWith('/login?') ||
+      url === '/signup' || url.startsWith('/signup?') ||
       url === '/login.html' || url.startsWith('/login.html?') || url === '/li' || url.startsWith('/li?') ||
       url === '/signup.html' || url.startsWith('/signup.html?') || url === '/su' || url.startsWith('/su?')
     ) {
@@ -132,6 +134,8 @@ export function createAuthGate() {
       
       // If we're already on login/signup page or redirect contains them, don't redirect again
       if (
+        pathname === '/login' || pathname.startsWith('/login') ||
+        pathname === '/signup' || pathname.startsWith('/signup') ||
         pathname === '/login.html' || pathname.startsWith('/login.html') ||
         pathname === '/signup.html' || pathname.startsWith('/signup.html') ||
         (parsedUrl.searchParams.get('redirect') &&

@@ -19,8 +19,7 @@
     <link rel="stylesheet" href="assets/styles/v9/reset.css" />
     <link rel="stylesheet" href="assets/styles/v9/variables.css" />
     <link rel="stylesheet" href="assets/styles/v9/main.css" />
-    <link rel="stylesheet" href="assets/styles/v9/components.css" />
-    <link rel="stylesheet" href="assets/styles/auth.css" />
+  <link rel="stylesheet" href="assets/styles/v9/components.css" />
     
     <style>
       :root {
@@ -654,7 +653,7 @@
         
         const formData = new FormData(loginForm);
         const data = {
-          username: document.getElementById('login-username').value,
+          usernameOrEmail: document.getElementById('login-username').value,
           password: document.getElementById('login-password').value,
           rememberMe: document.getElementById('remember-me').checked
         };

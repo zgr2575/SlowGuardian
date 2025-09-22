@@ -379,11 +379,13 @@ class NavigationBar {
 
       // Call regular logout endpoint
       try {
+        const authToken = localStorage.getItem('authToken');
         const response = await fetch('/api/auth/logout', {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
           }
         });
       } catch (e) {
@@ -398,7 +400,7 @@ class NavigationBar {
       sessionStorage.removeItem('sg-authenticated');
 
       // Redirect to login page
-      window.location.href = '/login.html';
+      window.location.href = '/login';
     } catch (error) {
       console.error('Logout failed:', error);
       // Fallback - force reload to clear session

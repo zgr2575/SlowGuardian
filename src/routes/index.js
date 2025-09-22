@@ -184,6 +184,8 @@ function setupFrontendRoutes(app) {
 
   const routes = [
     { path: "/", file: "index.html" }, // v9 UI in index.html
+    { path: "/login", file: "login.html" },
+    { path: "/signup", file: "signup.html" },
     { path: "/ap", file: "apps.html" },
     { path: "/apps", file: "apps.html" }, // Alternative route
     { path: "/g", file: "games.html" },

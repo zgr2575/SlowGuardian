@@ -4,6 +4,7 @@
  */
 
 import { Router } from "express";
+import { ObjectId } from "mongodb";
 import User from "../models/User.js";
 import sessionManager from "../auth/sessionManager.js";
 import {
@@ -146,6 +147,9 @@ router.post("/logout", authenticateToken, async (req, res) => {
 
   // Clear auth cookie
   res.clearCookie('sg_auth', { path: '/', sameSite: 'None', secure: true });
+  // Clear legacy premium cookies to avoid stale UI state
+  res.clearCookie('premium-active', { path: '/', sameSite: 'Lax' });
+  res.clearCookie('premium-key', { path: '/', sameSite: 'Lax' });
 
   res.json({
       success: true,
@@ -173,6 +177,9 @@ router.post("/logout-all", authenticateToken, async (req, res) => {
 
   // Clear auth cookie
   res.clearCookie('sg_auth', { path: '/', sameSite: 'None', secure: true });
+  // Clear legacy premium cookies to avoid stale UI state
+  res.clearCookie('premium-active', { path: '/', sameSite: 'Lax' });
+  res.clearCookie('premium-key', { path: '/', sameSite: 'Lax' });
 
   res.json({
       success: true,
@@ -291,6 +298,17 @@ router.post("/activate-premium", authenticateToken, validatePremiumKey, handleVa
 
     // Activate premium
     const result = await user.activatePremium(premiumKey, keyInfo.months);
+
+    // Update all active sessions for this user to reflect premium immediately
+    try {
+      const collection = (await import("../database/connection.js")).default.getCollection("sessions");
+      await collection.updateMany(
+        { userId: new ObjectId(user._id) },
+        { $set: { isPremium: true, lastActivity: new Date() } }
+      );
+    } catch (e) {
+      logger.warn("Failed to update sessions for premium flag:", e.message);
+    }
 
     logger.info(`Premium activated for user: ${user.username} with key: ${premiumKey}`);
 

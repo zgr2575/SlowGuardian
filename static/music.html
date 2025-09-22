@@ -705,6 +705,7 @@
           this.setupEventListeners();
           this.renderPlaylists();
           this.checkSpotifyStatus();
+          this.tryLoadSpotifyPlaylists();
         }
 
         getMainInterfaceHTML() {
@@ -747,9 +748,14 @@
                   </li>
                 </ul>
 
-                <button class="music-button" id="connect-spotify">
-                  🔗 Connect Spotify Account
-                </button>
+                <div class="button-row">
+                  <button class="music-button" id="connect-spotify">
+                    🔗 Connect Spotify Account
+                  </button>
+                  <button class="music-button secondary" id="disconnect-spotify" style="display:none">
+                    🔌 Disconnect
+                  </button>
+                </div>
                 
                 <div id="spotify-status" class="hidden"></div>
               </div>
@@ -849,6 +855,12 @@
             this.connectSpotify();
           });
 
+          // Disconnect Spotify button
+          const disconnectBtn = document.getElementById('disconnect-spotify');
+          disconnectBtn.addEventListener('click', () => {
+            this.disconnectSpotify();
+          });
+
           // Add playlist button
           document.getElementById('add-playlist').addEventListener('click', () => {
             this.addCustomPlaylist();
@@ -895,17 +907,60 @@
           statusDiv.className = '';
           statusDiv.innerHTML = '<div class="loading-spinner"></div>';
 
-          // Simulate Spotify connection process
-          setTimeout(() => {
-            // Note: This is a demo implementation
-            // Real Spotify integration would require API keys and OAuth
-            statusDiv.innerHTML = `
-              <div class="error-message">
-                <strong>Demo Mode:</strong> Spotify integration requires API keys and OAuth setup. 
-                For now, you can use the custom playlist feature with Spotify embed URLs.
-              </div>
-            `;
-          }, 2000);
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            statusDiv.innerHTML = '<div class="error-message">Please log in to connect Spotify.</div>';
+            return;
+          }
+
+          fetch('/api/spotify/auth', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` },
+          })
+            .then(async (r) => {
+              if (!r.ok) {
+                const txt = await r.text();
+                throw new Error(txt || 'Failed to start Spotify auth');
+              }
+              return r.json();
+            })
+            .then(({ success, authUrl, error }) => {
+              if (!success || !authUrl) {
+                statusDiv.innerHTML = `<div class="error-message">${error || 'Spotify not configured'}</div>`;
+                return;
+              }
+              window.location.href = authUrl;
+            })
+            .catch((err) => {
+              console.error('Spotify auth error:', err);
+              statusDiv.innerHTML = '<div class="error-message">Failed to connect to Spotify.</div>';
+            });
+        }
+
+        disconnectSpotify() {
+          const token = localStorage.getItem('authToken');
+          const statusDiv = document.getElementById('spotify-status');
+          if (!token) {
+            this.showNotification('Please log in first', 'error');
+            return;
+          }
+          fetch('/api/spotify/disconnect', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+          }).then(r => r.json()).then((res) => {
+            if (res && res.success) {
+              this.spotifyConnected = false;
+              const connectBtn = document.getElementById('connect-spotify');
+              const disconnectBtn = document.getElementById('disconnect-spotify');
+              connectBtn.disabled = false;
+              connectBtn.textContent = '🔗 Connect Spotify Account';
+              disconnectBtn.style.display = 'none';
+              statusDiv.className = '';
+              statusDiv.innerHTML = '<div class="success-message">Disconnected from Spotify</div>';
+            } else {
+              this.showNotification('Failed to disconnect', 'error');
+            }
+          }).catch(() => this.showNotification('Network error', 'error'));
         }
 
         addCustomPlaylist() {
@@ -1242,13 +1297,127 @@
         }
 
         checkSpotifyStatus() {
-          // Check if user has connected Spotify previously
-          const spotifyToken = localStorage.getItem('spotify-token');
-          if (spotifyToken) {
-            this.spotifyConnected = true;
-            document.getElementById('connect-spotify').textContent = '✅ Spotify Connected';
-            document.getElementById('connect-spotify').disabled = true;
+          const token = localStorage.getItem('authToken');
+          const statusDiv = document.getElementById('spotify-status');
+
+          // Handle post-callback flag
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('spotify_connected') === 'true') {
+            this.showNotification('Spotify connected!', 'success');
+            // Clean URL
+            params.delete('spotify_connected');
+            const base = window.location.pathname;
+            const qs = params.toString();
+            window.history.replaceState({}, '', qs ? `${base}?${qs}` : base);
           }
+
+          if (!token) return; // not logged in
+
+          fetch('/api/spotify/status', {
+            headers: { 'Authorization': `Bearer ${token}` },
+          })
+            .then(r => r.json())
+            .then((res) => {
+              if (res && res.success && res.connected) {
+                this.spotifyConnected = true;
+                const btn = document.getElementById('connect-spotify');
+                if (btn) {
+                  btn.textContent = '✅ Spotify Connected';
+                  btn.disabled = true;
+                }
+                const disconnectBtn = document.getElementById('disconnect-spotify');
+                if (disconnectBtn) disconnectBtn.style.display = 'inline-block';
+                if (res.profile) {
+                  statusDiv.className = '';
+                  statusDiv.innerHTML = `<div class="success-message">Connected as ${res.profile.displayName || res.profile.id}</div>`;
+                }
+                // Load playlists after confirming connection
+                this.tryLoadSpotifyPlaylists();
+              }
+            })
+            .catch(() => {/* ignore */});
+        }
+
+        async tryLoadSpotifyPlaylists() {
+          if (!this.spotifyConnected) return;
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          try {
+            const resp = await fetch('/api/spotify/playlists?limit=50', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!resp.ok) return;
+            const data = await resp.json();
+            if (!data.success || !Array.isArray(data.playlists)) return;
+
+            this.renderSpotifyPlaylists(data.playlists);
+          } catch (e) {
+            console.warn('Failed to load Spotify playlists', e);
+          }
+        }
+
+        renderSpotifyPlaylists(playlists) {
+          const grid = document.getElementById('playlists-grid');
+          const custom = this.playlists || [];
+
+          const spotifyCards = playlists.map(pl => {
+            const cover = (pl.images && pl.images[0] && pl.images[0].url) || this.createLocalPlaceholder('Spotify', '#1DB954');
+            const embed = `https://open.spotify.com/embed/playlist/${pl.id}`;
+            return `
+              <div class="playlist-card" data-spotify-id="${pl.id}">
+                <div class="playlist-cover">
+                  <img src="${cover}" alt="${pl.name}" class="cover-image">
+                </div>
+                <div class="playlist-info">
+                  <div class="playlist-title">Spotify • ${pl.name}</div>
+                  <div class="playlist-description">${pl.trackCount || 0} tracks • by ${pl.owner || 'You'}</div>
+                  <div class="playlist-actions">
+                    <button class="playlist-button" data-embed="${embed}">▶ Play</button>
+                    <a class="playlist-button secondary" href="https://open.spotify.com/playlist/${pl.id}" target="_blank">Open</a>
+                  </div>
+                </div>
+              </div>`;
+          });
+
+          const customCards = custom.map(playlist => `
+            <div class="playlist-card" data-id="${playlist.id}">
+              <div class="playlist-cover">
+                <img src="${playlist.albumCover}" alt="${playlist.name}" class="cover-image">
+              </div>
+              <div class="playlist-info">
+                <div class="playlist-title">${playlist.platform} • ${playlist.name}</div>
+                <div class="playlist-description">Added on ${playlist.addedAt}</div>
+                <div class="playlist-actions">
+                  <button class="playlist-button" onclick="musicPlayer.playPlaylist(${playlist.id})">▶ Play</button>
+                  <button class="playlist-button remove" onclick="musicPlayer.removePlaylist(${playlist.id})">🗑 Remove</button>
+                </div>
+              </div>
+            </div>`).join('');
+
+          grid.innerHTML = spotifyCards.join('') + customCards;
+
+          // Wire up play buttons for Spotify cards
+          grid.querySelectorAll('[data-embed]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const embedUrl = btn.getAttribute('data-embed');
+              const embedDiv = document.getElementById('current-embed');
+              embedDiv.innerHTML = `
+                <iframe 
+                  src="${embedUrl}"
+                  class="spotify-embed"
+                  frameborder="0" 
+                  allowtransparency="true" 
+                  allow="encrypted-media">
+                </iframe>`;
+              embedDiv.classList.remove('hidden');
+              document.getElementById('current-track').textContent = 'Spotify Playlist';
+              document.getElementById('current-artist').textContent = 'Spotify';
+              document.getElementById('current-album').textContent = '';
+              document.getElementById('play-button').textContent = '⏸';
+              this.isPlaying = true;
+            });
+          });
         }
       }
 

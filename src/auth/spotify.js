@@ -12,15 +12,12 @@ const logger = new Logger("SpotifyAPI");
 
 class SpotifyManager {
   constructor() {
-    this.clientId = process.env.SPOTIFY_CLIENT_ID;
-    this.clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-    this.redirectUri = process.env.SPOTIFY_REDIRECT_URI || "http://localhost:8080/api/spotify/callback";
-    
+    // Lazily evaluate env so dotenv.config() can run first
     this.scopes = [
       "user-read-private",
-      "user-read-email", 
+      "user-read-email",
       "playlist-read-private",
-      "playlist-read-collaborative", 
+      "playlist-read-collaborative",
       "playlist-modify-public",
       "playlist-modify-private",
       "user-read-playback-state",
@@ -28,14 +25,38 @@ class SpotifyManager {
       "user-read-currently-playing",
       "user-library-read",
       "user-library-modify",
-      "streaming"
+      "streaming",
     ];
 
-    this.spotifyApi = new SpotifyWebApi({
-      clientId: this.clientId,
-      clientSecret: this.clientSecret,
-      redirectUri: this.redirectUri,
-    });
+    // Will be created on demand after env is loaded
+    this.spotifyApi = null;
+  }
+
+  // Live env getters ensure values are read after dotenv is loaded
+  get clientId() {
+    return process.env.SPOTIFY_CLIENT_ID;
+  }
+
+  get clientSecret() {
+    return process.env.SPOTIFY_CLIENT_SECRET;
+  }
+
+  get redirectUri() {
+    return (
+      process.env.SPOTIFY_REDIRECT_URI ||
+      "http://localhost:8080/api/spotify/callback"
+    );
+  }
+
+  getClient() {
+    if (!this.spotifyApi) {
+      this.spotifyApi = new SpotifyWebApi({
+        clientId: this.clientId,
+        clientSecret: this.clientSecret,
+        redirectUri: this.redirectUri,
+      });
+    }
+    return this.spotifyApi;
   }
 
   /**
@@ -46,6 +67,13 @@ class SpotifyManager {
       logger.warn("Spotify API credentials not configured");
       return false;
     }
+
+    // Ensure client is initialized with current env values
+    this.spotifyApi = new SpotifyWebApi({
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
+      redirectUri: this.redirectUri,
+    });
 
     logger.info("Spotify API initialized");
     return true;
@@ -64,7 +92,10 @@ class SpotifyManager {
       
       const encodedState = Buffer.from(stateData).toString("base64");
 
-      const authUrl = this.spotifyApi.createAuthorizeURL(this.scopes, encodedState);
+      const authUrl = this.getClient().createAuthorizeURL(
+        this.scopes,
+        encodedState
+      );
       
       logger.info(`Generated Spotify auth URL for user: ${userId}`);
       return authUrl;
@@ -84,7 +115,7 @@ class SpotifyManager {
       const userId = stateData.userId;
 
       // Exchange code for tokens
-      const tokenData = await this.spotifyApi.authorizationCodeGrant(code);
+  const tokenData = await this.getClient().authorizationCodeGrant(code);
       
       const accessToken = tokenData.body.access_token;
       const refreshToken = tokenData.body.refresh_token;
@@ -94,8 +125,9 @@ class SpotifyManager {
       await this.storeUserTokens(userId, accessToken, refreshToken, expiresIn);
 
       // Get user profile info
-      this.spotifyApi.setAccessToken(accessToken);
-      const userProfile = await this.spotifyApi.getMe();
+  const client = this.getClient();
+  client.setAccessToken(accessToken);
+  const userProfile = await client.getMe();
 
       logger.info(`Spotify OAuth completed for user: ${userId}`);
 
@@ -177,8 +209,9 @@ class SpotifyManager {
    */
   async refreshUserTokens(userId, refreshToken) {
     try {
-      this.spotifyApi.setRefreshToken(refreshToken);
-      const tokenData = await this.spotifyApi.refreshAccessToken();
+  const client = this.getClient();
+  client.setRefreshToken(refreshToken);
+  const tokenData = await client.refreshAccessToken();
 
       const newAccessToken = tokenData.body.access_token;
       const expiresIn = tokenData.body.expires_in;

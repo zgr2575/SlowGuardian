@@ -662,7 +662,7 @@
 }
 
 .settings-card {
-  padding: var(--space-6);
+  padding: var(--space-5);
 }
 
 .settings-card .card-header {
@@ -670,22 +670,22 @@
 }
 
 .settings-card .card-title {
-  font-size: var(--font-size-lg);
+  font-size: calc(var(--font-size-lg) * 0.95);
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .settings-card .card-description {
   color: var(--text-secondary);
   line-height: 1.5;
-  margin-bottom: var(--space-1);
+  margin-bottom: 0;
 }
 
 .settings-controls {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .form-input,

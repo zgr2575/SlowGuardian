@@ -78,6 +78,11 @@ async function createSlowGuardianServer() {
   const app = express();
   const server = createServer();
 
+  // Trust reverse proxy headers (needed for express-rate-limit and dev tunnels)
+  // Use 1 proxy hop which covers common setups; adjust via TRUST_PROXY env when needed
+  const trustSetting = process.env.TRUST_PROXY ? (process.env.TRUST_PROXY === 'true' ? true : Number(process.env.TRUST_PROXY)) : 1;
+  app.set("trust proxy", trustSetting);
+
   // Create bare server for proxy functionality
   const bareServer = createBareServer(config.bare.path);
 

@@ -16,42 +16,42 @@ class PremiumBrandingManager {
     // Set up observer to hide new premium elements
     this.setupMutationObserver();
     
+    // Refresh on premium updates broadcast by pages (e.g., settings)
+    document.addEventListener('sg-premium-updated', () => this.checkPremiumStatus());
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) this.checkPremiumStatus();
+    });
+
     // Check periodically for status changes
     setInterval(() => {
       this.checkPremiumStatus();
     }, 5000);
   }
 
-  checkPremiumStatus() {
-    const premiumActive = getCookie('premium-active') === 'true';
-    const premiumKey = getCookie('premium-key');
-    const localPremium = localStorage.getItem('premium-status');
-    
+  async checkPremiumStatus() {
+    // Skip on settings page to prevent conflicts
+    if (location.pathname.includes('/settings')) return;
+
+    const token = localStorage.getItem('authToken');
     let isCurrentlyPremium = false;
-    
-    if (premiumActive && premiumKey) {
-      isCurrentlyPremium = true;
-    } else if (localPremium) {
+    if (token) {
       try {
-        const premiumData = JSON.parse(localPremium);
-        isCurrentlyPremium = premiumData.active === true;
-      } catch (e) {
-        // Invalid data, ignore
-      }
+        const res = await fetch('/api/auth/premium-status', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        isCurrentlyPremium = !!(data && data.success && data.isPremium);
+      } catch {}
     }
-    
-    // Update branding if status changed
+
     if (isCurrentlyPremium !== this.isPremium) {
       this.isPremium = isCurrentlyPremium;
-      
       if (this.isPremium) {
         this.hidePremiumBranding();
         this.showPremiumStatus();
-        console.log('✅ Premium user detected - hiding upgrade prompts');
       } else {
         this.showPremiumBranding();
         this.hidePremiumStatus();
-        console.log('👤 Free user detected - showing upgrade prompts');
       }
     }
   }
@@ -93,21 +93,7 @@ class PremiumBrandingManager {
     });
 
     // Hide premium text content
-    const textElements = document.querySelectorAll('*');
-    textElements.forEach(element => {
-      if (element.children.length === 0) { // Only text nodes
-        const text = element.textContent.toLowerCase();
-        if (text.includes('upgrade to premium') || 
-            text.includes('get premium') || 
-            text.includes('premium features')) {
-          const parent = element.parentElement;
-          if (parent && !parent.hasAttribute('data-premium-hidden')) {
-            parent.style.display = 'none';
-            parent.setAttribute('data-premium-hidden', 'true');
-          }
-        }
-      }
-    });
+    // Do not deep-scan all text nodes to avoid heavy DOM work
   }
 
   showPremiumBranding() {

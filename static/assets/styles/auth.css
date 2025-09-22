@@ -19,17 +19,8 @@
   transition: all 0.3s ease;
 }
 
-.auth-container {
-  background: var(--bg-secondary, #1f2937);
-  border: 1px solid var(--border-primary, #374151);
-  border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  max-width: 420px;
-  width: 90%;
-  padding: 0;
-  overflow: hidden;
-  animation: authSlideIn 0.5s ease-out;
-}
+/* Note: do not set container sizing/position here to avoid overriding
+   per-page centering layouts in login/signup. */
 
 @keyframes authSlideIn {
   from {

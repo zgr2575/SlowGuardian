@@ -3,8 +3,8 @@
 /* Games Grid */
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
   padding: var(--space-4) 0;
   width: 100%;
   max-width: none;
@@ -320,8 +320,8 @@
 /* Legacy container compatibility */
 .container-apps {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
-  gap: var(--space-4) !important;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: var(--space-3) !important;
   flex-direction: unset !important;
   flex-wrap: unset !important;
   justify-content: unset !important;
@@ -333,8 +333,8 @@
 
 .pinned-apps {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
-  gap: var(--space-4) !important;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: var(--space-3) !important;
   flex-direction: unset !important;
   flex-wrap: unset !important;
   justify-content: unset !important;

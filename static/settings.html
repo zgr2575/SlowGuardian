@@ -1816,83 +1816,43 @@
           activatePremiumBtn.textContent = "Activating...";
 
           try {
-            console.log('🔐 Validating premium key...');
-            
-            // Use KeyAuth for validation
-            if (window.keyAuthManager && window.keyAuthManager.isInitialized) {
-              const result = await window.keyAuthManager.loginWithKey(enteredKey);
-              
-              if (result.success) {
-                const user = result.user;
-                
-                // Set premium status cookies
-                setCookie('premium-active', 'true', 365);
-                setCookie('premium-key', enteredKey, 365);
-                setCookie('premium-user', user.username || 'Premium User', 365);
-                setCookie('premium-expiry', user.expiry || '2099-12-31', 365);
-                
-                // Store in localStorage as well
-                localStorage.setItem('premium-status', JSON.stringify({
-                  active: true,
-                  key: enteredKey,
-                  user: user.username || 'Premium User',
-                  expiry: user.expiry || '2099-12-31',
-                  activated: new Date().toISOString()
-                }));
-                
-                // Play activation animation
-                playPremiumActivationAnimation();
-                
-                // Clear input
-                premiumKeyInput.value = "";
-                
-                // Update UI after animation
-                setTimeout(() => {
-                  updatePremiumStatus();
-                  showNotification("Premium activated successfully! 🎉", "success");
-                  
-                  // Hide premium branding globally
-                  hidePremiumBranding();
-                  
-                  // Update navbar with new user info
-                  if (window.navigationBar) {
-                    window.navigationBar.loadUserInfo().then(() => {
-                      window.navigationBar.createNavbar();
-                      window.navigationBar.attachEventListeners();
-                    });
-                  }
-                }, 3000);
-              } else {
-                showNotification("Invalid premium key: " + (result.error || 'Key validation failed'), "error");
-              }
-            } else {
-              // Fallback to simple validation for testing
-              if (enteredKey === 'TESTPREM' || enteredKey.length > 10) {
-                setCookie('premium-active', 'true', 365);
-                setCookie('premium-key', enteredKey, 365);
-                setCookie('premium-user', 'TestUser', 365);
-                setCookie('premium-expiry', '2099-12-31', 365);
-                
-                localStorage.setItem('premium-status', JSON.stringify({
-                  active: true,
-                  key: enteredKey,
-                  user: 'TestUser',
-                  expiry: '2099-12-31',
-                  activated: new Date().toISOString()
-                }));
-                
-                playPremiumActivationAnimation();
-                premiumKeyInput.value = "";
-                
-                setTimeout(() => {
-                  updatePremiumStatus();
-                  showNotification("Premium activated successfully! 🎉", "success");
-                  hidePremiumBranding();
-                }, 3000);
-              } else {
-                showNotification("Invalid premium key", "error");
-              }
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+              showNotification('Please log in first', 'error');
+              return;
             }
+
+            const resp = await fetch('/api/auth/activate-premium', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({ premiumKey: enteredKey }),
+            });
+
+            const result = await resp.json();
+            if (!resp.ok || !result.success) {
+              showNotification(result.error || 'Activation failed', 'error');
+              return;
+            }
+
+            // Play activation animation
+            playPremiumActivationAnimation();
+            premiumKeyInput.value = '';
+
+            setTimeout(() => {
+              updatePremiumStatus();
+              showNotification('Premium activated successfully! 🎉', 'success');
+              if (window.navigationBar) {
+                window.navigationBar.loadUserInfo().then(() => {
+                  window.navigationBar.createNavbar();
+                  window.navigationBar.attachEventListeners();
+                });
+              }
+              // Notify premium branding script to refresh
+              document.dispatchEvent(new CustomEvent('sg-premium-updated'));
+            }, 1500);
           } catch (error) {
             console.error('Premium activation error:', error);
             showNotification("Premium activation error: " + error.message, "error");
