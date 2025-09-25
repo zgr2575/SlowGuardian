@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Login - SlowGuardian v9</title>
+    <link rel="shortcut icon" href="favicon.png" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+  <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    
+    <style>
+      :root {
+        --gradient-1: #667eea;
+        --gradient-2: #764ba2;
+        --gradient-3: #f093fb;
+        --gradient-4: #f5576c;
+        --card-bg: rgba(255, 255, 255, 0.15);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --primary-color: #667eea;
+        --primary-hover: #5a67d8;
+        --input-bg: rgba(255, 255, 255, 0.1);
+        --border-color: rgba(255, 255, 255, 0.2);
+        --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-xl: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        --glow: 0 0 40px rgba(102, 126, 234, 0.3);
+      }
+      
+      [data-theme="light"] {
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #1a202c;
+        --text-secondary: #718096;
+        --input-bg: rgba(255, 255, 255, 0.9);
+        --border-color: rgba(224, 224, 234, 0.8);
+        --glow: 0 0 40px rgba(102, 126, 234, 0.2);
+      }
+      
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background: linear-gradient(135deg, var(--gradient-1) 0%, var(--gradient-2) 35%, var(--gradient-3) 65%, var(--gradient-4) 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+      
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .auth-container {
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+        box-sizing: border-box;
+      }
+      
+      /* Floating particles background */
+      .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+          radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        animation: floatingParticles 20s ease-in-out infinite;
+        pointer-events: none;
+      }
+      
+      @keyframes floatingParticles {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+      
+      .auth-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 32px;
+        padding: 3.5rem;
+        max-width: 480px;
+        width: 100%;
+        box-shadow: var(--shadow-xl), var(--glow);
+        backdrop-filter: blur(30px);
+        position: relative;
+        z-index: 1;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+      
+      .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gradient-1), var(--gradient-3), var(--gradient-4));
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+      
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      
+      .auth-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 40px 80px -12px rgba(0, 0, 0, 0.6), var(--glow);
+      }
+      
+      .auth-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      
+      .auth-logo {
+        font-size: 4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.3));
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
+      
+      @keyframes logoGlow {
+        0% { filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.3)); }
+        100% { filter: drop-shadow(2px 2px 16px rgba(102, 126, 234, 0.5)); }
+      }
+      
+      .auth-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .auth-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 1.6;
+      }
+      
+      .form-group {
+        margin-bottom: 2rem;
+        position: relative;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 18px 24px;
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 1.05rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+      }
+      
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3), 0 0 0 4px rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.02);
+      }
+      
+      .form-group input::placeholder {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+      
+      .auth-button {
+        width: 100%;
+        padding: 18px 24px;
+        background: linear-gradient(135deg, var(--gradient-1), var(--gradient-3));
+        color: white;
+        border: none;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+      }
+      
+      .auth-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .auth-button:hover::before {
+        left: 100%;
+      }
+      
+      .auth-button:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, var(--gradient-3), var(--gradient-4));
+      }
+      
+      .auth-button:active {
+        transform: translateY(-2px) scale(1.01);
+      }
+      
+      .auth-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      .auth-divider {
+        text-align: center;
+        margin: 2.5rem 0;
+        position: relative;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      
+      .auth-divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        z-index: 1;
+      }
+      
+      .auth-divider span {
+        background: var(--card-bg);
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .auth-links {
+        text-align: center;
+      }
+      
+      .auth-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      
+      .auth-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+      }
+      
+      .auth-links a:hover::after {
+        width: 100%;
+      }
+      
+      .error-message {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #dc2626;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        animation: shake 0.5s ease-in-out;
+      }
+      
+      .success-message {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #059669;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        animation: slideInDown 0.5s ease-out;
+      }
+      
+      .toggle-form {
+        margin-top: 1.5rem;
+        text-align: center;
+      }
+      
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 0.75rem;
+      }
+      
+      .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary-color);
+      }
+      
+      .checkbox-group label {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: normal;
+      }
+      
+      .theme-toggle {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+      }
+      
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.1) rotate(10deg);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .floating-shapes {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      
+      .shape {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .shape:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+      
+      .shape:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+      }
+      
+      .shape:nth-child(3) {
+        width: 60px;
+        height: 60px;
+        bottom: 25%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      
+      @keyframes slideInDown {
+        0% { 
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        100% { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      
+      .auth-card {
+        animation: fadeIn 0.5s ease-out;
+      }
+      
+      @media (max-width: 768px) {
+        .auth-card {
+          padding: 2rem;
+          margin: 1rem;
+          border-radius: 20px;
+        }
+        
+        .auth-logo {
+          font-size: 2.5rem;
+        }
+        
+        .theme-toggle {
+          top: 1rem;
+          right: 1rem;
+          width: 45px;
+          height: 45px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .auth-container {
+          padding: 1rem;
+        }
+        
+        .auth-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Set theme ASAP to avoid flash
+      (function(){
+        var savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
+    
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</div>
+    
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">🛡️</div>
+          <div class="auth-title">SlowGuardian</div>
+          <div class="auth-subtitle">Premium secure browsing platform</div>
+        </div>
+        
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+        
+        <!-- Login Form -->
+        <form id="login-form" style="display: block;" method="post" action="javascript:void(0);" autocomplete="off">
+          <div class="form-group">
+            <label for="login-username">Username / Email / License Key</label>
+            <input type="text" id="login-username" name="username" required autocomplete="username" placeholder="Enter username, email, or premium license key" />
+            <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+              💡 Premium users can enter their license key here (password not required)
+            </small>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password (optional for license keys)</label>
+            <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Enter your password" />
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="remember-me" name="rememberMe" />
+            <label for="remember-me">Remember me for 30 days</label>
+          </div>
+          
+          <button type="button" class="auth-button" id="login-button">
+            🚀 Sign In
+          </button>
+          
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+          
+          <div class="toggle-form">
+            <a href="/signup" id="go-signup">Don't have an account? Create one →</a>
+          </div>
+        </form>
+        
+  <!-- Register Form removed: now a separate page at /signup -->
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <div class="auth-links">
+          <a href="/">← Back to SlowGuardian</a>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Form toggle functionality
+      const loginForm = document.getElementById('login-form');
+  const registerForm = null;
+  const showRegister = document.getElementById('go-signup');
+  const showLogin = null;
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const themeToggle = document.getElementById('theme-toggle');
+      
+      // Theme toggle functionality with enhanced animations
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+      
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Add rotation animation to theme toggle
+        themeToggle.style.transform = 'scale(1.2) rotate(180deg)';
+        
+        setTimeout(() => {
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+          themeToggle.style.transform = 'scale(1) rotate(0deg)';
+        }, 150);
+      });
+      
+      if (showRegister) {
+        showRegister.addEventListener('click', (e) => {
+          // Let normal navigation happen to /signup; preserve redirect param
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirect = urlParams.get('redirect');
+          if (redirect) {
+            e.preventDefault();
+            window.location.href = `/signup?redirect=${encodeURIComponent(redirect)}`;
+          }
+        });
+      }
+      
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      }
+      
+      function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+      }
+      
+      function clearMessages() {
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+      }
+      
+      function setLoading(button, loading) {
+        if (loading) {
+          button.disabled = true;
+          button.textContent = 'Please wait...';
+        } else {
+          button.disabled = false;
+          button.textContent = button.id === 'login-button' ? 'Sign In' : 'Create Account';
+        }
+      }
+      
+      // Login form handler
+      const loginButton = document.getElementById('login-button');
+      loginButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearMessages();
+        
+        const loginButton = document.getElementById('login-button');
+        setLoading(loginButton, true);
+        
+        const formData = new FormData(loginForm);
+        const data = {
+          usernameOrEmail: document.getElementById('login-username').value,
+          password: document.getElementById('login-password').value,
+          rememberMe: document.getElementById('remember-me').checked
+        };
+        
+        try {
+          // First try KeyAuth if available
+          if (window.keyAuthManager && window.keyAuthManager.isInitialized) {
+            // Check if input looks like a license key (typically longer and alphanumeric)
+            const isLicenseKey = data.username && data.username.length > 10 && /^[A-Za-z0-9-]+$/.test(data.username);
+            
+            if (isLicenseKey && !data.password) {
+              // Try license key authentication
+              try {
+                const keyAuthResult = await window.keyAuthManager.loginWithKey(data.username);
+                if (keyAuthResult.success) {
+                  showSuccess('Premium login successful! Redirecting...');
+                  setTimeout(() => {
+                    redirectAfterLogin();
+                  }, 1500);
+                  return;
+                } else {
+                  showError('Invalid license key: ' + keyAuthResult.error);
+                  setLoading(loginButton, false);
+                  return;
+                }
+              } catch (error) {
+                console.log('KeyAuth license failed, trying regular auth:', error.message);
+              }
+            } else if (data.username && data.password) {
+              // Try username/password with KeyAuth
+              try {
+                const keyAuthResult = await window.keyAuthManager.loginWithCredentials(data.username, data.password);
+                if (keyAuthResult.success) {
+                  showSuccess('Premium login successful! Redirecting...');
+                  setTimeout(() => {
+                    redirectAfterLogin();
+                  }, 1500);
+                  return;
+                } else {
+                  console.log('KeyAuth login failed, trying regular auth:', keyAuthResult.error);
+                }
+              } catch (error) {
+                console.log('KeyAuth login failed, trying regular auth:', error.message);
+              }
+            }
+          }
+          
+          // Fallback to regular authentication
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Store token in localStorage (server also set an httpOnly cookie)
+            localStorage.setItem('authToken', result.token);
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => {
+              redirectAfterLogin();
+            }, 1500);
+          } else {
+            showError(result.error || 'Login failed');
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          showError('Login failed. Please try again.');
+        } finally {
+          setLoading(loginButton, false);
+        }
+      });
+      
+      function redirectAfterLogin() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let redirect = urlParams.get('redirect') || '/';
+
+        // Prevent redirect loops - don't redirect to login page
+        if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+          redirect = '/';
+        }
+
+        // Decode URL if it's encoded
+        try {
+          redirect = decodeURIComponent(redirect);
+        } catch (e) {
+          redirect = '/';
+        }
+
+        // As a final guard, if we somehow land back at login, go home
+        try {
+          if (new URL(redirect, window.location.origin).pathname.includes('/login.html')) {
+            redirect = '/';
+          }
+        } catch (e) {
+          redirect = '/';
+        }
+
+        window.location.href = redirect;
+      }
+      
+  // Registration is handled on /signup
+      
+      // Check if user is already logged in
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // Validate token
+        fetch('/api/auth/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.success && result.valid) {
+            // User is already logged in, redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            let redirect = urlParams.get('redirect') || '/';
+            // Set lightweight signal cookie for UI (server relies on httpOnly cookie)
+            document.cookie = 'sg_auth_ui=1; path=/; SameSite=None; Secure';
+            
+            // Prevent redirect loops - don't redirect to login page
+            if (!redirect || redirect === '/' || redirect.includes('/login.html') || redirect.includes('%2Flogin.html')) {
+              redirect = '/';
+            }
+            
+            // Decode URL if it's encoded
+            try {
+              redirect = decodeURIComponent(redirect);
+            } catch (e) {
+              redirect = '/';
+            }
+            
+            // If current path is login, navigate away; otherwise do nothing
+            if (location.pathname.includes('/login.html')) {
+              window.location.href = redirect;
+            }
+          }
+        })
+        .catch(() => {
+          // Token validation failed, remove invalid token
+          localStorage.removeItem('authToken');
+        });
+      }
+    </script>
+    <!-- Particles initialization to match main UI -->
+    <script type="module">
+      import { initParticles } from '/assets/scripts/v9/particles.js';
+      const container = document.getElementById('particles');
+      if (container) {
+        initParticles(container, 'floating');
+      }
+    </script>
+  </body>
+</html>

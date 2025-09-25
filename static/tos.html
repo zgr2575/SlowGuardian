@@ -1,248 +1,530 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="tab-title">Home</title>
-  <link rel="stylesheet" href="/assets/styles/main.css?v=8" />
-  <link rel="stylesheet" href="/assets/styles/themes/default.css?v=5" />
-  <script
-    src="https://kit.fontawesome.com/1237c86ba0.js"
-    crossorigin="anonymous"
-  ></script>
+  <title id="tab-title">SlowGuardian v9 - Terms of Service & Privacy Policy</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- v9 Styles -->
+  <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+  <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+  <link rel="stylesheet" href="assets/styles/v9/main.css" />
+  <link rel="stylesheet" href="assets/styles/v9/components.css" />
+  <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+  <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
+
+  <!-- TOS Specific Styles -->
+  <style>
+    .tos-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-4);
+      padding-left: 90px;
+      transition: padding-left 0.3s ease;
+    }
+
+    body:has(.sidebar-nav:hover) .tos-container {
+      padding-left: 300px;
+    }
+
+    .tos-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+
+    .tos-title {
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--space-3);
+    }
+
+    .tos-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    .last-updated {
+      font-size: var(--font-size-sm);
+      color: var(--text-tertiary);
+      background: var(--bg-secondary);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      display: inline-block;
+    }
+
+    .tos-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      margin-bottom: var(--space-6);
+    }
+
+    .tos-section {
+      margin-bottom: var(--space-8);
+    }
+
+    .tos-section h2 {
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 2px solid var(--border-primary);
+    }
+
+    .tos-section h3 {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: var(--space-6) 0 var(--space-3) 0;
+    }
+
+    .tos-section p {
+      font-size: var(--font-size-base);
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+
+    .tos-section ul {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-4) 0;
+    }
+
+    .tos-section li {
+      font-size: var(--font-size-base);
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-3);
+      padding-left: var(--space-6);
+      position: relative;
+    }
+
+    .tos-section li::before {
+      content: "•";
+      color: var(--accent-primary);
+      font-weight: bold;
+      position: absolute;
+      left: var(--space-2);
+    }
+
+    .tos-section a {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all var(--transition-base);
+    }
+
+    .tos-section a:hover {
+      color: var(--accent-secondary);
+      text-decoration: underline;
+    }
+
+    .highlight-box {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+
+    .highlight-box strong {
+      color: var(--accent-primary);
+    }
+
+    .warning-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+
+    .warning-box strong {
+      color: #ef4444;
+    }
+
+    .info-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+
+    .info-box strong {
+      color: #10b981;
+    }
+
+    .back-button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+
+    .back-button:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .tos-container {
+        padding: var(--space-6) var(--space-4);
+        padding-left: var(--space-4);
+      }
+
+      .tos-content {
+        padding: var(--space-6);
+      }
+
+      .tos-title {
+        font-size: var(--font-size-2xl);
+      }
+
+      .tos-section h2 {
+        font-size: var(--font-size-xl);
+      }
+
+      .tos-section h3 {
+        font-size: var(--font-size-lg);
+      }
+    }
+  </style>
+
+  <!-- Progressive Web App -->
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 </head>
-<style>
-  * {
-    color: white;
-  }
-</style>
 <body>
-  <br />
-  <br />
-  <br />
-  <br />
-  <div class="fixed-nav-bar"></div>
-  <h1>
-    <a href="https://github.com/zgr2575/SlowGuardian">SlowGuardian</a> privacy
-    policy and terms of use
-  </h1>
-  <h2>Section 1: Definitions</h2>
-  <p>
-    In this privacy policy, "We" refers to "SlowGuardian".
-    "Personally-identifiable information" (PII) refers to information that can
-    be used to identify a person such as IP addresses. "Official SlowGuardian
-    deployments" refer to the SlowGuardian application
-    <b>running on the official server.</b> "SlowGuardian deployment operator"
-    refers to the person(s) running the SlowGuardian application. "ToS" refers
-    to Terms of Service.
-  </p>
-  <p>Please redirect any general inquiries to our official community on</p>
+  <!-- Background -->
+  <div class="background">
+    <div class="bg-gradient"></div>
+    <div class="bg-particles" id="particles"></div>
+    <div class="bg-overlay"></div>
+  </div>
 
-  <h2>Section 2: Summary</h2>
-  <li>
-    By using SlowGuardian, you agree you understand and acknowledge this privacy
-    policy and its clauses.
-  </li>
-  <li>
-    SlowGuardian will not be held liable in any situation that may occur as a
-    result of using or hosting the SlowGuardian application on ANY SlowGuardian
-    deployment.
-  </li>
-  <li>
-    The safest way to use SlowGuardian is by using its official deployments or
-    by
-  </li>
-  <h3>Section 2.1: Summary - Offical SlowGuardian Deployment</h3>
-  <li>
-    Official SlowGuardian deployments are run with privacy in mind.
-    <b
-      >We do not intentionally collect and retain any PII such as IP addresses
-      used to access the official SlowGuardian deployment.</b
-    >
-  </li>
-  <h3>Section 2.2: Summary - Unofficial SlowGuardian Deployments</h3>
-  <li>
-    SlowGuardian developers are commited to ensuring SlowGuardian remains as a
-    secure application. However, we cannot guarantee the same level of security
-    or privacy of unofficial SlowGuardian deployments.
-  </li>
-  <li>
-    The type of information collected on community deployments is completely
-    dependent on who and where the deployment is being hosted.
-  </li>
-  <li>
-    Generally, we recommend SlowGuardian deployment operators to collect as
-    minimal information as possible.
-  </li>
-  <li>We cannot control unofficial SlowGuardian deployments.</li>
-  <li>
-    We cannot verify the authenticity of the code in unofficial SlowGuardian
-    deployments. This is an extremely rare situation, but we will not be held
-    responsible if your data such as an account becomes compromised as a result
-    of malicious code in an unofficial SlowGuardian deployment.
-  </li>
-  <h2>Section 3: Acceptable Use</h2>
-  <li>Do not use any SlowGuardian deployment to do illegal activity.</li>
-  <li>
-    If you are under 18, do not use any SlowGuardian deployment to access any
-    adult sites.
-  </li>
-  <h2>Section 4: Third Parties</h2>
-  <h3>Section 4.1: Google Analytics Usage</h3>
-  <li>Google Analytics is active and embedded in SlowGuardian's code.</li>
-  <li>
-    <a href="https://marketingplatform.google.com/about/analytics/terms/us/"
-      >You may read the Google Analytics ToS here.</a
-    >
-  </li>
-  <li>
-    <a href="https://policies.google.com/technologies/partner-sites"
-      >You may read "HOW GOOGLE USES INFORMATION FROM SITES OR APPS THAT USE OUR
-      SERVICES" here.</a
-    >
-  </li>
-  <h3>Section 4.2: Our community on Discord</h3>
-  <li>
-    <h3>Section 4.3: Our commmunity and repository at GitHub</h3>
-  </li>
+  <!-- Main Content -->
+  <main class="tos-container">
+    <!-- Back Button -->
+    <a href="/" class="back-button">
+      ← Back to Home
+    </a>
 
-  <li>
-    SlowGuardian is an open source project.
-    <a href="https://github.com/SlowGuardianNetwork/SlowGuardian"
-      >You can view its code by clicking here.</a
-    >
-  </li>
-  <li>
-    <a
-      href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service"
-      >You can read the GitHub ToS here.</a
-    >
-  </li>
-  <li>
-    <a
-      href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
-      >You can read the GitHub General Privacy Statement here.</a
-    >
-  </li>
-  <h3>Section 4.4: Supporting SlowGuardian using Patreon</h3>
-  <li>
-    SlowGuardian uses Patreon as a way for people to donate and support
-    SlowGuardian.
-  </li>
-  <li>
-    <a href="https://www.patreon.com/policy/legal"
-      >You can read the Patreon ToS here.</a
-    >
-  </li>
-  <li>
-    <a href="https://privacy.patreon.com/policies/en/"
-      >You can read the Patreon Privacy Policy here.</a
-    >
-  </li>
-  <li>
-    <a href="https://www.patreon.com/policy/cookies"
-      >You can read the Patreon Cookie Policy here.</a
-    >
-  </li>
-  <h3>Section 4.5: Supporting SlowGuardian using Cash App</h3>
-  <li>
-    SlowGuardian accepts Cash App as a way for people to donate and support
-    SlowGuardian.
-  </li>
-  <li>
-    <a href="https://cash.app/legal/us/en-us/privacy"
-      >You can read the Cash App privacy policy here.</a
-    >
-  </li>
-  <li>
-    <a href="https://cash.app/legal/us/en-us/tos"
-      >You can read the Cash App ToS here.</a
-    >
-  </li>
-  <h2>Section 5: The information we collect</h2>
-  <h3>Section 5.1: The official SlowGuardian deployment</h3>
-  <li>
-    Information that may be unintentionally collected as part of using
-    SlowGuardian's official deployment may include basic information such as
-    your IP address, web traffic when using SlowGuardian, etc. This information
-    is temporary and is kept until the server is rebooted.
-  </li>
-  <li>
-    We do not purposefully collect anyone's information. We try to limit the
-    data collected by the official SlowGuardian deployment.
-  </li>
-  <li>
-    We do not, will not, and will never knowingly collect the information of
-    minors under the age of 13 (or the minimum age required by laws in your
-    country).
-  </li>
-  <h3>Section 5.2: Unofficial SlowGuardian Deployments</h3>
-  <li>
-    We can't give a definitive answer on what information is collected when you
-    use a unofficial SlowGuardian deployment, only the operator of the
-    SlowGuardian deployment you're using can.
-  </li>
-  <li>
-    We urge operators to collect and store as minimal information as possible,
-    but we can't control what they do.
-  </li>
-  <h2>Section 6: Control</h2>
-  <li>
-    We do not have the power to control what unofficial SlowGuardian deployment
-    operators do with their deployment.
-  </li>
-  <li>
-    We protect information stored on the official SlowGuardian deployment by
-    limiting access. The only person that has access to the server of which the
-    official SlowGuardian deployment runs on is the server host and the owner of
-    SlowGuardian, xbubbo.
-  </li>
-  <li>
-    We cannot check every deployment for malicious code. If any data such as
-    your account gets compromised after you access it on a unofficial
-    SlowGuardian deployment, we will not be held liable.
-  </li>
-  <h2>
-    Section 7: How we use basic information on the official SlowGuardian
-    deployment that may be collected accidentally
-  </h2>
-  <li>
-    Your IP address is used to allow you to use the SlowGuardian service. This
-    is how it works for every website you visit, not just SlowGuardian. The
-    difference is whether or not this data is intentionally collected and
-    stored.
-  </li>
-  <li>
-    Info about your web traffic while using SlowGuardian is needed to allow you
-    to access the service you wish to access.
-  </li>
-  <li>
-    SlowGuardian will NEVER sell your info to third-parties, other than to some
-    ad companies. We do this so we can make enough money to pay for our server.
-  </li>
-  <li>
-    The official SlowGuardian server operator may respond to legal requests and
-    assist law enforcement officials in legal investigations if ever needed. We
-    can't guarantee we'll always have information to hand out as the information
-    that may be collected is automatically destroyed on reboot, but if we do
-    still have information relevent to the investigation, we may provide law
-    enforcement officials with it. Please redirect all requests regarding data
-    with an unofficial SlowGuardian deployment to its operator, as we don't have
-    control over unofficial deployments and couldn't comply with requests even
-    if we wanted to.
-  </li>
+    <!-- Header -->
+    <div class="tos-header">
+      <h1 class="tos-title">📋 Terms of Service & Privacy Policy</h1>
+      <p class="tos-subtitle">SlowGuardian v9 - Your Privacy and Security First</p>
+      <div class="last-updated">Last Updated: January 15, 2025</div>
+    </div>
 
-  <li></li>
-  <li>
-    As a thank you for supporting SlowGuardian, you get access to supporter
-    features. This includes a server with an SlowGuardian deployment for
-    supporters only. We cannot guarantee 100% uptime.
-  </li>
-  <li>This is NON-REFUNDABLE.</li>
-  <h2>Last Updated</h2>
-  <p>April 12, 2024 - Privacy Policy & ToS created.</p>
+    <!-- Content -->
+    <div class="tos-content">
+      <!-- Section 1: Definitions -->
+      <div class="tos-section">
+        <h2>Section 1: Definitions</h2>
+        <p>
+          In this privacy policy, "We" refers to "SlowGuardian". "Personally-identifiable information" (PII) refers to
+          information that can be used to identify a person such as IP addresses. "Official SlowGuardian deployments" refer to
+          the SlowGuardian application <strong>running on the official server.</strong> "SlowGuardian deployment operator" refers to the person(s) running the
+          SlowGuardian application. "ToS" refers to Terms of Service.
+        </p>
+        <p>Please redirect any general inquiries to our official community on GitHub.</p>
+      </div>
+
+      <!-- Section 2: Summary -->
+      <div class="tos-section">
+        <h2>Section 2: Summary</h2>
+        <ul>
+          <li>By using SlowGuardian, you agree you understand and acknowledge this privacy policy and its clauses.</li>
+          <li>
+            SlowGuardian will not be held liable in any situation that may occur as a result of using or hosting the
+            SlowGuardian application on ANY SlowGuardian deployment.
+          </li>
+          <li>The safest way to use SlowGuardian is by using its official deployments or by self-hosting.</li>
+        </ul>
+
+        <h3>Section 2.1: Summary - Official SlowGuardian Deployment</h3>
+        <div class="info-box">
+          <p>
+            <strong>Privacy First:</strong> Official SlowGuardian deployments are run with privacy in mind.
+            We do not intentionally collect and retain any PII such as IP addresses used to access the official SlowGuardian
+            deployment.
+          </p>
+        </div>
+
+        <h3>Section 2.2: Summary - Unofficial SlowGuardian Deployments</h3>
+        <ul>
+          <li>
+            SlowGuardian developers are committed to ensuring SlowGuardian remains as a secure application. However, we cannot
+            guarantee the same level of security or privacy of unofficial SlowGuardian deployments.
+          </li>
+          <li>
+            The type of information collected on community deployments is completely dependent on who and where the deployment
+            is being hosted.
+          </li>
+          <li>Generally, we recommend SlowGuardian deployment operators to collect as minimal information as possible.</li>
+          <li>We cannot control unofficial SlowGuardian deployments.</li>
+          <li>
+            We cannot verify the authenticity of the code in unofficial SlowGuardian deployments. This is an extremely rare
+            situation, but we will not be held responsible if your data such as an account becomes compromised as a result of
+            malicious code in an unofficial SlowGuardian deployment.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Section 3: Acceptable Use -->
+      <div class="tos-section">
+        <h2>Section 3: Acceptable Use</h2>
+        <div class="warning-box">
+          <p><strong>Important Guidelines:</strong></p>
+        </div>
+        <ul>
+          <li>Do not use any SlowGuardian deployment to do illegal activity.</li>
+          <li>If you are under 18, do not use any SlowGuardian deployment to access any adult sites.</li>
+          <li>Respect the terms of service of websites you visit through SlowGuardian.</li>
+          <li>Do not attempt to circumvent network security measures beyond intended proxy functionality.</li>
+        </ul>
+      </div>
+
+      <!-- Section 4: Third Parties -->
+      <div class="tos-section">
+        <h2>Section 4: Third Party Services</h2>
+        
+        <h3>Section 4.1: Analytics Usage</h3>
+        <ul>
+          <li>SlowGuardian may use analytics services to improve user experience.</li>
+          <li>All analytics data is anonymized and used solely for service improvement.</li>
+          <li>You can opt-out of analytics in the settings page.</li>
+        </ul>
+
+        <h3>Section 4.2: Our Community on GitHub</h3>
+        <ul>
+          <li>
+            SlowGuardian is an open source project.
+            <a href="https://github.com/zgr2575/SlowGuardian">You can view its code by clicking here.</a>
+          </li>
+          <li>
+            <a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service"
+              >You can read the GitHub ToS here.</a
+            >
+          </li>
+          <li>
+            <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+              >You can read the GitHub General Privacy Statement here.</a
+            >
+          </li>
+        </ul>
+
+        <h3>Section 4.3: Support & Donations</h3>
+        <ul>
+          <li>SlowGuardian accepts donations to support development and hosting costs.</li>
+          <li>Premium features help sustain the project while keeping core functionality free.</li>
+          <li>All payment processing is handled by secure third-party providers.</li>
+        </ul>
+      </div>
+
+      <!-- Section 5: Information Collection -->
+      <div class="tos-section">
+        <h2>Section 5: The Information We Collect</h2>
+        
+        <h3>Section 5.1: The Official SlowGuardian Deployment</h3>
+        <div class="highlight-box">
+          <p>
+            <strong>Minimal Data Collection:</strong> Information that may be unintentionally collected as part of using SlowGuardian's official deployment may include
+            basic information such as your IP address, web traffic when using SlowGuardian, etc. This information is temporary
+            and is kept until the server is rebooted.
+          </p>
+        </div>
+        <ul>
+          <li>
+            We do not purposefully collect anyone's information. We try to limit the data collected by the official SlowGuardian
+            deployment.
+          </li>
+          <li>
+            We do not, will not, and will never knowingly collect the information of minors under the age of 13 (or the minimum
+            age required by laws in your country).
+          </li>
+          <li>User preferences and settings are stored locally in your browser.</li>
+        </ul>
+
+        <h3>Section 5.2: Unofficial SlowGuardian Deployments</h3>
+        <ul>
+          <li>
+            We can't give a definitive answer on what information is collected when you use an unofficial SlowGuardian
+            deployment, only the operator of the SlowGuardian deployment you're using can.
+          </li>
+          <li>We urge operators to collect and store as minimal information as possible, but we can't control what they do.</li>
+        </ul>
+      </div>
+
+      <!-- Section 6: Control -->
+      <div class="tos-section">
+        <h2>Section 6: Data Control & Security</h2>
+        <ul>
+          <li>
+            We do not have the power to control what unofficial SlowGuardian deployment operators do with their deployment.
+          </li>
+          <li>
+            We protect information stored on the official SlowGuardian deployment by limiting access and implementing security best practices.
+          </li>
+          <li>
+            We cannot check every deployment for malicious code. If any data such as your account gets compromised after you
+            access it on an unofficial SlowGuardian deployment, we will not be held liable.
+          </li>
+          <li>All proxy traffic is encrypted and secured using industry-standard protocols.</li>
+        </ul>
+      </div>
+
+      <!-- Section 7: Data Usage -->
+      <div class="tos-section">
+        <h2>Section 7: How We Use Information</h2>
+        <ul>
+          <li>
+            Your IP address is used to allow you to use the SlowGuardian service. This is how it works for every website you
+            visit, not just SlowGuardian. The difference is whether or not this data is intentionally collected and stored.
+          </li>
+          <li>
+            Info about your web traffic while using SlowGuardian is needed to allow you to access the service you wish to
+            access.
+          </li>
+          <li>
+            SlowGuardian will NEVER sell your info to third-parties. We may display ads to support the service, but personal data is never shared.
+          </li>
+          <li>
+            The official SlowGuardian server operator may respond to legal requests and assist law enforcement officials in
+            legal investigations if ever needed. We can't guarantee we'll always have information to hand out as the information
+            that may be collected is automatically destroyed on reboot, but if we do still have information relevant to the
+            investigation, we may provide law enforcement officials with it.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Section 8: Premium Features -->
+      <div class="tos-section">
+        <h2>Section 8: Premium Features & Subscriptions</h2>
+        <div class="info-box">
+          <p><strong>Premium Benefits:</strong> Support SlowGuardian development while enjoying enhanced features.</p>
+        </div>
+        <ul>
+          <li>
+            Premium subscriptions provide access to enhanced features like ad-free browsing, priority servers, and advanced customization.
+          </li>
+          <li>All premium subscriptions help support SlowGuardian development and server costs.</li>
+          <li>Premium features are provided as-is and we cannot guarantee 100% uptime.</li>
+          <li>Subscription cancellations can be processed through the settings panel.</li>
+          <li>Refunds are handled on a case-by-case basis for service issues.</li>
+        </ul>
+      </div>
+
+      <!-- Section 9: Updates -->
+      <div class="tos-section">
+        <h2>Section 9: Policy Updates</h2>
+        <p>
+          This privacy policy and terms of service may be updated from time to time to reflect changes in our practices or for legal compliance.
+          We will notify users of significant changes through the application interface.
+        </p>
+        <p>
+          Continued use of SlowGuardian after policy updates constitutes acceptance of the new terms.
+        </p>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="tos-section">
+        <h2>Contact & Support</h2>
+        <p>
+          For questions about this privacy policy, terms of service, or SlowGuardian in general:
+        </p>
+        <ul>
+          <li>Visit our <a href="https://github.com/zgr2575/SlowGuardian">GitHub repository</a></li>
+          <li>Open an issue for technical questions or concerns</li>
+          <li>Contact through official SlowGuardian community channels</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: var(--space-6); color: var(--text-secondary);">
+      <p>&copy; 2025 SlowGuardian. Licensed under GPL-3.0. All rights reserved.</p>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="assets/scripts/cookie-utils.js?v=1"></script>
+  <script src="assets/scripts/loading-system.js?v=1"></script>
+  <script src="assets/scripts/script-loader.js?v=1"></script>
+  <script src="assets/scripts/navbar.js?v=1"></script>
+  <script src="assets/scripts/v9/features.js?v=1"></script>
+  <script src="assets/scripts/plugin-system.js?v=1"></script>
+  <script src="assets/scripts/performance-mode.js?v=1"></script>
+  <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+  <script src="assets/scripts/ads-manager.js?v=1"></script>
+  <script src="assets/scripts/main.js?v=31"></script>
+
+  <!-- Particles background -->
+  <script>
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      if (!particlesContainer) return;
+
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: rgba(79, 70, 229, 0.6);
+          border-radius: 50%;
+          top: ${Math.random() * 100}%;
+          left: ${Math.random() * 100}%;
+          animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+          animation-delay: ${Math.random() * 2}s;
+        `;
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Add particle animation CSS
+    const particleStyles = document.createElement('style');
+    particleStyles.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); opacity: 0.6; }
+        50% { transform: translateY(-20px); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(particleStyles);
+
+    // Initialize particles
+    createParticles();
+  </script>
 </body>
-<script src="/assets/scripts/main.js?v=31"></script>
+</html>

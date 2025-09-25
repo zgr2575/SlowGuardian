@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title>404 - Page Not Found | SlowGuardian v9</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <style>
+      .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        text-align: center;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+      .error-code {
+        font-size: 8rem;
+        font-weight: 700;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      .error-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .error-message {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-bottom: 3rem;
+        max-width: 600px;
+        line-height: 1.6;
+      }
+
+      .error-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background: var(--accent-primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-tertiary);
+        transform: translateY(-2px);
+      }
+
+      .error-illustration {
+        width: 300px;
+        height: 200px;
+        margin-bottom: 2rem;
+        opacity: 0.8;
+      }
+
+      .floating-shapes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .shape {
+        position: absolute;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .shape:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .shape:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 20%;
+        right: 15%;
+        animation-delay: 2s;
+      }
+
+      .shape:nth-child(3) {
+        width: 100px;
+        height: 100px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      .shape:nth-child(4) {
+        width: 60px;
+        height: 60px;
+        bottom: 10%;
+        right: 10%;
+        animation-delay: 1s;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 20px var(--accent-primary);
+        }
+        to {
+          text-shadow:
+            0 0 30px var(--accent-primary),
+            0 0 40px var(--accent-secondary);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .error-code {
+          font-size: 5rem;
+        }
+
+        .error-title {
+          font-size: 2rem;
+        }
+
+        .error-message {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+        }
+
+        .error-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 250px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="floating-shapes">
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+
+    <div class="error-container">
+      <div class="error-illustration">
+        <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 0.8" />
+              <stop offset="100%" style="stop-color: var(--accent-secondary); stop-opacity: 0.8" />
+            </linearGradient>
+          </defs>
+
+          <!-- Broken computer screen -->
+          <rect x="50" y="40" width="200" height="120" rx="8" fill="url(#gradient)" opacity="0.3" />
+          <rect
+            x="60"
+            y="50"
+            width="180"
+            height="90"
+            rx="4"
+            fill="var(--bg-primary)"
+            stroke="url(#gradient)"
+            stroke-width="2"
+          />
+
+          <!-- Crack in screen -->
+          <path
+            d="M 100 70 L 150 100 L 200 80 L 160 120"
+            stroke="url(#gradient)"
+            stroke-width="3"
+            fill="none"
+            opacity="0.8"
+          />
+          <path d="M 120 60 L 180 110" stroke="url(#gradient)" stroke-width="2" fill="none" opacity="0.6" />
+
+          <!-- Stand -->
+          <rect x="130" y="160" width="40" height="20" rx="4" fill="url(#gradient)" opacity="0.6" />
+          <rect x="110" y="175" width="80" height="8" rx="4" fill="url(#gradient)" opacity="0.4" />
+
+          <!-- Warning symbol -->
+          <circle cx="150" cy="95" r="25" fill="var(--bg-primary)" stroke="url(#gradient)" stroke-width="2" />
+          <path
+            d="M 150 85 L 150 100 M 150 105 L 150 108"
+            stroke="url(#gradient)"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="error-code">404</div>
+      <h1 class="error-title">Page Not Found</h1>
+      <p class="error-message">
+        The page you're looking for seems to have vanished into the digital void. Don't worry though - our navigation
+        system is still working perfectly!
+      </p>
+
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+          </svg>
+          Go Home
+        </a>
+        <button id="go-back-btn" class="btn btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+          Go Back
+        </button>
+        <a href="/apps" class="btn btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          Browse Apps
+        </a>
+      </div>
+    </div>
+
+    <!-- Theme System -->
+    <script src="assets/js/themes.js"></script>
+    <script src="assets/js/settings.js"></script>
+
+    <script>
+      // Initialize theme system
+      document.addEventListener("DOMContentLoaded", function () {
+        try {
+          if (typeof initializeThemes === "function") {
+            initializeThemes();
+          }
+          if (typeof loadSettings === "function") {
+            loadSettings();
+          }
+
+          // Add event listener for go back button
+          const goBackBtn = document.getElementById("go-back-btn");
+          if (goBackBtn) {
+            goBackBtn.addEventListener("click", function () {
+              history.back();
+            });
+          }
+        } catch (error) {
+          console.log("Theme system not available");
+        }
+      });
+
+      // Add some interactivity
+      document.addEventListener("mousemove", function (e) {
+        const shapes = document.querySelectorAll(".shape");
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        shapes.forEach((shape, index) => {
+          const speed = (index + 1) * 0.5;
+          const xOffset = (x - 0.5) * speed * 20;
+          const yOffset = (y - 0.5) * speed * 20;
+
+          shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+        });
+      });
+    </script>
+  </body>
+</html>

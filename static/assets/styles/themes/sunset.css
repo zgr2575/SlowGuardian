@@ -1,0 +1,100 @@
+/* Sunset Theme */
+:root {
+  --bg-primary: #1a0c2e;
+  --bg-secondary: #2d1b4e;
+  --bg-tertiary: #402a6e;
+  --bg-quaternary: #5339a0;
+
+  --text-primary: #fff4e6;
+  --text-secondary: #ffd7a3;
+  --text-tertiary: #ffb366;
+
+  --accent-primary: #ff6b35;
+  --accent-secondary: #f7931e;
+  --accent-tertiary: #ffb347;
+  --accent-hover: #ff8c69;
+
+  --border-primary: #ff6b35;
+  --border-secondary: #f7931e;
+
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+
+  --shadow-primary: 0 8px 32px rgba(255, 107, 53, 0.3);
+  --shadow-secondary: 0 4px 16px rgba(247, 147, 30, 0.2);
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    #1a0c2e 0%,
+    #2d1b4e 25%,
+    #ff6b35 50%,
+    #f7931e 75%,
+    #ffb347 100%
+  );
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+.bg-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 12, 46, 0.95) 0%,
+    rgba(45, 27, 78, 0.9) 25%,
+    rgba(255, 107, 53, 0.1) 50%,
+    rgba(247, 147, 30, 0.1) 75%,
+    rgba(255, 179, 71, 0.05) 100%
+  );
+}
+
+.card,
+.widget,
+.navbar {
+  background: rgba(26, 12, 46, 0.9);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-primary);
+  backdrop-filter: blur(15px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #ff6b35, #f7931e);
+  border: 1px solid #ff6b35;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #ff8c69, #ff6b35);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+}
+
+.input-field {
+  background: rgba(45, 27, 78, 0.8);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.input-field:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+/* Sunset glow effect */
+.brand-text {
+  background: linear-gradient(45deg, #ff6b35, #f7931e, #ffb347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: sunsetGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes sunsetGlow {
+  from {
+    filter: brightness(1) saturate(1);
+  }
+  to {
+    filter: brightness(1.2) saturate(1.3);
+  }
+}

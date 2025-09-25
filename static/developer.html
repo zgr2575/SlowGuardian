@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Developer Mode</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/admin.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Enhanced Modal Styling -->
+    <style>
+      /* Enhanced modal positioning and z-index */
+      .modal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10001 !important;
+        backdrop-filter: blur(5px) !important;
+      }
+
+      .modal-content {
+        background: var(--bg-secondary) !important;
+        border-radius: var(--radius-lg) !important;
+        border: 1px solid var(--border-primary) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        max-width: 600px !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        position: relative !important;
+        z-index: 10002 !important;
+        margin: 20px !important;
+      }
+
+      .modal-header {
+        padding: var(--space-4) !important;
+        border-bottom: 1px solid var(--border-primary) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+
+      .modal-body {
+        padding: var(--space-4) !important;
+      }
+
+      .modal-footer {
+        padding: var(--space-4) !important;
+        border-top: 1px solid var(--border-primary) !important;
+        display: flex !important;
+        gap: var(--space-2) !important;
+        justify-content: flex-end !important;
+      }
+
+      .modal-close {
+        background: none !important;
+        border: none !important;
+        color: var(--text-secondary) !important;
+        font-size: 24px !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        transition: all var(--transition-base) !important;
+      }
+
+      .modal-close:hover {
+        background: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/tabs" class="nav-link" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-developer">
+        <div class="page-header">
+          <h2 class="page-title">🛠️ Developer Mode</h2>
+          <p class="page-subtitle">Administrative controls and advanced features</p>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="auth-section" id="auth-section">
+          <div class="card settings-card">
+            <div class="card-header">
+              <h3 class="card-title">🔐 Admin Authentication</h3>
+              <p class="card-description">Login to access administrative controls</p>
+            </div>
+            <div class="auth-form">
+              <div class="input-group">
+                <label for="admin-username">Username:</label>
+                <input type="text" id="admin-username" class="form-input" placeholder="Enter admin username" />
+              </div>
+              <div class="input-group">
+                <label for="admin-password">Password:</label>
+                <input type="password" id="admin-password" class="form-input" placeholder="Enter admin password" />
+              </div>
+              <button id="admin-login-btn" class="btn btn-primary">Login to Developer Mode</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Developer Dashboard -->
+        <div class="developer-dashboard" id="developer-dashboard" style="display: none">
+          <div class="dashboard-grid">
+            <!-- Real-time Statistics -->
+            <div class="card stats-card">
+              <div class="card-header">
+                <h3 class="card-title">📊 Live Statistics</h3>
+                <button id="refresh-stats-btn" class="btn btn-sm btn-secondary">🔄 Refresh</button>
+              </div>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <div class="stat-label">Online Users</div>
+                  <div class="stat-value" id="online-users-count">0</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Total Admins</div>
+                  <div class="stat-value" id="total-admins-count">1</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Site Status</div>
+                  <div class="stat-value" id="site-status">Active</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Uptime</div>
+                  <div class="stat-value" id="uptime">24h 30m</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Global Controls -->
+            <div class="card controls-card">
+              <div class="card-header">
+                <h3 class="card-title">🌐 Global Site Controls</h3>
+                <p class="card-description">Emergency controls for site-wide management</p>
+              </div>
+              <div class="controls-grid">
+                <button id="pause-site-btn" class="btn btn-warning btn-block">⏸️ Pause Site Globally</button>
+                <button id="unpause-site-btn" class="btn btn-success btn-block" style="display: none">
+                  ▶️ Resume Site
+                </button>
+                <button id="maintenance-mode-btn" class="btn btn-info btn-block">🔧 Enable Maintenance Mode</button>
+                <button id="emergency-stop-btn" class="btn btn-danger btn-block">🚨 Emergency Stop</button>
+              </div>
+            </div>
+
+            <!-- User Management -->
+            <div class="card users-card">
+              <div class="card-header">
+                <h3 class="card-title">👥 User Management</h3>
+                <p class="card-description">Monitor and manage active users</p>
+              </div>
+              <div class="user-controls">
+                <button id="view-online-users-btn" class="btn btn-primary">👁️ View Online Users</button>
+                <button id="user-sessions-btn" class="btn btn-secondary">📋 Session Management</button>
+                <button id="block-user-btn" class="btn btn-warning">🚫 Block User</button>
+              </div>
+              <div class="user-stats">
+                <div class="user-stat">
+                  <span class="stat-label">Active Sessions:</span>
+                  <span class="stat-value" id="active-sessions">0</span>
+                </div>
+                <div class="user-stat">
+                  <span class="stat-label">Blocked Users:</span>
+                  <span class="stat-value" id="blocked-users">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Management -->
+            <div class="card content-card">
+              <div class="card-header">
+                <h3 class="card-title">🌐 Content Management</h3>
+                <p class="card-description">Control website access and filtering</p>
+              </div>
+              <div class="content-controls">
+                <div class="input-group">
+                  <label for="block-domain">Block Domain:</label>
+                  <input type="text" id="block-domain" class="form-input" placeholder="example.com" />
+                  <button id="add-block-btn" class="btn btn-warning">Add Block</button>
+                </div>
+                <div class="blocked-domains" id="blocked-domains">
+                  <h4>Blocked Domains:</h4>
+                  <div class="domain-list" id="domain-list">
+                    <div class="empty-state">No domains blocked</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Management -->
+            <div class="card accounts-card">
+              <div class="card-header">
+                <h3 class="card-title">🔐 Account Management</h3>
+                <p class="card-description">Manage administrative accounts</p>
+              </div>
+              <div class="account-controls">
+                <button id="create-admin-btn" class="btn btn-primary">➕ Create Admin Account</button>
+                <button id="manage-accounts-btn" class="btn btn-secondary">📝 Manage Accounts</button>
+                <button id="audit-logs-btn" class="btn btn-info">📋 View Audit Logs</button>
+              </div>
+            </div>
+
+            <!-- Advanced Features -->
+            <div class="card features-card">
+              <div class="card-header">
+                <h3 class="card-title">🔬 Advanced Features</h3>
+                <p class="card-description">Developer-only functionality</p>
+              </div>
+              <div class="feature-controls">
+                <div class="feature-toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="screenshot-protection-dev" />
+                    <span class="switch-slider"></span>
+                  </label>
+                  <div class="feature-info">
+                    <strong>Screenshot Protection</strong>
+                    <small>Advanced anti-surveillance system</small>
+                  </div>
+                </div>
+                <div class="feature-toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="debug-mode" />
+                    <span class="switch-slider"></span>
+                  </label>
+                  <div class="feature-info">
+                    <strong>Debug Mode</strong>
+                    <small>Enable detailed logging and diagnostics</small>
+                  </div>
+                </div>
+                <div class="feature-toggle">
+                  <label class="switch">
+                    <input type="checkbox" id="performance-monitoring" />
+                    <span class="switch-slider"></span>
+                  </label>
+                  <div class="feature-info">
+                    <strong>Performance Monitoring</strong>
+                    <small>Real-time performance analytics</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ChatGPT Integration -->
+            <div class="card chatgpt-card">
+              <div class="card-header">
+                <h3 class="card-title">🤖 ChatGPT Integration</h3>
+                <p class="card-description">Configure AI assistant</p>
+              </div>
+              <div class="chatgpt-controls">
+                <div class="input-group">
+                  <label for="openai-api-key">OpenAI API Key:</label>
+                  <input type="password" id="openai-api-key" class="form-input" placeholder="sk-..." />
+                  <button id="save-api-key-btn" class="btn btn-primary">Save</button>
+                </div>
+                <div class="input-group">
+                  <label for="chatgpt-model">Model:</label>
+                  <select id="chatgpt-model" class="form-select">
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                  </select>
+                </div>
+                <button id="test-chatgpt-btn" class="btn btn-secondary">Test Connection</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logout -->
+          <div class="card logout-card">
+            <div class="card-footer">
+              <button id="admin-logout-btn" class="btn btn-secondary">🚪 Logout</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Developer Mode - Administrative Controls</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Global Pause Modal -->
+    <div id="pause-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>⏸️ Pause Site Globally</h3>
+          <button class="modal-close" id="close-pause-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>This will temporarily disable the site for all users with a maintenance-style message.</p>
+          <div class="input-group">
+            <label for="pause-password">Set Pause Password:</label>
+            <input
+              type="password"
+              id="pause-password"
+              class="form-input"
+              placeholder="Enter password to unpause later"
+              required
+            />
+          </div>
+          <div class="warning-box">
+            <strong>⚠️ Warning:</strong> Users will see a "SlowGuardian is paused" message and won't be able to access
+            the site until you unpause it with this password.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="confirm-pause-btn" class="btn btn-warning">Pause Site</button>
+          <button id="cancel-pause-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management Modal -->
+    <div id="user-management-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>👥 Online Users</h3>
+          <button class="modal-close" id="close-user-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="user-list" id="user-list">
+            <div class="loading-text">Loading users...</div>
+          </div>
+
+          <div class="user-actions" style="margin-top: 20px">
+            <h4>Block Website for User</h4>
+            <div class="input-group">
+              <select id="select-user" class="form-select">
+                <option value="">Select a user...</option>
+              </select>
+              <input
+                type="text"
+                id="block-domain-user"
+                class="form-input"
+                placeholder="Enter domain (e.g., youtube.com)"
+              />
+              <button id="block-site-user-btn" class="btn btn-warning">Block Site for User</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-users-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-user-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+
+    <script src="assets/scripts/v9/utils.js" type="module"></script>
+    <script src="assets/scripts/v9/particles.js" type="module"></script>
+    <script src="assets/scripts/admin.js"></script>
+    <script src="assets/scripts/developer-mode.js"></script>
+    <script src="assets/scripts/main.js"></script>
+
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+  </body>
+</html>

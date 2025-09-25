@@ -1,51 +1,61 @@
-let inFrame
+// DISABLED: Auto about:blank execution to prevent spam
+// This file previously auto-executed about:blank on load
+// Now requires manual activation only to prevent infinite loops
 
-try {
-  inFrame = window !== top
-} catch (e) {
-  inFrame = true
-}
+// Manual about:blank function - call with window.createAboutBlank() if needed
+window.createAboutBlank = function () {
+  let inFrame;
 
-if (!inFrame && !navigator.userAgent.includes("Firefox")) {
-  const popup = open("about:blank", "_blank")
-  if (!popup || popup.closed) {
-    alert("Please allow popups and redirects.")
-  } else {
-    const doc = popup.document
-    const iframe = doc.createElement("iframe")
-    const style = iframe.style
-    const link = doc.createElement("link")
-
-    const name = localStorage.getItem("name") || "My Drive - Google Drive"
-    const icon = localStorage.getItem("icon") || "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"
-
-    doc.title = name
-    link.rel = "icon"
-    link.href = icon
-
-    iframe.src = location.href
-    style.position = "fixed"
-    style.top = style.bottom = style.left = style.right = 0
-    style.border = style.outline = "none"
-    style.width = style.height = "100%"
-
-    doc.head.appendChild(link)
-    doc.body.appendChild(iframe)
-
-    const pLink = localStorage.getItem(encodeURI("pLink")) || "https://www.nasa.gov/"
-    location.replace(pLink)
-
-    const script = doc.createElement("script")
-    script.textContent = `
-      window.onbeforeunload = function (event) {
-        const confirmationMessage = 'Leave Site?';
-        (event || window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
-      };
-    `
-    doc.head.appendChild(script)
+  try {
+    inFrame = window !== top;
+  } catch (e) {
+    inFrame = true;
   }
-}
+
+  if (!inFrame && !navigator.userAgent.includes("Firefox")) {
+    const popup = open("about:blank", "_blank");
+    if (!popup || popup.closed) {
+      alert("Please allow popups and redirects.");
+    } else {
+      const doc = popup.document;
+      const iframe = doc.createElement("iframe");
+      const style = iframe.style;
+      const link = doc.createElement("link");
+
+      const name = localStorage.getItem("name") || "My Drive - Google Drive";
+      const icon =
+        localStorage.getItem("icon") ||
+        "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
+      doc.title = name;
+      link.rel = "icon";
+      link.href = icon;
+
+      iframe.src = location.href;
+      style.position = "fixed";
+      style.top = style.bottom = style.left = style.right = 0;
+      style.border = style.outline = "none";
+      style.width = style.height = "100%";
+
+      doc.head.appendChild(link);
+      doc.body.appendChild(iframe);
+
+      const pLink =
+        localStorage.getItem(encodeURI("pLink")) || "https://www.nasa.gov/";
+      location.replace(pLink);
+
+      const script = doc.createElement("script");
+      script.textContent = `
+        window.onbeforeunload = function (event) {
+          const confirmationMessage = 'Leave Site?';
+          (event || window.event).returnValue = confirmationMessage;
+          return confirmationMessage;
+        };
+      `;
+      doc.head.appendChild(script);
+    }
+  }
+};
 // Particles
 document.addEventListener("DOMContentLoaded", function (event) {
   if (window.localStorage.getItem("Particles") === "true") {
@@ -158,24 +168,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
         },
       },
       retina_detect: true,
-    }
-    particlesJS("particles-js", particlesConfig)
+    };
+    particlesJS("particles-js", particlesConfig);
   }
-})
+});
 // Splash
-let SplashT = [
-  "SlowGuardian will be back next year!",
+let SplashT = ["SlowGuardian will be back next year!"];
 
-];
-
-let SplashI = Math.floor(Math.random() * SplashT.length)
-const SplashE = document.getElementById("splash")
+let SplashI = Math.floor(Math.random() * SplashT.length);
+const SplashE = document.getElementById("splash");
 
 function US() {
-  SplashI = (SplashI + 1) % SplashT.length
-  SplashE.innerText = SplashT[SplashI]
+  SplashI = (SplashI + 1) % SplashT.length;
+  SplashE.innerText = SplashT[SplashI];
 }
 
-SplashE.innerText = SplashT[SplashI]
+SplashE.innerText = SplashT[SplashI];
 
-SplashE.addEventListener("click", US)
+SplashE.addEventListener("click", US);

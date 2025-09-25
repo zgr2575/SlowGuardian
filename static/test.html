@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SW Test</title>
+  </head>
+  <body>
+    <h1>Service Worker test page</h1>
+    <script>
+      (async () => {
+        try {
+          const reg = await navigator.serviceWorker.register('/sw.js');
+          console.log('sw-registered', reg.scope);
+        } catch (e) {
+          console.error('sw-register-failed', e && e.message);
+        }
+      })();
+    </script>
+  </body>
+</html>

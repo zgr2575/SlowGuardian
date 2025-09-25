@@ -2,46 +2,290 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
-    <script src="assets/scripts/index.js?v=14"></script>
-    <script src="assets/scripts/g.js?v=70"></script>
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <!-- SEO and AdSense Meta Tags -->
+    <meta
+      name="description"
+      content="Play popular online games through SlowGuardian's secure proxy. Access blocked games safely with enhanced performance and privacy protection."
+    />
+    <meta name="keywords" content="online games, gaming, proxy games, unblocked games, secure gaming, SlowGuardian" />
+    <meta name="author" content="SlowGuardian Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <title id="tab-title">SlowGuardian v9 - Games</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/v9/games.css" />
+    <link rel="stylesheet" href="assets/styles/premium.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
-    <div class="fixed-nav-bar"></div>
-    <div class="input-container">
-      <input
-        type="text"
-        id="searchbarbottom"
-        onkeyup="search_bar()"
-        placeholder="Search"
-      />
-      <select id="category" name="category" onchange="show_category()">
-        <option value="all">All</option>
-        <option value="android">Android Emulator</option>
-        <option value="2P">Multiplayer</option>
-        <option value="sports">Sports</option>
-        <option value="flash">Flash</option>
-        <option value="emu">Emulator</option>
-        <option value="local">Local</option>
-      </select>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
     </div>
-    <div class="pinned-apps"></div>
-    <div class="container-apps"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link active" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/music" class="nav-link" data-page="music">
+            <i class="icon">🎵</i>
+            <span>Music</span>
+          </a>
+          <a href="/go" class="nav-link" data-page="browser">
+            <i class="icon">🌐</i>
+            <span>Browser</span>
+          </a>
+          <a href="/tabs" class="nav-link" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-games">
+        <div class="page-header">
+          <h2 class="page-title">Games</h2>
+          <p class="page-subtitle">Play unblocked games</p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="content-controls">
+          <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input
+              type="text"
+              class="search-input"
+              id="searchbarbottom"
+              placeholder="Search games..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <select id="category" name="category" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="android">Android Emulator</option>
+            <option value="2P">Multiplayer</option>
+            <option value="sports">Sports</option>
+            <option value="flash">Flash</option>
+            <option value="emu">Emulator</option>
+            <option value="local">Local</option>
+          </select>
+        </div>
+
+        <!-- Pinned Games -->
+        <div class="pinned-games" id="pinned-games-section" style="display: none;">
+          <div class="pinned-games-header">
+            <h3 class="pinned-games-title">
+              <span class="pinned-games-icon">📌</span>
+              Pinned Games
+            </h3>
+          </div>
+          <div class="pinned-apps" id="pinned-games"></div>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="content-grid" id="games-grid">
+          <div class="container-apps"></div>
+        </div>
+
+        <!-- Hidden Games -->
+        <div class="hidden-games" id="hidden-games-section" style="display: none;">
+          <div class="hidden-games-header">
+            <h3 class="hidden-games-title">
+              <span>👁️‍🗨️</span>
+              Hidden Games
+            </h3>
+            <button class="toggle-hidden-btn" id="toggle-hidden-btn" onclick="toggleHiddenGames()">
+              <span id="toggle-hidden-text">Show Hidden</span>
+            </button>
+          </div>
+          <div class="hidden-games-grid" id="hidden-games-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Proxy Bundle -->
     <script src="./m/bundle.js?v=6"></script>
     <script src="./m/config.js?v=6"></script>
-    <script
-      src="https://kit.fontawesome.com/1237c86ba0.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/index.js?v=14"></script>
+
+    <!-- App Scripts -->
+    <!-- Loading System (Load first) -->
+    <script src="assets/scripts/loading-system.js?v=1"></script>
+
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+
+    <!-- Legacy Games Script -->
+    <script src="assets/scripts/g-enhanced.js?v=71"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
     <script src="assets/scripts/main.js?v=31"></script>
-  
+    <script src="assets/scripts/particles.js?v=1"></script>
+
+    <!-- Centralized Navigation -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+
+    <!-- Script Loader for dependency management -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+
+    <!-- Ads Manager -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
+    <script>
+      // Update search function to work with new styling
+      function search_bar() {
+        const searchInput = document.getElementById("searchbarbottom");
+        const searchTerm = searchInput.value.toLowerCase();
+        const games = document.querySelectorAll(".container-apps .game-item, .container-apps > div");
+
+        games.forEach((game) => {
+          const gameName = game.textContent.toLowerCase();
+          if (gameName.includes(searchTerm)) {
+            game.style.display = "";
+          } else {
+            game.style.display = "none";
+          }
+        });
+      }
+
+      // Enhanced initialization for games page
+      if (typeof window.whenReady === "function") {
+        window.whenReady(() => {
+          initGamesPage();
+        }, ["cookie-utils"]); // Wait for cookie utilities
+      } else {
+        // Fallback to DOMContentLoaded if whenReady is not available
+        document.addEventListener("DOMContentLoaded", () => {
+          console.warn("whenReady not available, using DOMContentLoaded fallback");
+          initGamesPage();
+        });
+      }
+
+      function initGamesPage() {
+        const searchInput = document.getElementById("searchbarbottom");
+        if (searchInput) {
+          searchInput.addEventListener("input", search_bar);
+        }
+
+        // Add event listener for category filter
+        const categorySelect = document.getElementById("category");
+        if (categorySelect) {
+          categorySelect.addEventListener("change", show_category);
+        }
+      }
+
+      // Call initialization function immediately
+      initGamesPage();
+    </script>
+
     <div id="adv"></div>
   </body>
 </html>

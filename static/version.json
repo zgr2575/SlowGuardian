@@ -1,0 +1,18 @@
+{
+  "version": "9.0.0",
+  "name": "slowguardian",
+  "buildId": "5b3082d-1758503536900",
+  "buildDate": "2025-09-22T01:12:16.900Z",
+  "buildTimestamp": 1758503536900,
+  "git": {
+    "commit": "5b3082d70d0c3e3aeb19bde672c15efdf9db8cc3",
+    "commitShort": "5b3082d",
+    "branch": "copilot/fix-9ce74c5d-f4ea-4fa9-9c8c-c796dd6349c7",
+    "commitDate": "2025-09-20T02:15:22Z",
+    "commitMessage": "🔧 Fix KeyAuth syntax error, service worker initialization, and ads manager null pointer errors"
+  },
+  "environment": "development",
+  "nodeVersion": "v22.19.0",
+  "platform": "win32",
+  "arch": "x64"
+}
