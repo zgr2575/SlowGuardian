@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "a670c30-1759327797886",
-  "buildDate": "2025-10-01T14:09:57.886Z",
-  "buildTimestamp": 1759327797886,
+  "buildId": "7eca07d-1759328123560",
+  "buildDate": "2025-10-01T14:15:23.560Z",
+  "buildTimestamp": 1759328123560,
   "git": {
-    "commit": "a670c30029cd5816f39ca0b41ff388aae4fc6e98",
-    "commitShort": "a670c30",
+    "commit": "7eca07db9f188f749c6b272a06a93f74ea8c73b3",
+    "commitShort": "7eca07d",
     "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-01T14:07:00Z",
-    "commitMessage": "Revert proxy config to main branch and fix AdSense script placement"
+    "commitDate": "2025-10-01T14:11:06Z",
+    "commitMessage": "Fix games/apps grid display to show all rows properly"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",
