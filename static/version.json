@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "26bdd37-1759341137705",
-  "buildDate": "2025-10-01T17:52:17.705Z",
-  "buildTimestamp": 1759341137706,
+  "buildId": "bd1ba2e-1759353661634",
+  "buildDate": "2025-10-01T21:21:01.634Z",
+  "buildTimestamp": 1759353661634,
   "git": {
-    "commit": "26bdd37ed0be3ba7dafaac0f28b3f41218e9ff71",
-    "commitShort": "26bdd37",
+    "commit": "bd1ba2e58568601de974123d4d01ea88154038eb",
+    "commitShort": "bd1ba2e",
     "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-01T14:33:05Z",
-    "commitMessage": "Add Enzuzo cookie banner to all HTML pages"
+    "commitDate": "2025-10-01T17:53:21Z",
+    "commitMessage": "Fix service worker to not intercept external scripts (Enzuzo, AdSense, Analytics)"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",

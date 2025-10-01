@@ -11,16 +11,16 @@ let userKey = new URL(location).searchParams.get("userkey");
 self.dynamic = dynamic;
 
 self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  
+  // Don't intercept external requests at all - let browser handle them naturally
+  // This allows external scripts (Enzuzo, AdSense, Analytics) to load without service worker interference
+  if (url.origin !== location.origin) {
+    return; // Don't call event.respondWith() - let browser handle it
+  }
+
   event.respondWith(
     (async function () {
-      const url = new URL(event.request.url);
-      
-      // Only intercept requests that are for our origin or proxy paths
-      // Let external scripts (like Enzuzo, AdSense, Analytics) pass through without interception
-      if (url.origin !== location.origin) {
-        return await fetch(event.request);
-      }
-
       if (await dynamic.route(event)) {
         return await dynamic.fetch(event);
       }
