@@ -1,3 +1,17 @@
+// Cookie helper functions
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
+}
+
+function setCookie(name, value, days = 365) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Ads
   if (
@@ -19,6 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
     advDiv.remove();
     console.log("The adv div has been removed.");
   }
+
+  // DISABLED: Auto About:Blank Popup to prevent spam
+  // About:blank is now manual only - users can enable it through settings
+  // This prevents the infinite loop of about:blank windows being created automatically
+
+  // Simple beforeunload prevention - "Leave Site?" prompt
+  window.onbeforeunload = function (event) {
+    const confirmationMessage = "Leave Site?";
+    (event || window.event).returnValue = confirmationMessage;
+    return confirmationMessage;
+  };
 });
 
 // Nav
@@ -39,8 +64,10 @@ if (nav) {
 
 // Themes
 var themeid = localStorage.getItem("theme");
-themeEle = document.createElement("link");
+var themeEle = document.createElement("link");
 themeEle.rel = "stylesheet";
+
+// Catppuccin themes
 if (themeid == "catppuccinMocha") {
   themeEle.href = "/assets/styles/themes/catppuccin/mocha.css?v=1";
 }
@@ -53,7 +80,174 @@ if (themeid == "catppuccinFrappe") {
 if (themeid == "catppuccinLatte") {
   themeEle.href = "/assets/styles/themes/catppuccin/latte.css?v=1";
 }
-document.body.appendChild(themeEle);
+
+// New modern themes
+if (themeid == "cyberpunk") {
+  themeEle.href = "/assets/styles/themes/cyberpunk.css?v=1";
+}
+if (themeid == "ocean") {
+  themeEle.href = "/assets/styles/themes/ocean.css?v=1";
+}
+if (themeid == "sunset") {
+  themeEle.href = "/assets/styles/themes/sunset.css?v=1";
+}
+
+if (themeEle.href) {
+  document.body.appendChild(themeEle);
+}
+// Global proxy navigation functions
+window.go = function (url) {
+  // Helper function to safely get cookie value
+  function safeCookie(name) {
+    if (typeof getCookie === "function") {
+      return getCookie(name);
+    } else if (typeof window.getCookie === "function") {
+      return window.getCookie(name);
+    } else {
+      // Fallback implementation
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
+  }
+
+  // Check performance mode setting with fallbacks
+  const performanceMode =
+    safeCookie("performance-mode") === "true" ||
+    localStorage.getItem("performance-mode") === "true";
+
+  // Check if we're coming from games or apps page
+  const isFromGamesOrApps =
+    window.location.pathname.includes("/games") ||
+    window.location.pathname.includes("/apps");
+
+  // Store the URL for the proxy to use
+  sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+
+  // If performance mode is disabled (default) and we're launching from games/apps,
+  // use the browser interface for better user experience
+  if (!performanceMode && isFromGamesOrApps) {
+    console.log("Browser mode: Using browser interface for", url);
+    window.location.href = "/go";
+  } else {
+    console.log("Direct mode: Going directly to proxy for", url);
+    window.location.href = "/p/" + __uv$config.encodeUrl(url);
+  }
+};
+
+window.dy = function (url) {
+  sessionStorage.setItem("GoUrl", __uv$config.encodeUrl(url));
+  window.location.href = "/a/" + __uv$config.encodeUrl(url);
+};
+
+// Global theme switching function
+window.changeTheme = function (themeId) {
+  localStorage.setItem("theme", themeId);
+  setCookie("theme", themeId);
+
+  // Remove existing theme links
+  const existingThemeLinks = document.querySelectorAll(
+    'link[href*="/themes/"]'
+  );
+  existingThemeLinks.forEach((link) => link.remove());
+
+  // Apply new theme if not default
+  if (themeId !== "default") {
+    const themeLink = document.createElement("link");
+    themeLink.rel = "stylesheet";
+
+    if (themeId.startsWith("catppuccin")) {
+      const variant = themeId.replace("catppuccin", "").toLowerCase();
+      themeLink.href = `/assets/styles/themes/catppuccin/${variant}.css?v=1`;
+    } else {
+      themeLink.href = `/assets/styles/themes/${themeId}.css?v=1`;
+    }
+
+    document.head.appendChild(themeLink);
+  }
+
+  if (window.showNotification) {
+    window.showNotification(`Theme changed to ${themeId}`, "success");
+  }
+};
+
+// Global about:blank toggle function
+window.toggleAboutBlank = function (enabled) {
+  localStorage.setItem("ab", enabled ? "true" : "false");
+  setCookie("ab", enabled ? "true" : "false");
+
+  if (window.showNotification) {
+    window.showNotification(
+      `About:blank ${enabled ? "enabled" : "disabled"}`,
+      "info"
+    );
+  }
+};
+
+// Simple notification fallback for pages without notification system
+function safeNotification(message, type = "info") {
+  if (typeof window.showNotification === "function") {
+    window.showNotification(message, type);
+  } else {
+    // Fallback to console and alert for critical messages
+    console.log(`[${type.toUpperCase()}] ${message}`);
+    if (type === "error") {
+      alert(message);
+    }
+  }
+}
+
+// About:blank popup function - Simple and reliable (original code)
+window.AB = function () {
+  let inFrame;
+  try {
+    inFrame = window !== top;
+  } catch (e) {
+    inFrame = true;
+  }
+
+  if (!inFrame && !navigator.userAgent.includes("Firefox")) {
+    const popup = open("about:blank", "_blank");
+    if (!popup || popup.closed) {
+      console.log("Popup blocked - please allow popups");
+      return;
+    }
+
+    const doc = popup.document;
+    const iframe = doc.createElement("iframe");
+    const style = iframe.style;
+    const link = doc.createElement("link");
+
+    const name =
+      getCookie("name") ||
+      localStorage.getItem("name") ||
+      "My Drive - Google Drive";
+    const icon =
+      getCookie("icon") ||
+      localStorage.getItem("icon") ||
+      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
+    doc.title = name;
+    
+    // Change the current tab title to "Nasa" when popup works
+    document.title = "Nasa";
+    link.rel = "icon";
+    link.href = icon;
+
+    iframe.src = location.href;
+    style.position = "fixed";
+    style.top = style.bottom = style.left = style.right = 0;
+    style.border = style.outline = "none";
+    style.width = style.height = "100%";
+
+    doc.head.appendChild(link);
+    doc.body.appendChild(iframe);
+
+    window.location.replace("about:blank");
+  }
+};
+
 // Tab Cloaker
 document.addEventListener("DOMContentLoaded", function (event) {
   const icon = document.getElementById("tab-favicon");
@@ -261,5 +455,15 @@ document.addEventListener("DOMContentLoaded", function () {
   var savedBackgroundImage = localStorage.getItem("backgroundImage");
   if (savedBackgroundImage) {
     document.body.style.backgroundImage = "url('" + savedBackgroundImage + "')";
+  }
+
+  // Initialize global music player if it exists
+  if (typeof GlobalMusicPlayer !== 'undefined' && !window.globalMusicPlayer) {
+    window.globalMusicPlayer = new GlobalMusicPlayer();
+  }
+
+  // Mark main module as loaded
+  if (typeof window.markModuleLoaded === "function") {
+    window.markModuleLoaded("main");
   }
 });

@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  fetch("/assets/json/a.min.json")
+  fetch("assets/json/a.min.json")
     .then((response) => {
       return response.json();
     })
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function show_category() {
   var selectedCategories = Array.from(
-    document.querySelectorAll("#category option:checked"),
+    document.querySelectorAll("#category option:checked")
   ).map((option) => option.value);
   var games = document.getElementsByClassName("column");
 

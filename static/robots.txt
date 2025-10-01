@@ -1,2 +1,23 @@
 User-agent: *
+Allow: /
 Disallow: /e/
+Disallow: /api/
+Disallow: /o/
+Disallow: /a/
+Disallow: /m/
+Disallow: /dy/
+
+# Allow important pages for indexing
+Allow: /apps
+Allow: /games
+Allow: /settings
+Allow: /browser
+Allow: /proxy
+Allow: /tos
+Allow: /privacy
+
+# Sitemap location
+Sitemap: https://slowguardian.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

@@ -2,263 +2,2229 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title id="tab-title">SlowGuardian v9 - Settings</title>
+
+    <!-- Favicon -->
     <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <link rel="stylesheet" href="/assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="/assets/styles/settings.css?v=5" />
-    <link rel="stylesheet" href="/assets/styles/themes/default.css?v=5" />
-    <script
-      src="https://kit.fontawesome.com/1237c86ba0.js"
-      crossorigin="anonymous"
-    ></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/custom-dropdown.css" />
+    <link rel="stylesheet" href="assets/styles/theme-creator.css" />
+    <link rel="stylesheet" href="assets/styles/auth.css" />
+    <link rel="stylesheet" href="assets/styles/admin.css" />
+    <link rel="stylesheet" href="assets/styles/v9-improvements.css" />
+
+    <!-- Emergency CSS to prevent white screen if loading system fails -->
+    <style>
+      /* Show content if loading overlay is missing or broken */
+      body {
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      /* Force main content to be visible immediately and always */
+      .main-content {
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 1 !important;
+      }
+      
+      /* Force loading overlay to hide after 3 seconds maximum */
+      .loading-overlay {
+        animation: force-hide-loading 1s ease-in-out 3s forwards !important;
+      }
+      
+      /* Also handle SlowGuardian loading overlay */
+      #slowguardian-loading-overlay {
+        animation: force-hide-loading 1s ease-in-out 3s forwards !important;
+      }
+      
+      @keyframes force-hide-loading {
+        0% { opacity: 1; visibility: visible; }
+        100% { opacity: 0; visibility: hidden; display: none; }
+      }
+      
+      /* Ensure background is always visible */
+      .background {
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    </style>
+
+    <!-- Ads Management Styles -->
+    <style>
+      .ads-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: pulse 2s infinite;
+      }
+
+      .status-dot.disabled {
+        background: #ef4444;
+        animation: none;
+      }
+
+      .status-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .ads-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .control-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .ads-info {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+      }
+
+      /* Premium Key Activation Styles */
+      .premium-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .premium-activation {
+        margin-bottom: 20px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .input-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .form-input {
+        padding: 12px;
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      .premium-info {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .premium-note {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Premium Activation Animation */
+      .premium-animation-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        pointer-events: none;
+      }
+
+      .animation-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1f 100%);
+        opacity: 0;
+        animation: fadeInOverlay 1s ease-in-out forwards;
+      }
+
+      .rocket-animation {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 0;
+        animation: fadeInRocket 0.5s ease-in-out 0.5s forwards;
+      }
+
+      .rocket {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+        animation: rocketBlastOff 3s ease-in-out 1s forwards;
+        transform: translateY(0);
+      }
+
+      .planet {
+        font-size: 6rem;
+        opacity: 0;
+        animation: planetAppear 1s ease-in-out 3s forwards;
+        position: absolute;
+        top: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .success-message {
+        margin-top: 3rem;
+        opacity: 0;
+        animation: messageAppear 1s ease-in-out 4s forwards;
+      }
+
+      .success-message h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .success-message p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+      }
+
+      @keyframes fadeInOverlay {
+        0% { opacity: 0; }
+        100% { opacity: 0.95; }
+      }
+
+      @keyframes fadeInRocket {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes rocketBlastOff {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-50px) scale(1.1); }
+        100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+      }
+
+      @keyframes planetAppear {
+        0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      }
+
+      @keyframes messageAppear {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      .info-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .info-value {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .ads-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .ads-actions .btn {
+        flex: 1;
+      }
+
+      .ads-note {
+        padding: 12px;
+        background: rgba(103, 126, 234, 0.1);
+        border: 1px solid rgba(103, 126, 234, 0.2);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* Enhanced Settings Layout */
+      .settings-grid-footer {
+        margin-top: var(--space-8);
+        padding: var(--space-6);
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .footer-note {
+        color: var(--text-secondary);
+        font-size: var(--font-size-sm);
+        margin: 0;
+      }
+
+      .site-info-details {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--space-2) 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+      }
+
+      .info-value {
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      /* Search Container Improvements */
+      .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .search-clear {
+        position: absolute;
+        right: var(--space-3);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: var(--space-1);
+        border-radius: var(--radius-sm);
+        transition: all var(--transition-base);
+      }
+
+      .search-clear:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
+    </style>
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
-    <div class="fixed-nav-bar"></div>
-    <div class="main">
-      <div class="settings-container">
-        <div class="settings-card">
-          <h3>About:Blank</h3>
-          <p>Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)</p>
-          <div id="ab-settings">
-            <div id="ab-settings-container">
-              <label class="switch">
-                <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" onchange="toggleAB()" />
-                <span class="slider-round"></span>
-              </label>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-settings">
+        <div class="page-header">
+          <h2 class="page-title">Settings</h2>
+          <p class="page-subtitle">Customize your experience</p>
+        </div>
+
+        <div class="settings-container">
+          <div class="settings-grid">
+            <!-- Features Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🚀 Features Management</h3>
+                <p class="card-description">
+                  Customize your SlowGuardian experience with 100+ quality of life improvements
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="features-preview">
+                  <div class="feature-stats">
+                    <div class="feature-stat">
+                      <span class="stat-number" id="preview-enabled-count">0</span>
+                      <span class="stat-label">Enabled</span>
+                    </div>
+                    <div class="feature-stat">
+                      <span class="stat-number" id="preview-disabled-count">0</span>
+                      <span class="stat-label">Disabled</span>
+                    </div>
+                    <div class="feature-stat">
+                      <span class="stat-number">100</span>
+                      <span class="stat-label">Total</span>
+                    </div>
+                  </div>
+
+                  <div class="feature-categories-preview">
+                    <div class="category-preview">
+                      <span class="category-name">User Experience</span>
+                      <span class="category-count" id="ux-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Productivity</span>
+                      <span class="category-count" id="productivity-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Customization</span>
+                      <span class="category-count" id="customization-count">25 features</span>
+                    </div>
+                    <div class="category-preview">
+                      <span class="category-name">Advanced</span>
+                      <span class="category-count" id="advanced-count">25 features</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button id="open-features-manager-btn" class="btn btn-primary btn-block">
+                  🎛️ Open Features Manager
+                </button>
+              </div>
             </div>
-            <button onclick="AB()" class="key-button">Open Popup</button>
+
+            <!-- Ads Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">📢 Ads Management</h3>
+                <p class="card-description">
+                  Support SlowGuardian by viewing ads or upgrade to Premium for an ad-free experience
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="ads-status" id="ads-status">
+                  <div class="status-indicator">
+                    <span class="status-dot" id="ads-status-dot"></span>
+                    <span class="status-text" id="ads-status-text">Loading...</span>
+                  </div>
+                </div>
+
+                <div class="ads-controls">
+                  <label class="switch">
+                    <input type="checkbox" id="ads-enabled-switch" class="slider-checkbox" checked />
+                    <span class="switch-slider"></span>
+                  </label>
+                  <span class="control-label">Enable Ads</span>
+                </div>
+
+                <div class="ads-info">
+                  <div class="info-item">
+                    <span class="info-label">Video Ads on Proxy:</span>
+                    <span class="info-value" id="video-ads-status">Enabled</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Display Ads:</span>
+                    <span class="info-value" id="display-ads-status">Enabled</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Support Revenue:</span>
+                    <span class="info-value">Active</span>
+                  </div>
+                </div>
+
+                <div class="ads-actions">
+                  <button id="test-video-ad-btn" class="btn btn-secondary">Test Video Ad</button>
+                  <button id="upgrade-premium-btn" class="btn btn-primary">🚀 Upgrade to Premium</button>
+                </div>
+
+                <div class="ads-note">
+                  <small>
+                    <strong>Note:</strong> Ads help keep SlowGuardian free for everyone. Premium users enjoy an ad-free
+                    experience plus faster speeds and priority support.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium Key Activation -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">⭐ Premium Key Activation</h3>
+                <p class="card-description">
+                  Activate your SlowGuardian Premium subscription with your premium key
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="premium-status" id="premium-status">
+                  <div class="status-indicator">
+                    <div class="status-dot" id="premium-status-dot"></div>
+                    <span class="status-text" id="premium-status-text">Premium not activated</span>
+                  </div>
+                </div>
+
+                <div class="premium-activation" id="premium-activation">
+                  <div class="input-group">
+                    <label for="premium-key-input">Premium Key:</label>
+                    <input 
+                      type="text" 
+                      id="premium-key-input" 
+                      class="form-input" 
+                      placeholder="Enter your premium key..."
+                      style="margin-bottom: 10px;"
+                    />
+                    <button id="activate-premium-btn" class="btn btn-primary">🚀 Activate Premium</button>
+                  </div>
+                </div>
+
+                <div class="premium-info" id="premium-info" style="display: none;">
+                  <div class="info-item">
+                    <span>Status:</span>
+                    <span id="premium-plan-type">Premium Active</span>
+                  </div>
+                  <div class="info-item">
+                    <span>Expires:</span>
+                    <span id="premium-expiry-date">Never</span>
+                  </div>
+                  <div class="info-item">
+                    <span>Key:</span>
+                    <span id="premium-key-display">••••••••</span>
+                  </div>
+                </div>
+
+                <div class="premium-note">
+                  <small>
+                    <strong>Note:</strong> Premium keys are provided after purchase. Contact support@slowguardian.com if you need assistance.
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium Activation Animation Container -->
+            <div id="premium-animation-container" class="premium-animation-container" style="display: none;">
+              <div class="animation-overlay"></div>
+              <div class="rocket-animation">
+                <div class="rocket">🚀</div>
+                <div class="planet">⭐</div>
+                <div class="success-message">
+                  <h2>🎉 Welcome to Premium!</h2>
+                  <p>Thank you for your purchase! Premium features are now active.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Management -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">👤 Account Management</h3>
+                <p class="card-description">
+                  Manage your SlowGuardian account, profile, and login sessions
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div id="account-info" style="display: none;">
+                  <div class="premium-info">
+                    <div class="info-item">
+                      <span>Username:</span>
+                      <span id="account-username">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Email:</span>
+                      <span id="account-email">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Role:</span>
+                      <span id="account-role">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Member Since:</span>
+                      <span id="account-created">-</span>
+                    </div>
+                  </div>
+                  
+                  <div style="margin-top: 20px;">
+                    <button id="manage-sessions-btn" class="btn btn-secondary" style="margin-right: 10px;">
+                      📱 Manage Sessions
+                    </button>
+                    <button id="logout-all-btn" class="btn btn-warning" style="margin-right: 10px;">
+                      🚪 Logout All Devices
+                    </button>
+                    <button id="logout-btn" class="btn btn-secondary">
+                      👋 Logout
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="account-login-prompt" style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to view your account information
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spotify Integration -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🎵 Spotify Integration</h3>
+                <p class="card-description">
+                  Connect your Spotify account to access your playlists and music in SlowGuardian
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="premium-status" id="spotify-status">
+                  <div class="status-indicator">
+                    <div class="status-dot disabled" id="spotify-status-dot"></div>
+                    <span class="status-text" id="spotify-status-text">Checking connection...</span>
+                  </div>
+                </div>
+                
+                <div id="spotify-info" style="display: none;">
+                  <div class="premium-info">
+                    <div class="info-item">
+                      <span>Display Name:</span>
+                      <span id="spotify-display-name">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Followers:</span>
+                      <span id="spotify-followers">-</span>
+                    </div>
+                    <div class="info-item">
+                      <span>Country:</span>
+                      <span id="spotify-country">-</span>
+                    </div>
+                  </div>
+                  
+                  <div style="margin-top: 15px;">
+                    <button id="disconnect-spotify-btn" class="btn btn-warning">
+                      🔌 Disconnect Spotify
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="spotify-connect" style="display: none;">
+                  <div style="margin-bottom: 15px;">
+                    <button id="connect-spotify-btn" class="btn btn-primary">
+                      🎵 Connect Spotify Account
+                    </button>
+                  </div>
+                  <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                    <p><strong>Benefits of connecting Spotify:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                      <li>Import and play your playlists</li>
+                      <li>Access your saved music</li>
+                      <li>Create new playlists</li>
+                      <li>See what's currently playing</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div id="spotify-login-required" style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to connect your Spotify account
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- About:Blank -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">About:Blank</h3>
+                <p class="card-description">
+                  Cloak the site in an about:blank page and toggle about:blank on startup (enabled by default)
+                </p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" id="ab-settings-switch" class="slider-checkbox" />
+                  <span class="switch-slider"></span>
+                </label>
+                <button id="ab-popup-btn" class="btn btn-secondary">Open Popup</button>
+              </div>
+            </div>
+
+            <!-- Screenshot Protection -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  🛡️ Screenshot Protection <span class="feature-badge disabled">Developer Only</span>
+                </h3>
+                <p class="card-description">
+                  Advanced anti-surveillance system that shows spoofed content when screenshots are detected. This
+                  feature is only available in Developer Mode.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch disabled">
+                  <input type="checkbox" id="screenshot-protection-switch" class="slider-checkbox" disabled />
+                  <span class="switch-slider"></span>
+                </label>
+                <button id="test-protection-btn" class="btn btn-secondary" disabled>Test Protection</button>
+                <div class="feature-notice">
+                  <p>
+                    🔒 This feature requires Developer Mode access. Contact your administrator or access Developer Mode
+                    to enable screenshot protection.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panic Key -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Set Panic Key</h3>
+                <p class="card-description">
+                  Quickly open an educational site when the teacher comes. The panic link is also used to redirect you
+                  when about:blank windows are opened. For multiple key strokes separate them with a comma. (e.g. "a, b,
+                  c")
+                </p>
+              </div>
+              <div class="settings-controls">
+                <input type="text" id="eventKeyInput" placeholder="Panic Keys (comma separated)" class="form-input" />
+                <input class="form-input" placeholder="Panic Link" type="text" id="linkInput" />
+                <button id="save-panic-key-btn" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+
+            <!-- Tab Cloaker -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Tab Cloaker</h3>
+                <p class="card-description">Change the title and icon of the page.</p>
+              </div>
+              <div class="settings-controls">
+                <select id="dropdown" class="form-select">
+                  <option value="Classroom">Default</option>
+                  <option value="Clever">Clever</option>
+                  <option value="Canvas">Canvas</option>
+                  <option value="Edpuzzle">Edpuzzle</option>
+                  <option value="Google">Google</option>
+                  <option value="Google Meet">Google Meet</option>
+                  <option value="Classroom">Google Classroom</option>
+                  <option value="Drive">Google Drive</option>
+                  <option value="Google Docs">Google Docs</option>
+                  <option value="Google Slides">Google Slides</option>
+                  <option value="Gmail">Gmail</option>
+                  <option value="Khan">Khan Academy</option>
+                  <option value="Campus">Infinite Campus</option>
+                  <option value="IXL">IXL</option>
+                  <option value="LinkIt">LinkIt!</option>
+                  <option value="Schoology">Schoology</option>
+                  <option value="i-Ready Math">i-Ready Math</option>
+                  <option value="i-Ready Reading">i-Ready Reading</option>
+                  <option value="ClassLink Login">ClassLink Login</option>
+                  <option value="Wikipedia">Wikipedia</option>
+                  <option value="Britannica">Britannica</option>
+                  <option value="Ducksters">Ducksters</option>
+                  <option value="Minga">Minga</option>
+                  <option value="i-Ready Learning Games">i-Ready Learning Games</option>
+                  <option value="NoRedInk Home">NoRedInk Home</option>
+                  <option value="Newsela Binder">Newsela Binder</option>
+                  <option value="Newsela Assignments">Newsela Assignments</option>
+                  <option value="Newsela Home">Newsela Home</option>
+                  <option value="PowerSchool Sign In">PowerSchool Sign In</option>
+                  <option value="PowerSchool Grades and Attendance">PowerSchool Grades and Attendance</option>
+                  <option value="PowerSchool Teacher Comments">PowerSchool Teacher Comments</option>
+                  <option value="PowerSchool Standards Grades">PowerSchool Standards Grades</option>
+                  <option value="PowerSchool Attendance">PowerSchool Attendance</option>
+                  <option value="Nearpod">Nearpod</option>
+                  <option value="StudentVUE">StudentVUE</option>
+                  <option value="Quizlet Home">Quizlet Home</option>
+                  <option value="Google Forms Locked Mode">Google Forms - Locked Mode</option>
+                  <option value="DeltaMath">DeltaMath</option>
+                  <option value="Kami">Kami</option>
+                  <option value="GoGuardian Admin Restricted">GoGuardian Admin Block</option>
+                  <option value="GoGuardian Teacher Block">GoGuardian Teacher Block</option>
+                  <option value="World History Encyclopedia">World History Encyclopedia</option>
+                  <option value="Big Ideas Math">Big Ideas Math</option>
+                  <option value="Big Ideas Math Assignment Player">Big Ideas Math Assignment Player</option>
+                </select>
+                <input class="form-input" type="text" id="icon" placeholder="Change Tab Icon" name="icon" />
+                <input class="form-input" type="text" id="name" name="name" placeholder="Change Tab Name" />
+                <div class="button-group">
+                  <button id="save-tab-cloak-btn" class="btn btn-primary">Save</button>
+                  <button id="reset-tab-cloak-btn" class="btn btn-secondary">Reset Cloak</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Search Engine -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Search Engine</h3>
+                <p class="card-description">Change the search engine when searching.</p>
+              </div>
+              <div class="settings-controls">
+                <select title="engine" id="engine" class="form-select">
+                  <option value="Google">Google (Default)</option>
+                  <option value="Bing">Bing</option>
+                  <option value="DuckDuckGo">DuckDuckGo</option>
+                  <option value="Qwant">Qwant</option>
+                  <option value="Startpage">Startpage</option>
+                  <option value="SearchEncrypt">SearchEncrypt</option>
+                  <option value="Ecosia">Ecosia</option>
+                </select>
+                <input
+                  class="form-input"
+                  type="text"
+                  id="engine-form"
+                  placeholder="Change Search Engine"
+                  name="engine"
+                />
+                <button id="save-engine-btn" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+
+            <!-- Enhanced Proxy System -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🔄 Enhanced Proxy System</h3>
+                <p class="card-description">
+                  Choose your preferred proxy backend and configure advanced stealth settings for better performance and
+                  detection resistance.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="form-group">
+                  <label for="proxy-backend">Proxy Backend</label>
+                  <select id="proxy-backend" class="form-select">
+                    <option value="ultraviolet">Ultraviolet (Default)</option>
+                    <option value="dynamic">Dynamic</option>
+                    <option value="rammerhead">Rammerhead (Advanced)</option>
+                    <option value="epoxy">Epoxy Transport</option>
+                    <option value="libcurl">LibCurl Transport</option>
+                    <option value="auto">Auto-Select Best</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="auto-failover" />
+                    <span class="checkbox-custom"></span>
+                    Automatic Failover
+                  </label>
+                  <p class="setting-description">Automatically switch to backup proxies if the primary fails</p>
+                </div>
+
+                <div
+                  class="proxy-status"
+                  id="proxy-status"
+                  style="margin-top: 16px; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 8px"
+                >
+                  <strong>Proxy Status:</strong>
+                  <div id="proxy-status-content">Loading...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legacy Proxy Choice -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Choose your <b>Pr</b>oxy (Legacy)</h3>
+                <p class="card-description">
+                  Ultra<xn>vio</xn>let is the main <xn>pro</xn>xy, but Dynamic is faster and supports more sites!
+                  (Dynamic is still in beta, so it has some bugs.)
+                </p>
+              </div>
+              <div class="settings-controls">
+                <select id="pChange" class="form-select">
+                  <option value="uv">Ultraviolet (Default)</option>
+                  <option value="dy">Dynamic</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Background Image -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Set Background Image</h3>
+                <p class="card-description">Change the site's background image.</p>
+              </div>
+              <div class="settings-controls">
+                <input type="text" id="background-input" class="form-input" placeholder="Enter image URL" />
+                <div class="button-group">
+                  <button class="btn btn-primary" id="save-button">Save</button>
+                  <button class="btn btn-secondary" id="reset-button">Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advertisement -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Advertisement <span class="feature-badge disabled">Developer Only</span></h3>
+                <p class="card-description">
+                  Advertisements are crucial in order to keep the site running. Please consider donating or hosting your
+                  own links to go ad-free. Only developers can disable advertisements.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <select id="adType" class="form-select">
+                  <option value="default">Default</option>
+                  <option value="off">Off (Developer Only)</option>
+                </select>
+                <div
+                  id="legacy-ads-notice"
+                  style="
+                    display: none;
+                    margin-top: 10px;
+                    padding: 10px;
+                    background: rgba(255, 193, 7, 0.1);
+                    border: 1px solid rgba(255, 193, 7, 0.3);
+                    border-radius: 6px;
+                    color: #ffc107;
+                    font-size: 14px;
+                  "
+                >
+                  🔒 <strong>Developer Only:</strong> This legacy ad control is restricted to authorized developers.
+                </div>
+              </div>
+            </div>
+
+            <!-- Particles -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Particles</h3>
+                <p class="card-description">Add the particles that are from the previous version to the new site.</p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" class="slider-checkbox" id="2" />
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Authentication -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">🔐 KEY Authentication</h3>
+                <p class="card-description">
+                  Protect SlowGuardian access with username and password authentication. When enabled, users must login
+                  to access the proxy.
+                </p>
+              </div>
+              <div class="settings-controls">
+                <label class="switch">
+                  <input type="checkbox" class="slider-checkbox" id="auth-toggle" />
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Enable Authentication</span>
+                </label>
+
+                <div class="auth-credentials" id="auth-credentials" style="display: none; margin-top: 16px">
+                  <div class="input-group">
+                    <label for="auth-username-setting">Username:</label>
+                    <input type="text" id="auth-username-setting" class="form-input" placeholder="Enter username" />
+                  </div>
+                  <div class="input-group">
+                    <label for="auth-password-setting">Password:</label>
+                    <input type="password" id="auth-password-setting" class="form-input" placeholder="Enter password" />
+                  </div>
+                  <button id="save-auth-btn" class="btn btn-primary">Save Credentials</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Themes -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Themes!</h3>
+                <p class="card-description">Pick from a variety of themes!</p>
+              </div>
+              <div class="settings-controls">
+                <select placeholder="Themes" id="theme-dropdown" class="form-select">
+                  <option value="d">Default</option>
+                  <option disabled>────── Modern Themes ──────</option>
+                  <option value="cyberpunk">🔮 Cyberpunk</option>
+                  <option value="ocean">🌊 Ocean</option>
+                  <option value="sunset">🌅 Sunset</option>
+                  <option disabled>────── Catppuccin Themes ──────</option>
+                  <option value="catppuccinMocha">🌙 Mocha (Dark)</option>
+                  <option value="catppuccinMacchiato">☕ Macchiato</option>
+                  <option value="catppuccinFrappe">🥤 Frappe</option>
+                  <option value="catppuccinLatte">☀️ Latte (Light)</option>
+                </select>
+                <div class="button-group">
+                  <button id="create-custom-theme-btn" class="btn btn-secondary">🎨 Create Custom Theme</button>
+                  <button id="export-theme-btn" class="btn btn-secondary">📤 Export Current</button>
+                  <button id="import-theme-btn" class="btn btn-secondary">📥 Import Theme</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Version Information -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">📋 Version Information</h3>
+                <p class="card-description">Current build and deployment information for SlowGuardian</p>
+              </div>
+              <div class="settings-controls">
+                <div id="version-info-content" class="version-info">
+                  <div class="version-loading">Loading version information...</div>
+                </div>
+                <div class="button-group">
+                  <button id="copy-version-btn" class="btn btn-secondary" style="display: none">
+                    📋 Copy Version Info
+                  </button>
+                  <button id="check-updates-btn" class="btn btn-secondary">🔄 Check Updates</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Developer Mode Admin Panel -->
+            <div class="card settings-card" id="admin-panel" style="display: none">
+              <div class="card-header">
+                <h3 class="card-title">🛠️ Developer Mode</h3>
+                <p class="card-description">Administrative controls for website hosting and user management</p>
+              </div>
+              <div class="settings-controls">
+                <div class="admin-login" id="admin-login">
+                  <div class="input-group">
+                    <label for="admin-username">Admin Username:</label>
+                    <input type="text" id="admin-username" class="form-input" placeholder="Enter admin username" />
+                  </div>
+                  <div class="input-group">
+                    <label for="admin-password">Admin Password:</label>
+                    <input type="password" id="admin-password" class="form-input" placeholder="Enter admin password" />
+                  </div>
+                  <button id="admin-login-btn" class="btn btn-primary">Login to Admin Panel</button>
+                </div>
+
+                <div class="admin-dashboard" id="admin-dashboard" style="display: none">
+                  <div class="admin-stats">
+                    <div class="stat-card">
+                      <h4>Online Users</h4>
+                      <span id="online-users-count">0</span>
+                    </div>
+                    <div class="stat-card">
+                      <h4>Total Admins</h4>
+                      <span id="total-admins-count">0</span>
+                    </div>
+                    <div class="stat-card">
+                      <h4>Site Status</h4>
+                      <span id="site-status">Active</span>
+                    </div>
+                  </div>
+
+                  <div class="admin-controls">
+                    <div class="control-section">
+                      <h4>Global Controls</h4>
+                      <div class="button-group">
+                        <button id="pause-site-btn" class="btn btn-warning">⏸️ Pause Site</button>
+                        <button id="unpause-site-btn" class="btn btn-success" style="display: none">
+                          ▶️ Unpause Site
+                        </button>
+                        <button id="refresh-stats-btn" class="btn btn-secondary">🔄 Refresh</button>
+                      </div>
+                    </div>
+
+                    <div class="control-section">
+                      <h4>User Management</h4>
+                      <button id="view-users-btn" class="btn btn-primary">👥 View Online Users</button>
+                      <button id="manage-accounts-btn" class="btn btn-secondary">🔐 Manage Accounts</button>
+                    </div>
+                  </div>
+
+                  <button id="admin-logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Developer Mode Access -->
+            <div class="card settings-card developer-access">
+              <div class="card-header">
+                <h3 class="card-title">🛠️ Developer Mode</h3>
+                <p class="card-description">
+                  Access advanced administrative controls, user management, and developer-only features
+                </p>
+              </div>
+              <div class="settings-controls">
+                <div class="developer-info">
+                  <div class="developer-features">
+                    <div class="dev-feature">
+                      <span class="dev-icon">👥</span>
+                      <span class="dev-text">User Management</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🌐</span>
+                      <span class="dev-text">Global Site Controls</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🛡️</span>
+                      <span class="dev-text">Advanced Security</span>
+                    </div>
+                    <div class="dev-feature">
+                      <span class="dev-icon">🤖</span>
+                      <span class="dev-text">ChatGPT Integration</span>
+                    </div>
+                  </div>
+                </div>
+                <a href="/developer" class="btn btn-primary btn-block"> 🚪 Access Developer Mode </a>
+              </div>
+            </div>
+
+            <!-- Site Info -->
+            <div class="card settings-card">
+              <div class="card-header">
+                <h3 class="card-title">Site Info</h3>
+                <p class="card-description">Version: 9</p>
+                <p class="card-description" id="last-updated">Last Updated: January 2025</p>
+                <a href="/tos" class="card-description" style="color: var(--accent-primary)">
+                  By using SlowGuardian, you agree you understand and acknowledge our Terms of Service and Privacy
+                  Policy.
+                </a>
+              </div>
+              <div class="settings-controls">
+                <div class="site-info-details">
+                  <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value">🟢 Active</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">Environment:</span>
+                    <span class="info-value">Production</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">License:</span>
+                    <span class="info-value">GPL-3.0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Proper spacing and end of grid -->
+          <div class="settings-grid-footer">
+            <p class="footer-note">
+              💡 <strong>Tip:</strong> Hover over feature cards for more information. All settings are automatically
+              saved.
+            </p>
           </div>
         </div>
+      </section>
+    </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
 
-        <div class="settings-card">
-          <h3>Set Panic Key</h3>
-          <p>
-            Quickly open an educational site when the teacher comes. The panic
-            link is also used to redirect you when about:blank windows are
-            opened. For multiple key strokes separate them with a comma. (e.g.
-            "a, b, c")
-          </p>
-          <input
-            type="text"
-            id="eventKeyInput"
-            placeholder="Panic Keys (comma separated)"
-            class="key-form"
-          />
-          <input
-            class="key-form"
-            placeholder="Panic Link"
-            type="text"
-            id="linkInput"
-            value
-          />
-          <button class="key-button" value="Save" onclick="saveEventKey()">
-            Save
-          </button>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Custom Theme Creator Modal -->
+    <div id="custom-theme-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🎨 Create Custom Theme</h3>
+          <button class="modal-close" id="close-theme-modal">&times;</button>
         </div>
-        <div class="settings-card">
-          <h3>Tab Cloaker</h3>
-          <p>Change the title and icon of the page.</p>
-          <select id="dropdown" onchange="handleDropdownChange(this)">
-            <option value="Classroom">Default</option>
-            <option value="Clever">Clever</option>
-            <option value="Canvas">Canvas</option>
-            <option value="Edpuzzle">Edpuzzle</option>
-            <option value="Google">Google</option>
-            <option value="Google Meet">Google Meet</option>
-            <option value="Classroom">Google Classroom</option>
-            <option value="Drive">Google Drive</option>
-            <option value="Google Docs">Google Docs</option>
-            <option value="Google Slides">Google Slides</option>
-            <option value="Gmail">Gmail</option>
-            <option value="Khan">Khan Academy</option>
-            <option value="Campus">Infinite Campus</option>
-            <option value="IXL">IXL</option>
-            <option value="LinkIt">LinkIt!</option>
-            <option value="Schoology">Schoology</option>
-            <option value="i-Ready Math">i-Ready Math</option>
-            <option value="i-Ready Reading">i-Ready Reading</option>
-            <option value="ClassLink Login">ClassLink Login</option>
-            <option value="Wikipedia">Wikipedia</option>
-            <option value="Britannica">Britannica</option>
-            <option value="Ducksters">Ducksters</option>
-            <option value="Minga">Minga</option>
-            <option value="i-Ready Learning Games">
-              i-Ready Learning Games
-            </option>
-            <option value="NoRedInk Home">NoRedInk Home</option>
-            <option value="Newsela Binder">Newsela Binder</option>
-            <option value="Newsela Assignments">Newsela Assignments</option>
-            <option value="Newsela Home">Newsela Home</option>
-            <option value="PowerSchool Sign In">PowerSchool Sign In</option>
-            <option value="PowerSchool Grades and Attendance">
-              PowerSchool Grades and Attendance
-            </option>
-            <option value="PowerSchool Teacher Comments">
-              PowerSchool Teacher Comments
-            </option>
-            <option value="PowerSchool Standards Grades">
-              PowerSchool Standards Grades
-            </option>
-            <option value="PowerSchool Attendance">
-              PowerSchool Attendance
-            </option>
-            <option value="Nearpod">Nearpod</option>
-            <option value="StudentVUE">StudentVUE</option>
-            <option value="Quizlet Home">Quizlet Home</option>
-            <option value="Google Forms Locked Mode">
-              Google Forms - Locked Mode
-            </option>
-            <option value="DeltaMath">DeltaMath</option>
-            <option value="Kami">Kami</option>
-            <option value="GoGuardian Admin Restricted">
-              GoGuardian Admin Block
-            </option>
-            <option value="GoGuardian Teacher Block">
-              GoGuardian Teacher Block
-            </option>
-            <option value="World History Encyclopedia">
-              World History Encyclopedia
-            </option>
-            <option value="Big Ideas Math">Big Ideas Math</option>
-            <option value="Big Ideas Math Assignment Player">
-              Big Ideas Math Assignment Player
-            </option>
-          </select>
-          <input
-            class="key-form"
-            type="text"
-            id="icon"
-            placeholder="Change Tab Icon"
-            name="icon"
-          />
-          <input
-            class="key-form"
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Change Tab Name"
-          />
-          <button
-            class="key-button"
-            value="Save"
-            onclick="CustomIcon(); CustomName(); redirectToMainDomain();"
-          >
-            Save
-          </button>
-          <button
-            class="key-button"
-            value="Reset"
-            onclick="ResetCustomCloak(); redirectToMainDomain();"
-          >
-            Reset Cloak
-          </button>
+        <div class="modal-body">
+          <div class="theme-creator-grid">
+            <div class="theme-inputs">
+              <div class="input-group">
+                <label for="theme-name">Theme Name</label>
+                <input type="text" id="theme-name" class="form-input" placeholder="My Awesome Theme" />
+              </div>
+
+              <div class="color-inputs">
+                <div class="color-input-row">
+                  <label for="primary-bg-color">Primary Background</label>
+                  <input type="color" id="primary-bg-color" value="#1a1a2e" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="secondary-bg-color">Secondary Background</label>
+                  <input type="color" id="secondary-bg-color" value="#16213e" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="accent-color">Accent Color</label>
+                  <input type="color" id="accent-color" value="#0f3460" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="text-primary-color">Primary Text</label>
+                  <input type="color" id="text-primary-color" value="#ffffff" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="text-secondary-color">Secondary Text</label>
+                  <input type="color" id="text-secondary-color" value="#b8bcc8" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="gradient-start-color">Gradient Start</label>
+                  <input type="color" id="gradient-start-color" value="#1a1a2e" />
+                </div>
+
+                <div class="color-input-row">
+                  <label for="gradient-end-color">Gradient End</label>
+                  <input type="color" id="gradient-end-color" value="#16213e" />
+                </div>
+              </div>
+            </div>
+
+            <div class="theme-preview">
+              <h4>Live Preview</h4>
+              <div id="theme-preview-container">
+                <div class="preview-navbar">
+                  <span class="preview-brand">🛡️ SlowGuardian</span>
+                  <div class="preview-nav-links">
+                    <span>🏠 Home</span>
+                    <span>📱 Apps</span>
+                    <span>🎮 Games</span>
+                  </div>
+                </div>
+                <div class="preview-content">
+                  <h2>SlowGuardian</h2>
+                  <p>Your gateway to unrestricted web browsing</p>
+                  <div class="preview-card">
+                    <h3>Sample Card</h3>
+                    <p>This is how cards will look with your theme</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="settings-card">
-          <h3>Search Engine</h3>
-          <p>Change the search engine when searching.</p>
-          <select title="engine" id="engine" onchange="EngineChange(this)">
-            <option value="Google">Google (Default)</option>
-            <option value="Bing">Bing</option>
-            <option value="DuckDuckGo">DuckDuckGo</option>
-            <option value="Qwant">Qwant</option>
-            <option value="Startpage">Startpage</option>
-            <option value="SearchEncrypt">SearchEncrypt</option>
-            <option value="Ecosia">Ecosia</option>
-          </select>
-          <input
-            class="key-form"
-            type="text"
-            id="engine-form"
-            placeholder="Change Search Engine"
-            name="engine"
-          />
-          <button class="key-button" value="Save" onclick="SaveEngine();">
-            Save
-          </button>
-        </div>
-        <div class="settings-card">
-          <h3>Choose your <b>Pr</b>oxy</h3>
-          <p>
-            Ultra<xn>vio</xn>let is the main <xn>pro</xn>xy, but Dynamic is
-            faster and supports more sites! (Dynamic is still in beta, so it has
-            some bugs.)
-          </p>
-          <select id="pChange">
-            <option value="uv">Ultraviolet (Default)</option>
-            <option value="dy">Dynamic</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Set Background Image</h3>
-          <p>Change the site's background image.</p>
-          <input
-            type="text"
-            id="background-input"
-            placeholder="Enter image URL"
-          />
-          <button class="key-button" id="save-button">Save</button>
-          <button class="key-button" id="reset-button">Reset</button>
-        </div>
-        <div class="settings-card">
-          <h3>Advertisement</h3>
-          <p>
-            Advertisements are crucial in order to keep the site running. Please
-            consider donating or hosting your own links to go ad-free. If not,
-            you can still disable them below.
-          </p>
-          <select id="adType" onchange="adChange(this)">
-            <option value="default">Default</option>
-            <option value="off">Off</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Particles</h3>
-          <p>
-            Add the particles that are from the previous version to the new
-            site.
-          </p>
-          <label class="switch">
-            <input type="checkbox" class="slider-checkbox" id="2" />
-            <span class="slider-round"></span>
-          </label>
-        </div>
-        <div class="settings-card">
-          <h3>Themes!</h3>
-          <p>Pick from a variety of themes!</p>
-          <select
-            placeholder="Solid Color Themes"
-            id="dropdown"
-            class="td"
-            onchange="themeChange(this)"
-          >
-            <option disabled selected>Solid Color Themes</option>
-            <option value="d">Default</option>
-            <option disabled selected>Catppuccin Themes</option>
-            <option value="catppuccinMocha">GoGaurdian Theme</option>
-            <option value="catppuccinMacchiato">VS Studio Dark</option>
-            <option value="catppuccinFrappe">SG Dark</option>
-            <option value="catppuccinLatte">Light Mode</option>
-          </select>
-        </div>
-        <div class="settings-card">
-          <h3>Site Info</h3>
-          <p>Version: 8</p>
-          <p id="last-updated">Last Updated: May 3rd, 2024</p>
-          <p></p>
-          <a style="color: white" href="/tos"
-            >By using SlowGuardian, you agree you understand and acknowledge our
-            Terms of Service and Privacy Policy.</a
-          >
+        <div class="modal-footer">
+          <button id="save-custom-theme-btn" class="btn btn-primary">💾 Save Theme</button>
+          <button id="apply-theme-preview-btn" class="btn btn-secondary">👁️ Apply Preview</button>
+          <button id="cancel-theme-btn" class="btn btn-secondary">Cancel</button>
         </div>
       </div>
     </div>
-    <script src="/assets/scripts/main.js?v=31"></script>
-    <script src="/assets/scripts/settings.js?v=21"></script>
+
+    <!-- Import Theme Modal -->
+    <div id="import-theme-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📥 Import Custom Theme</h3>
+          <button class="modal-close" id="close-import-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="theme-import-data">Paste Theme Data (JSON)</label>
+            <textarea
+              id="theme-import-data"
+              class="form-textarea"
+              rows="10"
+              placeholder='{"name":"Theme Name","primaryBg":"#1a1a2e",...}'
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="import-theme-confirm-btn" class="btn btn-primary">Import Theme</button>
+          <button id="cancel-import-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management Modal -->
+    <div id="user-management-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>👥 User Management</h3>
+          <button class="modal-close" id="close-user-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="user-list" id="user-list">
+            <div class="loading-text">Loading users...</div>
+          </div>
+
+          <div class="user-actions" style="margin-top: 20px">
+            <h4>Block Website for User</h4>
+            <div class="input-group">
+              <select id="select-user" class="form-select">
+                <option value="">Select a user...</option>
+              </select>
+              <input type="text" id="block-domain" class="form-input" placeholder="Enter domain (e.g., youtube.com)" />
+              <button id="block-site-btn" class="btn btn-warning">Block Site</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-users-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-user-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Management Modal -->
+    <div id="account-management-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🔐 Account Management</h3>
+          <button class="modal-close" id="close-account-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="account-section">
+            <h4>Create New Admin Account</h4>
+            <div class="input-group">
+              <label for="new-admin-username">Username:</label>
+              <input type="text" id="new-admin-username" class="form-input" placeholder="Enter username" />
+            </div>
+            <div class="input-group">
+              <label for="new-admin-password">Password:</label>
+              <input type="password" id="new-admin-password" class="form-input" placeholder="Enter password" />
+            </div>
+            <div class="input-group">
+              <label for="new-admin-role">Role:</label>
+              <select id="new-admin-role" class="form-select">
+                <option value="admin">Admin</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+            </div>
+            <button id="create-admin-btn" class="btn btn-primary">Create Account</button>
+          </div>
+
+          <div class="account-section" style="margin-top: 30px">
+            <h4>Existing Admin Accounts</h4>
+            <div class="admin-list" id="admin-list">
+              <div class="loading-text">Loading accounts...</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="refresh-accounts-btn" class="btn btn-secondary">🔄 Refresh</button>
+          <button id="close-account-management-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Pause Modal -->
+    <div id="pause-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>⏸️ Pause Site Globally</h3>
+          <button class="modal-close" id="close-pause-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>This will temporarily disable the site for all users with a maintenance-style message.</p>
+          <div class="input-group">
+            <label for="pause-password">Set Pause Password:</label>
+            <input
+              type="password"
+              id="pause-password"
+              class="form-input"
+              placeholder="Enter password to unpause later"
+              required
+            />
+          </div>
+          <div class="warning-box">
+            <strong>⚠️ Warning:</strong> Users will see a "SlowGuardian is paused" message and won't be able to access
+            the site until you unpause it with this password.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="confirm-pause-btn" class="btn btn-warning">Pause Site</button>
+          <button id="cancel-pause-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Scripts -->
+    <!-- Loading System (Load first) -->
+    <script src="assets/scripts/loading-system.js?v=1"></script>
+
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+
+    <!-- KeyAuth Premium System -->
+    <script src="assets/scripts/keyauth.js?v=1"></script>
+
+    <!-- Premium Branding Manager -->
+    <script src="assets/scripts/premium-branding.js?v=1"></script>
+
+    <!-- Enhanced Features System -->
+    <script src="assets/scripts/v9/features.js?v=1"></script>
+    <script src="assets/scripts/v9/features-manager.js?v=1"></script>
+
+    <!-- Script Loader for dependency management -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+
+    <!-- Legacy Settings Script -->
+    <script src="assets/scripts/custom-dropdown.js?v=1"></script>
+    <script src="assets/scripts/auth.js?v=1"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="assets/scripts/admin.js?v=1"></script>
+    <script src="assets/scripts/settings.js?v=21"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
+    <script src="assets/scripts/main.js?v=31"></script>
+
+    <!-- Centralized Navigation Bar -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
+
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+
+    <!-- Ads Manager -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
+    <!-- Ads Management Settings Script -->
+    <script>
+      // Notification system
+      window.showNotification = function (message, type = "info", duration = 5000) {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === "error" ? "#ef4444" : type === "success" ? "#10b981" : type === "warning" ? "#f59e0b" : "#3b82f6"};
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease-out;
+          max-width: 300px;
+        `;
+        notification.textContent = message;
+
+        if (!document.getElementById("notification-styles")) {
+          const style = document.createElement("style");
+          style.id = "notification-styles";
+          style.textContent = `
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+              from { transform: translateX(0); opacity: 1; }
+              to { transform: translateX(100%); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease-in forwards";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, duration);
+      };
+
+      // Cookie utility functions
+      window.setCookie = function(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+      };
+
+      window.getCookie = function(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize ads management UI
+        initAdsManagement();
+      });
+
+      // Check if current user is a developer/admin
+      function isDeveloper() {
+        // Check if admin panel is logged in
+        if (window.adminPanel && window.adminPanel.isLoggedIn) {
+          return true;
+        }
+
+        // Check for admin token in sessionStorage
+        const adminToken = sessionStorage.getItem("admin-token");
+        if (adminToken) {
+          return true;
+        }
+
+        // Check for developer mode cookie
+        const devMode = getCookie("developer-mode");
+        if (devMode === "true") {
+          return true;
+        }
+
+        return false;
+      }
+
+      function initAdsManagement() {
+        const adsEnabledSwitch = document.getElementById("ads-enabled-switch");
+        const adsStatusDot = document.getElementById("ads-status-dot");
+        const adsStatusText = document.getElementById("ads-status-text");
+        const videoAdsStatus = document.getElementById("video-ads-status");
+        const displayAdsStatus = document.getElementById("display-ads-status");
+        const testVideoAdBtn = document.getElementById("test-video-ad-btn");
+        const upgradePremiumBtn = document.getElementById("upgrade-premium-btn");
+        const adsControls = document.querySelector(".ads-controls");
+
+        // Update UI based on current ads settings and developer status
+        function updateAdsStatus() {
+          const adsEnabled = getCookie("ads-enabled") !== "false";
+          const performanceMode = getCookie("performance-mode") === "true";
+          const isDevUser = isDeveloper();
+
+          adsEnabledSwitch.checked = adsEnabled;
+
+          // Restrict ads control to developers only
+          if (!isDevUser) {
+            adsEnabledSwitch.disabled = true;
+            adsEnabledSwitch.checked = true; // Force ads enabled for non-developers
+
+            // Add developer-only notice
+            if (!document.querySelector(".developer-ads-notice")) {
+              const notice = document.createElement("div");
+              notice.className = "developer-ads-notice";
+              notice.innerHTML = `
+                <div style="
+                  background: rgba(255, 193, 7, 0.1);
+                  border: 1px solid rgba(255, 193, 7, 0.3);
+                  border-radius: 6px;
+                  padding: 12px;
+                  margin-top: 10px;
+                  color: #ffc107;
+                  font-size: 14px;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                ">
+                  <span>🔒</span>
+                  <div>
+                    <strong>Developer Only:</strong> Ad controls are restricted to authorized developers. 
+                    Ads help keep SlowGuardian free for everyone.
+                  </div>
+                </div>
+              `;
+              adsControls.appendChild(notice);
+            }
+          } else {
+            adsEnabledSwitch.disabled = false;
+
+            // Remove developer notice if it exists
+            const notice = document.querySelector(".developer-ads-notice");
+            if (notice) {
+              notice.remove();
+            }
+          }
+
+          if (adsEnabled) {
+            adsStatusDot.classList.remove("disabled");
+            adsStatusText.textContent = isDevUser
+              ? "Ads Enabled - Supporting SlowGuardian"
+              : "Ads Enabled (Developer Mode Required to Disable)";
+            videoAdsStatus.textContent = performanceMode ? "Disabled (Performance Mode)" : "Enabled";
+            displayAdsStatus.textContent = "Enabled";
+          } else {
+            adsStatusDot.classList.add("disabled");
+            adsStatusText.textContent = "Ads Disabled (Developer Mode)";
+            videoAdsStatus.textContent = "Disabled";
+            displayAdsStatus.textContent = "Disabled";
+          }
+        }
+
+        // Handle ads toggle (restricted to developers)
+        adsEnabledSwitch.addEventListener("change", function () {
+          const enabled = this.checked;
+
+          // Double-check developer status
+          if (!isDeveloper()) {
+            this.checked = true; // Force enabled
+            showNotification("Developer access required to disable ads", "warning");
+            return;
+          }
+
+          if (enabled) {
+            if (window.adsManager) {
+              window.adsManager.enableAds();
+            }
+            showNotification("Ads enabled - Thank you for supporting SlowGuardian!", "success");
+          } else {
+            if (window.adsManager) {
+              window.adsManager.disableAds();
+            }
+            showNotification("Ads disabled (Developer Mode)", "info");
+          }
+
+          updateAdsStatus();
+        });
+
+        // Test video ad
+        testVideoAdBtn.addEventListener("click", function () {
+          if (window.adsManager) {
+            window.adsManager.showVideoAd(() => {
+              showNotification("Test video ad completed!", "success");
+            });
+          } else {
+            showNotification("Ads manager not available", "error");
+          }
+        });
+
+        // Upgrade to premium
+        upgradePremiumBtn.addEventListener("click", function () {
+          if (window.adsManager) {
+            window.adsManager.showUpgradeModal();
+          } else {
+            showNotification("Premium upgrade coming soon!", "info");
+          }
+        });
+
+        // Premium Key Activation
+        const premiumKeyInput = document.getElementById("premium-key-input");
+        const activatePremiumBtn = document.getElementById("activate-premium-btn");
+        const premiumStatusDot = document.getElementById("premium-status-dot");
+        const premiumStatusText = document.getElementById("premium-status-text");
+        const premiumInfo = document.getElementById("premium-info");
+        const premiumActivation = document.getElementById("premium-activation");
+        const premiumPlanType = document.getElementById("premium-plan-type");
+        const premiumExpiryDate = document.getElementById("premium-expiry-date");
+        const premiumKeyDisplay = document.getElementById("premium-key-display");
+        
+        // Check if premium elements exist before proceeding
+        if (!premiumKeyInput || !activatePremiumBtn || !premiumStatusDot || !premiumStatusText) {
+          console.log('Premium UI elements not found, skipping premium activation setup');
+          return;
+        }
+
+        // Check premium status on load
+        async function updatePremiumStatus() {
+          const token = localStorage.getItem('authToken');
+          
+          if (!token) {
+            // User not logged in - show login prompt
+            if (premiumStatusDot) {
+              premiumStatusDot.classList.add("disabled");
+              premiumStatusDot.style.background = "#ef4444";
+            }
+            if (premiumStatusText) {
+              premiumStatusText.textContent = "Login required";
+            }
+            if (premiumInfo) {
+              premiumInfo.style.display = "none";
+            }
+            if (premiumActivation) {
+              premiumActivation.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                    Please login to manage your premium subscription
+                  </p>
+                  <a href="/login" class="btn btn-primary">Login / Register</a>
+                </div>
+              `;
+            }
+            return;
+          }
+
+          try {
+            // Check premium status from server
+            const response = await fetch('/api/auth/premium-status', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success && result.isPremium) {
+              // Premium is active
+              if (premiumStatusDot) {
+                premiumStatusDot.classList.remove("disabled");
+                premiumStatusDot.style.background = "#10b981";
+              }
+              if (premiumStatusText) {
+                premiumStatusText.textContent = "Premium Active";
+              }
+              if (premiumInfo) {
+                premiumInfo.style.display = "block";
+              }
+              if (premiumActivation) {
+                premiumActivation.style.display = "none";
+              }
+              
+              const premiumStatus = result.premiumStatus;
+              const expiryDate = premiumStatus.expiresAt ? 
+                new Date(premiumStatus.expiresAt).toLocaleDateString() : "Never";
+              
+              if (premiumKeyDisplay) {
+                premiumKeyDisplay.textContent = premiumStatus.premiumKey ? 
+                  premiumStatus.premiumKey.substring(0, 4) + "••••" : "••••••••";
+              }
+              if (premiumExpiryDate) {
+                premiumExpiryDate.textContent = expiryDate;
+              }
+              if (premiumPlanType) {
+                premiumPlanType.textContent = "Premium Active";
+              }
+            } else {
+              // Premium not active
+              if (premiumStatusDot) {
+                premiumStatusDot.classList.add("disabled");
+                premiumStatusDot.style.background = "#ef4444";
+              }
+              if (premiumStatusText) {
+                premiumStatusText.textContent = "Premium not activated";
+              }
+              if (premiumInfo) {
+                premiumInfo.style.display = "none";
+              }
+              if (premiumActivation) {
+                premiumActivation.style.display = "block";
+              }
+            }
+          } catch (error) {
+            console.error('Failed to check premium status:', error);
+            premiumStatusDot.classList.add("disabled");
+            premiumStatusDot.style.background = "#ef4444";
+            premiumStatusText.textContent = "Status unavailable";
+          }
+        }
+
+        // Activate premium key
+        activatePremiumBtn.addEventListener("click", async function () {
+          const enteredKey = premiumKeyInput.value.trim();
+          
+          if (!enteredKey) {
+            showNotification("Please enter a premium key", "error");
+            return;
+          }
+
+          // Disable button during activation
+          activatePremiumBtn.disabled = true;
+          activatePremiumBtn.textContent = "Activating...";
+
+          try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+              showNotification('Please log in first', 'error');
+              return;
+            }
+
+            const resp = await fetch('/api/auth/activate-premium', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({ premiumKey: enteredKey }),
+            });
+
+            const result = await resp.json();
+            if (!resp.ok || !result.success) {
+              showNotification(result.error || 'Activation failed', 'error');
+              return;
+            }
+
+            // Play activation animation
+            playPremiumActivationAnimation();
+            premiumKeyInput.value = '';
+
+            setTimeout(() => {
+              updatePremiumStatus();
+              showNotification('Premium activated successfully! 🎉', 'success');
+              if (window.navigationBar) {
+                window.navigationBar.loadUserInfo().then(() => {
+                  window.navigationBar.createNavbar();
+                  window.navigationBar.attachEventListeners();
+                });
+              }
+              // Notify premium branding script to refresh
+              document.dispatchEvent(new CustomEvent('sg-premium-updated'));
+            }, 1500);
+          } catch (error) {
+            console.error('Premium activation error:', error);
+            showNotification("Premium activation error: " + error.message, "error");
+          } finally {
+            // Re-enable button
+            activatePremiumBtn.disabled = false;
+            activatePremiumBtn.textContent = "🚀 Activate Premium";
+          }
+        });
+
+        function playPremiumActivationAnimation() {
+          const animationContainer = document.getElementById("premium-animation-container");
+          animationContainer.style.display = "block";
+          animationContainer.style.pointerEvents = "auto";
+          
+          // Hide animation after 5 seconds
+          setTimeout(() => {
+            animationContainer.style.opacity = "0";
+            setTimeout(() => {
+              animationContainer.style.display = "none";
+              animationContainer.style.pointerEvents = "none";
+              animationContainer.style.opacity = "1";
+            }, 500);
+          }, 5000);
+        }
+
+        function hidePremiumBranding() {
+          // Hide all "Get Premium" buttons and links
+          const premiumElements = document.querySelectorAll(
+            '.get-premium-btn, .premium-upgrade, .upgrade-premium, [href="/premium"], [href="premium.html"]'
+          );
+          
+          premiumElements.forEach(element => {
+            element.style.display = 'none';
+          });
+          
+          // Hide premium sidebar button
+          const premiumNavLink = document.querySelector('nav a[href="/premium"], nav a[href="premium.html"]');
+          if (premiumNavLink) {
+            premiumNavLink.style.display = 'none';
+          }
+          
+          // Update navbar to show premium status
+          const navbar = document.querySelector('.navbar, .nav-menu');
+          if (navbar) {
+            const premiumStatus = document.createElement('div');
+            premiumStatus.className = 'premium-status-indicator';
+            premiumStatus.innerHTML = '<span class="premium-badge">⭐ PREMIUM</span>';
+            premiumStatus.style.cssText = `
+              color: #fbbf24;
+              font-weight: bold;
+              font-size: 12px;
+              margin: 0 10px;
+            `;
+            navbar.appendChild(premiumStatus);
+          }
+          
+          console.log('✅ Premium branding hidden - premium user');
+        }
+
+        // Allow Enter key to activate premium
+        premiumKeyInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            activatePremiumBtn.click();
+          }
+        });
+
+        // Initial premium status update
+        updatePremiumStatus();
+
+        // Account Management System
+        async function initAccountManagement() {
+          const token = localStorage.getItem('authToken');
+          const accountInfo = document.getElementById('account-info');
+          const accountLoginPrompt = document.getElementById('account-login-prompt');
+          
+          if (!token) {
+            accountInfo.style.display = 'none';
+            accountLoginPrompt.style.display = 'block';
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/auth/profile', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              accountInfo.style.display = 'block';
+              accountLoginPrompt.style.display = 'none';
+              
+              document.getElementById('account-username').textContent = result.user.username || '-';
+              document.getElementById('account-email').textContent = result.user.email || '-';
+              document.getElementById('account-role').textContent = result.user.role || 'user';
+              document.getElementById('account-created').textContent = 
+                result.user.createdAt ? new Date(result.user.createdAt).toLocaleDateString() : '-';
+            } else {
+              accountInfo.style.display = 'none';
+              accountLoginPrompt.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Failed to load account info:', error);
+            accountInfo.style.display = 'none';
+            accountLoginPrompt.style.display = 'block';
+          }
+        }
+
+        // Logout functionality
+        document.getElementById('logout-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          try {
+            await fetch('/api/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+          } catch (error) {
+            console.error('Logout error:', error);
+          } finally {
+            localStorage.removeItem('authToken');
+            window.location.href = '/login';
+          }
+        });
+
+        // Logout all devices
+        document.getElementById('logout-all-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          if (!confirm('This will log you out from all devices. Continue?')) {
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/auth/logout-all', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+              showNotification(result.message, 'success');
+              localStorage.removeItem('authToken');
+              setTimeout(() => {
+                window.location.href = '/login';
+              }, 2000);
+            }
+          } catch (error) {
+            console.error('Logout all error:', error);
+            showNotification('Failed to logout from all devices', 'error');
+          }
+        });
+
+        // Spotify Integration System
+        async function initSpotifyIntegration() {
+          const token = localStorage.getItem('authToken');
+          const spotifyStatus = document.getElementById('spotify-status');
+          const spotifyStatusDot = document.getElementById('spotify-status-dot');
+          const spotifyStatusText = document.getElementById('spotify-status-text');
+          const spotifyInfo = document.getElementById('spotify-info');
+          const spotifyConnect = document.getElementById('spotify-connect');
+          const spotifyLoginRequired = document.getElementById('spotify-login-required');
+          
+          if (!token) {
+            spotifyInfo.style.display = 'none';
+            spotifyConnect.style.display = 'none';
+            spotifyLoginRequired.style.display = 'block';
+            spotifyStatusText.textContent = 'Login required';
+            return;
+          }
+
+          spotifyLoginRequired.style.display = 'none';
+
+          try {
+            const response = await fetch('/api/spotify/status', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.connected) {
+              // Spotify is connected
+              spotifyStatusDot.classList.remove('disabled');
+              spotifyStatusDot.style.background = '#1db954'; // Spotify green
+              spotifyStatusText.textContent = 'Connected to Spotify';
+              spotifyInfo.style.display = 'block';
+              spotifyConnect.style.display = 'none';
+
+              if (result.profile) {
+                document.getElementById('spotify-display-name').textContent = 
+                  result.profile.displayName || result.profile.id || '-';
+                document.getElementById('spotify-followers').textContent = 
+                  result.profile.followers || '0';
+                document.getElementById('spotify-country').textContent = 
+                  result.profile.country || '-';
+              }
+            } else {
+              // Spotify not connected
+              spotifyStatusDot.classList.add('disabled');
+              spotifyStatusDot.style.background = '#ef4444';
+              spotifyStatusText.textContent = 'Not connected';
+              spotifyInfo.style.display = 'none';
+              spotifyConnect.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Failed to check Spotify status:', error);
+            spotifyStatusDot.classList.add('disabled');
+            spotifyStatusDot.style.background = '#ef4444';
+            spotifyStatusText.textContent = 'Status unavailable';
+            spotifyConnect.style.display = 'block';
+          }
+        }
+
+        // Connect Spotify
+        document.getElementById('connect-spotify-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) {
+            showNotification('Please login first', 'error');
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/spotify/auth', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              // Redirect to Spotify authorization
+              window.location.href = result.authUrl;
+            } else {
+              showNotification(result.error || 'Failed to connect to Spotify', 'error');
+            }
+          } catch (error) {
+            console.error('Spotify connection error:', error);
+            showNotification('Failed to connect to Spotify', 'error');
+          }
+        });
+
+        // Disconnect Spotify
+        document.getElementById('disconnect-spotify-btn')?.addEventListener('click', async function() {
+          const token = localStorage.getItem('authToken');
+          if (!token) return;
+
+          if (!confirm('Are you sure you want to disconnect Spotify?')) {
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/spotify/disconnect', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              showNotification('Spotify disconnected successfully', 'success');
+              initSpotifyIntegration(); // Refresh status
+            } else {
+              showNotification(result.error || 'Failed to disconnect Spotify', 'error');
+            }
+          } catch (error) {
+            console.error('Spotify disconnect error:', error);
+            showNotification('Failed to disconnect Spotify', 'error');
+          }
+        });
+
+        // Initialize account and Spotify management
+        initAccountManagement();
+        initSpotifyIntegration();
+
+        // Initial status update
+        updateAdsStatus();
+
+        // Update status when ads manager loads
+        if (window.adsManager) {
+          setTimeout(updateAdsStatus, 1000);
+        }
+
+        // Update status when admin panel state changes
+        setInterval(updateAdsStatus, 5000);
+      }
+
+      // Enhanced Proxy System Settings
+      function initEnhancedProxySettings() {
+        const proxyBackendSelect = document.getElementById("proxy-backend");
+        const autoFailoverCheckbox = document.getElementById("auto-failover");
+        const proxyStatusContent = document.getElementById("proxy-status-content");
+
+        if (!proxyBackendSelect || !autoFailoverCheckbox || !proxyStatusContent) {
+          console.log("Enhanced proxy settings not available on this page");
+          return;
+        }
+
+        // Load saved settings
+        const savedProxy = localStorage.getItem("preferred-proxy") || "ultraviolet";
+        const autoFailover = localStorage.getItem("auto-failover") !== "false"; // Default to true
+
+        proxyBackendSelect.value = savedProxy;
+        autoFailoverCheckbox.checked = autoFailover;
+
+        // Update proxy status
+        function updateProxyStatus() {
+          if (window.multiProxy) {
+            const status = window.multiProxy.getProxyStatus();
+            proxyStatusContent.innerHTML = `
+              <div>Current: <strong>${status.current}</strong></div>
+              <div>Available: ${status.available.join(", ")}</div>
+              ${status.failed.length > 0 ? `<div style="color: #ff6b6b;">Failed: ${status.failed.join(", ")}</div>` : ""}
+            `;
+          } else {
+            proxyStatusContent.innerHTML = '<div style="color: #ffa500;">Multi-proxy system loading...</div>';
+          }
+        }
+
+        // Event listeners
+        proxyBackendSelect.addEventListener("change", function () {
+          const selectedProxy = this.value;
+          localStorage.setItem("preferred-proxy", selectedProxy);
+
+          if (window.multiProxy) {
+            if (selectedProxy === "auto") {
+              // Let the system auto-select
+              console.log("Auto-selection enabled");
+            } else {
+              window.multiProxy.setPreferredProxy(selectedProxy);
+            }
+            updateProxyStatus();
+          }
+
+          showNotification("Proxy backend updated to " + selectedProxy);
+        });
+
+        autoFailoverCheckbox.addEventListener("change", function () {
+          const enabled = this.checked;
+          localStorage.setItem("auto-failover", enabled);
+          showNotification("Auto-failover " + (enabled ? "enabled" : "disabled"));
+        });
+
+        // Initial status update
+        updateProxyStatus();
+
+        // Update status every 10 seconds
+        setInterval(updateProxyStatus, 10000);
+
+        console.log("✅ Enhanced proxy settings initialized");
+      }
+
+      // Initialize enhanced proxy settings when page loads
+      document.addEventListener("DOMContentLoaded", initEnhancedProxySettings);
+
+      // Also try to initialize after a delay in case multiProxy isn't ready
+      setTimeout(initEnhancedProxySettings, 2000);
+    </script>
+
     <div id="adv"></div>
   </body>
 </html>

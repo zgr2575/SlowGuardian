@@ -1,0 +1,11 @@
+{
+  "id": "notes-manager",
+  "name": "Notes Manager",
+  "version": "1.0.0",
+  "description": "Take and manage notes while browsing",
+  "author": "SlowGuardian Team",
+  "permissions": ["storage"],
+  "hooks": ["page_load"],
+  "category": "productivity",
+  "icon": "📝"
+}

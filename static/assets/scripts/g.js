@@ -11,7 +11,7 @@ function handleClick(app) {
 
   if (app.local) {
     saveToLocal(app.link);
-    window.location.href = "p";
+    window.location.href = "/go";
   } else if (app.local2) {
     saveToLocal(app.link);
     window.location.href = app.link;
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  fetch("/assets/json/g.min.json")
+  fetch("assets/json/g.min.json")
     .then((response) => {
       return response.json();
     })
@@ -253,9 +253,14 @@ document.addEventListener("DOMContentLoaded", () => {
         appInd++;
       });
 
-      const appsContainer = document.getElementById("apps-container");
-      appsContainer.appendChild(pinnedApps);
-      appsContainer.appendChild(nonPinnedApps);
+      const appsContainer = document.getElementById("games-grid");
+      if (appsContainer) {
+        const containerApps = appsContainer.querySelector(".container-apps");
+        if (containerApps) {
+          containerApps.appendChild(pinnedApps);
+          containerApps.appendChild(nonPinnedApps);
+        }
+      }
     })
     .catch((error) => {
       console.error("Error fetching JSON data:", error);
@@ -264,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function show_category() {
   var selectedCategories = Array.from(
-    document.querySelectorAll("#category option:checked"),
+    document.querySelectorAll("#category option:checked")
   ).map((option) => option.value);
   var games = document.getElementsByClassName("column");
 

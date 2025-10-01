@@ -1,0 +1,98 @@
+/* Cyberpunk Theme */
+:root {
+  --bg-primary: #0d0208;
+  --bg-secondary: #1a0411;
+  --bg-tertiary: #240515;
+  --bg-quaternary: #3a0726;
+
+  --text-primary: #00ff98;
+  --text-secondary: #ff0080;
+  --text-tertiary: #00d9ff;
+
+  --accent-primary: #ff0080;
+  --accent-secondary: #00ff98;
+  --accent-tertiary: #00d9ff;
+  --accent-hover: #ff4da6;
+
+  --border-primary: #ff0080;
+  --border-secondary: #00ff98;
+
+  --success: #00ff98;
+  --warning: #ffff00;
+  --error: #ff0080;
+
+  --shadow-primary: 0 0 20px rgba(255, 0, 128, 0.3);
+  --shadow-secondary: 0 0 15px rgba(0, 255, 152, 0.2);
+
+  --glow-primary: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 15px #ff0080;
+  --glow-secondary: 0 0 5px #00ff98, 0 0 10px #00ff98, 0 0 15px #00ff98;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    #0d0208 0%,
+    #1a0411 25%,
+    #240515 50%,
+    #3a0726 75%,
+    #0d0208 100%
+  );
+  color: var(--text-primary);
+}
+
+.card,
+.widget,
+.navbar {
+  background: rgba(13, 2, 8, 0.9);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-primary);
+  backdrop-filter: blur(10px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #ff0080, #ff4da6);
+  border: 1px solid #ff0080;
+  box-shadow: var(--glow-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 10px #ff0080,
+    0 0 20px #ff0080,
+    0 0 30px #ff0080;
+}
+
+.input-field {
+  background: rgba(36, 5, 21, 0.8);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.input-field:focus {
+  border-color: var(--accent-primary);
+  box-shadow: var(--glow-primary);
+}
+
+/* Animated text glow */
+.brand-text,
+h1,
+h2 {
+  text-shadow: var(--glow-secondary);
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow:
+      0 0 5px #00ff98,
+      0 0 10px #00ff98;
+  }
+  to {
+    text-shadow:
+      0 0 10px #00ff98,
+      0 0 20px #00ff98,
+      0 0 30px #00ff98;
+  }
+}
