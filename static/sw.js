@@ -13,6 +13,14 @@ self.dynamic = dynamic;
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async function () {
+      const url = new URL(event.request.url);
+      
+      // Only intercept requests that are for our origin or proxy paths
+      // Let external scripts (like Enzuzo, AdSense, Analytics) pass through without interception
+      if (url.origin !== location.origin) {
+        return await fetch(event.request);
+      }
+
       if (await dynamic.route(event)) {
         return await dynamic.fetch(event);
       }
