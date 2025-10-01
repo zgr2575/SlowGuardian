@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "629fc82-1759328557294",
-  "buildDate": "2025-10-01T14:22:37.294Z",
-  "buildTimestamp": 1759328557294,
+  "buildId": "9a3d5bd-1759329099493",
+  "buildDate": "2025-10-01T14:31:39.493Z",
+  "buildTimestamp": 1759329099493,
   "git": {
-    "commit": "629fc821d3f630df2b630e5441880c468e24349b",
-    "commitShort": "629fc82",
+    "commit": "9a3d5bd2e31c39e66e51391b4e73779147d6c373",
+    "commitShort": "9a3d5bd",
     "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-01T14:17:11Z",
-    "commitMessage": "Addressing PR comments"
+    "commitDate": "2025-10-01T14:24:24Z",
+    "commitMessage": "Revert all proxy files (sw.js, bundle.js, handler.js) to main branch"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",
