@@ -387,10 +387,6 @@ body {
 #suggestions:empty {
   display: none !important;
 }
-  display: none;
-  max-height: 300px;
-  overflow-y: auto;
-}
 
 .suggestion-item {
   display: flex;
