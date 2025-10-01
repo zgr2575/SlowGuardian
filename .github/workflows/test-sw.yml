@@ -46,7 +46,7 @@ jobs:
         echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
         
         # Wait for server to be ready
-        timeout 30 bash -c 'until curl -f http://localhost:8787/health > /dev/null 2>&1; do sleep 1; done'
+        timeout 30 bash -c 'until curl -f http://localhost:8787/ > /dev/null 2>&1; do sleep 1; done'
         echo "Server is ready"
         
     - name: Run service worker health checks
