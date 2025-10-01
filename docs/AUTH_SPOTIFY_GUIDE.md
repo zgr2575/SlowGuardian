@@ -336,8 +336,7 @@ Set `NODE_ENV=development` for detailed logging and error messages.
 ## 📞 Support
 
 For issues or questions:
-- Create an issue on GitHub
-- Contact: support@slowguardian.com
+- Create an issue on GitHub (https://github.com/SlowGuardian/SlowGuardian/issues)
 - Documentation: Coming soon
 
 ---
