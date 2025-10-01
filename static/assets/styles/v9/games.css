@@ -1,14 +1,16 @@
 /* Games page styles for SlowGuardian v9 */
 
-/* Games Grid */
+/* Games/Apps Grid - ID selector to override .content-grid */
+#games-grid,
+#apps-grid,
 .games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--space-3);
-  padding: var(--space-4) 0;
-  width: 100%;
-  max-width: none;
-  min-height: calc(100vh - 300px);
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: var(--space-3) !important;
+  padding: var(--space-4) 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: calc(100vh - 300px) !important;
 }
 
 /* Game Item */

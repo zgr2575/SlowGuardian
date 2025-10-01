@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "591c608-1759327506974",
-  "buildDate": "2025-10-01T14:05:06.974Z",
-  "buildTimestamp": 1759327506974,
+  "buildId": "a670c30-1759327797886",
+  "buildDate": "2025-10-01T14:09:57.886Z",
+  "buildTimestamp": 1759327797886,
   "git": {
-    "commit": "591c60841e5ff080a150064d23052edb61e0324b",
-    "commitShort": "591c608",
+    "commit": "a670c30029cd5816f39ca0b41ff388aae4fc6e98",
+    "commitShort": "a670c30",
     "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-01T13:40:16Z",
-    "commitMessage": "Add Google Analytics, Enzuzo cookie banner, and enhanced AdSense ads"
+    "commitDate": "2025-10-01T14:07:00Z",
+    "commitMessage": "Revert proxy config to main branch and fix AdSense script placement"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",
