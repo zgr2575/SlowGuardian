@@ -28,7 +28,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
       HTMLImageElement: S,
       HTMLSourceElement: w,
     } = e;
-  (i.nativeMethods.defineProperty(e, "__uv", { value: l, enumerable: !1 }),
+  i.nativeMethods.defineProperty(e, "__uv", { value: l, enumerable: !1 }),
     (l.meta.origin = location.origin),
     (l.location = i.location.emulate(
       (e) =>
@@ -36,7 +36,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           ? new URL(e)
           : (e.startsWith("blob:") && (e = e.slice(5)),
             new URL(l.sourceUrl(e))),
-      (e) => l.rewriteUrl(e)
+      (e) => l.rewriteUrl(e),
     )),
     (l.cookieStr = e.__uv$cookies || ""),
     (l.meta.url = l.location),
@@ -45,7 +45,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
     (l.referrer = ""),
     (l.cookies = []),
     (l.localStorageObj = {}),
-    (l.sessionStorageObj = {}));
+    (l.sessionStorageObj = {});
   try {
     l.bare = new URL(a, e.location.href);
   } catch (t) {
@@ -123,15 +123,15 @@ async function __uvHook(e, t = {}, a = "/o/") {
       "__uvHook",
     ]),
     i.on("wrap", (e, t) => {
-      (i.nativeMethods.defineProperty(
+      i.nativeMethods.defineProperty(
         t,
         "name",
-        i.nativeMethods.getOwnPropertyDescriptor(e, "name")
+        i.nativeMethods.getOwnPropertyDescriptor(e, "name"),
       ),
         i.nativeMethods.defineProperty(
           t,
           "length",
-          i.nativeMethods.getOwnPropertyDescriptor(e, "length")
+          i.nativeMethods.getOwnPropertyDescriptor(e, "length"),
         ),
         i.nativeMethods.defineProperty(t, l.methods.string, {
           enumerable: !1,
@@ -140,7 +140,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         i.nativeMethods.defineProperty(t, l.methods.function, {
           enumerable: !1,
           value: e,
-        }));
+        });
     }),
     i.fetch.on("request", (e) => {
       e.data.input = l.rewriteUrl(e.data.input);
@@ -169,12 +169,12 @@ async function __uvHook(e, t = {}, a = "/o/") {
     }),
     i.workers.on("postMessage", (e) => {
       let t = e.data.origin;
-      ((e.data.origin = "*"),
+      (e.data.origin = "*"),
         (e.data.message = {
           __data: e.data.message,
           __origin: l.meta.url.origin,
           __to: t,
-        }));
+        });
     }),
     i.navigator.on("sendBeacon", (e) => {
       e.data.url = l.rewriteUrl(e.data.url);
@@ -190,15 +190,15 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.cookieStr = l.cookie.serialize(e, l.meta, !0);
             });
           });
-        }
+        },
       );
       const t = l.cookie.setCookie(e.data.value)[0];
-      (t.path || (t.path = "/"),
+      t.path || (t.path = "/"),
         t.domain || (t.domain = l.meta.url.hostname),
         l.cookie.validateCookie(t, l.meta, !0) &&
           (l.cookieStr.length && (l.cookieStr += "; "),
           (l.cookieStr += `${t.name}=${t.value}`)),
-        e.respondWith(e.data.value));
+        e.respondWith(e.data.value);
     }),
     i.element.on("setInnerHTML", (e) => {
       switch (e.that.tagName) {
@@ -228,8 +228,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
             .sourceHtml(
               e.data.value.replace(
                 /<head(.*)>(.*)<\/head>/s,
-                "<op-head$1>$2</op-head>"
-              )
+                "<op-head$1>$2</op-head>",
+              ),
             )
             .replace(/<op-head(.*)>(.*)<\/op-head>/s, "<head$1>$2</head>");
           break;
@@ -238,8 +238,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
             .sourceHtml(
               e.data.value.replace(
                 /<body(.*)>(.*)<\/body>/s,
-                "<op-body$1>$2</op-body>"
-              )
+                "<op-body$1>$2</op-body>",
+              ),
             )
             .replace(/<op-body(.*)>(.*)<\/op-body>/s, "<body$1>$2</body>");
           break;
@@ -270,29 +270,29 @@ async function __uvHook(e, t = {}, a = "/o/") {
       e.data.url &&
         (e.data.url = l.rewriteUrl(
           e.data.url,
-          "__uv" in e.that ? e.that.__uv.meta : l.meta
+          "__uv" in e.that ? e.that.__uv.meta : l.meta,
         ));
     }),
     i.history.on("pushState", (e) => {
       e.data.url &&
         (e.data.url = l.rewriteUrl(
           e.data.url,
-          "__uv" in e.that ? e.that.__uv.meta : l.meta
+          "__uv" in e.that ? e.that.__uv.meta : l.meta,
         ));
     }),
     i.element.on("getAttribute", (e) => {
       i.element.hasAttribute.call(
         e.that,
-        l.attributePrefix + "-attr-" + e.data.name
+        l.attributePrefix + "-attr-" + e.data.name,
       ) &&
         e.respondWith(
-          e.target.call(e.that, l.attributePrefix + "-attr-" + e.data.name)
+          e.target.call(e.that, l.attributePrefix + "-attr-" + e.data.name),
         );
     }),
     i.message.on("postMessage", (e) => {
       let t = e.data.origin,
         a = l.call;
-      (e.that && (a = e.that.__uv$source.call),
+      e.that && (a = e.that.__uv$source.call),
         (e.data.origin = "*"),
         (e.data.message = {
           __data: e.data.message,
@@ -305,9 +305,9 @@ async function __uvHook(e, t = {}, a = "/o/") {
             r
               ? [e.data.message, e.data.transfer]
               : [e.data.message, e.data.origin, e.data.transfer],
-            e.that
-          )
-        ));
+            e.that,
+          ),
+        );
     }),
     i.message.on("data", (e) => {
       const { value: t } = e.data;
@@ -338,22 +338,22 @@ async function __uvHook(e, t = {}, a = "/o/") {
           t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           void (t.data.value = l.blobUrls.get(t.data.value))
         );
-      (l.attrs.isUrl(t.data.name) &&
+      l.attrs.isUrl(t.data.name) &&
         (t.target.call(
           t.that,
           l.attributePrefix + "-attr-" + t.data.name,
-          t.data.value
+          t.data.value,
         ),
         (t.data.value = l.rewriteUrl(t.data.value))),
         l.attrs.isStyle(t.data.name) &&
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = l.rewriteCSS(t.data.value, {
             context: "declarationList",
@@ -362,7 +362,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = l.rewriteHtml(t.data.value, {
             ...l.meta,
@@ -372,18 +372,18 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href
+              e.location.href,
             ),
           }))),
         l.attrs.isSrcset(t.data.name) &&
           (t.target.call(
             t.that,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = l.html.wrapSrcset(t.data.value))),
         l.attrs.isForbidden(t.data.name) &&
-          (t.data.name = l.attributePrefix + "-attr-" + t.data.name));
+          (t.data.name = l.attributePrefix + "-attr-" + t.data.name);
     }),
     i.element.on("audio", (e) => {
       e.data.url = l.rewriteUrl(e.data.url);
@@ -391,8 +391,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
     i.element.hookProperty([g, b, f, _], "href", {
       get: (e, t) => l.sourceUrl(e.call(t)),
       set: (e, t, [a]) => {
-        (i.element.setAttribute.call(t, l.attributePrefix + "-attr-href", a),
-          e.call(t, l.rewriteUrl(a)));
+        i.element.setAttribute.call(t, l.attributePrefix + "-attr-href", a),
+          e.call(t, l.rewriteUrl(a));
       },
     }),
     i.element.hookProperty([d, c, u, s, S, m, h, p, v, w], "src", {
@@ -406,15 +406,15 @@ async function __uvHook(e, t = {}, a = "/o/") {
             i.element.setAttribute.call(t, l.attributePrefix + "-attr-src", a),
             e.call(t, l.blobUrls.get(a) || a)
           );
-        (i.element.setAttribute.call(t, l.attributePrefix + "-attr-src", a),
-          e.call(t, l.rewriteUrl(a)));
+        i.element.setAttribute.call(t, l.attributePrefix + "-attr-src", a),
+          e.call(t, l.rewriteUrl(a));
       },
     }),
     i.element.hookProperty([y], "action", {
       get: (e, t) => l.sourceUrl(e.call(t)),
       set: (e, t, [a]) => {
-        (i.element.setAttribute.call(t, l.attributePrefix + "-attr-action", a),
-          e.call(t, l.rewriteUrl(a)));
+        i.element.setAttribute.call(t, l.attributePrefix + "-attr-action", a),
+          e.call(t, l.rewriteUrl(a));
       },
     }),
     i.element.hookProperty([S], "srcset", {
@@ -422,8 +422,8 @@ async function __uvHook(e, t = {}, a = "/o/") {
         i.element.getAttribute.call(t, l.attributePrefix + "-attr-srcset") ||
         e.call(t),
       set: (e, t, [a]) => {
-        (i.element.setAttribute.call(t, l.attributePrefix + "-attr-srcset", a),
-          e.call(t, l.html.wrapSrcset(a)));
+        i.element.setAttribute.call(t, l.attributePrefix + "-attr-srcset", a),
+          e.call(t, l.html.wrapSrcset(a));
       },
     }),
     i.element.hookProperty(d, "integrity", {
@@ -433,7 +433,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         i.element.setAttribute.call(
           t,
           l.attributePrefix + "-attr-integrity",
-          a
+          a,
         );
       },
     }),
@@ -449,7 +449,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
       get: (e, r) => {
         const o = e.call(r);
         try {
-          return (o.__uv || __uvHook(o, t, a), o);
+          return o.__uv || __uvHook(o, t, a), o;
         } catch (e) {
           return o;
         }
@@ -460,7 +460,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         const o = e.call(r);
         try {
           const e = o.defaultView;
-          return (e.__uv || __uvHook(e, t, a), o);
+          return e.__uv || __uvHook(e, t, a), o;
         } catch (e) {
           return win;
         }
@@ -480,9 +480,9 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href
+              e.location.href,
             ),
-          })
+          }),
         );
       },
     }),
@@ -523,26 +523,26 @@ async function __uvHook(e, t = {}, a = "/o/") {
     i.attribute.on("getValue", (e) => {
       i.element.hasAttribute.call(
         e.that.ownerElement,
-        l.attributePrefix + "-attr-" + e.data.name
+        l.attributePrefix + "-attr-" + e.data.name,
       ) &&
         (e.data.value = i.element.getAttribute.call(
           e.that.ownerElement,
-          l.attributePrefix + "-attr-" + e.data.name
+          l.attributePrefix + "-attr-" + e.data.name,
         ));
     }),
     i.attribute.on("setValue", (t) => {
-      (l.attrs.isUrl(t.data.name) &&
+      l.attrs.isUrl(t.data.name) &&
         (i.element.setAttribute.call(
           t.that.ownerElement,
           l.attributePrefix + "-attr-" + t.data.name,
-          t.data.value
+          t.data.value,
         ),
         (t.data.value = l.rewriteUrl(t.data.value))),
         l.attrs.isStyle(t.data.name) &&
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = l.rewriteCSS(t.data.value, {
             context: "declarationList",
@@ -551,7 +551,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = l.rewriteHtml(t.data.value, {
             ...l.meta,
@@ -561,16 +561,16 @@ async function __uvHook(e, t = {}, a = "/o/") {
               l.bundleScript,
               l.configScript,
               l.cookieStr,
-              e.location.href
+              e.location.href,
             ),
           }))),
         l.attrs.isSrcset(t.data.name) &&
           (i.element.setAttribute.call(
             t.that.ownerElement,
             l.attributePrefix + "-attr-" + t.data.name,
-            t.data.value
+            t.data.value,
           ),
-          (t.data.value = l.html.wrapSrcset(t.data.value))));
+          (t.data.value = l.html.wrapSrcset(t.data.value)));
     }),
     i.url.on("createObjectURL", (t) => {
       let a = t.target.call(t.that, t.data.object);
@@ -581,50 +581,50 @@ async function __uvHook(e, t = {}, a = "/o/") {
             ? l.meta.url.origin
             : e.parent.__uv.meta.url.origin) +
           a.slice(5 + location.origin.length);
-        (l.blobUrls.set(r, a), t.respondWith(r));
+        l.blobUrls.set(r, a), t.respondWith(r);
       } else t.respondWith(a);
     }),
     i.url.on("revokeObjectURL", (e) => {
       if (l.blobUrls.has(e.data.url)) {
         const t = e.data.url;
-        ((e.data.url = l.blobUrls.get(e.data.url)), l.blobUrls.delete(t));
+        (e.data.url = l.blobUrls.get(e.data.url)), l.blobUrls.delete(t);
       }
     }),
     i.storage.on("get", (e) => {
       e.data.name = n + l.meta.url.origin + "@" + e.data.name;
     }),
     i.storage.on("set", (e) => {
-      (e.that.__uv$storageObj &&
+      e.that.__uv$storageObj &&
         (e.that.__uv$storageObj[e.data.name] = e.data.value),
-        (e.data.name = n + l.meta.url.origin + "@" + e.data.name));
+        (e.data.name = n + l.meta.url.origin + "@" + e.data.name);
     }),
     i.storage.on("delete", (e) => {
-      (e.that.__uv$storageObj && delete e.that.__uv$storageObj[e.data.name],
-        (e.data.name = n + l.meta.url.origin + "@" + e.data.name));
+      e.that.__uv$storageObj && delete e.that.__uv$storageObj[e.data.name],
+        (e.data.name = n + l.meta.url.origin + "@" + e.data.name);
     }),
     i.storage.on("getItem", (e) => {
       e.data.name = n + l.meta.url.origin + "@" + e.data.name;
     }),
     i.storage.on("setItem", (e) => {
-      (e.that.__uv$storageObj &&
+      e.that.__uv$storageObj &&
         (e.that.__uv$storageObj[e.data.name] = e.data.value),
-        (e.data.name = n + l.meta.url.origin + "@" + e.data.name));
+        (e.data.name = n + l.meta.url.origin + "@" + e.data.name);
     }),
     i.storage.on("removeItem", (e) => {
-      (e.that.__uv$storageObj && delete e.that.__uv$storageObj[e.data.name],
-        (e.data.name = n + l.meta.url.origin + "@" + e.data.name));
+      e.that.__uv$storageObj && delete e.that.__uv$storageObj[e.data.name],
+        (e.data.name = n + l.meta.url.origin + "@" + e.data.name);
     }),
     i.storage.on("clear", (e) => {
       if (e.that.__uv$storageObj)
         for (const t of i.nativeMethods.keys.call(null, e.that.__uv$storageObj))
-          (delete e.that.__uv$storageObj[t],
+          delete e.that.__uv$storageObj[t],
             i.storage.removeItem.call(e.that, n + l.meta.url.origin + "@" + t),
-            e.respondWith());
+            e.respondWith();
     }),
     i.storage.on("length", (e) => {
       e.that.__uv$storageObj &&
         e.respondWith(
-          i.nativeMethods.keys.call(null, e.that.__uv$storageObj).length
+          i.nativeMethods.keys.call(null, e.that.__uv$storageObj).length,
         );
     }),
     i.storage.on("key", (e) => {
@@ -632,7 +632,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
         e.respondWith(
           i.nativeMethods.keys.call(null, e.that.__uv$storageObj)[
             e.data.index
-          ] || null
+          ] || null,
         );
     }),
     i.websocket.on("websocket", async (t) => {
@@ -660,7 +660,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           port: a.port || ("wss:" === a.protocol ? "443" : "80"),
           path: a.pathname + a.search,
         };
-      (s.length && (r["Sec-WebSocket-Protocol"] = s.join(", ")),
+      s.length && (r["Sec-WebSocket-Protocol"] = s.join(", ")),
         (t.data.url =
           ("https:" === l.bare.protocol ? "wss://" : "ws://") +
           l.bare.host +
@@ -680,15 +680,15 @@ async function __uvHook(e, t = {}, a = "/o/") {
                 "sec-websocket-key",
                 "sec-websocket-version",
               ],
-            })
+            }),
           ),
-        ]));
+        ]);
       const c = new t.target(t.data.url, t.data.protocols);
-      (i.nativeMethods.defineProperty(c, n + "url", {
+      i.nativeMethods.defineProperty(c, n + "url", {
         enumerable: !1,
         value: a.href,
       }),
-        t.respondWith(c));
+        t.respondWith(c);
     }),
     i.websocket.on("url", (e) => {
       "__uv$url" in e.that && (e.data.value = e.that.__uv$url);
@@ -721,7 +721,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           l.sourceCSS(e.target.call(e.that, e.data.property), {
             context: "value",
             ...l.meta,
-          })
+          }),
         );
     }),
     "CSS2Properties" in e)
@@ -740,7 +740,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
           const a = e.call(t);
           if (!a[n + "modifiedStyle"])
             for (const e of i.style.urlProps)
-              (i.nativeMethods.defineProperty(a, e, {
+              i.nativeMethods.defineProperty(a, e, {
                 enumerable: !0,
                 configurable: !0,
                 get() {
@@ -751,18 +751,18 @@ async function __uvHook(e, t = {}, a = "/o/") {
                   i.style.setProperty.call(
                     this,
                     i.style.propToDashed[e] || e,
-                    l.rewriteCSS(t, { context: "value", ...l.meta })
+                    l.rewriteCSS(t, { context: "value", ...l.meta }),
                   );
                 },
               }),
                 i.nativeMethods.defineProperty(a, n + "modifiedStyle", {
                   enumerable: !1,
                   value: !0,
-                }));
+                });
           return a;
         },
       });
-  (i.style.on("setCssText", (e) => {
+  i.style.on("setCssText", (e) => {
     e.data.value = l.rewriteCSS(e.data.value, {
       context: "declarationList",
       ...l.meta,
@@ -779,18 +779,18 @@ async function __uvHook(e, t = {}, a = "/o/") {
         if (t.__uv$dispatched) return !1;
         t.stopImmediatePropagation();
         const a = e.location.hash;
-        (i.history.replaceState.call(e.history, "", "", t.oldURL),
-          (l.location.hash = a));
+        i.history.replaceState.call(e.history, "", "", t.oldURL),
+          (l.location.hash = a);
       }),
     i.location.on("hashchange", (t, a, r) => {
       if (r.HashChangeEvent && i.history.replaceState) {
         i.history.replaceState.call(e.history, "", "", l.rewriteUrl(a));
         const o = new r.HashChangeEvent("hashchange", { newURL: a, oldURL: t });
-        (i.nativeMethods.defineProperty(o, n + "dispatched", {
+        i.nativeMethods.defineProperty(o, n + "dispatched", {
           value: !0,
           enumerable: !1,
         }),
-          l.dispatchEvent.call(e, o));
+          l.dispatchEvent.call(e, o);
       }
     }),
     i.fetch.overrideRequest(),
@@ -845,7 +845,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
     i.override(e, "open", (e, t, a) => {
       if (!a.length) return e.apply(t, a);
       let [r] = a;
-      return ((r = l.rewriteUrl(r)), e.call(t, r));
+      return (r = l.rewriteUrl(r)), e.call(t, r);
     }),
     (l.$wrap = function (e) {
       return "location" === e
@@ -868,7 +868,7 @@ async function __uvHook(e, t = {}, a = "/o/") {
     (l.eval = i.wrap(e, "eval", (e, t, a) => {
       if (!a.length || "string" != typeof a[0]) return e.apply(t, a);
       let [r] = a;
-      return ((r = l.rewriteJS(r)), e.call(t, r));
+      return (r = l.rewriteJS(r)), e.call(t, r);
     })),
     (l.call = function (e, t, a) {
       return a ? e.apply(a, t) : e(...t);
@@ -956,6 +956,6 @@ async function __uvHook(e, t = {}, a = "/o/") {
       set(e) {
         this.eval = e;
       },
-    }));
+    });
 }
 self.__uv || __uvHook(self, self.__uv$config, self.__uv$config.bare);

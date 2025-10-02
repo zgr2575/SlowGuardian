@@ -28,6 +28,8 @@
     "test-sw-headless": "node scripts/test-sw-puppeteer.js",
     "test-sw-simple": "node scripts/test-sw-simple.js",
     "build": "npm run build:version && npm run format",
+    "postinstall": "node scripts/setup-scramjet.cjs",
+    "setup:scramjet": "node scripts/setup-scramjet.cjs",
     "build:production": "NODE_ENV=production npm run build:version && npm run format && npm run audit-fix",
     "build:version": "node scripts/build-version.js",
     "audit-fix": "npm audit fix",

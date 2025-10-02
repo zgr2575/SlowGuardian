@@ -407,6 +407,9 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Enzuzo Cookie Banner -->
+    <script src="https://app.enzuzo.com/scripts/cookiebar/f8c4cd70-9ec8-11f0-8a15-efa3a64fef00"></script>
   </head>
   <body>
     <!-- Background -->
@@ -875,12 +878,10 @@
                   <label for="proxy-backend">Proxy Backend</label>
                   <select id="proxy-backend" class="form-select">
                     <option value="ultraviolet">Ultraviolet (Default)</option>
+                    <option value="scramjet">Scramjet (Premium)</option>
                     <option value="dynamic">Dynamic</option>
-                    <option value="rammerhead">Rammerhead (Advanced)</option>
-                    <option value="epoxy">Epoxy Transport</option>
-                    <option value="libcurl">LibCurl Transport</option>
-                    <option value="auto">Auto-Select Best</option>
                   </select>
+                  <small class="form-text">Scramjet requires premium status (sg_premium=1 cookie)</small>
                 </div>
 
                 <div class="form-group">
