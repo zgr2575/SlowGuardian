@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "ea1dba1-1759411964662",
-  "buildDate": "2025-10-02T13:32:44.662Z",
-  "buildTimestamp": 1759411964663,
+  "buildId": "538efd0-1759412949665",
+  "buildDate": "2025-10-02T13:49:09.665Z",
+  "buildTimestamp": 1759412949665,
   "git": {
-    "commit": "ea1dba1d16a886b24dff6e00b28c32e3ba4ec260",
-    "commitShort": "ea1dba1",
+    "commit": "538efd008d5b9c76c319b3489c8fca719ad56cc4",
+    "commitShort": "538efd0",
     "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-01T21:22:22Z",
-    "commitMessage": "Fix service worker to completely skip external requests without interception"
+    "commitDate": "2025-10-02T13:35:43Z",
+    "commitMessage": "Add postinstall script and documentation for dual proxy system"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",

@@ -10,6 +10,7 @@ let scramjetLoaded = false;
 
 try {
   importScripts("/scram/config.js");
+  importScripts("/scram/scramjet.bundle.js");
   importScripts("/scram/scramjet.codecs.js");
   importScripts("/scram/scramjet.client.js");
   importScripts("/scram/scramjet.worker.js");

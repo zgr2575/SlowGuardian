@@ -28,18 +28,16 @@ if (!fs.existsSync(scramjetSrc)) {
 
 // List of files to copy (based on Scramjet documentation)
 const filesToCopy = [
-  'scramjet.wasm.js',
+  'scramjet.bundle.js',
   'scramjet.worker.js', 
   'scramjet.client.js',
-  'scramjet.shared.js',
-  'scramjet.sync.js',
   'scramjet.codecs.js'
 ];
 
 let copiedCount = 0;
 
-// Try to copy files from various possible locations
-const possiblePaths = ['dist', 'lib', ''];
+// Try to copy files from various possible locations  
+const possiblePaths = ['dist', 'lib', '', 'dist/'];
 
 for (const file of filesToCopy) {
   let found = false;
