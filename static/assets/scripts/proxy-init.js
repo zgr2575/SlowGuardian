@@ -194,9 +194,9 @@ class SlowGuardianProxy {
   async testProxyConfigs() {
     this.log('debug', 'CONFIG', 'Testing proxy configurations...');
 
-    // Test Ultraviolet config
+    // Test Ultraviolet config (located at /m/config.js, proxy prefix is /a/)
     try {
-      const uvResponse = await fetch('/a/config.js');
+      const uvResponse = await fetch('/m/config.js');
       if (uvResponse.ok) {
         this.status.ultraviolet = true;
         this.log('info', 'UV', '✅ Ultraviolet configuration accessible');
