@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "538efd0-1759412949665",
-  "buildDate": "2025-10-02T13:49:09.665Z",
-  "buildTimestamp": 1759412949665,
+  "buildId": "377eaaf-1759426494872",
+  "buildDate": "2025-10-02T17:34:54.872Z",
+  "buildTimestamp": 1759426494872,
   "git": {
-    "commit": "538efd008d5b9c76c319b3489c8fca719ad56cc4",
-    "commitShort": "538efd0",
-    "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-02T13:35:43Z",
-    "commitMessage": "Add postinstall script and documentation for dual proxy system"
+    "commit": "377eaaf5ce220eaf927e2fb5d0521dd94a275351",
+    "commitShort": "377eaaf",
+    "branch": "copilot/fix-1b669f73-aa90-4dfa-a0fc-2fdf17771979",
+    "commitDate": "2025-10-02T17:30:11Z",
+    "commitMessage": "Initial plan"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",
