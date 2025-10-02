@@ -99,7 +99,14 @@ window.addEventListener("load", function () {
     }
 
     if (!GoUrl.startsWith("/e/")) {
-      if (dyValue === "true" || dyValue === "auto") {
+      // Check proxy service preference
+      const proxyService = localStorage.getItem("proxy-service") || "ultraviolet";
+      
+      if (proxyService === "scramjet") {
+        // Use Scramjet proxy encoding
+        GoUrl = "/scram/" + GoUrl;
+        console.log("🔄 Using Scramjet proxy for:", GoUrl);
+      } else if (dyValue === "true" || dyValue === "auto" || proxyService === "dynamic") {
         // Use Dynamic proxy encoding
         GoUrl = "/dy/q/" + GoUrl;
         console.log("🔄 Using Dynamic proxy for:", GoUrl);
