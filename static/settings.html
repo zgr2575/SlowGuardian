@@ -1446,6 +1446,9 @@
     <!-- Cookie Utilities (Load first) -->
     <script src="assets/scripts/cookie-utils.js?v=1"></script>
 
+    <!-- Proxy Initialization System -->
+    <script src="assets/scripts/proxy-init.js?v=1"></script>
+
     <!-- KeyAuth Premium System -->
     <script src="assets/scripts/keyauth.js?v=1"></script>
 
@@ -2174,15 +2177,32 @@
 
         // Update proxy status
         function updateProxyStatus() {
-          if (window.multiProxy) {
-            const status = window.multiProxy.getProxyStatus();
+          if (window.slowGuardianProxy) {
+            const proxyStatus = window.slowGuardianProxy.getStatus();
+            const status = proxyStatus.status || {};
+            
+            // Determine current proxy
+            const savedProxy = localStorage.getItem("preferred-proxy") || "auto";
+            let currentProxy = savedProxy;
+            
+            // Determine available proxies
+            const available = [];
+            if (status.ultraviolet) available.push("ultraviolet");
+            if (status.dynamic) available.push("dynamic");
+            
+            // Auto-select current based on availability if set to auto
+            if (currentProxy === "auto" && available.length > 0) {
+              currentProxy = available[0]; // Use first available
+            }
+            
             proxyStatusContent.innerHTML = `
-              <div>Current: <strong>${status.current}</strong></div>
-              <div>Available: ${status.available.join(", ")}</div>
-              ${status.failed.length > 0 ? `<div style="color: #ff6b6b;">Failed: ${status.failed.join(", ")}</div>` : ""}
+              <div>Current: <strong>${currentProxy}</strong></div>
+              <div>Available: ${available.length > 0 ? available.join(", ") : "None"}</div>
+              <div>Service Worker: ${status.serviceWorker ? '✅' : '❌'}</div>
+              <div>Bare Server: ${status.bare ? '✅' : '❌'}</div>
             `;
           } else {
-            proxyStatusContent.innerHTML = '<div style="color: #ffa500;">Multi-proxy system loading...</div>';
+            proxyStatusContent.innerHTML = '<div style="color: #ffa500;">Proxy system loading...</div>';
           }
         }
 
@@ -2190,18 +2210,11 @@
         proxyBackendSelect.addEventListener("change", function () {
           const selectedProxy = this.value;
           localStorage.setItem("preferred-proxy", selectedProxy);
-
-          if (window.multiProxy) {
-            if (selectedProxy === "auto") {
-              // Let the system auto-select
-              console.log("Auto-selection enabled");
-            } else {
-              window.multiProxy.setPreferredProxy(selectedProxy);
-            }
-            updateProxyStatus();
-          }
-
-          showNotification("Proxy backend updated to " + selectedProxy);
+          
+          // Update the display immediately
+          updateProxyStatus();
+          
+          showNotification("Proxy backend updated to " + selectedProxy, "success");
         });
 
         autoFailoverCheckbox.addEventListener("change", function () {
@@ -2210,8 +2223,22 @@
           showNotification("Auto-failover " + (enabled ? "enabled" : "disabled"));
         });
 
-        // Initial status update
-        updateProxyStatus();
+        // Initial status update with retry
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        function tryUpdateStatus() {
+          if (window.slowGuardianProxy) {
+            updateProxyStatus();
+          } else if (retryCount < maxRetries) {
+            retryCount++;
+            setTimeout(tryUpdateStatus, 500);
+          } else {
+            proxyStatusContent.innerHTML = '<div style="color: #ff6b6b;">Proxy system failed to load</div>';
+          }
+        }
+        
+        tryUpdateStatus();
 
         // Update status every 10 seconds
         setInterval(updateProxyStatus, 10000);
