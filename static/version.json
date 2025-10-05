@@ -1,15 +1,15 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "538efd0-1759412949665",
-  "buildDate": "2025-10-02T13:49:09.665Z",
-  "buildTimestamp": 1759412949665,
+  "buildId": "a0d402a-1759625265736",
+  "buildDate": "2025-10-05T00:47:45.736Z",
+  "buildTimestamp": 1759625265737,
   "git": {
-    "commit": "538efd008d5b9c76c319b3489c8fca719ad56cc4",
-    "commitShort": "538efd0",
-    "branch": "copilot/fix-d05b4264-aa13-4d6a-80d4-ee33f804b5d3",
-    "commitDate": "2025-10-02T13:35:43Z",
-    "commitMessage": "Add postinstall script and documentation for dual proxy system"
+    "commit": "a0d402a1acc8a8142fb3739f563d3b10f319c604",
+    "commitShort": "a0d402a",
+    "branch": "copilot/fix-1b669f73-aa90-4dfa-a0fc-2fdf17771979",
+    "commitDate": "2025-10-05T00:41:46Z",
+    "commitMessage": "Fix settings page proxy status - use window.slowGuardianProxy instead of non-existent window.multiProxy"
   },
   "environment": "development",
   "nodeVersion": "v20.19.5",
