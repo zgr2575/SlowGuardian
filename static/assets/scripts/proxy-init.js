@@ -194,9 +194,9 @@ class SlowGuardianProxy {
   async testProxyConfigs() {
     this.log('debug', 'CONFIG', 'Testing proxy configurations...');
 
-    // Test Ultraviolet config
+    // Test Ultraviolet config (located at /m/config.js, proxy prefix is /a/)
     try {
-      const uvResponse = await fetch('/a/config.js');
+      const uvResponse = await fetch('/m/config.js');
       if (uvResponse.ok) {
         this.status.ultraviolet = true;
         this.log('info', 'UV', '✅ Ultraviolet configuration accessible');
@@ -373,21 +373,28 @@ window.SlowGuardianProxy = SlowGuardianProxy;
 
 // Auto-initialize if not in a worker context
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  console.log('[PROXY-INIT DEBUG] Script executing, document.readyState:', document.readyState);
+  console.log('[PROXY-INIT DEBUG] Creating SlowGuardianProxy instance...');
   window.slowGuardianProxy = new SlowGuardianProxy();
+  console.log('[PROXY-INIT DEBUG] SlowGuardianProxy instance created:', window.slowGuardianProxy);
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
+    console.log('[PROXY-INIT DEBUG] DOM still loading, adding DOMContentLoaded listener');
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('[PROXY-INIT DEBUG] DOMContentLoaded fired, initializing proxy...');
       window.slowGuardianProxy.initialize().catch(error => {
-        console.error('Proxy initialization failed:', error);
+        console.error('[PROXY-INIT DEBUG] Proxy initialization failed:', error);
         window.slowGuardianProxy.log('error', 'INIT', '❌ Automatic initialization failed, manual retry may be needed');
       });
     });
   } else {
     // DOM already ready
+    console.log('[PROXY-INIT DEBUG] DOM already ready, initializing with timeout...');
     setTimeout(() => {
+      console.log('[PROXY-INIT DEBUG] Timeout elapsed, initializing proxy...');
       window.slowGuardianProxy.initialize().catch(error => {
-        console.error('Proxy initialization failed:', error);
+        console.error('[PROXY-INIT DEBUG] Proxy initialization failed:', error);
         window.slowGuardianProxy.log('error', 'INIT', '❌ Automatic initialization failed, manual retry may be needed');
       });
     }, 100);
