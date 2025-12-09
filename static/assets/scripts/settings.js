@@ -33,8 +33,13 @@ document.addEventListener("DOMContentLoaded", function () {
   iconElement.value = customIcon;
   nameElement.value = customName;
 
-  localStorage.setItem("ab", true);
-  document.getElementById("ab-settings-switch").checked = true;
+  // Persist About:Blank setting - only set default if no value exists
+  const storedAb = localStorage.getItem("ab");
+  if (storedAb === null) {
+    localStorage.setItem("ab", "true");
+  }
+  document.getElementById("ab-settings-switch").checked =
+    localStorage.getItem("ab") === "true";
 });
 
 // Dyn
