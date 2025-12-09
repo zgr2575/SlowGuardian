@@ -11,6 +11,13 @@ window.onload = function () {
   let GoUrl = sessionStorage.getItem("GoUrl");
   let dyValue = localStorage.getItem("dy");
 
+  // Check if GoUrl exists before proceeding
+  if (!GoUrl) {
+    console.error("No URL found in sessionStorage. Redirecting to home.");
+    window.location.href = "/";
+    return;
+  }
+
   if (!GoUrl.startsWith("/e/")) {
     if (dyValue === "true" || dyValue === "auto") {
       GoUrl = "/a/q/" + GoUrl;

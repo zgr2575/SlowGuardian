@@ -28,20 +28,21 @@ The Proxy is a modern version of Interstellar, but since release everything has 
 - Geforce NOW Support
 
 ### Install Instructions
-```git clone https://github.com/zgr2575/SlowGuardian```
+
+`git clone https://github.com/zgr2575/SlowGuardian`
 <br>
-```cd SlowGuardian```
+`cd SlowGuardian`
 <br>
-```npm install```
+`npm install`
 <br>
-```npm start```
+`npm start`
 
 Updating
-```cd SlowGuardian```
-```git pull --force --allow-unrelated-histories```
-
+`cd SlowGuardian`
+`git pull --force --allow-unrelated-histories`
 
 ---
+
 TO UPDATE OR DO ANYTHING ON REPLIT, PLEASE REFFER TO OLD INSTRUCTON ON THE V7
 LONG TERM SUPPORT BRANCH, WE NOW SUPPORT EVERYTHING. REPLIT DEVELOPMENT DISCONTINUED
 
