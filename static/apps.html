@@ -236,12 +236,13 @@
         const searchInput = document.getElementById("searchbarbottom");
         const searchClear = document.getElementById("search-clear");
         const searchTerm = searchInput.value.toLowerCase();
-        const apps = document.querySelectorAll(".container-apps .app-item, .container-apps > div");
+        // Only select direct app-item children to avoid duplicates
+        const apps = document.querySelectorAll(".container-apps > .app-item");
 
         // Show/hide clear button
-        if (searchTerm.length > 0) {
+        if (searchTerm.length > 0 && searchClear) {
           searchClear.style.display = "block";
-        } else {
+        } else if (searchClear) {
           searchClear.style.display = "none";
         }
 
@@ -258,8 +259,11 @@
 
         // Update results counter if available
         const resultsCounter = document.getElementById("results-counter");
-        if (resultsCounter) {
-          resultsCounter.textContent = `${visibleCount} apps found`;
+        if (resultsCounter && searchTerm) {
+          resultsCounter.textContent = `${visibleCount} app${visibleCount !== 1 ? 's' : ''} found`;
+          resultsCounter.style.display = "block";
+        } else if (resultsCounter) {
+          resultsCounter.style.display = "none";
         }
       }
 

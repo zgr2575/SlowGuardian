@@ -304,7 +304,7 @@ router.get("/stats", adminAuth, (req, res) => {
       success: true,
       onlineUsers: onlineUsers.length,
       activeSessions: onlineUsers.length, // Same as online users for now
-      blockedUsers: 0, // TODO: Implement user blocking tracking
+      blockedUsers: adminStore.getBlockedUsersCount(),
       uptime: process.uptime(),
       memoryUsageMB: Math.round(memoryUsage.heapUsed / 1024 / 1024),
       totalRequests: adminStore.getTotalRequests?.() || 0,

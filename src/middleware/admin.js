@@ -133,6 +133,16 @@ class AdminStore {
     return user && user.isBlocked;
   }
 
+  getBlockedUsersCount() {
+    let count = 0;
+    for (const [userId, user] of this.users) {
+      if (user.isBlocked) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   // Website Blocking
   blockSiteForUser(userId, domain) {
     if (!this.blockedSites.has(userId)) {

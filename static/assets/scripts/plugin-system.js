@@ -380,7 +380,30 @@ class PluginSystem {
 
   showPluginStore() {
     // Plugin store implementation
-    this.showNotification("Plugin Store - Coming soon!", "info");
+    const storeHTML = `
+      <div class="modal-overlay" id="plugin-store-modal">
+        <div class="modal-dialog" style="max-width: 800px;">
+          <div class="modal-header">
+            <h3>Plugin Store</h3>
+            <button class="modal-close" onclick="document.getElementById('plugin-store-modal').remove()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+              <strong>Plugin Store is currently under development</strong><br><br>
+              Plugins can be manually installed by placing them in the <code>/plugins/</code> directory.<br>
+              Check the documentation for more information on creating and installing plugins.
+            </p>
+            <div style="text-align: center;">
+              <button class="btn btn-primary" onclick="window.open('https://github.com/zgr2575/SlowGuardian/tree/main/docs/developer/plugins.md', '_blank')">
+                📖 View Plugin Documentation
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', storeHTML);
   }
 
   showPluginDocs() {

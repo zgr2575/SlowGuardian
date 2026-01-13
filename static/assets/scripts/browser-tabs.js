@@ -661,8 +661,40 @@ class BrowserTabs {
   }
 
   showPageMenu() {
-    // Implement page menu
-    this.showNotification("Page menu - Coming soon!", "info");
+    const currentTab = this.tabs.get(this.activeTab);
+    if (!currentTab) {
+      this.showNotification("No active tab", "error");
+      return;
+    }
+
+    const menuHTML = `
+      <div class="modal-overlay" id="page-menu-modal">
+        <div class="modal-dialog" style="max-width: 400px;">
+          <div class="modal-header">
+            <h3>Page Options</h3>
+            <button class="modal-close" onclick="document.getElementById('page-menu-modal').remove()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="menu-items" style="display: flex; flex-direction: column; gap: 10px;">
+              <button class="btn btn-secondary" onclick="window.browserTabs?.refreshTab('${this.activeTab}'); document.getElementById('page-menu-modal').remove();">
+                🔄 Reload Page
+              </button>
+              <button class="btn btn-secondary" onclick="window.browserTabs?.duplicateTab('${this.activeTab}'); document.getElementById('page-menu-modal').remove();">
+                📄 Duplicate Tab
+              </button>
+              <button class="btn btn-secondary" onclick="window.browserTabs?.pinTab('${this.activeTab}'); document.getElementById('page-menu-modal').remove();">
+                📌 Pin Tab
+              </button>
+              <button class="btn btn-danger" onclick="window.browserTabs?.closeTab('${this.activeTab}'); document.getElementById('page-menu-modal').remove();">
+                ❌ Close Tab
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', menuHTML);
   }
 
   autoSaveSession() {

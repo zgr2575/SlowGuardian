@@ -298,16 +298,28 @@
       function search_bar() {
         const searchInput = document.getElementById("searchbarbottom");
         const searchTerm = searchInput.value.toLowerCase();
-        const games = document.querySelectorAll(".container-apps .game-item, .container-apps > div");
+        // Only select direct game-item children to avoid duplicates
+        const games = document.querySelectorAll(".container-apps > .game-item");
 
+        let visibleCount = 0;
         games.forEach((game) => {
           const gameName = game.textContent.toLowerCase();
           if (gameName.includes(searchTerm)) {
             game.style.display = "";
+            visibleCount++;
           } else {
             game.style.display = "none";
           }
         });
+
+        // Update results counter if it exists
+        const counter = document.getElementById("results-counter");
+        if (counter && searchTerm) {
+          counter.textContent = `${visibleCount} game${visibleCount !== 1 ? 's' : ''} found`;
+          counter.style.display = "block";
+        } else if (counter) {
+          counter.style.display = "none";
+        }
       }
 
       // Enhanced initialization for games page
@@ -338,6 +350,24 @@
 
       // Call initialization function immediately
       initGamesPage();
+
+      // Toggle hidden games visibility
+      function toggleHiddenGames() {
+        const hiddenGamesGrid = document.getElementById("hidden-games-grid");
+        const toggleText = document.getElementById("toggle-hidden-text");
+
+        if (hiddenGamesGrid && toggleText) {
+          const isHidden = hiddenGamesGrid.style.display === "none";
+
+          if (isHidden) {
+            hiddenGamesGrid.style.display = "grid";
+            toggleText.textContent = "Hide Hidden";
+          } else {
+            hiddenGamesGrid.style.display = "none";
+            toggleText.textContent = "Show Hidden";
+          }
+        }
+      }
     </script>
 
     <div id="adv"></div>

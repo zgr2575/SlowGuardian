@@ -4,9 +4,7 @@
 #games-grid,
 #apps-grid,
 .games-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
-  gap: var(--space-3) !important;
+  display: block !important;
   padding: var(--space-4) 0 !important;
   width: 100% !important;
   max-width: none !important;

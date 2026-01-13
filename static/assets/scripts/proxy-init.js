@@ -84,6 +84,9 @@ class SlowGuardianProxy {
       // Step 5: Set up proxy debugging tools
       this.setupProxyDebugTools();
 
+      // Step 6: Check final status to verify everything is working
+      await this.checkFinalStatus();
+
       this.log('info', 'INIT', '✅ Proxy system initialization completed');
       return true;
 
@@ -158,13 +161,25 @@ class SlowGuardianProxy {
 
   async registerServiceWorker() {
     this.log('debug', 'SW', 'Registering service worker...');
-    
+
     try {
-      // Unregister existing service worker first
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      for (const registration of registrations) {
-        await registration.unregister();
-        this.log('debug', 'SW', 'Unregistered existing service worker');
+      // Check if service worker is already registered and active
+      const existingRegistration = await navigator.serviceWorker.getRegistration('/');
+
+      if (existingRegistration && existingRegistration.active) {
+        this.log('info', 'SW', '✅ Service worker already registered and active, reusing it');
+        this.serviceWorker = existingRegistration;
+        this.status.serviceWorker = true;
+
+        // Set up message listener
+        navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerMessage.bind(this));
+        return;
+      }
+
+      // Only unregister if we have a broken/inactive registration
+      if (existingRegistration && !existingRegistration.active) {
+        this.log('debug', 'SW', 'Unregistering broken service worker...');
+        await existingRegistration.unregister();
       }
 
       // Register new service worker
@@ -298,29 +313,37 @@ class SlowGuardianProxy {
   // Public method to encode URLs for proxying
   encodeUrl(url, proxy = 'auto') {
     if (!url) return '';
-    
+
     try {
       const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-      
+
       // Auto-select proxy based on availability
       if (proxy === 'auto') {
-        if (this.status.dynamic) {
-          proxy = 'dynamic';
-        } else if (this.status.ultraviolet) {
+        if (this.status.ultraviolet) {
           proxy = 'ultraviolet';
+        } else if (this.status.dynamic) {
+          proxy = 'dynamic';
         } else {
           throw new Error('No proxy systems available');
         }
       }
-      
-      if (proxy === 'dynamic' && this.status.dynamic) {
-        // Dynamic proxy encoding
-        const encoded = btoa(fullUrl).replace(/[+/=]/g, c => ({'+': '-', '/': '_', '=': ''}[c] || c));
-        return `/dy/${encoded}`;
-      } else if (proxy === 'ultraviolet' && this.status.ultraviolet) {
-        // Ultraviolet proxy encoding
-        const encoded = btoa(fullUrl).replace(/[+/=]/g, c => ({'+': '-', '/': '_', '=': ''}[c] || c));
-        return `/a/${encoded}`;
+
+      if (proxy === 'ultraviolet' && this.status.ultraviolet) {
+        // Use Ultraviolet's proper encoder if available
+        if (typeof __uv$config !== 'undefined' && __uv$config.encodeUrl) {
+          const encoded = __uv$config.encodeUrl(fullUrl);
+          this.log('debug', 'ENCODE', `Ultraviolet encoded: ${fullUrl} -> ${encoded}`);
+          return encoded;
+        } else {
+          this.log('warn', 'ENCODE', 'Ultraviolet config not loaded, using fallback encoding');
+          // Fallback: just use the prefix
+          return `/a/${encodeURIComponent(fullUrl)}`;
+        }
+      } else if (proxy === 'dynamic' && this.status.dynamic) {
+        // Dynamic proxy doesn't have a client-side encoder, use direct URL
+        // The service worker will handle the encoding
+        this.log('debug', 'ENCODE', `Dynamic proxy: ${fullUrl}`);
+        return `/dy/${encodeURIComponent(fullUrl)}`;
       } else {
         throw new Error(`Proxy system '${proxy}' not available`);
       }
