@@ -253,13 +253,21 @@
         optIn?.addEventListener('click', ()=>{
           setCookie('sg_beta','scramjet',365);
           setCookie('sg_premium','1',365);
-          alert('Beta enabled for this browser (test mode)');
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('✅ Beta features enabled! Refresh the page to see changes.', 'success', 5000);
+          } else {
+            console.log('✅ Beta enabled for this browser (test mode)');
+          }
         });
 
         optOut?.addEventListener('click', ()=>{
           setCookie('sg_beta','',-1);
           setCookie('sg_premium','0',365);
-          alert('Beta disabled');
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('Beta features disabled. Refresh to apply.', 'info', 3000);
+          } else {
+            console.log('Beta disabled');
+          }
         });
 
         hide?.addEventListener('click', ()=>{ banner.style.display = 'none'; });

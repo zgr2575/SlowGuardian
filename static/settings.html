@@ -2158,21 +2158,16 @@
       }
 
       // Enhanced Proxy System Settings
+      const DEBUG_PROXY = false; // Set to true for debugging
+
       function initEnhancedProxySettings() {
-        console.log("[PROXY DEBUG] initEnhancedProxySettings called");
-        
+        if (DEBUG_PROXY) console.log("[PROXY DEBUG] initEnhancedProxySettings called");
+
         const proxyBackendSelect = document.getElementById("proxy-backend");
         const autoFailoverCheckbox = document.getElementById("auto-failover");
         const proxyStatusContent = document.getElementById("proxy-status-content");
 
-        console.log("[PROXY DEBUG] Elements found:", {
-          proxyBackendSelect: !!proxyBackendSelect,
-          autoFailoverCheckbox: !!autoFailoverCheckbox,
-          proxyStatusContent: !!proxyStatusContent
-        });
-
         if (!proxyBackendSelect || !autoFailoverCheckbox || !proxyStatusContent) {
-          console.log("[PROXY DEBUG] Enhanced proxy settings not available on this page");
           return;
         }
 
@@ -2180,56 +2175,37 @@
         const savedProxy = localStorage.getItem("preferred-proxy") || "ultraviolet";
         const autoFailover = localStorage.getItem("auto-failover") !== "false"; // Default to true
 
-        console.log("[PROXY DEBUG] Loaded settings from localStorage:", {
-          savedProxy,
-          autoFailover
-        });
-
         proxyBackendSelect.value = savedProxy;
         autoFailoverCheckbox.checked = autoFailover;
-        
-        console.log("[PROXY DEBUG] Applied settings to UI elements");
 
         // Update proxy status
         function updateProxyStatus() {
-          console.log("[PROXY DEBUG] updateProxyStatus called");
-          console.log("[PROXY DEBUG] window.slowGuardianProxy exists:", !!window.slowGuardianProxy);
-          
           if (window.slowGuardianProxy) {
-            console.log("[PROXY DEBUG] Getting proxy status...");
             const proxyStatus = window.slowGuardianProxy.getStatus();
-            console.log("[PROXY DEBUG] Proxy status object:", proxyStatus);
-            
             const status = proxyStatus.status || {};
-            console.log("[PROXY DEBUG] Status details:", status);
-            
+
             // Determine current proxy
             const savedProxy = localStorage.getItem("preferred-proxy") || "auto";
-            console.log("[PROXY DEBUG] Saved proxy from localStorage:", savedProxy);
             let currentProxy = savedProxy;
-            
+
             // Determine available proxies
             const available = [];
             if (status.ultraviolet) available.push("ultraviolet");
             if (status.dynamic) available.push("dynamic");
-            console.log("[PROXY DEBUG] Available proxies:", available);
-            
+
             // Auto-select current based on availability if set to auto
             if (currentProxy === "auto" && available.length > 0) {
               currentProxy = available[0]; // Use first available
-              console.log("[PROXY DEBUG] Auto-selected proxy:", currentProxy);
             }
-            
+
             const displayHTML = `
               <div>Current: <strong>${currentProxy}</strong></div>
               <div>Available: ${available.length > 0 ? available.join(", ") : "None"}</div>
               <div>Service Worker: ${status.serviceWorker ? '✅' : '❌'}</div>
               <div>Bare Server: ${status.bare ? '✅' : '❌'}</div>
             `;
-            console.log("[PROXY DEBUG] Setting status HTML:", displayHTML);
             proxyStatusContent.innerHTML = displayHTML;
           } else {
-            console.log("[PROXY DEBUG] Proxy system not available yet, showing loading message");
             proxyStatusContent.innerHTML = '<div style="color: #ffa500;">Proxy system loading...</div>';
           }
         }
@@ -2237,16 +2213,8 @@
         // Event listeners
         proxyBackendSelect.addEventListener("change", function () {
           const selectedProxy = this.value;
-          console.log("[PROXY DEBUG] Proxy selection changed to:", selectedProxy);
-          console.log("[PROXY DEBUG] Saving to localStorage...");
           localStorage.setItem("preferred-proxy", selectedProxy);
-          console.log("[PROXY DEBUG] Saved! Verifying:", localStorage.getItem("preferred-proxy"));
-          
-          // Update the display immediately
-          console.log("[PROXY DEBUG] Updating display after selection change");
           updateProxyStatus();
-          
-          console.log("[PROXY DEBUG] Showing notification");
           showNotification("Proxy backend updated to " + selectedProxy, "success");
         });
 
@@ -2256,66 +2224,47 @@
           showNotification("Auto-failover " + (enabled ? "enabled" : "disabled"));
         });
 
-        // Add debug info display
-        window.showProxyDebugInfo = function() {
-          const debugInfo = {
-            timestamp: new Date().toISOString(),
-            proxyObjectExists: !!window.slowGuardianProxy,
-            proxyStatus: window.slowGuardianProxy ? window.slowGuardianProxy.getStatus() : null,
-            localStorage: {
-              preferredProxy: localStorage.getItem("preferred-proxy"),
-              autoFailover: localStorage.getItem("auto-failover")
-            },
-            elements: {
-              proxyBackendSelect: !!proxyBackendSelect,
-              autoFailoverCheckbox: !!autoFailoverCheckbox,
-              proxyStatusContent: !!proxyStatusContent
-            },
-            documentReady: document.readyState,
-            retryCount: retryCount,
-            maxRetries: maxRetries
+        // Add debug info display (only available when DEBUG_PROXY is true)
+        if (DEBUG_PROXY) {
+          window.showProxyDebugInfo = function() {
+            const debugInfo = {
+              timestamp: new Date().toISOString(),
+              proxyObjectExists: !!window.slowGuardianProxy,
+              proxyStatus: window.slowGuardianProxy ? window.slowGuardianProxy.getStatus() : null,
+              localStorage: {
+                preferredProxy: localStorage.getItem("preferred-proxy"),
+                autoFailover: localStorage.getItem("auto-failover")
+              }
+            };
+
+            console.log("🔍 PROXY DEBUG INFO:");
+            console.log(JSON.stringify(debugInfo, null, 2));
+            return debugInfo;
           };
-          
-          console.log("═══════════════════════════════════════");
-          console.log("🔍 PROXY DEBUG INFO SUMMARY");
-          console.log("═══════════════════════════════════════");
-          console.log(JSON.stringify(debugInfo, null, 2));
-          console.log("═══════════════════════════════════════");
-          
-          return debugInfo;
-        };
-        
-        console.log("[PROXY DEBUG] Debug helper function 'showProxyDebugInfo()' is available in console");
+        }
         
         // Initial status update with retry
         let retryCount = 0;
         const maxRetries = 10;
-        
+
         function tryUpdateStatus() {
-          console.log(`[PROXY DEBUG] Retry attempt ${retryCount + 1}/${maxRetries}`);
-          console.log("[PROXY DEBUG] window.slowGuardianProxy:", window.slowGuardianProxy);
-          
+          if (DEBUG_PROXY) console.log(`[PROXY DEBUG] Retry attempt ${retryCount + 1}/${maxRetries}`);
+
           if (window.slowGuardianProxy) {
-            console.log("[PROXY DEBUG] Proxy system found! Updating status...");
             updateProxyStatus();
           } else if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`[PROXY DEBUG] Proxy not found, retrying in 500ms (attempt ${retryCount}/${maxRetries})`);
             setTimeout(tryUpdateStatus, 500);
           } else {
-            console.error("[PROXY DEBUG] Proxy system failed to load after", maxRetries, "attempts");
+            if (DEBUG_PROXY) console.error("[PROXY DEBUG] Proxy system failed to load after", maxRetries, "attempts");
             proxyStatusContent.innerHTML = '<div style="color: #ff6b6b;">Proxy system failed to load</div>';
           }
         }
-        
-        console.log("[PROXY DEBUG] Starting proxy status initialization...");
+
         tryUpdateStatus();
 
         // Update status every 10 seconds
-        console.log("[PROXY DEBUG] Setting up 10-second status update interval");
         setInterval(updateProxyStatus, 10000);
-
-        console.log("✅ Enhanced proxy settings initialized");
       }
 
       // Initialize enhanced proxy settings when page loads
@@ -2323,6 +2272,30 @@
 
       // Also try to initialize after a delay in case multiProxy isn't ready
       setTimeout(initEnhancedProxySettings, 2000);
+
+      // Hide developer-only features for non-developer users
+      document.addEventListener("DOMContentLoaded", function() {
+        const devMode = getCookie && getCookie("developer-mode") === "true";
+
+        if (!devMode) {
+          // Hide all developer-only sections
+          const devOnlySections = document.querySelectorAll('.settings-card:has(.feature-badge:contains("Developer Only"))');
+          devOnlySections.forEach(section => {
+            section.style.display = 'none';
+          });
+
+          // More specific selectors for screenshot protection and ads
+          const screenshotCard = Array.from(document.querySelectorAll('.settings-card')).find(card =>
+            card.textContent.includes('Screenshot Protection') && card.textContent.includes('Developer Only')
+          );
+          if (screenshotCard) screenshotCard.style.display = 'none';
+
+          const adsCard = Array.from(document.querySelectorAll('.settings-card')).find(card =>
+            card.textContent.includes('Advertisement') && card.textContent.includes('Developer Only')
+          );
+          if (adsCard) adsCard.style.display = 'none';
+        }
+      });
     </script>
 
     <div id="adv"></div>
