@@ -338,6 +338,24 @@
 
       // Call initialization function immediately
       initGamesPage();
+
+      // Toggle hidden games visibility
+      function toggleHiddenGames() {
+        const hiddenGamesGrid = document.getElementById("hidden-games-grid");
+        const toggleText = document.getElementById("toggle-hidden-text");
+
+        if (hiddenGamesGrid && toggleText) {
+          const isHidden = hiddenGamesGrid.style.display === "none";
+
+          if (isHidden) {
+            hiddenGamesGrid.style.display = "grid";
+            toggleText.textContent = "Hide Hidden";
+          } else {
+            hiddenGamesGrid.style.display = "none";
+            toggleText.textContent = "Show Hidden";
+          }
+        }
+      }
     </script>
 
     <div id="adv"></div>

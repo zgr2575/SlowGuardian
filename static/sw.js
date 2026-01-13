@@ -1,7 +1,15 @@
+// Load scripts in correct order to prevent timing issues
+// First load configs that don't depend on libraries
 importScripts("/dy/config.js");
-importScripts("/dy/worker.js");
+
+// Then load the libraries
 importScripts("/m/bundle.js");
+importScripts("/dy/worker.js");
+
+// Now load config that depends on Ultraviolet library
 importScripts("/m/config.js");
+
+// Finally load the service worker implementation
 importScripts(__uv$config.sw || "/m/sw.js");
 
 const uv = new UVServiceWorker();
