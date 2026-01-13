@@ -1,18 +1,18 @@
 {
   "version": "9.0.0",
   "name": "slowguardian",
-  "buildId": "a0d402a-1759625265736",
-  "buildDate": "2025-10-05T00:47:45.736Z",
-  "buildTimestamp": 1759625265737,
+  "buildId": "87bffae-1768313800814",
+  "buildDate": "2026-01-13T14:16:40.814Z",
+  "buildTimestamp": 1768313800815,
   "git": {
-    "commit": "a0d402a1acc8a8142fb3739f563d3b10f319c604",
-    "commitShort": "a0d402a",
-    "branch": "copilot/fix-1b669f73-aa90-4dfa-a0fc-2fdf17771979",
-    "commitDate": "2025-10-05T00:41:46Z",
-    "commitMessage": "Fix settings page proxy status - use window.slowGuardianProxy instead of non-existent window.multiProxy"
+    "commit": "87bffaec932f7eb24cf0b1f58b5fdb52dd2a68c7",
+    "commitShort": "87bffae",
+    "branch": "claude/fix-bugs-webproxy-TcoVI",
+    "commitDate": "2025-10-30T13:00:32-04:00",
+    "commitMessage": "Merge pull request #10 from zgr2575/copilot/fix-1b669f73-aa90-4dfa-a0fc-2fdf17771979"
   },
   "environment": "development",
-  "nodeVersion": "v20.19.5",
+  "nodeVersion": "v22.21.1",
   "platform": "linux",
   "arch": "x64"
 }
