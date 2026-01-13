@@ -1462,6 +1462,9 @@
     <!-- Script Loader for dependency management -->
     <script src="assets/scripts/script-loader.js?v=1"></script>
 
+    <!-- Modal Handler System -->
+    <script src="assets/scripts/modal-handler.js?v=1"></script>
+
     <!-- Legacy Settings Script -->
     <script src="assets/scripts/custom-dropdown.js?v=1"></script>
     <script src="assets/scripts/auth.js?v=1"></script>
@@ -2294,6 +2297,59 @@
             card.textContent.includes('Advertisement') && card.textContent.includes('Developer Only')
           );
           if (adsCard) adsCard.style.display = 'none';
+        }
+      });
+    </script>
+
+    <!-- Wire up modal buttons -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Connect buttons to their respective modals
+        const modalConnections = {
+          'create-custom-theme-btn': 'custom-theme-modal',
+          'import-theme-btn': 'import-theme-modal',
+          'export-theme-btn': null, // Export doesn't use a modal
+          'pause-site-btn': 'pause-modal'
+        };
+
+        // Set up click handlers for modal triggers
+        Object.entries(modalConnections).forEach(([buttonId, modalId]) => {
+          const button = document.getElementById(buttonId);
+          if (button && modalId) {
+            button.addEventListener('click', (e) => {
+              e.preventDefault();
+              window.openModal(modalId);
+            });
+          }
+        });
+
+        // Handle export theme button separately
+        const exportBtn = document.getElementById('export-theme-btn');
+        if (exportBtn) {
+          exportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Export current theme
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            const themeData = {
+              theme: currentTheme,
+              customSettings: {
+                // Add any custom theme settings here
+              },
+              exportedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(themeData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `slowguardian-theme-${currentTheme}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            if (typeof window.showNotification === 'function') {
+              window.showNotification('✅ Theme exported successfully!', 'success');
+            }
+          });
         }
       });
     </script>
