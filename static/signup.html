@@ -225,7 +225,7 @@
       function setLoading(button, loading) {
         if (loading) {
           button.disabled = true;
-          button.textContent = 'Please wait...';
+          button.textContent = '⏳ Please wait...';
         } else {
           button.disabled = false;
           button.textContent = 'Create Account';
@@ -314,11 +314,5 @@
       }
     </script>
 
-    <!-- Particles initialization to match main UI -->
-    <script type="module">
-      import { initParticles } from '/assets/scripts/v9/particles.js';
-      const container = document.getElementById('particles');
-      if (container) initParticles(container, 'floating');
-    </script>
   </body>
   </html>

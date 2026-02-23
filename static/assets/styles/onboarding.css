@@ -160,8 +160,7 @@
 
 .theme-option.active {
   border-color: var(--accent-primary, #4f46e5);
-  background: var(--accent-primary, #4f46e5);
-  background-opacity: 0.1;
+  background: rgba(79, 70, 229, 0.1);
 }
 
 .theme-preview {

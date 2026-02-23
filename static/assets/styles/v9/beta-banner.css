@@ -1,17 +1,72 @@
-/* Minimal beta banner styles */
-.beta-banner{
-  position:fixed;
-  left:0;right:0;top:0;
-  background:linear-gradient(90deg,#111827cc,#0f172acc);
-  color:#fff;
-  z-index:9999;
-  padding:10px 20px;
-  box-shadow:0 4px 24px rgba(0,0,0,0.4);
-  display:flex;align-items:center;justify-content:center;
+/* Beta banner styles */
+
+.beta-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, rgba(17, 24, 39, 0.92), rgba(15, 23, 42, 0.92));
+  color: var(--text-primary, #fff);
+  z-index: 9999;
+  padding: 10px 20px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
 }
-.beta-inner{max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.beta-text{font-size:14px}
-.beta-actions{display:flex;gap:8px}
-.beta-btn{background:#6366f1;border:none;padding:8px 12px;border-radius:8px;color:#fff;cursor:pointer;font-weight:600}
-.beta-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.12)}
-.beta-btn.ghost{background:transparent;color:rgba(255,255,255,0.6)}
+
+.beta-inner {
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.beta-text {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-primary, #fff);
+}
+
+.beta-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.beta-btn {
+  background: var(--accent-primary, #6366f1);
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-lg, 8px);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--font-size-sm, 14px);
+  transition: opacity 0.2s ease;
+}
+
+.beta-btn:hover {
+  opacity: 0.85;
+}
+
+.beta-btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.12));
+  color: var(--text-primary, #fff);
+}
+
+.beta-btn.ghost {
+  background: transparent;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+}
+
+@media (max-width: 600px) {
+  .beta-inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}

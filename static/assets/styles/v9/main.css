@@ -720,7 +720,7 @@ body {
   position: absolute;
   top: -40px;
   left: 6px;
-  background: var(--accent-color);
+  background: var(--accent-primary);
   color: white;
   padding: 8px;
   text-decoration: none;
