@@ -67,340 +67,8 @@
       }
     </style>
 
-    <!-- Ads Management Styles -->
-    <style>
-      .ads-status {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .status-indicator {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
-        animation: pulse 2s infinite;
-      }
-
-      .status-dot.disabled {
-        background: #ef4444;
-        animation: none;
-      }
-
-      .status-text {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-primary);
-      }
-
-      .ads-controls {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-
-      .control-label {
-        font-size: 14px;
-        color: var(--text-secondary);
-      }
-
-      .ads-info {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .info-item:last-child {
-        border-bottom: none;
-      }
-
-      /* Premium Key Activation Styles */
-      .premium-status {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .premium-activation {
-        margin-bottom: 20px;
-      }
-
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .input-group label {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-primary);
-      }
-
-      .form-input {
-        padding: 12px;
-        border: 1px solid var(--border-primary);
-        border-radius: 8px;
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-        font-size: 14px;
-        transition: all 0.3s ease;
-      }
-
-      .form-input:focus {
-        outline: none;
-        border-color: var(--accent-primary);
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-      }
-
-      .premium-info {
-        background: rgba(16, 185, 129, 0.1);
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-      }
-
-      .premium-note {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
-        padding: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      /* Premium Activation Animation */
-      .premium-animation-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 10000;
-        pointer-events: none;
-      }
-
-      .animation-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1f 100%);
-        opacity: 0;
-        animation: fadeInOverlay 1s ease-in-out forwards;
-      }
-
-      .rocket-animation {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        opacity: 0;
-        animation: fadeInRocket 0.5s ease-in-out 0.5s forwards;
-      }
-
-      .rocket {
-        font-size: 4rem;
-        margin-bottom: 2rem;
-        animation: rocketBlastOff 3s ease-in-out 1s forwards;
-        transform: translateY(0);
-      }
-
-      .planet {
-        font-size: 6rem;
-        opacity: 0;
-        animation: planetAppear 1s ease-in-out 3s forwards;
-        position: absolute;
-        top: -150px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-
-      .success-message {
-        margin-top: 3rem;
-        opacity: 0;
-        animation: messageAppear 1s ease-in-out 4s forwards;
-      }
-
-      .success-message h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      .success-message p {
-        font-size: 1.2rem;
-        color: var(--text-secondary);
-      }
-
-      @keyframes fadeInOverlay {
-        0% { opacity: 0; }
-        100% { opacity: 0.95; }
-      }
-
-      @keyframes fadeInRocket {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-
-      @keyframes rocketBlastOff {
-        0% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-50px) scale(1.1); }
-        100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
-      }
-
-      @keyframes planetAppear {
-        0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-        50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-        100% { opacity: 1; transform: translateX(-50%) scale(1); }
-      }
-
-      @keyframes messageAppear {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-
-      .info-label {
-        font-size: 14px;
-        color: var(--text-secondary);
-      }
-
-      .info-value {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-primary);
-      }
-
-      .ads-actions {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 15px;
-      }
-
-      .ads-actions .btn {
-        flex: 1;
-      }
-
-      .ads-note {
-        padding: 12px;
-        background: rgba(103, 126, 234, 0.1);
-        border: 1px solid rgba(103, 126, 234, 0.2);
-        border-radius: 8px;
-        color: var(--text-secondary);
-        line-height: 1.5;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
-
-      /* Enhanced Settings Layout */
-      .settings-grid-footer {
-        margin-top: var(--space-8);
-        padding: var(--space-6);
-        text-align: center;
-        background: rgba(255, 255, 255, 0.02);
-        border-radius: var(--radius-lg);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .footer-note {
-        color: var(--text-secondary);
-        font-size: var(--font-size-sm);
-        margin: 0;
-      }
-
-      .site-info-details {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-3);
-      }
-
-      .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: var(--space-2) 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .info-row:last-child {
-        border-bottom: none;
-      }
-
-      .info-label {
-        font-size: var(--font-size-sm);
-        color: var(--text-secondary);
-      }
-
-      .info-value {
-        font-size: var(--font-size-sm);
-        font-weight: 500;
-        color: var(--text-primary);
-      }
-
-      /* Search Container Improvements */
-      .search-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        max-width: 400px;
-      }
-
-      .search-clear {
-        position: absolute;
-        right: var(--space-3);
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        cursor: pointer;
-        padding: var(--space-1);
-        border-radius: var(--radius-sm);
-        transition: all var(--transition-base);
-      }
-
-      .search-clear:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-      }
-    </style>
+    <!-- Settings Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/settings.css" />
 
     <!-- Progressive Web App -->
     <meta name="theme-color" content="#1a1a2e" />
@@ -552,12 +220,11 @@
                 <div class="premium-activation" id="premium-activation">
                   <div class="input-group">
                     <label for="premium-key-input">Premium Key:</label>
-                    <input 
-                      type="text" 
-                      id="premium-key-input" 
-                      class="form-input" 
+                    <input
+                      type="text"
+                      id="premium-key-input"
+                      class="form-input"
                       placeholder="Enter your premium key..."
-                      style="margin-bottom: 10px;"
                     />
                     <button id="activate-premium-btn" class="btn btn-primary">🚀 Activate Premium</button>
                   </div>
@@ -628,23 +295,15 @@
                     </div>
                   </div>
                   
-                  <div style="margin-top: 20px;">
-                    <button id="manage-sessions-btn" class="btn btn-secondary" style="margin-right: 10px;">
-                      📱 Manage Sessions
-                    </button>
-                    <button id="logout-all-btn" class="btn btn-warning" style="margin-right: 10px;">
-                      🚪 Logout All Devices
-                    </button>
-                    <button id="logout-btn" class="btn btn-secondary">
-                      👋 Logout
-                    </button>
+                  <div class="account-btn-group">
+                    <button id="manage-sessions-btn" class="btn btn-secondary">📱 Manage Sessions</button>
+                    <button id="logout-all-btn" class="btn btn-warning">🚪 Logout All Devices</button>
+                    <button id="logout-btn" class="btn btn-secondary">👋 Logout</button>
                   </div>
                 </div>
                 
-                <div id="account-login-prompt" style="text-align: center; padding: 20px;">
-                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
-                    Please login to view your account information
-                  </p>
+                <div id="account-login-prompt" class="login-prompt">
+                  <p>Please login to view your account information</p>
                   <a href="/login" class="btn btn-primary">Login / Register</a>
                 </div>
               </div>
@@ -681,23 +340,18 @@
                       <span id="spotify-country">-</span>
                     </div>
                   </div>
-                  
-                  <div style="margin-top: 15px;">
-                    <button id="disconnect-spotify-btn" class="btn btn-warning">
-                      🔌 Disconnect Spotify
-                    </button>
+                  <div class="spotify-info-block">
+                    <button id="disconnect-spotify-btn" class="btn btn-warning">🔌 Disconnect Spotify</button>
                   </div>
                 </div>
-                
+
                 <div id="spotify-connect" style="display: none;">
-                  <div style="margin-bottom: 15px;">
-                    <button id="connect-spotify-btn" class="btn btn-primary">
-                      🎵 Connect Spotify Account
-                    </button>
+                  <div class="spotify-connect-block">
+                    <button id="connect-spotify-btn" class="btn btn-primary">🎵 Connect Spotify Account</button>
                   </div>
-                  <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                  <div class="spotify-benefits">
                     <p><strong>Benefits of connecting Spotify:</strong></p>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
+                    <ul>
                       <li>Import and play your playlists</li>
                       <li>Access your saved music</li>
                       <li>Create new playlists</li>
@@ -705,11 +359,9 @@
                     </ul>
                   </div>
                 </div>
-                
-                <div id="spotify-login-required" style="text-align: center; padding: 20px;">
-                  <p style="margin-bottom: 15px; color: var(--text-secondary);">
-                    Please login to connect your Spotify account
-                  </p>
+
+                <div id="spotify-login-required" class="login-prompt">
+                  <p>Please login to connect your Spotify account</p>
                   <a href="/login" class="btn btn-primary">Login / Register</a>
                 </div>
               </div>
@@ -893,11 +545,7 @@
                   <p class="setting-description">Automatically switch to backup proxies if the primary fails</p>
                 </div>
 
-                <div
-                  class="proxy-status"
-                  id="proxy-status"
-                  style="margin-top: 16px; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 8px"
-                >
+                <div class="proxy-status-box" id="proxy-status">
                   <strong>Proxy Status:</strong>
                   <div id="proxy-status-content">Loading...</div>
                 </div>
@@ -907,7 +555,7 @@
             <!-- Legacy Proxy Choice -->
             <div class="card settings-card">
               <div class="card-header">
-                <h3 class="card-title">Choose your <b>Pr</b>oxy (Legacy)</h3>
+                <h3 class="card-title">Choose your Proxy (Legacy)</h3>
                 <p class="card-description">
                   Ultraviolet is the main proxy, but Dynamic is faster and supports more sites!
                   (Dynamic is still in beta, so it has some bugs.)
@@ -950,19 +598,7 @@
                   <option value="default">Default</option>
                   <option value="off">Off (Developer Only)</option>
                 </select>
-                <div
-                  id="legacy-ads-notice"
-                  style="
-                    display: none;
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: rgba(255, 193, 7, 0.1);
-                    border: 1px solid rgba(255, 193, 7, 0.3);
-                    border-radius: 6px;
-                    color: #ffc107;
-                    font-size: 14px;
-                  "
-                >
+                <div class="legacy-ads-notice" id="legacy-ads-notice">
                   🔒 <strong>Developer Only:</strong> This legacy ad control is restricted to authorized developers.
                 </div>
               </div>
@@ -998,7 +634,7 @@
                   <span class="switch-label">Enable Authentication</span>
                 </label>
 
-                <div class="auth-credentials" id="auth-credentials" style="display: none; margin-top: 16px">
+                <div class="auth-credentials" id="auth-credentials" style="display: none">
                   <div class="input-group">
                     <label for="auth-username-setting">Username:</label>
                     <input type="text" id="auth-username-setting" class="form-input" placeholder="Enter username" />
@@ -1156,10 +792,10 @@
                 <h3 class="card-title">Site Info</h3>
                 <p class="card-description">Version: 9</p>
                 <p class="card-description" id="last-updated">Last Updated: January 2025</p>
-                <a href="/tos" class="card-description" style="color: var(--accent-primary)">
-                  By using SlowGuardian, you agree you understand and acknowledge our Terms of Service and Privacy
-                  Policy.
-                </a>
+                <p class="card-description">
+                  By using SlowGuardian, you agree you understand and acknowledge our
+                  <a href="/tos" style="color: var(--accent-primary)">Terms of Service and Privacy Policy</a>.
+                </p>
               </div>
               <div class="settings-controls">
                 <div class="site-info-details">
@@ -1348,7 +984,7 @@
             <div class="loading-text">Loading users...</div>
           </div>
 
-          <div class="user-actions" style="margin-top: 20px">
+          <div class="user-actions">
             <h4>Block Website for User</h4>
             <div class="input-group">
               <select id="select-user" class="form-select">
@@ -1394,7 +1030,7 @@
             <button id="create-admin-btn" class="btn btn-primary">Create Account</button>
           </div>
 
-          <div class="account-section" style="margin-top: 30px">
+          <div class="account-section account-section--spaced">
             <h4>Existing Admin Accounts</h4>
             <div class="admin-list" id="admin-list">
               <div class="loading-text">Loading accounts...</div>

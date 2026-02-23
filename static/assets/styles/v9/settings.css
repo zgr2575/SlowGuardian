@@ -747,3 +747,375 @@
     flex-direction: column;
   }
 }
+
+/* === Ads Management === */
+
+.ads-status {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-success, #10b981);
+  animation: pulse 2s infinite;
+}
+
+.status-dot.disabled {
+  background: var(--accent-error, #ef4444);
+  animation: none;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ads-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.control-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.ads-info {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.ads-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.ads-actions .btn {
+  flex: 1;
+}
+
+.ads-note {
+  padding: 12px;
+  background: rgba(103, 126, 234, 0.1);
+  border: 1px solid rgba(103, 126, 234, 0.2);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* === Premium Key Activation === */
+
+.premium-status {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.premium-activation {
+  margin-bottom: 20px;
+}
+
+.premium-info {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.premium-note {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === Premium Activation Animation === */
+
+.premium-animation-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.animation-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1f 100%);
+  opacity: 0;
+  animation: fadeInOverlay 1s ease-in-out forwards;
+}
+
+.rocket-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  animation: fadeInRocket 0.5s ease-in-out 0.5s forwards;
+}
+
+.rocket {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  animation: rocketBlastOff 3s ease-in-out 1s forwards;
+  transform: translateY(0);
+}
+
+.planet {
+  font-size: 6rem;
+  opacity: 0;
+  animation: planetAppear 1s ease-in-out 3s forwards;
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.success-message {
+  margin-top: 3rem;
+  opacity: 0;
+  animation: messageAppear 1s ease-in-out 4s forwards;
+}
+
+.success-message h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.success-message p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+@keyframes fadeInOverlay {
+  0%   { opacity: 0; }
+  100% { opacity: 0.95; }
+}
+
+@keyframes fadeInRocket {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rocketBlastOff {
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-50px) scale(1.1); }
+  100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+}
+
+@keyframes planetAppear {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.5); }
+  50%  { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+@keyframes messageAppear {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* === Info Labels / Site Info === */
+
+.info-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.info-value {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.site-info-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+/* === Settings Grid Footer === */
+
+.settings-grid-footer {
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-note {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* === Search Container === */
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-clear {
+  position: absolute;
+  right: var(--space-3);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.search-clear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* === Proxy Status Box === */
+
+.proxy-status-box {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+}
+
+/* === Legacy Ads Notice === */
+
+.legacy-ads-notice {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 6px;
+  color: var(--accent-warning, #ffc107);
+  font-size: 14px;
+}
+
+/* === Account Button Group === */
+
+.account-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+/* === Login Prompt === */
+
+.login-prompt {
+  text-align: center;
+  padding: 20px;
+}
+
+.login-prompt p {
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+}
+
+/* === Auth Credentials (shown/hidden by JS) === */
+
+.auth-credentials {
+  margin-top: var(--space-4);
+}
+
+/* === Account Section Spacing (modal) === */
+
+.account-section--spaced {
+  margin-top: var(--space-7);
+}
+
+/* === User Actions (modal) === */
+
+.user-actions {
+  margin-top: var(--space-5);
+}
+
+/* === Spotify Section === */
+
+.spotify-connect-block {
+  margin-bottom: 15px;
+}
+
+.spotify-benefits {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.spotify-benefits ul {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.spotify-info-block {
+  margin-top: 15px;
+}
