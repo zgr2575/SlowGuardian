@@ -6,6 +6,8 @@
   --bg-secondary: #141420;
   --bg-tertiary: #1e1e2e;
   --bg-quaternary: #0f172a;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-danger: rgba(239, 68, 68, 0.15);
   --bg-accent: rgba(79, 70, 229, 0.1);
 
   --text-primary: #ffffff;
@@ -132,6 +134,8 @@
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
   --bg-quaternary: #e2e8f0;
+  --bg-hover: rgba(0, 0, 0, 0.06);
+  --bg-danger: rgba(239, 68, 68, 0.1);
   --bg-accent: rgba(79, 70, 229, 0.05);
 
   --text-primary: #1e293b;

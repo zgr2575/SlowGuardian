@@ -37,7 +37,7 @@ class UIManager {
           themeToggle.title = "Switch to dark theme";
         } else {
           icon.textContent = "☀️";
-          themeToggle.title = "Switch theme";
+          themeToggle.title = "Switch to light theme";
         }
       }
     };
@@ -75,7 +75,7 @@ class UIManager {
     const updateFullscreenIcon = () => {
       const icon = fullscreenToggle.querySelector(".icon");
       if (icon) {
-        icon.textContent = document.fullscreenElement ? "⛶" : "⛶";
+        icon.textContent = document.fullscreenElement ? "⊡" : "⛶";
       }
       fullscreenToggle.title = document.fullscreenElement
         ? "Exit fullscreen"

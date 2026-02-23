@@ -229,11 +229,11 @@
 
     <div class="error-container">
       <div class="error-illustration">
-        <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 0.8" />
-              <stop offset="100%" style="stop-color: var(--accent-secondary); stop-opacity: 0.8" />
+              <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.8" />
+              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.8" />
             </linearGradient>
           </defs>
 
@@ -340,25 +340,31 @@
         const goBackBtn = document.getElementById("go-back-btn");
         if (goBackBtn) {
           goBackBtn.addEventListener("click", function () {
-            history.back();
+            if (history.length > 1) {
+              history.back();
+            } else {
+              window.location.href = "/";
+            }
           });
         }
       });
 
-      // Add some interactivity
-      document.addEventListener("mousemove", function (e) {
-        const shapes = document.querySelectorAll(".shape");
-        const x = e.clientX / window.innerWidth;
-        const y = e.clientY / window.innerHeight;
+      // Parallax effect — skip for users who prefer reduced motion
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.addEventListener("mousemove", function (e) {
+          const shapes = document.querySelectorAll(".shape");
+          const x = e.clientX / window.innerWidth;
+          const y = e.clientY / window.innerHeight;
 
-        shapes.forEach((shape, index) => {
-          const speed = (index + 1) * 0.5;
-          const xOffset = (x - 0.5) * speed * 20;
-          const yOffset = (y - 0.5) * speed * 20;
+          shapes.forEach((shape, index) => {
+            const speed = (index + 1) * 0.5;
+            const xOffset = (x - 0.5) * speed * 20;
+            const yOffset = (y - 0.5) * speed * 20;
 
-          shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+          });
         });
-      });
+      }
     </script>
   </body>
 </html>

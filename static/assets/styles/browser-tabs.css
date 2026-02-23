@@ -57,7 +57,7 @@
 }
 
 .browser-tab:hover {
-  background: var(--bg-hover);
+  background: var(--bg-hover, rgba(255, 255, 255, 0.08));
   transform: translateY(-1px);
 }
 
@@ -100,7 +100,7 @@
 
 .tab-close:hover {
   background: var(--bg-danger);
-  color: var(--text-primary);
+  color: var(--accent-error);
 }
 
 .tab-overflow {

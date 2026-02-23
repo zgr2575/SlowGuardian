@@ -34,7 +34,7 @@
       transition: padding-left 0.3s ease;
     }
 
-    body:has(.sidebar-nav:hover) .tos-container {
+    body:has(.sidebar-nav.expanded) .tos-container {
       padding-left: 300px;
     }
 
@@ -139,8 +139,8 @@
     }
 
     .highlight-box {
-      background: rgba(79, 70, 229, 0.1);
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: var(--bg-accent);
+      border: 1px solid var(--border-accent);
       border-radius: var(--radius-lg);
       padding: var(--space-4);
       margin: var(--space-4) 0;
@@ -159,7 +159,7 @@
     }
 
     .warning-box strong {
-      color: #ef4444;
+      color: var(--accent-error);
     }
 
     .info-box {
@@ -171,7 +171,7 @@
     }
 
     .info-box strong {
-      color: #10b981;
+      color: var(--accent-success);
     }
 
     .back-button {

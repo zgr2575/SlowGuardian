@@ -27,7 +27,7 @@ iframe {
   background: var(--main);
   box-sizing: border-box;
   transition: 0.35s ease;
-  width: fill;
+  width: 100%;
   z-index: 100;
   position: fixed;
 }
@@ -43,8 +43,8 @@ iframe {
   box-sizing: border-box;
   margin-right: 10px;
   transition: 0.2s ease;
-  margin-top: 0 auto;
-  margin-bottom: 0 auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .nav-button:hover {
@@ -92,16 +92,6 @@ iframe {
   transform: translateX(-20%);
 }
 
-.nav-right .nav-btn:hover {
-  text-transform: uppercase;
-  cursor: pointer;
-  font-weight: 800;
-  font-family: "Inter", sans-serif;
-  font-style: normal;
-  font-size: 3vh;
-  transform: translateX(-20%);
-}
-
 .fullscreen .nav-bar {
   display: none;
 }
@@ -115,7 +105,6 @@ iframe {
 }
 
 .navsearch {
-  height: 2em;
   border: none;
   background: none;
   color: #fff;
@@ -135,7 +124,7 @@ iframe {
 }
 
 .navpost {
-  padding: none;
+  padding: 0;
   float: right;
   margin-top: 0em;
   color: #fff;
