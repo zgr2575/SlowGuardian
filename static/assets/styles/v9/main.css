@@ -366,8 +366,13 @@ body {
   gap: var(--space-2);
 }
 
+.suggestion-item:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
 .suggestion-item:last-child {
   border-bottom: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 .suggestion-item:hover,
@@ -381,44 +386,12 @@ body {
   content: "🔍";
   font-size: var(--font-size-sm);
   opacity: 0.6;
+  flex-shrink: 0;
 }
 
 /* Hide suggestions container initially */
 #suggestions:empty {
   display: none !important;
-}
-
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  cursor: pointer;
-  transition: background-color var(--transition-base);
-}
-
-.suggestion-item:hover,
-.suggestion-item.selected {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.suggestion-icon {
-  font-size: var(--font-size-lg);
-  width: 20px;
-  text-align: center;
-}
-
-.suggestion-title {
-  flex: 1;
-  color: var(--text-primary);
-}
-
-.suggestion-item:first-child {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.suggestion-item:last-child {
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 /* Page Headers */
@@ -738,7 +711,7 @@ body {
 
 /* Sidebar Layout Adjustments */
 .main-content.with-sidebar {
-  margin-left: 60px; /* Space for collapsed sidebar */
+  margin-left: 0; /* Sidebar is fully hidden when collapsed, no reserved space needed */
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -763,7 +736,7 @@ body {
 /* Responsive adjustments for sidebar */
 @media (max-width: 768px) {
   .main-content.with-sidebar {
-    margin-left: 40px; /* Smaller margin on mobile */
+    margin-left: 0;
   }
 }
 

@@ -615,6 +615,10 @@
     gap: var(--space-2);
     text-align: center;
   }
+
+  .modal-footer {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 480px) {
@@ -648,15 +652,7 @@
   .modal-header h3 {
     font-size: var(--font-size-lg);
   }
-}
-  }
 
-  .modal-footer {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
   .form-checkbox {
     flex-direction: column;
     gap: var(--space-2);

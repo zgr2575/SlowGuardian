@@ -95,14 +95,14 @@
       }
 
       .btn-primary:hover {
-        background: var(--accent-hover);
+        background: var(--accent-secondary);
         transform: translateY(-2px);
       }
 
       .btn-secondary {
         background: var(--bg-secondary);
         color: var(--text-primary);
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--border-primary);
       }
 
       .btn-secondary:hover {
@@ -308,30 +308,40 @@
       </div>
     </div>
 
-    <!-- Theme System -->
-    <script src="assets/js/themes.js"></script>
-    <script src="assets/js/settings.js"></script>
+    <!-- Cookie utilities for theme support -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
 
     <script>
       // Initialize theme system
-      document.addEventListener("DOMContentLoaded", function () {
-        try {
-          if (typeof initializeThemes === "function") {
-            initializeThemes();
+      // Apply saved theme immediately
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        if (savedTheme !== "default") {
+          const themeMap = {
+            catppuccinMocha: "/assets/styles/themes/catppuccin/mocha.css?v=1",
+            catppuccinMacchiato: "/assets/styles/themes/catppuccin/macchiato.css?v=1",
+            catppuccinFrappe: "/assets/styles/themes/catppuccin/frappe.css?v=1",
+            catppuccinLatte: "/assets/styles/themes/catppuccin/latte.css?v=1",
+            cyberpunk: "/assets/styles/themes/cyberpunk.css?v=1",
+            ocean: "/assets/styles/themes/ocean.css?v=1",
+            sunset: "/assets/styles/themes/sunset.css?v=1",
+          };
+          if (themeMap[savedTheme]) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = themeMap[savedTheme];
+            document.head.appendChild(link);
           }
-          if (typeof loadSettings === "function") {
-            loadSettings();
-          }
+        }
+      })();
 
-          // Add event listener for go back button
-          const goBackBtn = document.getElementById("go-back-btn");
-          if (goBackBtn) {
-            goBackBtn.addEventListener("click", function () {
-              history.back();
-            });
-          }
-        } catch (error) {
-          console.log("Theme system not available");
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add event listener for go back button
+        const goBackBtn = document.getElementById("go-back-btn");
+        if (goBackBtn) {
+          goBackBtn.addEventListener("click", function () {
+            history.back();
+          });
         }
       });
 

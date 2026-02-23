@@ -382,32 +382,27 @@ export default {
 ### **User Guides**
 
 - [Getting Started Guide](docs/user/getting-started.md)
-- [Feature Overview](docs/user/features.md)
-- [Theme Customization](docs/user/themes.md)
-- [Mobile Usage](docs/user/mobile.md)
-- [Troubleshooting](docs/user/troubleshooting.md)
+- [Proxy Setup](PROXY_SETUP.md)
+- [Spotify Integration](AUTH_SPOTIFY_GUIDE.md)
 
 ### **Developer Documentation**
 
-- [Development Setup](docs/developer/setup.md)
 - [Architecture Overview](docs/developer/architecture.md)
 - [Plugin Development Guide](docs/developer/plugins.md)
-- [API Reference](docs/developer/api.md)
-- [Contributing Guidelines](docs/developer/contributing.md)
+- [Contributing Guidelines](CONTRIBUTING.md)
 
-### **Administration**
+### **Project**
 
-- [Developer Mode Guide](docs/admin/developer-mode.md)
-- [User Management](docs/admin/user-management.md)
-- [Security Configuration](docs/admin/security.md)
-- [Performance Monitoring](docs/admin/monitoring.md)
+- [Security Policy](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Changelog](CHANGELOG.md)
+- [Roadmap](ROADMAP.md)
 
 ### **Deployment**
 
-- [Self-Hosting Guide](docs/deployment/self-hosting.md)
-- [Cloud Deployment](docs/deployment/cloud.md)
-- [Docker Setup](docs/deployment/docker.md)
-- [Environment Variables](docs/deployment/environment.md)
+- [Environment Variables](.env.example)
+- [Render Config](render.yaml)
+- [Vercel Config](vercel.json)
 
 ## 🔧 Deployment Options
 

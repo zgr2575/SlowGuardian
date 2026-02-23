@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="assets/styles/v9/reset.css" />
     <link rel="stylesheet" href="assets/styles/v9/variables.css" />
     <link rel="stylesheet" href="assets/styles/v9/main.css" />
-  <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
     
     <style>
       :root {
@@ -637,10 +637,10 @@
       function setLoading(button, loading) {
         if (loading) {
           button.disabled = true;
-          button.textContent = 'Please wait...';
+          button.textContent = '⏳ Please wait...';
         } else {
           button.disabled = false;
-          button.textContent = button.id === 'login-button' ? 'Sign In' : 'Create Account';
+          button.textContent = button.id === 'login-button' ? '🚀 Sign In' : 'Create Account';
         }
       }
       
@@ -805,14 +805,6 @@
           // Token validation failed, remove invalid token
           localStorage.removeItem('authToken');
         });
-      }
-    </script>
-    <!-- Particles initialization to match main UI -->
-    <script type="module">
-      import { initParticles } from '/assets/scripts/v9/particles.js';
-      const container = document.getElementById('particles');
-      if (container) {
-        initParticles(container, 'floating');
       }
     </script>
   </body>

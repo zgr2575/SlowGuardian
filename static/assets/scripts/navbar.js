@@ -478,7 +478,7 @@ class NavigationBar {
         z-index: 10000;
         transform: translateX(-290px);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
+        overflow: visible;
         display: flex;
         flex-direction: column;
       }
@@ -494,6 +494,8 @@ class NavigationBar {
         padding: 20px;
         position: relative;
         min-height: 0; /* Allow flex children to shrink */
+        overflow-y: auto; /* Scroll content within sidebar */
+        overflow-x: hidden; /* Clip horizontal overflow inside content */
       }
 
       .sidebar-trigger {
