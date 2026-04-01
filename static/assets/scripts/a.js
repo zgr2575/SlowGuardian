@@ -11,7 +11,7 @@ function handleClick(app) {
 
   if (app.local) {
     saveToLocal(app.link);
-    window.location.href = "p";
+    window.location.href = "/go";
   } else if (app.local2) {
     saveToLocal(app.link);
     window.location.href = app.link;
@@ -137,7 +137,9 @@ function initializeCustomApp(customApp) {
   columnDiv.appendChild(btn);
 
   const nonPinnedApps = document.querySelector(".container-apps");
-  nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild);
+  if (nonPinnedApps) {
+    nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

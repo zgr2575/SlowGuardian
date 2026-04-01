@@ -283,37 +283,58 @@ class GlobalMusicPlayer {
 
   setupEventListeners() {
     // Play/Pause button
-    document.getElementById('global-play-pause-btn').addEventListener('click', () => {
-      this.togglePlayPause();
-    });
+    const playPauseBtn = document.getElementById('global-play-pause-btn');
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', () => {
+        this.togglePlayPause();
+      });
+    }
     
     // Previous/Next buttons
-    document.getElementById('global-prev-btn').addEventListener('click', () => {
-      this.previousTrack();
-    });
+    const prevBtn = document.getElementById('global-prev-btn');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        this.previousTrack();
+      });
+    }
     
-    document.getElementById('global-next-btn').addEventListener('click', () => {
-      this.nextTrack();
-    });
+    const nextBtn = document.getElementById('global-next-btn');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        this.nextTrack();
+      });
+    }
     
     // Minimize/Close buttons
-    document.getElementById('global-minimize-btn').addEventListener('click', () => {
-      this.toggleMinimize();
-    });
+    const minimizeBtn = document.getElementById('global-minimize-btn');
+    if (minimizeBtn) {
+      minimizeBtn.addEventListener('click', () => {
+        this.toggleMinimize();
+      });
+    }
     
-    document.getElementById('global-close-btn').addEventListener('click', () => {
-      this.stopAndHide();
-    });
+    const closeBtn = document.getElementById('global-close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.stopAndHide();
+      });
+    }
     
     // Progress bar interaction
-    document.getElementById('global-progress-bar').addEventListener('click', (e) => {
-      this.seekTo(e);
-    });
+    const progressBar = document.getElementById('global-progress-bar');
+    if (progressBar) {
+      progressBar.addEventListener('click', (e) => {
+        this.seekTo(e);
+      });
+    }
     
     // Volume control
-    document.getElementById('global-volume-btn').addEventListener('click', () => {
-      this.toggleMute();
-    });
+    const volumeBtn = document.getElementById('global-volume-btn');
+    if (volumeBtn) {
+      volumeBtn.addEventListener('click', () => {
+        this.toggleMute();
+      });
+    }
     
     // Save state when page unloads
     window.addEventListener('beforeunload', () => {

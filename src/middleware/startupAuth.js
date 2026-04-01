@@ -59,7 +59,13 @@ export function createAuthGate() {
     const method = req.method;
     
     // Allow proxy endpoints to function without auth
-    if (url.startsWith('/o/') || url.startsWith('/a/') || url.startsWith('/dy/') || url.startsWith('/scramjet/')) {
+    if (
+      url.startsWith('/o/') ||
+      url.startsWith('/a/') ||
+      url.startsWith('/dy/') ||
+      url.startsWith('/scram/') ||
+      url.startsWith('/scramjet/')
+    ) {
       return next();
     }
 

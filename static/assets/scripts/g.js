@@ -137,7 +137,9 @@ function initializeCustomApp(customApp) {
   columnDiv.appendChild(btn);
 
   const nonPinnedApps = document.querySelector(".container-apps");
-  nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild);
+  if (nonPinnedApps) {
+    nonPinnedApps.insertBefore(columnDiv, nonPinnedApps.firstChild);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

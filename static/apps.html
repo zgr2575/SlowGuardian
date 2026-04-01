@@ -234,6 +234,9 @@
       // Enhanced search function to work with new styling
       function search_bar() {
         const searchInput = document.getElementById("searchbarbottom");
+        if (!searchInput) {
+          return;
+        }
         const searchClear = document.getElementById("search-clear");
         const searchTerm = searchInput.value.toLowerCase();
         // Only select direct app-item children to avoid duplicates
@@ -271,8 +274,13 @@
       function clearSearch() {
         const searchInput = document.getElementById("searchbarbottom");
         const searchClear = document.getElementById("search-clear");
+        if (!searchInput) {
+          return;
+        }
         searchInput.value = "";
-        searchClear.style.display = "none";
+        if (searchClear) {
+          searchClear.style.display = "none";
+        }
         search_bar(); // Reset the search
       }
 
