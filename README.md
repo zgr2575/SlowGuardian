@@ -156,8 +156,10 @@ npm run build
 ### Default Admin Access
 
 - **URL**: `http://localhost:8080/developer`
-- **Username**: `admin`
-- **Password**: `SlowGuardian2025!`
+- **Username**: Set via `ADMIN_USERNAME` environment variable
+- **Password**: Set via `ADMIN_PASSWORD` environment variable
+
+> **Important:** Developer mode is disabled by default. To enable it, set `developerMode.enabled = true` in `config.js` and configure credentials via environment variables before starting the server. The server will refuse to start if developer mode is enabled without credentials set.
 
 ## ⚙️ Configuration
 

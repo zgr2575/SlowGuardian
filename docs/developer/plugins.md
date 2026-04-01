@@ -344,18 +344,19 @@ Create tests for your plugin:
 
 ```javascript
 // test/plugin.test.js
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 import plugin from "../plugins/my-plugin/index.js";
-import { describe, it, expect } from "node:test";
 
 describe("My Plugin", () => {
   it("should have correct metadata", () => {
-    expect(plugin.name).toBe("my-plugin");
-    expect(plugin.version).toBe("1.0.0");
+    assert.equal(plugin.name, "my-plugin");
+    assert.equal(plugin.version, "1.0.0");
   });
 
   it("should handle routes correctly", () => {
     const route = plugin.routes[0];
-    expect(route.path).toBe("/api/my-plugin/hello");
+    assert.equal(route.path, "/api/my-plugin/hello");
   });
 });
 ```
@@ -366,13 +367,19 @@ Test plugin integration with SlowGuardian:
 
 ```javascript
 import request from "supertest";
-import app from "../index.js";
+import { createSlowGuardianServer } from "../server.js";
 
 describe("Plugin Integration", () => {
+  let app;
+
+  before(async () => {
+    ({ app } = await createSlowGuardianServer());
+  });
+
   it("should respond to plugin routes", async () => {
     const response = await request(app).get("/api/my-plugin/hello").expect(200);
 
-    expect(response.body.message).toBe("Hello from my plugin!");
+    assert.equal(response.body.message, "Hello from my plugin!");
   });
 });
 ```

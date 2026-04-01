@@ -233,6 +233,25 @@ async function createSlowGuardianServer() {
  */
 async function startServer() {
   try {
+    // Validate configuration before starting
+    if (config.developerMode.enabled) {
+      const { username, password } = config.developerMode.defaultAdminCredentials;
+      if (!username || !password) {
+        logger.error(
+          "Developer mode is enabled but ADMIN_USERNAME or ADMIN_PASSWORD environment variables are not set. " +
+          "Set these environment variables or disable developer mode (developerMode.enabled = false)."
+        );
+        process.exit(1);
+      }
+    }
+
+    if (config.keyauth.enabled && (!config.keyauth.ownerId || !config.keyauth.name)) {
+      logger.error(
+        "KeyAuth is enabled but KEYAUTH_OWNER_ID or KEYAUTH_APP_NAME environment variables are not set. " +
+        "Set these environment variables or disable KeyAuth (keyauth.enabled = false)."
+      );
+      process.exit(1);
+    }
     const { server } = await createSlowGuardianServer();
 
     server.listen(PORT, () => {

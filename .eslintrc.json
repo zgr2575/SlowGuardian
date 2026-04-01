@@ -1,4 +1,5 @@
 {
+  "x-legacyNote": "Primary ESLint configuration is eslint.config.js. This .eslintrc.json is kept only for legacy/editor tooling that does not yet support flat config and should be kept in sync or treated as secondary.",
   "env": {
     "node": true,
     "es2022": true,

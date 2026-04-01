@@ -102,7 +102,7 @@ jobs:
     - name: Install Chrome for Puppeteer
       run: |
         sudo apt-get update
-        sudo apt-get install -y chromium-browser
+        sudo apt-get install -y chromium
         
     - name: Install dependencies with Puppeteer
       run: |

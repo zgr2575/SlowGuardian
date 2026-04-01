@@ -15,9 +15,9 @@ const config = {
 
   // KeyAuth API Configuration - NEW AUTHENTICATION SYSTEM
   keyauth: {
-    enabled: true, // Set to true to enable KeyAuth authentication
-    name: "slowguardian", // Your KeyAuth application name
-    ownerId: "TgewInK5Uy", // Your KeyAuth owner ID
+    enabled: false, // Set to true to enable KeyAuth authentication
+    name: process.env.KEYAUTH_APP_NAME || "slowguardian", // Your KeyAuth application name
+    ownerId: process.env.KEYAUTH_OWNER_ID || "", // Your KeyAuth owner ID
     secret: process.env.KEYAUTH_SECRET || "", // Your KeyAuth application secret
     version: "1.0", // Your application version in KeyAuth
     requireLicense: false, // Set to true if users need license keys
@@ -27,10 +27,10 @@ const config = {
 
   // Developer Mode Settings - ADMIN CONFIGURATION
   developerMode: {
-    enabled: true, // Enable developer/admin features
+    enabled: false, // Enable developer/admin features (set via DEVELOPER_MODE=true env var)
     defaultAdminCredentials: {
-      username: "admin",
-      password: "SlowGuardian2025!", // CHANGE THIS IN PRODUCTION!
+      username: process.env.ADMIN_USERNAME || "", // Set ADMIN_USERNAME in environment
+      password: process.env.ADMIN_PASSWORD || "", // Set ADMIN_PASSWORD in environment
     },
     features: {
       userTracking: true, // Track online users and sessions
