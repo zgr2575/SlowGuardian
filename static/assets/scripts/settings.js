@@ -253,15 +253,6 @@ if (themeId == "") {
 
 document.getElementsByClassName("td")[0].value = themeId;
 
-const themeDropdown = document.getElementsByClassName("td");
-dropdown.addEventListener("change", function () {
-  const selectedValue = dropdown.value;
-
-  localStorage.setItem("theme", selectedValue);
-
-  window.location = window.location;
-});
-
 function themeChange(ele) {
   const selTheme = ele.value;
 
