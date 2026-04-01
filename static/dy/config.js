@@ -1,14 +1,16 @@
+// See documentation for more information
+
 self.__dynamic$config = {
-  prefix: "/a/q/",
+  prefix: "/dy/",
   encoding: "xor",
   mode: "production",
   logLevel: 0,
   bare: {
-    version: 3,
+    version: 2,
     path: "/o/",
   },
   tab: {
-    title: null,
+    title: "Service",
     icon: null,
     ua: null,
   },

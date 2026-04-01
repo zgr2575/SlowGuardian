@@ -2,237 +2,356 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
-    <script src="./m/bundle.js?v=5"></script>
-    <script src="./m/config.js?v=5"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2510115202431848"
-      crossorigin="anonymous"
-      onerror="window.adsBlocked=true"
-    ></script>
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <!-- SEO and AdSense Meta Tags -->
+    <meta
+      name="description"
+      content="Discover and access popular web applications through SlowGuardian's secure proxy. Browse apps safely with enhanced privacy and performance."
+    />
+    <meta name="keywords" content="web apps, applications, proxy, secure browsing, privacy, SlowGuardian" />
+    <meta name="author" content="SlowGuardian Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <title id="tab-title">SlowGuardian v9 - Apps</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/v9/games.css" />
+    <link rel="stylesheet" href="assets/styles/premium.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-00LBBY9N6T"></script>
     <script>
-      // Inline Anti-Adblock Detection (cannot be blocked by external URL filters)
-      !function(){function e(){if(window.adsBlocked)return!0;if("undefined"==typeof window.adsbygoogle)return!0;if(!document.body)return!1;var e=document.createElement("div");e.className="adsbygoogle ad-banner ads advertisement",e.style.cssText="position:absolute;top:-1px;left:-1px;width:1px;height:1px;",document.body.appendChild(e);var t=0===e.offsetHeight||"none"===window.getComputedStyle(e).display||"hidden"===window.getComputedStyle(e).visibility;return document.body.removeChild(e),t}function t(){if(!document.getElementById("adb-m")){var e='<div id="adb-m" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif"><div style="background:white;padding:40px;border-radius:10px;max-width:500px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3)"><div style="font-size:48px;margin-bottom:20px">🚫</div><h2 style="color:#d32f2f;margin-bottom:20px">AdBlock Detected!</h2><p style="color:#333;margin-bottom:20px;line-height:1.6">This site is heavily monetized and requires ads to remain free. Please disable your ad blocker to continue using SlowGuardian.</p><p style="color:#666;margin-bottom:30px;font-size:14px">We use ads to keep our service running and free for everyone.</p><button id="adb-r" style="background:#4CAF50;color:white;border:none;padding:12px 30px;font-size:16px;border-radius:5px;cursor:pointer;margin-right:10px">I\'ve Disabled AdBlock</button><button id="adb-i" style="background:#2196F3;color:white;border:none;padding:12px 30px;font-size:16px;border-radius:5px;cursor:pointer">How to Disable</button></div></div>';document.body.insertAdjacentHTML("beforeend",e),document.getElementById("adb-r").addEventListener("click",function(){window.location.reload()}),document.getElementById("adb-i").addEventListener("click",function(){alert("To disable your ad blocker:\\n\\n1. Click on your ad blocker extension icon\\n2. Select \\"Disable on this site\\" or similar option\\n3. Refresh the page\\n\\nThank you for supporting SlowGuardian!")}),document.body.style.overflow="hidden"}}function n(){e()&&t()}setTimeout(n,500),setTimeout(n,1500),setTimeout(n,3e3),window.addEventListener("load",n),document.addEventListener("DOMContentLoaded",n),setInterval(function(){e()&&!document.getElementById("adb-m")&&t()},3e3);var o=new MutationObserver(function(e){e.forEach(function(e){e.removedNodes.forEach(function(e){e.className&&e.className.includes("adsbygoogle")&&!document.getElementById("adb-m")&&t()})})});document.body?o.observe(document.body,{childList:!0,subtree:!0}):setTimeout(function(){document.body&&o.observe(document.body,{childList:!0,subtree:!0})},100)}();
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-00LBBY9N6T');
     </script>
-    <script src="/assets/scripts/main.js?v=32"></script>
-    <script src="/assets/scripts/index.js?v=14"></script>
-    <script
-      src="https://kit.fontawesome.com/1237c86ba0.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="assets/scripts/a.js?v=40"></script>
+
+    <!-- Enzuzo Cookie Banner -->
+    <script src="https://app.enzuzo.com/scripts/cookiebar/f8c4cd70-9ec8-11f0-8a15-efa3a64fef00"></script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2510115202431848"
+         crossorigin="anonymous"></script>
   </head>
   <body>
-    <!-- Top Banner Ad -->
-    <div
-      class="ad-container"
-      style="
-        margin: 10px 0;
-        min-height: 90px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
     </div>
 
-    <div class="fixed-nav-bar"></div>
-    <div class="input-container">
-      <input
-        type="text"
-        id="searchbarbottom"
-        onkeyup="search_bar()"
-        placeholder="Search"
-      />
-      <select id="category" name="category" onchange="show_category()">
-        <option value="all">All</option>
-        <option value="android">Android Emulator</option>
-        <option value="social">Social</option>
-        <option value="stream">Streaming</option>
-        <option value="message">Messaging</option>
-        <option value="game">Game Sites</option>
-        <option value="cloud">Cloud Gaming</option>
-        <option value="tool">Tools</option>
-        <option value="media">Media</option>
-        <option value="AI">AI</option>
-        <option value="emu">Emulator</option>
-        <option value="mail">Mail</option>
-      </select>
+    <!-- Main Content (navbar will be injected by navbar.js) -->
+    <main class="main-content with-sidebar" id="main-content">
+      <section class="page active" id="page-apps">
+        <div class="page-header">
+          <h2 class="page-title">Applications</h2>
+          <p class="page-subtitle">Access your favorite web applications</p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="content-controls">
+          <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input
+              type="text"
+              class="search-input"
+              id="searchbarbottom"
+              placeholder="Search applications..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="search-clear" id="search-clear" style="display: none">✕</button>
+          </div>
+
+          <select id="category" name="category" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="android">Android Emulator</option>
+            <option value="social">Social</option>
+            <option value="stream">Streaming</option>
+            <option value="message">Messaging</option>
+            <option value="game">Game Sites</option>
+            <option value="cloud">Cloud Gaming</option>
+            <option value="tool">Tools</option>
+            <option value="media">Media</option>
+            <option value="AI">AI</option>
+            <option value="emu">Emulator</option>
+            <option value="mail">Mail</option>
+          </select>
+        </div>
+
+        <!-- Pinned Apps -->
+        <div class="pinned-apps" id="pinned-apps"></div>
+
+        <!-- AdSense In-Article Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="4938663842"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="content-grid" id="apps-grid">
+          <div class="container-apps"></div>
+        </div>
+
+        <!-- AdSense Multiplex Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-format="autorelaxed"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="1953407856"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <!-- AdSense In-Feed Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-format="fluid"
+               data-ad-layout-key="-fb+5w+4e-db+86"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="7205734533"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
     </div>
 
-    <!-- Ad after search bar -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 250px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="1953407856"
-        data-ad-format="autorelaxed"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <!-- Proxy Bundle -->
+    <script src="./m/bundle.js?v=5"></script>
+    <script src="./m/config.js?v=5"></script>
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/index.js?v=14"></script>
 
-    <div class="pinned-apps"></div>
+    <!-- App Scripts -->
+    <!-- Loading System (Load first) -->
+    <script src="assets/scripts/loading-system.js?v=1"></script>
 
-    <!-- Ad between pinned and all apps -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 280px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="4938663842"
-        data-ad-format="fluid"
-        data-ad-layout="in-article"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
 
-    <div class="container-apps"></div>
+    <!-- Legacy Apps Script -->
+    <script src="assets/scripts/a.js?v=40"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
+    <script src="assets/scripts/main.js?v=32"></script>
 
-    <!-- Side Banner Ad Left -->
-    <div
-      style="
-        position: fixed;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        z-index: 1000;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <!-- Centralized Navigation Bar -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
 
-    <!-- Side Banner Ad Right -->
-    <div
-      style="
-        position: fixed;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        z-index: 1000;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <script src="assets/scripts/particles.js?v=1"></script>
 
-    <!-- Display ad for content -->
-    <ins
-      class="adsbygoogle"
-      style="display: block"
-      data-ad-client="ca-pub-2510115202431848"
-      data-ad-slot="7329110811"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    ></ins>
+    <!-- Script Loader for dependency management -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
+
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+
+    <!-- Ads Manager -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
     <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
+      // Enhanced search function to work with new styling
+      function search_bar() {
+        const searchInput = document.getElementById("searchbarbottom");
+        if (!searchInput) {
+          return;
+        }
+        const searchClear = document.getElementById("search-clear");
+        const searchTerm = searchInput.value.toLowerCase();
+        // Only select direct app-item children to avoid duplicates
+        const apps = document.querySelectorAll(".container-apps > .app-item");
+
+        // Show/hide clear button
+        if (searchTerm.length > 0 && searchClear) {
+          searchClear.style.display = "block";
+        } else if (searchClear) {
+          searchClear.style.display = "none";
+        }
+
+        let visibleCount = 0;
+        apps.forEach((app) => {
+          const appName = app.textContent.toLowerCase();
+          if (appName.includes(searchTerm)) {
+            app.style.display = "";
+            visibleCount++;
+          } else {
+            app.style.display = "none";
+          }
+        });
+
+        // Update results counter if available
+        const resultsCounter = document.getElementById("results-counter");
+        if (resultsCounter && searchTerm) {
+          resultsCounter.textContent = `${visibleCount} app${visibleCount !== 1 ? 's' : ''} found`;
+          resultsCounter.style.display = "block";
+        } else if (resultsCounter) {
+          resultsCounter.style.display = "none";
+        }
+      }
+
+      // Clear search function
+      function clearSearch() {
+        const searchInput = document.getElementById("searchbarbottom");
+        const searchClear = document.getElementById("search-clear");
+        if (!searchInput) {
+          return;
+        }
+        searchInput.value = "";
+        if (searchClear) {
+          searchClear.style.display = "none";
+        }
+        search_bar(); // Reset the search
+      }
+
+      // Add event listeners for search functionality with enhanced initialization
+      if (typeof window.whenReady === "function") {
+        window.whenReady(() => {
+          initAppsPage();
+        }, ["cookie-utils"]); // Wait for cookie utilities
+      } else {
+        // Fallback to DOMContentLoaded if whenReady is not available
+        document.addEventListener("DOMContentLoaded", () => {
+          console.warn("whenReady not available, using DOMContentLoaded fallback");
+          initAppsPage();
+        });
+      }
+
+      function initAppsPage() {
+        const searchInput = document.getElementById("searchbarbottom");
+        const searchClear = document.getElementById("search-clear");
+
+        if (searchInput) {
+          searchInput.addEventListener("input", search_bar);
+          searchInput.addEventListener("keyup", (e) => {
+            if (e.key === "Escape") {
+              clearSearch();
+            }
+          });
+        }
+
+        if (searchClear) {
+          searchClear.addEventListener("click", clearSearch);
+        }
+
+        // Add event listener for category filter
+        const categorySelect = document.getElementById("category");
+        if (categorySelect) {
+          categorySelect.addEventListener("change", show_category);
+        }
+
+        // Ensure search bar is visible
+        setTimeout(() => {
+          if (searchInput && searchInput.style.display === "none") {
+            console.warn("Search bar is hidden, forcing display");
+            searchInput.style.display = "block";
+            searchInput.style.visibility = "visible";
+          }
+        }, 100);
+      }
+
+      // Call initialization function immediately
+      initAppsPage();
+
+      // Enhanced show_category function
+      function show_category() {
+        const categorySelect = document.getElementById("category");
+        const selectedCategory = categorySelect.value;
+        const apps = document.querySelectorAll(".container-apps .app-item, .container-apps > div");
+
+        apps.forEach((app) => {
+          const appCategory = app.getAttribute("data-category") || "all";
+          if (selectedCategory === "all" || appCategory === selectedCategory) {
+            app.style.display = "";
+          } else {
+            app.style.display = "none";
+          }
+        });
+
+        // Update search after category change
+        search_bar();
+      }
     </script>
-
-    <!-- Additional Display Ad -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 280px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7205734533"
-        data-ad-format="fluid"
-        data-ad-layout-key="-6t+ed+2i-1n-4w"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
-
-    <!-- Bottom Banner Ad -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 90px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
 
     <div id="adv"></div>
   </body>

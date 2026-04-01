@@ -1,0 +1,11 @@
+{
+  "id": "bookmark-system",
+  "name": "Bookmark Manager",
+  "version": "1.0.0",
+  "description": "Save and organize your favorite websites",
+  "author": "SlowGuardian Team",
+  "permissions": ["storage", "proxy"],
+  "hooks": ["page_load", "proxy_request"],
+  "category": "productivity",
+  "icon": "🔖"
+}

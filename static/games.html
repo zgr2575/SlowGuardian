@@ -2,209 +2,373 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-    <title id="tab-title">Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/styles/main.css?v=8" />
-    <link rel="stylesheet" href="assets/styles/themes/default.css?v=5" />
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2510115202431848"
-      crossorigin="anonymous"
-      onerror="window.adsBlocked=true"
-    ></script>
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <!-- SEO and AdSense Meta Tags -->
+    <meta
+      name="description"
+      content="Play popular online games through SlowGuardian's secure proxy. Access blocked games safely with enhanced performance and privacy protection."
+    />
+    <meta name="keywords" content="online games, gaming, proxy games, unblocked games, secure gaming, SlowGuardian" />
+    <meta name="author" content="SlowGuardian Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <title id="tab-title">SlowGuardian v9 - Games</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/styles/v9/reset.css" />
+    <link rel="stylesheet" href="assets/styles/v9/variables.css" />
+    <link rel="stylesheet" href="assets/styles/v9/main.css" />
+    <link rel="stylesheet" href="assets/styles/v9/components.css" />
+    <link rel="stylesheet" href="assets/styles/v9/animations.css" />
+    <link rel="stylesheet" href="assets/styles/v9/games.css" />
+    <link rel="stylesheet" href="assets/styles/premium.css" />
+
+    <!-- Progressive Web App -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-00LBBY9N6T"></script>
     <script>
-      // Inline Anti-Adblock Detection (cannot be blocked by external URL filters)
-      !function(){function e(){if(window.adsBlocked)return!0;if("undefined"==typeof window.adsbygoogle)return!0;if(!document.body)return!1;var e=document.createElement("div");e.className="adsbygoogle ad-banner ads advertisement",e.style.cssText="position:absolute;top:-1px;left:-1px;width:1px;height:1px;",document.body.appendChild(e);var t=0===e.offsetHeight||"none"===window.getComputedStyle(e).display||"hidden"===window.getComputedStyle(e).visibility;return document.body.removeChild(e),t}function t(){if(!document.getElementById("adb-m")){var e='<div id="adb-m" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif"><div style="background:white;padding:40px;border-radius:10px;max-width:500px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3)"><div style="font-size:48px;margin-bottom:20px">🚫</div><h2 style="color:#d32f2f;margin-bottom:20px">AdBlock Detected!</h2><p style="color:#333;margin-bottom:20px;line-height:1.6">This site is heavily monetized and requires ads to remain free. Please disable your ad blocker to continue using SlowGuardian.</p><p style="color:#666;margin-bottom:30px;font-size:14px">We use ads to keep our service running and free for everyone.</p><button id="adb-r" style="background:#4CAF50;color:white;border:none;padding:12px 30px;font-size:16px;border-radius:5px;cursor:pointer;margin-right:10px">I\'ve Disabled AdBlock</button><button id="adb-i" style="background:#2196F3;color:white;border:none;padding:12px 30px;font-size:16px;border-radius:5px;cursor:pointer">How to Disable</button></div></div>';document.body.insertAdjacentHTML("beforeend",e),document.getElementById("adb-r").addEventListener("click",function(){window.location.reload()}),document.getElementById("adb-i").addEventListener("click",function(){alert("To disable your ad blocker:\\n\\n1. Click on your ad blocker extension icon\\n2. Select \\"Disable on this site\\" or similar option\\n3. Refresh the page\\n\\nThank you for supporting SlowGuardian!")}),document.body.style.overflow="hidden"}}function n(){e()&&t()}setTimeout(n,500),setTimeout(n,1500),setTimeout(n,3e3),window.addEventListener("load",n),document.addEventListener("DOMContentLoaded",n),setInterval(function(){e()&&!document.getElementById("adb-m")&&t()},3e3);var o=new MutationObserver(function(e){e.forEach(function(e){e.removedNodes.forEach(function(e){e.className&&e.className.includes("adsbygoogle")&&!document.getElementById("adb-m")&&t()})})});document.body?o.observe(document.body,{childList:!0,subtree:!0}):setTimeout(function(){document.body&&o.observe(document.body,{childList:!0,subtree:!0})},100)}();
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-00LBBY9N6T');
     </script>
-    <script src="assets/scripts/index.js?v=14"></script>
-    <script src="assets/scripts/g.js?v=70"></script>
+
+    <!-- Enzuzo Cookie Banner -->
+    <script src="https://app.enzuzo.com/scripts/cookiebar/f8c4cd70-9ec8-11f0-8a15-efa3a64fef00"></script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2510115202431848"
+         crossorigin="anonymous"></script>
   </head>
   <body>
-    <!-- Top Banner Ad -->
-    <div
-      class="ad-container"
-      style="
-        margin: 10px 0;
-        min-height: 90px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+    <!-- Background -->
+    <div class="background">
+      <div class="bg-gradient"></div>
+      <div class="bg-particles" id="particles"></div>
+      <div class="bg-overlay"></div>
     </div>
 
-    <div class="fixed-nav-bar"></div>
-    <div class="input-container">
-      <input
-        type="text"
-        id="searchbarbottom"
-        onkeyup="search_bar()"
-        placeholder="Search"
-      />
-      <select id="category" name="category" onchange="show_category()">
-        <option value="all">All</option>
-        <option value="android">Android Emulator</option>
-        <option value="2P">Multiplayer</option>
-        <option value="sports">Sports</option>
-        <option value="flash">Flash</option>
-        <option value="emu">Emulator</option>
-        <option value="local">Local</option>
-      </select>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="brand-icon">🛡️</span>
+          <span class="brand-text">SlowGuardian</span>
+          <span class="brand-version">v9</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="/" class="nav-link" data-page="home">
+            <i class="icon">🏠</i>
+            <span>Home</span>
+          </a>
+          <a href="/apps" class="nav-link" data-page="apps">
+            <i class="icon">📱</i>
+            <span>Apps</span>
+          </a>
+          <a href="/games" class="nav-link active" data-page="games">
+            <i class="icon">🎮</i>
+            <span>Games</span>
+          </a>
+          <a href="/music" class="nav-link" data-page="music">
+            <i class="icon">🎵</i>
+            <span>Music</span>
+          </a>
+          <a href="/go" class="nav-link" data-page="browser">
+            <i class="icon">🌐</i>
+            <span>Browser</span>
+          </a>
+          <a href="/tabs" class="nav-link" data-page="tabs">
+            <i class="icon">🗂️</i>
+            <span>Tabs</span>
+          </a>
+          <a href="/settings" class="nav-link" data-page="settings">
+            <i class="icon">⚙️</i>
+            <span>Settings</span>
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle theme">
+            <i class="icon">🌙</i>
+          </button>
+          <button class="btn-icon" id="fullscreen-toggle" title="Toggle fullscreen">
+            <i class="icon">⛶</i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <section class="page active" id="page-games">
+        <div class="page-header">
+          <h2 class="page-title">Games</h2>
+          <p class="page-subtitle">Play unblocked games</p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="content-controls">
+          <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input
+              type="text"
+              class="search-input"
+              id="searchbarbottom"
+              placeholder="Search games..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <select id="category" name="category" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="android">Android Emulator</option>
+            <option value="2P">Multiplayer</option>
+            <option value="sports">Sports</option>
+            <option value="flash">Flash</option>
+            <option value="emu">Emulator</option>
+            <option value="local">Local</option>
+          </select>
+        </div>
+
+        <!-- Pinned Games -->
+        <div class="pinned-games" id="pinned-games-section" style="display: none;">
+          <div class="pinned-games-header">
+            <h3 class="pinned-games-title">
+              <span class="pinned-games-icon">📌</span>
+              Pinned Games
+            </h3>
+          </div>
+          <div class="pinned-apps" id="pinned-games"></div>
+        </div>
+
+        <!-- AdSense In-Article Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="4938663842"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="content-grid" id="games-grid">
+          <div class="container-apps"></div>
+        </div>
+
+        <!-- AdSense Multiplex Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-format="autorelaxed"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="1953407856"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <!-- AdSense In-Feed Ad -->
+        <div class="adsense-container" style="margin: 2rem 0; text-align: center;">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-format="fluid"
+               data-ad-layout-key="-fb+5w+4e-db+86"
+               data-ad-client="ca-pub-2510115202431848"
+               data-ad-slot="7205734533"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <!-- Hidden Games -->
+        <div class="hidden-games" id="hidden-games-section" style="display: none;">
+          <div class="hidden-games-header">
+            <h3 class="hidden-games-title">
+              <span>👁️‍🗨️</span>
+              Hidden Games
+            </h3>
+            <button class="toggle-hidden-btn" id="toggle-hidden-btn" onclick="toggleHiddenGames()">
+              <span id="toggle-hidden-text">Show Hidden</span>
+            </button>
+          </div>
+          <div class="hidden-games-grid" id="hidden-games-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SlowGuardian v9</h4>
+          <p>Modern web proxy with extensible plugin system</p>
+        </div>
+        <div class="footer-section">
+          <h4>Features</h4>
+          <ul>
+            <li>Secure browsing</li>
+            <li>Tab cloaking</li>
+            <li>Plugin system</li>
+            <li>Modern UI</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/zgr2575/SlowGuardian">GitHub</a></li>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/api/info">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 SlowGuardian. Licensed under GPL-3.0.</p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading...</div>
     </div>
 
-    <!-- Ad after search bar -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 250px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="1953407856"
-        data-ad-format="autorelaxed"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
-
-    <div class="pinned-apps"></div>
-
-    <!-- Ad between pinned and all games -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 280px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="4938663842"
-        data-ad-format="fluid"
-        data-ad-layout="in-article"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
-
-    <div class="container-apps"></div>
+    <!-- Proxy Bundle -->
     <script src="./m/bundle.js?v=6"></script>
     <script src="./m/config.js?v=6"></script>
-    <script
-      src="https://kit.fontawesome.com/1237c86ba0.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="assets/scripts/cookie-storage.js?v=1"></script>
+    <script src="assets/scripts/index.js?v=14"></script>
+
+    <!-- App Scripts -->
+    <!-- Loading System (Load first) -->
+    <script src="assets/scripts/loading-system.js?v=1"></script>
+
+    <!-- Cookie Utilities (Load first) -->
+    <script src="assets/scripts/cookie-utils.js?v=1"></script>
+
+    <!-- Legacy Games Script -->
+    <script src="assets/scripts/g-enhanced.js?v=71"></script>
+    <script src="assets/scripts/screenshot-protection.js?v=1"></script>
+    <script src="assets/scripts/global-music-player.js?v=1"></script>
     <script src="assets/scripts/main.js?v=31"></script>
+    <script src="assets/scripts/particles.js?v=1"></script>
 
-    <!-- Side Banner Ad Left -->
-    <div
-      style="
-        position: fixed;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        z-index: 1000;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <!-- Centralized Navigation -->
+    <script src="assets/scripts/navbar.js?v=1"></script>
 
-    <!-- Side Banner Ad Right -->
-    <div
-      style="
-        position: fixed;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 160px;
-        z-index: 1000;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <!-- Script Loader for dependency management -->
+    <script src="assets/scripts/script-loader.js?v=1"></script>
 
-    <!-- In-feed ad for games -->
-    <ins
-      class="adsbygoogle"
-      style="display: block"
-      data-ad-format="fluid"
-      data-ad-layout-key="-6t+ed+2i-1n-4w"
-      data-ad-client="ca-pub-2510115202431848"
-      data-ad-slot="7205734533"
-    ></ins>
+    <!-- New v9 Systems -->
+    <script src="assets/scripts/plugin-system.js?v=1"></script>
+    <script src="assets/scripts/performance-mode.js?v=1"></script>
+    <script src="assets/scripts/moveable-buttons.js?v=1"></script>
+
+    <!-- Ads Manager -->
+    <script src="assets/scripts/ads-manager.js?v=1"></script>
+
     <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+      // Update search function to work with new styling
+      function search_bar() {
+        const searchInput = document.getElementById("searchbarbottom");
+        const searchTerm = searchInput.value.toLowerCase();
+        // Only select direct game-item children to avoid duplicates
+        const games = document.querySelectorAll(".container-apps > .game-item");
 
-    <!-- Bottom Banner Ad -->
-    <div
-      class="ad-container"
-      style="
-        margin: 20px 0;
-        min-height: 90px;
-        display: flex;
-        justify-content: center;
-      "
-    >
-      <ins
-        class="adsbygoogle"
-        style="display: block"
-        data-ad-client="ca-pub-2510115202431848"
-        data-ad-slot="7329110811"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+        let visibleCount = 0;
+        games.forEach((game) => {
+          const gameName = game.textContent.toLowerCase();
+          if (gameName.includes(searchTerm)) {
+            game.style.display = "";
+            visibleCount++;
+          } else {
+            game.style.display = "none";
+          }
+        });
+
+        // Update results counter if it exists
+        const counter = document.getElementById("results-counter");
+        if (counter && searchTerm) {
+          counter.textContent = `${visibleCount} game${visibleCount !== 1 ? 's' : ''} found`;
+          counter.style.display = "block";
+        } else if (counter) {
+          counter.style.display = "none";
+        }
+      }
+
+      // Enhanced initialization for games page
+      if (typeof window.whenReady === "function") {
+        window.whenReady(() => {
+          initGamesPage();
+        }, ["cookie-utils"]); // Wait for cookie utilities
+      } else {
+        // Fallback to DOMContentLoaded if whenReady is not available
+        document.addEventListener("DOMContentLoaded", () => {
+          console.warn("whenReady not available, using DOMContentLoaded fallback");
+          initGamesPage();
+        });
+      }
+
+      function initGamesPage() {
+        const searchInput = document.getElementById("searchbarbottom");
+        if (searchInput) {
+          searchInput.addEventListener("input", search_bar);
+        }
+
+        // Add event listener for category filter
+        const categorySelect = document.getElementById("category");
+        if (categorySelect) {
+          categorySelect.addEventListener("change", show_category);
+        }
+      }
+
+      // Call initialization function immediately
+      initGamesPage();
+
+      // Toggle hidden games visibility
+      function toggleHiddenGames() {
+        const hiddenGamesGrid = document.getElementById("hidden-games-grid");
+        const toggleText = document.getElementById("toggle-hidden-text");
+
+        if (hiddenGamesGrid && toggleText) {
+          const isHidden = hiddenGamesGrid.style.display === "none";
+
+          if (isHidden) {
+            hiddenGamesGrid.style.display = "grid";
+            toggleText.textContent = "Hide Hidden";
+          } else {
+            hiddenGamesGrid.style.display = "none";
+            toggleText.textContent = "Show Hidden";
+          }
+        }
+      }
+    </script>
 
     <div id="adv"></div>
   </body>

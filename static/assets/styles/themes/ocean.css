@@ -1,0 +1,99 @@
+/* Ocean Theme */
+:root {
+  --bg-primary: #001122;
+  --bg-secondary: #002244;
+  --bg-tertiary: #003366;
+  --bg-quaternary: #004488;
+
+  --text-primary: #e0f6ff;
+  --text-secondary: #99d6ea;
+  --text-tertiary: #4db8d4;
+
+  --accent-primary: #00bcd4;
+  --accent-secondary: #26c6da;
+  --accent-tertiary: #4dd0e1;
+  --accent-hover: #00acc1;
+
+  --border-primary: #00bcd4;
+  --border-secondary: #26c6da;
+
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+
+  --shadow-primary: 0 8px 32px rgba(0, 188, 212, 0.2);
+  --shadow-secondary: 0 4px 16px rgba(38, 198, 218, 0.1);
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    #001122 0%,
+    #002244 25%,
+    #003366 50%,
+    #004488 75%,
+    #001122 100%
+  );
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+.bg-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 17, 34, 0.9) 0%,
+    rgba(0, 34, 68, 0.8) 25%,
+    rgba(0, 51, 102, 0.7) 50%,
+    rgba(0, 68, 136, 0.6) 75%,
+    rgba(0, 17, 34, 0.9) 100%
+  );
+}
+
+.card,
+.widget,
+.navbar {
+  background: rgba(0, 34, 68, 0.9);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-primary);
+  backdrop-filter: blur(15px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #00bcd4, #26c6da);
+  border: 1px solid #00bcd4;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #00acc1, #00bcd4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 188, 212, 0.4);
+}
+
+.input-field {
+  background: rgba(0, 51, 102, 0.8);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.input-field:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+}
+
+/* Wave animation for ocean feel */
+.brand-text::after {
+  content: "🌊";
+  margin-left: 8px;
+  animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}

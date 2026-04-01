@@ -1,54 +1,109 @@
-let inFrame;
+// DISABLED: Auto about:blank execution to prevent spam
+// This file previously auto-executed about:blank on load
+// Now requires manual activation only to prevent infinite loops
 
-try {
-  inFrame = window !== top;
-} catch (e) {
-  inFrame = true;
-}
+// Manual about:blank function - call with window.createAboutBlank() if needed
+window.createAboutBlank = function () {
+  let inFrame;
 
-if (!inFrame && !navigator.userAgent.includes("Firefox")) {
-  const popup = open("about:blank", "_blank");
-  if (!popup || popup.closed) {
-    alert("Please allow popups and redirects.");
-  } else {
-    const doc = popup.document;
-    const iframe = doc.createElement("iframe");
-    const style = iframe.style;
-    const link = doc.createElement("link");
-
-    const name = localStorage.getItem("name") || "My Drive - Google Drive";
-    const icon =
-      localStorage.getItem("icon") ||
-      "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
-
-    doc.title = name;
-    link.rel = "icon";
-    link.href = icon;
-
-    iframe.src = location.href;
-    style.position = "fixed";
-    style.top = style.bottom = style.left = style.right = 0;
-    style.border = style.outline = "none";
-    style.width = style.height = "100%";
-
-    doc.head.appendChild(link);
-    doc.body.appendChild(iframe);
-
-    const pLink =
-      localStorage.getItem(encodeURI("pLink")) || "https://www.nasa.gov/";
-    location.replace(pLink);
-
-    const script = doc.createElement("script");
-    script.textContent = `
-      window.onbeforeunload = function (event) {
-        const confirmationMessage = 'Leave Site?';
-        (event || window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
-      };
-    `;
-    doc.head.appendChild(script);
+  try {
+    inFrame = window !== top;
+  } catch (e) {
+    inFrame = true;
   }
-}
+
+  if (!inFrame && !navigator.userAgent.includes("Firefox")) {
+    try {
+      const popup = open("about:blank", "_blank");
+
+      if (!popup || popup.closed) {
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('⚠️ Please allow popups and redirects in your browser settings.', 'error', 5000);
+        } else {
+          console.error('Popup blocked. Please allow popups and redirects.');
+        }
+        return false;
+      }
+
+      // Wait a moment for popup to fully open
+      setTimeout(() => {
+        try {
+          const doc = popup.document;
+
+          // Set up basic document structure
+          doc.open();
+          doc.write('<!DOCTYPE html><html><head></head><body></body></html>');
+          doc.close();
+
+          const name = localStorage.getItem("name") || "My Drive - Google Drive";
+          const icon = localStorage.getItem("icon") || "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png";
+
+          // Set title and icon
+          doc.title = name;
+          const link = doc.createElement("link");
+          link.rel = "icon";
+          link.href = icon;
+          doc.head.appendChild(link);
+
+          // Create and configure iframe
+          const iframe = doc.createElement("iframe");
+          iframe.style.cssText = "position:fixed;top:0;bottom:0;left:0;right:0;border:none;outline:none;width:100%;height:100%";
+          iframe.src = location.href;
+
+          // Add loading indicator
+          const loadingDiv = doc.createElement("div");
+          loadingDiv.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Arial,sans-serif;color:#666;";
+          loadingDiv.textContent = "Loading...";
+          doc.body.appendChild(loadingDiv);
+
+          // Remove loading indicator when iframe loads
+          iframe.onload = () => {
+            if (loadingDiv.parentNode) {
+              loadingDiv.remove();
+            }
+          };
+
+          doc.body.appendChild(iframe);
+
+          // Add unload confirmation
+          const script = doc.createElement("script");
+          script.textContent = `
+            window.onbeforeunload = function (event) {
+              const confirmationMessage = 'Leave Site?';
+              (event || window.event).returnValue = confirmationMessage;
+              return confirmationMessage;
+            };
+          `;
+          doc.head.appendChild(script);
+
+          // Redirect parent window
+          const pLink = localStorage.getItem(encodeURI("pLink")) || "https://www.nasa.gov/";
+          setTimeout(() => {
+            location.replace(pLink);
+          }, 100);
+
+          return true;
+        } catch (err) {
+          console.error('Error setting up about:blank cloaking:', err);
+          if (typeof window.showNotification === 'function') {
+            window.showNotification('❌ Failed to set up tab cloaking. Try again.', 'error', 5000);
+          }
+          popup.close();
+          return false;
+        }
+      }, 100);
+
+    } catch (err) {
+      console.error('Error opening about:blank popup:', err);
+      if (typeof window.showNotification === 'function') {
+        window.showNotification('❌ Could not open popup. Check your browser settings.', 'error', 5000);
+      }
+      return false;
+    }
+  }
+
+  return false;
+};
 // Particles
 document.addEventListener("DOMContentLoaded", function (event) {
   if (window.localStorage.getItem("Particles") === "true") {
