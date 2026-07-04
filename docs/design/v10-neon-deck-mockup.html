@@ -1,0 +1,810 @@
+<title>SlowGuardian V10 — NEON DECK</title>
+<style>
+  /* ============================================================
+     NEON DECK — SlowGuardian V10 design mockup
+     Single-theme committed (arcade console), with live theme +
+     accent switching to demonstrate the token architecture.
+     Everything that gives it identity is static CSS painted once.
+     ============================================================ */
+
+  /* ---- Arcade (default) tokens ---- */
+  :root {
+    --bg: #0b0d14;
+    --bg-deep: #07080d;
+    --surface: #141826;
+    --surface-2: #1b2136;
+    --surface-sunken: #0e111c;
+    --scrim: rgba(7, 8, 13, 0.82);
+
+    --line: #262d45;
+    --line-strong: #34405f;
+    --ink: #eef1fb;
+    --ink-dim: #98a1c0;
+    --ink-faint: #626b8a;
+
+    --acc: #00e5ff;
+    --acc-deep: #00b7cc;
+    --acc-ink: #04121a;
+    --acc-weak: rgba(0, 229, 255, 0.10);
+    --glow: rgba(0, 229, 255, 0.35);
+
+    --coin: #ffcf3f;
+    --ok: #3ddc84;
+    --warn: #ffb020;
+    --err: #ff5d6c;
+
+    --grid-line: rgba(238, 241, 251, 0.045);
+    --scan-line: rgba(238, 241, 251, 0.03);
+
+    --sh-1: 0 1px 2px rgba(0,0,0,.35);
+    --sh-2: 0 12px 34px rgba(0,0,0,.5);
+    --sh-glow: 0 0 0 1px var(--acc), 0 6px 26px var(--glow);
+
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-pill: 999px;
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+    --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+    --topbar-h: 56px; --maxw: 1200px;
+
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", "Roboto Mono", Consolas, monospace;
+  }
+
+  /* ---- Accent presets ("coins") — one attribute retints the console ---- */
+  :root[data-accent="cyan"]    { --acc:#00e5ff; --acc-deep:#00b7cc; --acc-ink:#04121a; --acc-weak:rgba(0,229,255,.10);  --glow:rgba(0,229,255,.35); }
+  :root[data-accent="magenta"] { --acc:#ff3e8f; --acc-deep:#d81f6f; --acc-ink:#1a040d; --acc-weak:rgba(255,62,143,.10); --glow:rgba(255,62,143,.35); }
+  :root[data-accent="lime"]    { --acc:#a3ff3e; --acc-deep:#7fd41f; --acc-ink:#0d1a04; --acc-weak:rgba(163,255,62,.10); --glow:rgba(163,255,62,.32); }
+  :root[data-accent="violet"]  { --acc:#8b5cff; --acc-deep:#6f3fe0; --acc-ink:#f4f0ff; --acc-weak:rgba(139,92,255,.12); --glow:rgba(139,92,255,.38); }
+  :root[data-accent="gold"]    { --acc:#ffcf3f; --acc-deep:#e0af10; --acc-ink:#1a1504; --acc-weak:rgba(255,207,63,.10); --glow:rgba(255,207,63,.32); }
+
+  /* ---- Theme overrides ---- */
+  :root[data-theme="midnight"] {
+    --bg:#0B0E16; --bg-deep:#070911; --surface:#141A28; --surface-2:#1a2338; --surface-sunken:#0e131f;
+    --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.16);
+    --grid-line:rgba(238,241,251,.03); --scan-line:transparent;
+  }
+  :root[data-theme="carbon"] {
+    --bg:#000; --bg-deep:#000; --surface:#101014; --surface-2:#16161c; --surface-sunken:#0a0a0d;
+    --line:#22242c; --line-strong:#33353f;
+    --grid-line:transparent; --scan-line:rgba(238,241,251,.035);
+  }
+  :root[data-theme="paper"] {
+    --bg:#f4f6fb; --bg-deep:#e9edf5; --surface:#ffffff; --surface-2:#eef1f8; --surface-sunken:#e8ebf3;
+    --scrim:rgba(16,19,31,.45);
+    --line:#dde3ef; --line-strong:#c3cce0;
+    --ink:#10131f; --ink-dim:#4d5673; --ink-faint:#8d95ad;
+    --grid-line:transparent; --scan-line:transparent;
+    --sh-1:0 1px 2px rgba(16,20,40,.06); --sh-2:0 12px 34px rgba(16,20,40,.12);
+    --sh-glow:0 0 0 1px var(--acc), 0 6px 22px var(--glow);
+  }
+  /* Paper darkens accents for contrast on light ground */
+  :root[data-theme="paper"][data-accent="cyan"]    { --acc:#0b7d92; --acc-deep:#086477; --acc-ink:#fff; --glow:rgba(11,125,146,.18); }
+  :root[data-theme="paper"][data-accent="magenta"] { --acc:#c2185b; --acc-deep:#9c134a; --acc-ink:#fff; --glow:rgba(194,24,91,.18); }
+  :root[data-theme="paper"][data-accent="lime"]    { --acc:#4f8a10; --acc-deep:#3f6f0c; --acc-ink:#fff; --glow:rgba(79,138,16,.18); }
+  :root[data-theme="paper"][data-accent="violet"]  { --acc:#5b34c2; --acc-deep:#4a2aa0; --acc-ink:#fff; --glow:rgba(91,52,194,.18); }
+  :root[data-theme="paper"][data-accent="gold"]    { --acc:#8a6d00; --acc-deep:#6f5700; --acc-ink:#fff; --glow:rgba(138,109,0,.18); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ---- The backdrop: fixed, never animated, painted once ---- */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, var(--scan-line) 0 1px, transparent 1px 3px),
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 26px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 26px 100%,
+      radial-gradient(130% 90% at 50% -10%, var(--bg) 42%, var(--bg-deep) 100%);
+  }
+  /* grain — high perf only, static texture */
+  :root[data-perf="high"] body::after {
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.045;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .app { position: relative; z-index: 1; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 40; height: var(--topbar-h);
+    display: flex; align-items: center; gap: var(--sp-5);
+    padding: 0 var(--sp-5);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .coinmark {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--acc), var(--acc-deep));
+    box-shadow: 0 0 0 1px var(--acc-deep), 0 0 14px var(--glow);
+    display: grid; place-items: center;
+  }
+  .coinmark span { font: 700 13px/1 var(--font-mono); color: var(--acc-ink); }
+  .wordmark {
+    font: 800 17px/1 var(--font-mono); letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink);
+  }
+  .wordmark b { color: var(--acc); }
+  .nav { display: flex; gap: 2px; margin-left: var(--sp-3); }
+  .nav a {
+    position: relative; padding: 8px 14px; border-radius: var(--r-sm);
+    color: var(--ink-dim); text-decoration: none;
+    font: 600 13px/1 var(--font-sans); letter-spacing: .01em;
+    transition: color .15s, background .15s;
+  }
+  .nav a:hover { color: var(--ink); }
+  .nav a.on { color: var(--acc); background: var(--acc-weak); }
+  .nav a.on::after {
+    content:""; position:absolute; left:12px; right:12px; bottom:2px; height:2px;
+    background: var(--acc); border-radius: 2px; box-shadow: 0 0 8px var(--glow);
+  }
+  .hud { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .clock {
+    font: 500 13px/1 var(--font-mono); color: var(--ink-dim);
+    font-variant-numeric: tabular-nums; letter-spacing: .04em;
+    padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--r-sm);
+  }
+  .clock b { color: var(--acc); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    font: 600 12px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+    color: var(--ink-dim); background: var(--surface); border: 1px solid var(--line);
+    padding: 8px 12px; border-radius: var(--r-pill); transition: .15s;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--line-strong); }
+  .chip.active { color: var(--acc-ink); background: var(--acc); border-color: var(--acc); box-shadow: 0 0 16px var(--glow); }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .iconbtn {
+    width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer;
+    color: var(--ink-dim); background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-sm); transition: .15s;
+  }
+  .iconbtn:hover { color: var(--ink); border-color: var(--line-strong); }
+  .iconbtn.panic:hover { color: var(--err); border-color: var(--err); }
+  .iconbtn svg { width: 16px; height: 16px; }
+
+  /* ---------- Shared layout ---------- */
+  main { display: block; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--sp-5); }
+  .eyebrow {
+    font: 400 12px/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase;
+    color: var(--acc); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before { content: "//"; opacity: .6; }
+
+  /* stagger-in (coin drop) */
+  .rise { opacity: 0; transform: translateY(10px); animation: rise .5s cubic-bezier(.2,.8,.2,1) forwards; }
+  section:nth-child(1) .rise { animation-delay: .05s; }
+  section:nth-child(2) .rise { animation-delay: .12s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  /* ---------- Lobby / hero ---------- */
+  .lobby { padding: clamp(40px, 8vw, 84px) 0 var(--sp-7); }
+  .hero { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+  .hero h1 {
+    font: 800 clamp(2.4rem, 7vw, 4.6rem)/0.98 var(--font-mono);
+    letter-spacing: -0.02em; text-transform: uppercase;
+    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 55%, var(--acc)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-wrap: balance;
+  }
+  .hero h1 .glow { color: var(--acc); -webkit-text-fill-color: var(--acc); text-shadow: 0 0 26px var(--glow); }
+  .hero .tag { color: var(--ink-dim); font-size: 1.05rem; max-width: 46ch; }
+
+  /* omnibox */
+  .omni {
+    margin-top: var(--sp-3); width: 100%; max-width: 640px;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface-sunken); border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill); padding: 6px 6px 6px 0; position: relative;
+    transition: border-color .15s, box-shadow .2s;
+  }
+  .omni::before {
+    content:""; position:absolute; left:0; top:9px; bottom:9px; width:3px;
+    background: var(--acc); border-radius: 3px; box-shadow: 0 0 10px var(--glow);
+  }
+  .omni:focus-within { border-color: var(--acc); box-shadow: var(--sh-glow); }
+  :root[data-perf="high"] .omni:focus-within::before { animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .5; } }
+  .omni .lead { padding-left: 18px; color: var(--ink-faint); font: 600 12px/1 var(--font-mono); }
+  .omni input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--ink); font: 500 15px/1 var(--font-mono); padding: 12px 6px;
+  }
+  .omni input::placeholder { color: var(--ink-faint); }
+  .go {
+    flex-shrink: 0; cursor: pointer; border: none;
+    background: var(--acc); color: var(--acc-ink);
+    font: 700 13px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
+    padding: 12px 20px; border-radius: var(--r-pill); transition: .15s;
+  }
+  .go:hover { background: var(--acc-deep); }
+
+  /* channel tiles */
+  .channels { margin-top: var(--sp-6); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+  .channel {
+    position: relative; overflow: hidden; cursor: pointer; text-decoration: none;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: var(--sp-4); display: flex; flex-direction: column; gap: 10px;
+    transition: transform .15s cubic-bezier(.2,.8,.2,1), border-color .15s;
+  }
+  .channel::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--acc); opacity:.55; }
+  .channel::after { content:""; position:absolute; inset:0; box-shadow: var(--sh-glow); opacity:0; border-radius: inherit; transition: opacity .15s; pointer-events:none; }
+  .channel:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+  .channel:hover::after { opacity: 1; }
+  .channel .ic { width: 30px; height: 30px; color: var(--acc); }
+  .channel .name { font: 700 15px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+  .channel .count { font: 500 12px/1 var(--font-mono); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+
+  /* ticker */
+  .ticker {
+    margin-top: var(--sp-5); overflow: hidden; white-space: nowrap;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .ticker .run {
+    display: inline-block; font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim);
+  }
+  .ticker .run b { color: var(--acc); margin: 0 4px; }
+  :root[data-perf="high"] .ticker .run { animation: marq 34s linear infinite; }
+  .ticker:hover .run { animation-play-state: paused; }
+  @keyframes marq { to { transform: translateX(-50%); } }
+
+  /* ---------- Control deck ---------- */
+  .deck { padding: var(--sp-6) 0; }
+  .deck-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--sp-3); margin-top: var(--sp-4); }
+  .panel {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--sp-4);
+    display: flex; flex-direction: column; gap: var(--sp-3);
+  }
+  .panel h3 { font: 600 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .segrow { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg {
+    cursor: pointer; border: 1px solid var(--line); background: var(--surface-sunken); color: var(--ink-dim);
+    font: 600 12px/1 var(--font-sans); padding: 8px 12px; border-radius: var(--r-sm); transition: .15s;
+  }
+  .seg:hover { color: var(--ink); border-color: var(--line-strong); }
+  .seg.on { color: var(--acc-ink); background: var(--acc); border-color: var(--acc); }
+  .coins { display: flex; gap: 10px; }
+  .coin-btn {
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
+    transition: transform .12s; position: relative;
+  }
+  .coin-btn:hover { transform: scale(1.12); }
+  .coin-btn.on { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg), 0 0 14px currentColor; }
+  .coin-btn[data-c="cyan"] { background:#00e5ff; color:rgba(0,229,255,.6); }
+  .coin-btn[data-c="magenta"] { background:#ff3e8f; color:rgba(255,62,143,.6); }
+  .coin-btn[data-c="lime"] { background:#a3ff3e; color:rgba(163,255,62,.6); }
+  .coin-btn[data-c="violet"] { background:#8b5cff; color:rgba(139,92,255,.6); }
+  .coin-btn[data-c="gold"] { background:#ffcf3f; color:rgba(255,207,63,.6); }
+  .hint { font: 400 12px/1.45 var(--font-sans); color: var(--ink-faint); }
+  .hint kbd {
+    font: 600 11px/1 var(--font-mono); background: var(--surface-sunken); border:1px solid var(--line-strong);
+    border-radius: 4px; padding: 3px 6px; color: var(--ink-dim);
+  }
+
+  /* ---------- Library ---------- */
+  .library { padding: var(--sp-6) 0 var(--sp-8); }
+  .subhead {
+    display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+    margin: var(--sp-4) 0; padding-bottom: var(--sp-4); border-bottom: 1px solid var(--line);
+  }
+  .search {
+    display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px;
+    background: var(--surface-sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 0 12px;
+  }
+  .search:focus-within { border-color: var(--acc); }
+  .search svg { width: 15px; height: 15px; color: var(--ink-faint); flex-shrink: 0; }
+  .search input { flex:1; background:none; border:none; outline:none; color: var(--ink); font: 500 14px/1 var(--font-mono); padding: 11px 0; }
+  .search input::placeholder { color: var(--ink-faint); }
+  .cats { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat {
+    cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink-dim);
+    font: 600 11px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+    padding: 8px 11px; border-radius: var(--r-pill); transition: .15s;
+  }
+  .cat:hover { color: var(--ink); }
+  .cat.on { color: var(--acc-ink); background: var(--acc); border-color: var(--acc); }
+  .count-tag { font: 600 12px/1 var(--font-mono); color: var(--ink-dim); letter-spacing: .06em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .count-tag b { color: var(--acc); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-3); }
+  .card {
+    position: relative; display: flex; flex-direction: column; cursor: pointer; text-decoration: none;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden;
+    transition: transform .15s cubic-bezier(.2,.8,.2,1), border-color .15s;
+    contain: layout paint style;
+  }
+  .card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--acc); opacity:0; transition: opacity .15s; z-index:2; }
+  .card::after { content:""; position:absolute; inset:0; box-shadow: var(--sh-glow); opacity:0; border-radius: inherit; transition: opacity .15s; pointer-events:none; }
+  .card:hover { transform: translateY(-4px) scale(1.02); border-color: var(--line-strong); z-index: 3; }
+  .card:hover::before, .card:hover::after { opacity: 1; }
+  .card:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+  .cover {
+    aspect-ratio: 3/2; display: grid; place-items: center; position: relative;
+    font: 800 26px/1 var(--font-mono); letter-spacing: .02em; color: rgba(255,255,255,.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,.5);
+  }
+  .cover::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.35)); }
+  .card .meta { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .card .t { font: 600 13px/1.25 var(--font-sans); color: var(--ink); }
+  .card .c { font: 500 10px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
+  .card.hide { display: none; }
+
+  /* ---------- Features ---------- */
+  .features { padding: var(--sp-6) 0; }
+  .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-3); margin-top: var(--sp-4); }
+  .feature { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--sp-5); display: flex; flex-direction: column; gap: 10px; }
+  .feature .fic { width: 34px; height: 34px; border-radius: var(--r-sm); display: grid; place-items: center; background: var(--acc-weak); color: var(--acc); }
+  .feature .fic svg { width: 18px; height: 18px; }
+  .feature h4 { font: 700 15px/1.2 var(--font-mono); letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+  .feature p { font-size: .9rem; color: var(--ink-dim); }
+  .feature .note { font: 500 11px/1.4 var(--font-mono); color: var(--ink-faint); letter-spacing: .02em; }
+  /* fake tab preview */
+  .tabprev { margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+    background: var(--surface-sunken); border: 1px solid var(--line-strong); border-radius: 8px 8px 0 0; padding: 8px 12px; max-width: 100%; }
+  .tabprev .fav { width: 15px; height: 15px; border-radius: 3px; background: linear-gradient(135deg, #4285F4, #34A853 55%, #FBBC05 80%, #EA4335); flex-shrink: 0; }
+  .tabprev .tt { font: 500 12px/1 var(--font-sans); color: var(--ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ---------- Game Over ---------- */
+  .gameover { padding: var(--sp-8) 0; text-align: center; }
+  .gameover .go-t {
+    font: 800 clamp(2.6rem, 8vw, 5rem)/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase;
+    background: linear-gradient(180deg, var(--err), color-mix(in srgb, var(--err) 60%, var(--acc)));
+    -webkit-background-clip: text; background-clip: text; color: transparent; text-wrap: balance;
+  }
+  .gameover .go-sub { margin-top: 12px; font: 500 14px/1 var(--font-mono); letter-spacing: .1em; color: var(--ink-dim); }
+  .gameover .go-sub b { color: var(--acc); font-variant-numeric: tabular-nums; }
+  .gameover a { display: inline-block; margin-top: var(--sp-5); color: var(--acc); text-decoration: none; font: 700 13px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--acc); padding: 12px 22px; border-radius: var(--r-pill); transition: .15s; }
+  .gameover a:hover { background: var(--acc); color: var(--acc-ink); }
+
+  footer { border-top: 1px solid var(--line); padding: var(--sp-6) 0; }
+  footer .fnote { color: var(--ink-faint); font: 500 12px/1.6 var(--font-mono); letter-spacing: .02em; }
+  footer .fnote b { color: var(--ink-dim); }
+
+  .sectionhead { display: flex; flex-direction: column; gap: 10px; }
+  .sectionhead h2 { font: 800 clamp(1.4rem, 3vw, 2rem)/1 var(--font-mono); letter-spacing: -.01em; text-transform: uppercase; color: var(--ink); }
+  .sectionhead p { color: var(--ink-dim); max-width: 60ch; }
+
+  /* ---------- Command palette ---------- */
+  .palette-scrim {
+    position: fixed; inset: 0; z-index: 90; background: var(--scrim); display: none;
+    align-items: flex-start; justify-content: center; padding-top: 12vh;
+  }
+  .palette-scrim.open { display: flex; }
+  .palette {
+    width: min(560px, 92vw); background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg); box-shadow: var(--sh-2); overflow: hidden;
+    animation: pin .14s ease-out;
+  }
+  @keyframes pin { from { opacity: 0; transform: translateY(-6px); } }
+  .palette .pin { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .palette .pin svg { width: 16px; height: 16px; color: var(--acc); }
+  .palette .pin input { flex:1; background:none; border:none; outline:none; color: var(--ink); font: 500 15px/1 var(--font-mono); }
+  .palette .pin input::placeholder { color: var(--ink-faint); }
+  .palette .plist { max-height: 300px; overflow-y: auto; padding: 6px; }
+  .prow { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: var(--r-sm); cursor: pointer; }
+  .prow:hover, .prow.sel { background: var(--acc-weak); }
+  .prow .pk { font: 600 13px/1 var(--font-sans); color: var(--ink); }
+  .prow .pd { margin-left: auto; font: 500 11px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); }
+
+  /* toast */
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); z-index: 100;
+    background: var(--surface-2); border: 1px solid var(--line-strong); color: var(--ink);
+    padding: 12px 18px; border-radius: var(--r-pill); box-shadow: var(--sh-2);
+    font: 600 13px/1 var(--font-mono); letter-spacing: .02em; opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast b { color: var(--acc); }
+
+  @media (max-width: 860px) {
+    .nav { display: none; }
+    .channels { grid-template-columns: repeat(2, 1fr); }
+    .clock { display: none; }
+  }
+  @media (max-width: 520px) {
+    .channels { grid-template-columns: 1fr 1fr; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rise, .ticker .run, .omni:focus-within::before, .palette { animation: none !important; }
+    .rise { opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+    * { transition-duration: .01ms !important; }
+  }
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="coinmark"><span>SG</span></div>
+      <div class="wordmark">Slow<b>Guardian</b></div>
+    </div>
+    <nav class="nav">
+      <a href="#lobby" class="on">Home</a>
+      <a href="#library">Games</a>
+      <a href="#library">Apps</a>
+      <a href="#lobby">Go</a>
+    </nav>
+    <div class="hud">
+      <div class="clock">SYS <b id="clock">--:--</b></div>
+      <button class="chip" id="cloakChip" title="Toggle tab cloak"><span class="dot"></span>Cloak</button>
+      <button class="iconbtn" id="paletteBtn" title="Command palette (Ctrl+K)" aria-label="Command palette">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
+      </button>
+      <button class="iconbtn panic" id="panicBtn" title="Panic exit (Esc Esc)" aria-label="Panic exit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64M12 2v10"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== LOBBY ===== -->
+    <section class="lobby" id="lobby">
+      <div class="wrap">
+        <div class="hero">
+          <span class="eyebrow rise">Player One Ready</span>
+          <h1 class="rise">Boot up.<br><span class="glow">Play anything.</span></h1>
+          <p class="tag rise">A fast, private console for the school Chromebook. Type a site or launch a game — the cabinet loads instantly, even on the slow ones.</p>
+          <form class="omni rise" id="omni" onsubmit="return false">
+            <span class="lead">GO</span>
+            <input id="omniInput" placeholder="Search or paste a URL…" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
+            <button class="go" type="submit">Launch</button>
+          </form>
+        </div>
+
+        <div class="channels rise">
+          <a class="channel" href="#library">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M7 12h3M8.5 10.5v3M15 11h.01M18 13h.01"/></svg>
+            <span class="name">Games</span><span class="count">312 titles</span>
+          </a>
+          <a class="channel" href="#library">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+            <span class="name">Apps</span><span class="count">48 tools</span>
+          </a>
+          <a class="channel" href="#lobby">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="name">Go</span><span class="count">proxy bay</span>
+          </a>
+          <a class="channel" href="#deck">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+            <span class="name">System</span><span class="count">settings</span>
+          </a>
+        </div>
+
+        <div class="ticker rise" aria-hidden="true">
+          <span class="run" id="ticker"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTROL DECK (live demo) ===== -->
+    <section class="deck" id="deck">
+      <div class="wrap">
+        <div class="sectionhead">
+          <span class="eyebrow">Cabinet Controls · live</span>
+          <h2>Reskin the whole console in one tap</h2>
+          <p>Theme and accent are single attributes on the root — one style recalc, zero JS re-render, zero downloads. Try them; the entire page retints instantly. This is the same mechanism that runs free on a 2018 Celeron.</p>
+        </div>
+        <div class="deck-grid">
+          <div class="panel">
+            <h3>Theme</h3>
+            <div class="segrow" id="themeSeg">
+              <button class="seg on" data-theme="arcade">Arcade</button>
+              <button class="seg" data-theme="midnight">Midnight</button>
+              <button class="seg" data-theme="carbon">Carbon</button>
+              <button class="seg" data-theme="paper">Paper</button>
+            </div>
+            <p class="hint"><b style="color:var(--ink-dim)">Paper</b> is the classroom-camouflage theme — flips the arcade into a boring school-portal look.</p>
+          </div>
+          <div class="panel">
+            <h3>Accent coin</h3>
+            <div class="coins" id="coins">
+              <button class="coin-btn on" data-c="cyan" aria-label="Cyan"></button>
+              <button class="coin-btn" data-c="magenta" aria-label="Magenta"></button>
+              <button class="coin-btn" data-c="lime" aria-label="Lime"></button>
+              <button class="coin-btn" data-c="violet" aria-label="Violet"></button>
+              <button class="coin-btn" data-c="gold" aria-label="Gold"></button>
+            </div>
+            <p class="hint">Every power-light, glow and highlight reads one <kbd>--acc</kbd> token.</p>
+          </div>
+          <div class="panel">
+            <h3>Performance mode</h3>
+            <div class="segrow" id="perfSeg">
+              <button class="seg on" data-perf="high">High</button>
+              <button class="seg" data-perf="low">Low</button>
+            </div>
+            <p class="hint">Low kills ambient motion + grain (what a real Chromebook boots into). Notice the <b style="color:var(--ink-dim)">identity is unchanged</b> — that's the whole point.</p>
+          </div>
+          <div class="panel">
+            <h3>Try the keys</h3>
+            <p class="hint"><kbd>Ctrl</kbd>+<kbd>K</kbd> command palette · <kbd>/</kbd> focus search · <kbd>Esc</kbd> <kbd>Esc</kbd> panic exit. The palette doubles as camouflage in Paper theme.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LIBRARY ===== -->
+    <section class="library" id="library">
+      <div class="wrap">
+        <div class="sectionhead">
+          <span class="eyebrow">Game Library</span>
+          <h2>The Library</h2>
+        </div>
+        <div class="subhead">
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input id="libSearch" placeholder="Search titles…" aria-label="Search game titles" autocomplete="off" spellcheck="false">
+          </label>
+          <div class="cats" id="cats"></div>
+          <div class="count-tag"><b id="resCount">0</b> TITLES</div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="features">
+      <div class="wrap">
+        <div class="sectionhead">
+          <span class="eyebrow">Privacy · honest by design</span>
+          <h2>Quiet on a shared screen</h2>
+          <p>These defend against the real, solvable threat: someone glancing at your screen or opening your history. They don't pretend to beat network-level monitoring — the app tells you the truth about what it does.</p>
+        </div>
+        <div class="fgrid">
+          <div class="feature">
+            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18"/></svg></div>
+            <h4>Tab Cloak</h4>
+            <p>Disguise the tab's title and icon as something ordinary. Applied before first paint, re-asserted if a proxied page tries to overwrite it.</p>
+            <div class="tabprev"><span class="fav"></span><span class="tt" id="cloakPrev">Home — Google Classroom</span></div>
+          </div>
+          <div class="feature">
+            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"/><path d="M12 2v10"/></svg></div>
+            <h4>Panic Exit</h4>
+            <p>One key replaces the tab with a decoy site — and leaves no back-button trail, because it uses <span style="font-family:var(--font-mono);color:var(--ink)">replace()</span>, not a normal navigation.</p>
+            <span class="note">Default decoy · Google Classroom · rebindable</span>
+          </div>
+          <div class="feature">
+            <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
+            <h4>Command Palette</h4>
+            <p>Everything a keystroke away — jump pages, switch cloak, panic. In Paper theme it reads like any productivity app.</p>
+            <span class="note">Press Ctrl / Cmd + K anywhere</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GAME OVER 404 ===== -->
+    <section class="gameover">
+      <div class="wrap">
+        <div class="go-t">Game Over</div>
+        <div class="go-sub">CONTINUE? <b id="countdown">9</b></div>
+        <a href="#lobby">▸ Insert coin — back to lobby</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="fnote"><b>SlowGuardian V10 · NEON DECK</b> — design mockup. Every effect here is static CSS painted once or moved on the compositor; steady-state cost is ~one layer. Target: 2016–2019 Chromebooks · budget ≤30KB JS, ≤300KB first load.</p>
+    </div>
+  </footer>
+</div>
+
+<div class="palette-scrim" id="paletteScrim">
+  <div class="palette" role="dialog" aria-label="Command palette">
+    <div class="pin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+      <input id="paletteInput" placeholder="Type a command…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="plist" id="paletteList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  root.dataset.theme = "arcade";
+  root.dataset.accent = "cyan";
+  root.dataset.perf = matchMedia("(prefers-reduced-motion: reduce)").matches ? "low" : "high";
+
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function toast(html, ms) {
+    var t = document.getElementById("toast");
+    t.innerHTML = html; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove("show"); }, ms || 2200);
+  }
+
+  /* ---- clock (once/min) ---- */
+  function tick() {
+    var d = new Date(), h = ("0" + d.getHours()).slice(-2), m = ("0" + d.getMinutes()).slice(-2);
+    document.getElementById("clock").textContent = h + ":" + m;
+  }
+  tick(); setInterval(tick, 30000);
+
+  /* ---- ticker ---- */
+  var newTitles = ["Retro Bowl", "Moto X3M", "1v1.LOL", "Slope", "Cookie Clicker", "Basketball Stars", "Celeste", "Cat Ninja"];
+  var run = newTitles.map(function (n) { return "<b>NEW</b> " + n; }).join("  ·  ");
+  document.getElementById("ticker").innerHTML = run + "  ·  " + run;
+
+  /* ---- theme / accent / perf switches ---- */
+  document.getElementById("themeSeg").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-theme]"); if (!b) return;
+    root.dataset.theme = b.dataset.theme;
+    this.querySelectorAll(".seg").forEach(function (s) { s.classList.toggle("on", s === b); });
+    if (b.dataset.theme === "paper") toast("Camouflage on — reads like a <b>school portal</b>");
+  });
+  document.getElementById("coins").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-c]"); if (!b) return;
+    root.dataset.accent = b.dataset.c;
+    this.querySelectorAll(".coin-btn").forEach(function (s) { s.classList.toggle("on", s === b); });
+  });
+  document.getElementById("perfSeg").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-perf]"); if (!b) return;
+    root.dataset.perf = b.dataset.perf;
+    this.querySelectorAll(".seg").forEach(function (s) { s.classList.toggle("on", s === b); });
+    toast(b.dataset.perf === "low" ? "Low mode — identity intact, ambience off" : "High mode — full effects");
+  });
+
+  /* ---- tab cloak demo (really swaps the tab title) ---- */
+  var cloaked = false, realTitle = "SlowGuardian V10 — NEON DECK";
+  document.getElementById("cloakChip").addEventListener("click", function () {
+    cloaked = !cloaked;
+    this.classList.toggle("active", cloaked);
+    document.title = cloaked ? "Home — Google Classroom" : realTitle;
+    toast(cloaked ? "Tab cloaked → <b>Google Classroom</b>" : "Cloak off");
+  });
+
+  /* ---- catalog (real titles from the SlowGuardian catalog) ---- */
+  var GAMES = [
+    ["Age of War","Strategy",210],["Happy Wheels","Action",8],["Moto X3M","Racing",28],
+    ["Cookie Clicker","Arcade",42],["Agar.io","IO",190],["Basketball Stars","Sports",18],
+    ["Cat Ninja","Action",150],["Duck Life","Arcade",120],["Learn to Fly 2","Arcade",205],
+    ["Jacksmith","Strategy",36],["Kirka.io","IO",340],["Papa's Cheeseria","Strategy",50],
+    ["Slope","Arcade",96],["Madalin Cars","Racing",12],["Yohoho.io","IO",172],
+    ["Celeste","Action",158],["Retro Bowl","Sports",22],["1v1.LOL","Action",300],
+    ["Tanuki Sunset","Racing",300],["Bloxd.io","IO",220]
+  ];
+  function initials(t) {
+    var w = t.replace(/[.\-]/g, " ").split(/\s+/).filter(Boolean);
+    if (w.length === 1) return w[0].slice(0, 2).toUpperCase();
+    return (w[0][0] + w[1][0]).toUpperCase();
+  }
+  var grid = document.getElementById("grid");
+  var frag = document.createDocumentFragment();
+  GAMES.forEach(function (g, i) {
+    var hue = (i * 47) % 360;
+    var a = document.createElement("a");
+    a.className = "card"; a.href = "#"; a.dataset.cat = g[1]; a.dataset.name = g[0].toLowerCase();
+    a.setAttribute("tabindex", "0");
+    a.innerHTML =
+      '<div class="cover" style="background:linear-gradient(135deg,hsl(' + hue + ' 62% 26%),hsl(' + ((hue + 40) % 360) + ' 58% 13%))">' + initials(g[0]) + '</div>' +
+      '<div class="meta"><span class="t">' + g[0] + '</span><span class="c">' + g[1] + '</span></div>';
+    a.addEventListener("click", function (e) { e.preventDefault(); toast("Launching <b>" + g[0] + "</b> via proxy…"); });
+    frag.appendChild(a);
+  });
+  grid.appendChild(frag);
+
+  /* ---- categories ---- */
+  var cats = ["All"].concat(GAMES.map(function (g) { return g[1]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
+  var catBox = document.getElementById("cats"), curCat = "All", curQ = "";
+  cats.forEach(function (c, i) {
+    var b = document.createElement("button");
+    b.className = "cat" + (i === 0 ? " on" : ""); b.textContent = c; b.dataset.cat = c;
+    catBox.appendChild(b);
+  });
+  catBox.addEventListener("click", function (e) {
+    var b = e.target.closest(".cat"); if (!b) return;
+    curCat = b.dataset.cat;
+    this.querySelectorAll(".cat").forEach(function (s) { s.classList.toggle("on", s === b); });
+    filter();
+  });
+  function filter() {
+    var n = 0;
+    grid.querySelectorAll(".card").forEach(function (card) {
+      var okCat = curCat === "All" || card.dataset.cat === curCat;
+      var okQ = !curQ || card.dataset.name.indexOf(curQ) !== -1;
+      var show = okCat && okQ;
+      card.classList.toggle("hide", !show);
+      if (show) n++;
+    });
+    document.getElementById("resCount").textContent = n;
+  }
+  document.getElementById("libSearch").addEventListener("input", function () {
+    curQ = this.value.trim().toLowerCase(); filter();
+  });
+  filter();
+
+  /* ---- omnibox demo ---- */
+  document.getElementById("omni").addEventListener("submit", function () {
+    var v = document.getElementById("omniInput").value.trim();
+    toast(v ? "Warping to <b>" + (v.length > 30 ? v.slice(0, 30) + "…" : v) + "</b>" : "Type a site or search first");
+  });
+
+  /* ---- command palette ---- */
+  var COMMANDS = [
+    ["Go to Settings", "System"], ["Toggle tab cloak", "Cloak"], ["Panic exit", "Escape"],
+    ["Theme: Paper (camouflage)", "Theme"], ["Theme: Arcade", "Theme"], ["Open Games library", "Nav"],
+    ["Accent: Magenta", "Accent"], ["Clear all traces", "Privacy"]
+  ];
+  var scrim = document.getElementById("paletteScrim"), pInput = document.getElementById("paletteInput"), pList = document.getElementById("paletteList"), sel = 0;
+  function renderPalette(q) {
+    q = (q || "").toLowerCase();
+    var rows = COMMANDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) !== -1; });
+    sel = 0;
+    pList.innerHTML = rows.map(function (c, i) {
+      return '<div class="prow' + (i === 0 ? " sel" : "") + '" data-cmd="' + c[0] + '"><span class="pk">' + c[0] + '</span><span class="pd">' + c[1] + '</span></div>';
+    }).join("") || '<div class="prow"><span class="pk" style="color:var(--ink-faint)">No matches</span></div>';
+  }
+  function openPalette() { scrim.classList.add("open"); pInput.value = ""; renderPalette(""); pInput.focus(); }
+  function closePalette() { scrim.classList.remove("open"); }
+  function runCmd(name) {
+    closePalette();
+    if (/Paper/.test(name)) { root.dataset.theme = "paper"; syncSeg(); toast("Camouflage on — <b>school portal</b>"); }
+    else if (/Arcade/.test(name)) { root.dataset.theme = "arcade"; syncSeg(); }
+    else if (/Magenta/.test(name)) { root.dataset.accent = "magenta"; syncCoins(); }
+    else if (/cloak/i.test(name)) { document.getElementById("cloakChip").click(); }
+    else if (/Panic/.test(name)) { doPanic(); }
+    else toast("<b>" + name + "</b>");
+  }
+  function syncSeg() {
+    document.querySelectorAll("#themeSeg .seg").forEach(function (s) { s.classList.toggle("on", s.dataset.theme === root.dataset.theme); });
+  }
+  function syncCoins() {
+    document.querySelectorAll("#coins .coin-btn").forEach(function (s) { s.classList.toggle("on", s.dataset.c === root.dataset.accent); });
+  }
+  document.getElementById("paletteBtn").addEventListener("click", openPalette);
+  pInput.addEventListener("input", function () { renderPalette(this.value); });
+  pList.addEventListener("click", function (e) {
+    var r = e.target.closest(".prow"); if (r && r.dataset.cmd) runCmd(r.dataset.cmd);
+  });
+  scrim.addEventListener("click", function (e) { if (e.target === scrim) closePalette(); });
+
+  /* ---- panic ---- */
+  function doPanic() { toast("PANIC — tab would <b>replace()</b> with your decoy · no history left", 2600); }
+  document.getElementById("panicBtn").addEventListener("click", doPanic);
+
+  /* ---- global keys ---- */
+  var lastEsc = 0;
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); scrim.classList.contains("open") ? closePalette() : openPalette(); return; }
+    if (scrim.classList.contains("open")) {
+      var rows = Array.prototype.slice.call(pList.querySelectorAll(".prow[data-cmd]"));
+      if (e.key === "Escape") { closePalette(); }
+      else if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, rows.length - 1); paintSel(rows); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); paintSel(rows); }
+      else if (e.key === "Enter") { e.preventDefault(); if (rows[sel]) runCmd(rows[sel].dataset.cmd); }
+      return;
+    }
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); document.getElementById("libSearch").focus(); document.getElementById("library").scrollIntoView(); }
+    if (e.key === "Escape") {
+      var now = Date.now();
+      if (now - lastEsc < 500) doPanic();
+      lastEsc = now;
+    }
+  });
+  function paintSel(rows) { rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+
+  /* ---- GAME OVER countdown (demo flourish) ---- */
+  if (!reduced) {
+    var cd = 9, el = document.getElementById("countdown");
+    setInterval(function () { cd = cd <= 0 ? 9 : cd - 1; el.textContent = cd; }, 900);
+  }
+})();
+</script>
