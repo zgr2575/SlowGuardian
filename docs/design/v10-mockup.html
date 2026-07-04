@@ -189,6 +189,39 @@
   .card .c { font-size: 12px; color: var(--ink-3); }
   .card.hide { display: none; }
 
+  /* ---------- Netflix-style library ---------- */
+  .libhead { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); }
+  .libsearch { flex: 0 1 300px; min-width: 180px; }
+  .billboard { position: relative; overflow: hidden; border-radius: var(--r-lg); min-height: 300px; display: flex; align-items: flex-end; margin-bottom: var(--sp-7); box-shadow: var(--sh-2); }
+  .bb-art { position: absolute; inset: 0; background: linear-gradient(120deg, #3a2fb0, #7d5bed 46%, #12b5a6); }
+  .billboard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.74), rgba(0,0,0,0.28) 56%, transparent 80%), linear-gradient(0deg, rgba(0,0,0,0.5), transparent 55%); }
+  .bb-content { position: relative; z-index: 1; padding: var(--sp-6); max-width: 540px; }
+  .bb-tag { display: inline-flex; align-items: center; gap: 8px; color: #fff; opacity: 0.92; font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; }
+  .bb-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .billboard h3 { color: #fff; font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 600; letter-spacing: -0.035em; margin: 11px 0 8px; }
+  .billboard p { color: rgba(255,255,255,0.82); margin-bottom: 18px; max-width: 40ch; line-height: 1.5; }
+  .bb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .rows { display: flex; flex-direction: column; gap: var(--sp-6); }
+  .shelf .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+  .shelf .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .shelf .rowhead .more { font-size: 13px; color: var(--ink-3); cursor: pointer; transition: color .2s; white-space: nowrap; }
+  .shelf .rowhead .more:hover { color: var(--accent-2); }
+  .strip { display: flex; gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; padding: 12px 2px 18px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .tile { flex: 0 0 auto; width: 256px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; position: relative; box-shadow: var(--sh-1); transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; }
+  .tile .art { aspect-ratio: 16/9; display: grid; place-items: center; position: relative; }
+  .tile .art .mono { font-size: 30px; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 16px rgba(0,0,0,0.4); z-index: 1; }
+  .tile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.05), transparent 28%, rgba(0,0,0,0.64)); }
+  .tile .label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 10px 13px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .tile .label .tt { font-size: 13.5px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+  .tile .label .cc { font-size: 11px; color: rgba(255,255,255,0.72); white-space: nowrap; }
+  .tile:hover { transform: translateY(-4px) scale(1.035); box-shadow: var(--sh-3), var(--glow); z-index: 3; }
+  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .results { display: none; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .results .tile { width: auto; }
+  .nomatch { grid-column: 1 / -1; color: var(--ink-3); padding: 24px 0; }
+
   /* ---------- Features ---------- */
   .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); }
   .feature { border-radius: var(--r-lg); padding: var(--sp-6); }
@@ -285,19 +318,27 @@
 
   <section id="library">
     <div class="wrap">
-      <div class="sechead reveal">
+      <div class="libhead reveal">
         <div class="ey">Library</div>
-        <h2>Pick up where you left off.</h2>
-      </div>
-      <div class="controls reveal">
-        <label class="field glass">
+        <label class="field glass libsearch">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input id="libSearch" placeholder="Search the library" aria-label="Search titles" autocomplete="off">
+          <input id="libSearch" placeholder="Search games &amp; apps" aria-label="Search titles" autocomplete="off">
         </label>
-        <div class="segmented glass" id="cats"></div>
-        <span class="count"><b id="resCount">0</b> titles</span>
       </div>
-      <div class="grid reveal" id="grid"></div>
+      <div class="billboard reveal" id="billboard">
+        <div class="bb-art"></div>
+        <div class="bb-content">
+          <span class="bb-tag">Featured today</span>
+          <h3>Retro Bowl</h3>
+          <p>The throwback football sim everyone's hooked on. Jump in — it runs great even on a slow Chromebook.</p>
+          <div class="bb-actions">
+            <button class="btn" type="button" id="bbPlay">▶&nbsp; Play</button>
+            <button class="btn glassbtn" type="button">More info</button>
+          </div>
+        </div>
+      </div>
+      <div class="rows reveal" id="rows"></div>
+      <div class="results" id="results"></div>
     </div>
   </section>
 
@@ -410,6 +451,7 @@
     this.querySelectorAll(".sw").forEach(function (s) { s.classList.toggle("on", s === b); });
   });
 
+  function initials(t) { var w = t.replace(/[.\-']/g, " ").split(/\s+/).filter(Boolean); return (w.length === 1 ? w[0].slice(0, 2) : w[0][0] + w[1][0]).toUpperCase(); }
   var GAMES = [
     ["Age of War","Strategy"],["Happy Wheels","Action"],["Moto X3M","Racing"],["Cookie Clicker","Idle"],
     ["Agar.io","IO"],["Basketball Stars","Sports"],["Cat Ninja","Action"],["Duck Life","Arcade"],
@@ -417,25 +459,45 @@
     ["Slope","Arcade"],["Madalin Cars","Racing"],["Yohoho.io","IO"],["Celeste","Action"],
     ["Retro Bowl","Sports"],["1v1.LOL","Action"],["Tanuki Sunset","Racing"],["Bloxd.io","IO"]
   ];
-  function initials(t) { var w = t.replace(/[.\-']/g, " ").split(/\s+/).filter(Boolean); return (w.length === 1 ? w[0].slice(0, 2) : w[0][0] + w[1][0]).toUpperCase(); }
-  var grid = document.getElementById("grid"), frag = document.createDocumentFragment();
-  GAMES.forEach(function (g, i) {
-    var h = (i * 41 + 205) % 360;
+  var META = {}; GAMES.forEach(function (g, i) { META[g[0]] = { cat: g[1], hue: (i * 41 + 205) % 360 }; });
+  function tile(name) {
+    var m = META[name] || { cat: "", hue: 210 };
     var a = document.createElement("a");
-    a.className = "card glass"; a.href = "#"; a.dataset.cat = g[1]; a.dataset.name = g[0].toLowerCase(); a.tabIndex = 0;
-    a.innerHTML = '<div class="cover" style="background:linear-gradient(150deg,hsl(' + h + ' 60% 52%),hsl(' + ((h + 40) % 360) + ' 62% 40%))"><span class="mono">' + initials(g[0]) + '</span></div><div class="body"><span class="t">' + g[0] + '</span><span class="c">' + g[1] + '</span></div>';
-    a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + g[0] + "</b>…"); });
-    frag.appendChild(a);
+    a.className = "tile"; a.href = "#"; a.dataset.name = name.toLowerCase(); a.tabIndex = 0;
+    a.innerHTML = '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"><span class="mono">' + initials(name) + '</span></div>' +
+      '<div class="label"><span class="tt">' + name + '</span><span class="cc">' + m.cat + '</span></div>';
+    a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + name + "</b>…"); });
+    return a;
+  }
+  var CATALOG = {
+    "Continue Playing": ["Slope", "Retro Bowl", "1v1.LOL", "Moto X3M", "Agar.io", "Cat Ninja"],
+    "Popular Now": ["Happy Wheels", "Cookie Clicker", "Basketball Stars", "Kirka.io", "Bloxd.io", "Celeste", "Slope"],
+    "Action & Platformers": ["Happy Wheels", "Cat Ninja", "Celeste", "1v1.LOL", "Learn to Fly 2"],
+    "IO & Multiplayer": ["Agar.io", "Kirka.io", "Yohoho.io", "Bloxd.io"],
+    "Racing": ["Moto X3M", "Madalin Cars", "Tanuki Sunset"],
+    "Arcade & Classics": ["Duck Life", "Cookie Clicker", "Age of War", "Jacksmith", "Papa's Cheeseria", "Slope"]
+  };
+  var rowsEl = document.getElementById("rows");
+  Object.keys(CATALOG).forEach(function (title) {
+    var row = document.createElement("div"); row.className = "shelf";
+    var head = document.createElement("div"); head.className = "rowhead";
+    head.innerHTML = "<h3>" + title + "</h3><span class=\"more\">Browse all ›</span>";
+    var strip = document.createElement("div"); strip.className = "strip";
+    CATALOG[title].forEach(function (n) { strip.appendChild(tile(n)); });
+    row.appendChild(head); row.appendChild(strip); rowsEl.appendChild(row);
   });
-  grid.appendChild(frag);
-
-  var cats = ["All"].concat(GAMES.map(function (g) { return g[1]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
-  var catBox = document.getElementById("cats"), curCat = "All", curQ = "";
-  cats.slice(0, 7).forEach(function (c, i) { var b = document.createElement("button"); b.textContent = c; b.dataset.cat = c; if (i === 0) b.classList.add("on"); catBox.appendChild(b); });
-  catBox.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; curCat = b.dataset.cat; this.querySelectorAll("button").forEach(function (s) { s.classList.toggle("on", s === b); }); filter(); });
-  function filter() { var n = 0; grid.querySelectorAll(".card").forEach(function (c) { var ok = (curCat === "All" || c.dataset.cat === curCat) && (!curQ || c.dataset.name.indexOf(curQ) !== -1); c.classList.toggle("hide", !ok); if (ok) n++; }); document.getElementById("resCount").textContent = n; }
-  document.getElementById("libSearch").addEventListener("input", function () { curQ = this.value.trim().toLowerCase(); filter(); });
-  filter();
+  var pool = Object.keys(META);
+  function search(q) {
+    q = q.trim().toLowerCase();
+    var res = document.getElementById("results"), bb = document.getElementById("billboard");
+    if (!q) { rowsEl.style.display = ""; res.style.display = "none"; if (bb) bb.style.display = ""; return; }
+    rowsEl.style.display = "none"; if (bb) bb.style.display = "none"; res.style.display = "grid"; res.innerHTML = "";
+    var hits = pool.filter(function (n) { return n.toLowerCase().indexOf(q) > -1; });
+    if (!hits.length) { res.innerHTML = '<p class="nomatch">No titles match “' + q + '”.</p>'; return; }
+    hits.forEach(function (n) { res.appendChild(tile(n)); });
+  }
+  document.getElementById("libSearch").addEventListener("input", function () { search(this.value); });
+  var bbPlay = document.getElementById("bbPlay"); if (bbPlay) bbPlay.addEventListener("click", function () { toast("Opening <b>Retro Bowl</b>…"); });
 
   document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); });
 
