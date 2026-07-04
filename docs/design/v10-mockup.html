@@ -1,0 +1,481 @@
+<title>SlowGuardian</title>
+<style>
+  /* ============================================================
+     SlowGuardian V10 — Liquid Glass, dark-first
+     Apple's translucent material language: frosted layers,
+     specular edges, ambient light, floating depth.
+     Real backdrop-filter on capable devices; a solid-translucent
+     fallback keeps old Chromebooks smooth (see @supports / perf).
+     ============================================================ */
+
+  :root {
+    color-scheme: dark;
+
+    --bg:        #05060c;
+    --bg-2:      #090b14;
+
+    /* glass material */
+    --glass:      rgba(255,255,255,0.055);
+    --glass-2:    rgba(255,255,255,0.085);
+    --glass-strong: rgba(255,255,255,0.11);
+    --glass-brd:  rgba(255,255,255,0.11);
+    --glass-brd-2:rgba(255,255,255,0.16);
+    --hi:         rgba(255,255,255,0.22);   /* top specular highlight */
+    --blur: 26px;
+
+    --ink:   #f4f6fb;
+    --ink-2: rgba(233,238,248,0.68);
+    --ink-3: rgba(233,238,248,0.42);
+
+    --accent:   #0a84ff;
+    --accent-2: #2f9bff;
+    --accent-tint: rgba(10,132,255,0.16);
+    --on-accent: #ffffff;
+    --ok: #34d17a;
+
+    --sh-1: 0 2px 10px rgba(0,0,0,0.35);
+    --sh-2: 0 14px 40px rgba(0,0,0,0.5);
+    --sh-3: 0 30px 80px rgba(0,0,0,0.6);
+    --glow: 0 8px 30px var(--accent-tint);
+
+    --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:32px; --r-pill:980px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:76px; --sp-9:112px;
+    --maxw:1080px; --nav-h:60px;
+
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+    /* ambient light hues (feed the orbs so glass has something to refract) */
+    --a1: rgba(10,132,255,0.22);
+    --a2: rgba(125,91,237,0.20);
+    --a3: rgba(20,200,180,0.14);
+  }
+
+  :root[data-accent="indigo"] { --accent:#7d5bed; --accent-2:#9a7bff; --accent-tint:rgba(125,91,237,0.18); --a1:rgba(125,91,237,0.24); --a2:rgba(70,110,255,0.18); }
+  :root[data-accent="teal"]   { --accent:#12b5a6; --accent-2:#33d3c4; --accent-tint:rgba(18,181,166,0.18); --a1:rgba(18,181,166,0.22); --a2:rgba(20,140,255,0.16); --a3:rgba(120,90,240,0.12); }
+  :root[data-accent="rose"]   { --accent:#ff5d8f; --accent-2:#ff82a9; --accent-tint:rgba(255,93,143,0.18); --a1:rgba(255,93,143,0.22); --a2:rgba(180,80,255,0.16); }
+
+  /* Light Liquid Glass (toggle) — dark stays the hero */
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg:#eef1f7; --bg-2:#e6eaf3;
+    --glass:rgba(255,255,255,0.55); --glass-2:rgba(255,255,255,0.7); --glass-strong:rgba(255,255,255,0.82);
+    --glass-brd:rgba(255,255,255,0.7); --glass-brd-2:rgba(0,0,0,0.08); --hi:rgba(255,255,255,0.9);
+    --ink:#161a22; --ink-2:rgba(24,28,38,0.66); --ink-3:rgba(24,28,38,0.42);
+    --sh-1:0 2px 10px rgba(20,26,44,0.08); --sh-2:0 14px 40px rgba(20,26,44,0.14); --sh-3:0 30px 70px rgba(20,26,44,0.18);
+    --a1:rgba(10,132,255,0.16); --a2:rgba(125,91,237,0.14); --a3:rgba(20,200,180,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font);
+    line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overflow-x: hidden; min-height: 100vh;
+  }
+  /* ambient light field — static gradients, cheap; gives glass its glow */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(620px 460px at 12% 4%, var(--a1), transparent 62%),
+      radial-gradient(560px 520px at 88% 14%, var(--a2), transparent 60%),
+      radial-gradient(760px 560px at 72% 100%, var(--a3), transparent 62%);
+  }
+  ::selection { background: var(--accent-tint); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--sp-5); position: relative; z-index: 1; }
+
+  /* ---------- Glass material ---------- */
+  .glass {
+    position: relative;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    box-shadow: inset 0 1px 0 var(--hi), inset 0 0 0 0.5px rgba(255,255,255,0.03), var(--sh-2);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(175%);
+            backdrop-filter: blur(var(--blur)) saturate(175%);
+  }
+  /* specular sheen on the top edge */
+  .glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent 34%);
+    opacity: .8;
+  }
+  /* Perf fallback: no blur support OR low-power → solid translucent, no runtime filter */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: color-mix(in srgb, var(--bg-2) 86%, transparent); }
+  }
+  :root[data-perf="low"] .glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 88%, transparent); }
+
+  /* ---------- Nav (floating glass bar) ---------- */
+  .nav { position: sticky; top: 12px; z-index: 50; margin: 12px auto 0; max-width: calc(var(--maxw) + 48px); padding: 0 var(--sp-5); }
+  .navbar { height: var(--nav-h); border-radius: var(--r-pill); padding: 0 10px 0 20px; display: flex; align-items: center; gap: var(--sp-5); }
+  .navbar { background: var(--glass-2); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); -webkit-backdrop-filter: blur(var(--blur)) saturate(175%); backdrop-filter: blur(var(--blur)) saturate(175%); }
+  :root[data-perf="low"] .navbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 92%, transparent); }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
+  .logo .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--on-accent);
+    background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 10px var(--accent-tint); }
+  .logo .mark svg { width: 15px; height: 15px; }
+  .navlinks { display: flex; gap: 2px; margin-left: 4px; }
+  .navlinks a { padding: 8px 13px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); transition: color .2s, background .2s; }
+  .navlinks a:hover { color: var(--ink); }
+  .navlinks a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
+  .navtools { margin-left: auto; display: flex; align-items: center; gap: var(--sp-2); }
+  .ghost { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; height: 40px; padding: 0 14px; border-radius: var(--r-pill);
+    background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); font-family: var(--font); font-size: 13px; font-weight: 500; transition: .2s; }
+  .ghost:hover { color: var(--ink); background: var(--glass-2); }
+  .ghost svg { width: 16px; height: 16px; }
+  .kbd { font: 500 11px/1 var(--mono); color: var(--ink-3); border: 1px solid var(--glass-brd); border-radius: 6px; padding: 3px 6px; }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: var(--sp-9) 0 var(--sp-7); }
+  .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(2.7rem, 6.6vw, 4.8rem); font-weight: 600; line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; margin: 0 auto; max-width: 15ch;
+    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
+  .hero h1 .soft { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); }
+  .hero .lede { margin: 22px auto 0; max-width: 40ch; font-size: clamp(1.06rem, 2vw, 1.32rem); color: var(--ink-2); line-height: 1.5; }
+
+  .omni { margin: var(--sp-6) auto 0; max-width: 560px; display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 22px; }
+  .omni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
+  .omni input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; padding: 12px 0; }
+  .omni input::placeholder { color: var(--ink-3); }
+  .omni:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2), 0 0 0 4px var(--accent-tint); }
+
+  .btn { cursor: pointer; border: none; border-radius: var(--r-pill); font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: -0.01em;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--on-accent); padding: 12px 24px; white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 6px 20px var(--accent-tint); transition: filter .2s, transform .1s; }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: scale(0.98); }
+  .btn.sm { padding: 10px 18px; font-size: 14px; }
+  .btn.glassbtn { background: var(--glass-2); color: var(--ink); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-1); }
+
+  .meta-row { margin-top: var(--sp-5); display: flex; gap: var(--sp-5); justify-content: center; flex-wrap: wrap; color: var(--ink-3); font-size: 13.5px; }
+  .meta-row span { display: inline-flex; align-items: center; gap: 7px; }
+  .meta-row .d { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+
+  /* ---------- Sections ---------- */
+  section { padding: var(--sp-8) 0; }
+  .sechead { max-width: 640px; margin-bottom: var(--sp-6); }
+  .sechead.center { margin-left: auto; margin-right: auto; text-align: center; }
+  .sechead .ey { font-size: 13px; font-weight: 600; color: var(--accent-2); margin-bottom: 12px; }
+  .sechead h2 { font-size: clamp(1.8rem, 3.8vw, 2.6rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; text-wrap: balance; }
+  .sechead p { margin-top: 14px; font-size: 1.06rem; color: var(--ink-2); line-height: 1.5; }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s cubic-bezier(.16,.8,.3,1), transform .7s cubic-bezier(.16,.8,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Library ---------- */
+  .controls { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-5); }
+  .field { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 220px; border-radius: var(--r-sm); padding: 0 15px; }
+  .field svg { width: 16px; height: 16px; color: var(--ink-3); }
+  .field input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 15px; padding: 12px 0; }
+  .field input::placeholder { color: var(--ink-3); }
+  .field:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), 0 0 0 3px var(--accent-tint); }
+
+  .segmented { display: inline-flex; border-radius: var(--r-pill); padding: 4px; gap: 2px; }
+  .segmented button { cursor: pointer; border: none; background: none; color: var(--ink-2); font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 15px; border-radius: var(--r-pill); transition: .18s; }
+  .segmented button.on { background: var(--glass-strong); color: var(--ink); box-shadow: inset 0 1px 0 var(--hi), var(--sh-1); }
+
+  .count { font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; margin-left: auto; }
+  .count b { color: var(--ink); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--sp-4); }
+  .card { display: flex; flex-direction: column; cursor: pointer; border-radius: var(--r-md); overflow: hidden; transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; contain: layout paint style; }
+  .card:hover { transform: translateY(-5px); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3), var(--glow); }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card .cover { aspect-ratio: 16/10; display: grid; place-items: center; position: relative; }
+  .card .cover .mono { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,0.35); z-index: 1; }
+  .card .cover::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent 40%, rgba(0,0,0,0.16)); }
+  .card .body { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 3px; }
+  .card .t { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+  .card .c { font-size: 12px; color: var(--ink-3); }
+  .card.hide { display: none; }
+
+  /* ---------- Features ---------- */
+  .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); }
+  .feature { border-radius: var(--r-lg); padding: var(--sp-6); }
+  .feature .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 18px; color: var(--accent-2);
+    background: var(--accent-tint); box-shadow: inset 0 1px 0 var(--hi); }
+  .feature .ic svg { width: 22px; height: 22px; }
+  .feature h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .feature p { color: var(--ink-2); font-size: 0.97rem; line-height: 1.5; }
+  .feature .tabprev { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 10px; padding: 8px 12px; }
+  .feature .tabprev .fav { width: 15px; height: 15px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
+  .feature .tabprev .tt { font-size: 12.5px; color: var(--ink-2); }
+  .feature .note { margin-top: 14px; font-size: 12.5px; color: var(--ink-3); }
+
+  .callout { display: flex; gap: 14px; align-items: flex-start; border-radius: var(--r-md); padding: var(--sp-5); margin-top: var(--sp-5); }
+  .callout .ci { width: 22px; height: 22px; color: var(--ink-3); flex-shrink: 0; margin-top: 1px; }
+  .callout p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.55; }
+  .callout b { color: var(--ink); font-weight: 600; }
+
+  .appear { display: flex; gap: var(--sp-5); flex-wrap: wrap; align-items: center; justify-content: space-between; border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); }
+  .appear .grp { display: flex; align-items: center; gap: 14px; }
+  .appear .lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .swatches { display: flex; gap: 10px; }
+  .sw { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid var(--glass-brd); transition: transform .12s; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); }
+  .sw:hover { transform: scale(1.12); }
+  .sw.on { border-color: var(--ink); }
+  .sw[data-a="blue"]{background:#0a84ff;} .sw[data-a="indigo"]{background:#7d5bed;} .sw[data-a="teal"]{background:#12b5a6;} .sw[data-a="rose"]{background:#ff5d8f;}
+
+  footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-7) 0; margin-top: var(--sp-6); }
+  footer p { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+  footer b { color: var(--ink-2); font-weight: 600; }
+
+  /* ---------- Command palette ---------- */
+  .scrim { position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.4); display: none; align-items: flex-start; justify-content: center; padding-top: 14vh; }
+  .scrim.open { display: flex; }
+  .cmd { width: min(540px, 92vw); border-radius: var(--r-lg); overflow: hidden; animation: pop .2s cubic-bezier(.16,.8,.3,1); }
+  @keyframes pop { from { opacity: 0; transform: translateY(-10px) scale(.98); } }
+  .cmd .top { display: flex; align-items: center; gap: 11px; padding: 16px 18px; border-bottom: 1px solid var(--glass-brd); }
+  .cmd .top svg { width: 17px; height: 17px; color: var(--ink-3); }
+  .cmd .top input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; }
+  .cmd .top input::placeholder { color: var(--ink-3); }
+  .cmd .list { max-height: 320px; overflow-y: auto; padding: 8px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--r-sm); cursor: pointer; }
+  .row.sel, .row:hover { background: var(--accent-tint); }
+  .row .rk { font-size: 14px; font-weight: 500; }
+  .row .rd { margin-left: auto; font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .toast { position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 16px); z-index: 100; border-radius: var(--r-pill); padding: 13px 20px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: 90vw; text-align: center; color: var(--ink);
+    background: var(--glass-strong); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast b { color: var(--accent-2); font-weight: 600; }
+
+  @media (max-width: 800px) { .navlinks { display: none; } .hero { padding-top: var(--sp-7); } .navtools .lbltxt { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .cmd { animation: none; } html { scroll-behavior: auto; } * { transition-duration: .01ms !important; } }
+</style>
+
+<header class="nav">
+  <div class="navbar">
+    <a class="logo" href="#top">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+      SlowGuardian
+    </a>
+    <nav class="navlinks">
+      <a href="#library" class="on">Games</a>
+      <a href="#library">Apps</a>
+      <a href="#top">Proxy</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+    <div class="navtools">
+      <button class="ghost" id="cmdBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="lbltxt">Search</span><span class="kbd">⌘K</span></button>
+      <button class="ghost" id="themeBtn" title="Toggle appearance" aria-label="Toggle appearance"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker reveal in">SlowGuardian&nbsp;10</p>
+      <h1 class="reveal in">Everything you need.<br><span class="soft">Nothing in your way.</span></h1>
+      <p class="lede reveal in">A fast, private gateway for the school Chromebook. Open a site or launch a game — it loads in a blink, even on the slow machines.</p>
+      <form class="omni glass reveal in" id="omni" onsubmit="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
+        <button class="btn" type="submit">Open</button>
+      </form>
+      <div class="meta-row reveal in">
+        <span><span class="d"></span>All systems online</span>
+        <span>312 games</span>
+        <span>48 apps</span>
+        <span>Loads in &lt;1.5s on a 2018 Chromebook</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="library">
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Library</div>
+        <h2>Pick up where you left off.</h2>
+      </div>
+      <div class="controls reveal">
+        <label class="field glass">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="libSearch" placeholder="Search the library" aria-label="Search titles" autocomplete="off">
+        </label>
+        <div class="segmented glass" id="cats"></div>
+        <span class="count"><b id="resCount">0</b> titles</span>
+      </div>
+      <div class="grid reveal" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Privacy</div>
+        <h2>Quiet on a shared screen.</h2>
+        <p>Designed for the real, solvable problem — a glance over your shoulder, someone scrolling your history. Honest about what it does, and what it doesn't.</p>
+      </div>
+      <div class="fgrid reveal">
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M3 8h18"/></svg></div>
+          <h3>Tab Disguise</h3>
+          <p>Make the tab look like something ordinary. Applied before the page paints, and re-applied if a site tries to change it back.</p>
+          <div class="tabprev"><span class="fav"></span><span class="tt" id="cloakPrev">Home — Google Classroom</span></div>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"/><path d="M12 2v10"/></svg></div>
+          <h3>Quick Exit</h3>
+          <p>One key swaps to a normal-looking site and leaves nothing in the back button — it replaces the page instead of navigating.</p>
+          <span class="note">Default · Google Classroom · rebindable</span>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>Clean by Default</h3>
+          <p>No trackers, no analytics, no referrers leaked. A one-tap “clear traces” wipes the history, cache, and local data this app created.</p>
+          <span class="note">Encrypted local settings · tight cookies</span>
+        </div>
+      </div>
+      <div class="callout glass">
+        <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <p><b>Straight talk.</b> These features defend against people looking at your screen and casual history checks. They don't defeat network filtering or device monitoring — no website can — and SlowGuardian won't pretend otherwise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sechead center reveal">
+        <div class="ey">Make it yours</div>
+        <h2>Glass that doesn't cost you speed.</h2>
+        <p>Dark and light, with a considered accent — one attribute on the root rethemes the whole app, no reload, no download. On older Chromebooks the blur gracefully steps down to solid glass. Try it.</p>
+      </div>
+      <div class="appear glass reveal">
+        <div class="grp">
+          <span class="lbl">Appearance</span>
+          <div class="segmented" id="themeSeg" style="background:var(--glass);">
+            <button data-theme="dark" class="on">Dark</button>
+            <button data-theme="light">Light</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Accent</span>
+          <div class="swatches" id="swatches">
+            <button class="sw on" data-a="blue" aria-label="Blue"></button>
+            <button class="sw" data-a="indigo" aria-label="Indigo"></button>
+            <button class="sw" data-a="teal" aria-label="Teal"></button>
+            <button class="sw" data-a="rose" aria-label="Rose"></button>
+          </div>
+        </div>
+        <button class="btn sm" id="cloakToggle">Preview tab disguise</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>SlowGuardian 10</b> — design mockup · Liquid Glass, dark-first. Translucent material, specular edges, one accent. Real <span style="font-family:var(--mono)">backdrop-filter</span> on capable devices; solid-glass fallback keeps 2016–2019 Chromebooks smooth. Press <span style="font-family:var(--mono)">⌘K</span> to search · <span style="font-family:var(--mono)">Esc Esc</span> for quick exit.</p>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim">
+  <div class="cmd glass" role="dialog" aria-label="Command palette">
+    <div class="top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="cmdInput" placeholder="Search or type a command" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="list" id="cmdList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  root.dataset.theme = "dark"; /* dark-first */
+
+  function toast(html, ms) {
+    var t = document.getElementById("toast");
+    t.innerHTML = html; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove("show"); }, ms || 2200);
+  }
+
+  if (!reduced && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal:not(.in)").forEach(function (el) { io.observe(el); });
+  } else { document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); }); }
+
+  function setTheme(t) { root.dataset.theme = t; document.querySelectorAll("#themeSeg button").forEach(function (b) { b.classList.toggle("on", b.dataset.theme === t); }); }
+  document.getElementById("themeSeg").addEventListener("click", function (e) { var b = e.target.closest("[data-theme]"); if (b) setTheme(b.dataset.theme); });
+  document.getElementById("themeBtn").addEventListener("click", function () { setTheme(root.dataset.theme === "light" ? "dark" : "light"); });
+
+  document.getElementById("swatches").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-a]"); if (!b) return;
+    if (b.dataset.a === "blue") root.removeAttribute("data-accent"); else root.dataset.accent = b.dataset.a;
+    this.querySelectorAll(".sw").forEach(function (s) { s.classList.toggle("on", s === b); });
+  });
+
+  var GAMES = [
+    ["Age of War","Strategy"],["Happy Wheels","Action"],["Moto X3M","Racing"],["Cookie Clicker","Idle"],
+    ["Agar.io","IO"],["Basketball Stars","Sports"],["Cat Ninja","Action"],["Duck Life","Arcade"],
+    ["Learn to Fly 2","Arcade"],["Jacksmith","Strategy"],["Kirka.io","IO"],["Papa's Cheeseria","Sim"],
+    ["Slope","Arcade"],["Madalin Cars","Racing"],["Yohoho.io","IO"],["Celeste","Action"],
+    ["Retro Bowl","Sports"],["1v1.LOL","Action"],["Tanuki Sunset","Racing"],["Bloxd.io","IO"]
+  ];
+  function initials(t) { var w = t.replace(/[.\-']/g, " ").split(/\s+/).filter(Boolean); return (w.length === 1 ? w[0].slice(0, 2) : w[0][0] + w[1][0]).toUpperCase(); }
+  var grid = document.getElementById("grid"), frag = document.createDocumentFragment();
+  GAMES.forEach(function (g, i) {
+    var h = (i * 41 + 205) % 360;
+    var a = document.createElement("a");
+    a.className = "card glass"; a.href = "#"; a.dataset.cat = g[1]; a.dataset.name = g[0].toLowerCase(); a.tabIndex = 0;
+    a.innerHTML = '<div class="cover" style="background:linear-gradient(150deg,hsl(' + h + ' 60% 52%),hsl(' + ((h + 40) % 360) + ' 62% 40%))"><span class="mono">' + initials(g[0]) + '</span></div><div class="body"><span class="t">' + g[0] + '</span><span class="c">' + g[1] + '</span></div>';
+    a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + g[0] + "</b>…"); });
+    frag.appendChild(a);
+  });
+  grid.appendChild(frag);
+
+  var cats = ["All"].concat(GAMES.map(function (g) { return g[1]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
+  var catBox = document.getElementById("cats"), curCat = "All", curQ = "";
+  cats.slice(0, 7).forEach(function (c, i) { var b = document.createElement("button"); b.textContent = c; b.dataset.cat = c; if (i === 0) b.classList.add("on"); catBox.appendChild(b); });
+  catBox.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; curCat = b.dataset.cat; this.querySelectorAll("button").forEach(function (s) { s.classList.toggle("on", s === b); }); filter(); });
+  function filter() { var n = 0; grid.querySelectorAll(".card").forEach(function (c) { var ok = (curCat === "All" || c.dataset.cat === curCat) && (!curQ || c.dataset.name.indexOf(curQ) !== -1); c.classList.toggle("hide", !ok); if (ok) n++; }); document.getElementById("resCount").textContent = n; }
+  document.getElementById("libSearch").addEventListener("input", function () { curQ = this.value.trim().toLowerCase(); filter(); });
+  filter();
+
+  document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); });
+
+  var cloaked = false, real = "SlowGuardian";
+  function toggleCloak() { cloaked = !cloaked; document.title = cloaked ? "Home — Google Classroom" : real; toast(cloaked ? "Tab disguised as <b>Google Classroom</b>" : "Disguise off"); }
+  document.getElementById("cloakToggle").addEventListener("click", toggleCloak);
+
+  var CMDS = [["Open Games library","Nav"],["Open Apps","Nav"],["Appearance: Light","Theme"],["Appearance: Dark","Theme"],["Accent: Teal","Accent"],["Disguise this tab","Privacy"],["Quick exit","Privacy"],["Clear all traces","Privacy"]];
+  var scrim = document.getElementById("scrim"), ci = document.getElementById("cmdInput"), cl = document.getElementById("cmdList"), sel = 0;
+  function paint(q) { q = (q || "").toLowerCase(); var rows = CMDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) !== -1; }); sel = 0; cl.innerHTML = rows.map(function (c, i) { return '<div class="row' + (i === 0 ? " sel" : "") + '" data-cmd="' + c[0] + '"><span class="rk">' + c[0] + '</span><span class="rd">' + c[1] + '</span></div>'; }).join("") || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>'; }
+  function open() { scrim.classList.add("open"); ci.value = ""; paint(""); ci.focus(); }
+  function close() { scrim.classList.remove("open"); }
+  function run(name) {
+    close();
+    if (name === "Appearance: Light") setTheme("light");
+    else if (name === "Appearance: Dark") setTheme("dark");
+    else if (name === "Accent: Teal") { root.dataset.accent = "teal"; document.querySelectorAll("#swatches .sw").forEach(function (s) { s.classList.toggle("on", s.dataset.a === "teal"); }); }
+    else if (name === "Disguise this tab") toggleCloak();
+    else if (name === "Quick exit") panic();
+    else if (name.indexOf("library") > -1 || name.indexOf("Apps") > -1) document.getElementById("library").scrollIntoView();
+    else toast("<b>" + name + "</b>");
+  }
+  document.getElementById("cmdBtn").addEventListener("click", open);
+  ci.addEventListener("input", function () { paint(this.value); });
+  cl.addEventListener("click", function (e) { var r = e.target.closest(".row"); if (r && r.dataset.cmd) run(r.dataset.cmd); });
+  scrim.addEventListener("click", function (e) { if (e.target === scrim) close(); });
+
+  function panic() { toast("Quick exit — would <b>replace()</b> the tab with your decoy · no history left", 2600); }
+  var lastEsc = 0;
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); scrim.classList.contains("open") ? close() : open(); return; }
+    if (scrim.classList.contains("open")) {
+      var rows = Array.prototype.slice.call(cl.querySelectorAll(".row[data-cmd]"));
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, rows.length - 1); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+      else if (e.key === "Enter") { e.preventDefault(); if (rows[sel]) run(rows[sel].dataset.cmd); }
+      return;
+    }
+    if (e.key === "Escape") { var n = Date.now(); if (n - lastEsc < 500) panic(); lastEsc = n; }
+  });
+})();
+</script>
