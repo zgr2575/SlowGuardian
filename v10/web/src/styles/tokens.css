@@ -1,0 +1,108 @@
+/*
+ * SlowGuardian V10 — design tokens (Liquid Glass, dark-first)
+ * Single source of truth for the visual system. Derived from the
+ * approved design mockup (docs/design/v10-mockup.html).
+ *
+ * Theming model: attributes on <html>, all set before first paint.
+ *   data-theme  = dark (default) | light
+ *   data-accent = blue (default) | indigo | teal | rose
+ *   data-perf   = high (default) | low   (low drops runtime blur)
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ground */
+  --bg: #05060c;
+  --bg-2: #090b14;
+
+  /* glass material */
+  --glass: rgba(255, 255, 255, 0.055);
+  --glass-2: rgba(255, 255, 255, 0.085);
+  --glass-strong: rgba(255, 255, 255, 0.11);
+  --glass-brd: rgba(255, 255, 255, 0.11);
+  --glass-brd-2: rgba(255, 255, 255, 0.16);
+  --hi: rgba(255, 255, 255, 0.22); /* top specular highlight */
+  --blur: 26px;
+
+  /* ink */
+  --ink: #f4f6fb;
+  --ink-2: rgba(233, 238, 248, 0.68);
+  --ink-3: rgba(233, 238, 248, 0.42);
+
+  /* accent (blue default) */
+  --accent: #0a84ff;
+  --accent-2: #2f9bff;
+  --accent-tint: rgba(10, 132, 255, 0.16);
+  --on-accent: #ffffff;
+
+  /* status (independent of accent) */
+  --ok: #34d17a;
+  --warn: #ff9f45;
+  --err: #ff6961;
+
+  /* elevation */
+  --sh-1: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --sh-2: 0 14px 40px rgba(0, 0, 0, 0.5);
+  --sh-3: 0 30px 80px rgba(0, 0, 0, 0.6);
+  --glow: 0 8px 30px var(--accent-tint);
+
+  /* radius / spacing (8px grid) */
+  --r-sm: 12px; --r-md: 18px; --r-lg: 26px; --r-xl: 32px; --r-pill: 980px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 76px; --sp-9: 112px;
+  --maxw: 1080px; --nav-h: 60px;
+
+  /* type */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* ambient light hues (feed the background orbs) */
+  --a1: rgba(10, 132, 255, 0.22);
+  --a2: rgba(125, 91, 237, 0.20);
+  --a3: rgba(20, 200, 180, 0.14);
+}
+
+/* ---- accent presets: one attribute retints the whole app ---- */
+:root[data-accent="indigo"] { --accent:#7d5bed; --accent-2:#9a7bff; --accent-tint:rgba(125,91,237,.18); --a1:rgba(125,91,237,.24); --a2:rgba(70,110,255,.18); }
+:root[data-accent="teal"]   { --accent:#12b5a6; --accent-2:#33d3c4; --accent-tint:rgba(18,181,166,.18); --a1:rgba(18,181,166,.22); --a2:rgba(20,140,255,.16); --a3:rgba(120,90,240,.12); }
+:root[data-accent="rose"]   { --accent:#ff5d8f; --accent-2:#ff82a9; --accent-tint:rgba(255,93,143,.18); --a1:rgba(255,93,143,.22); --a2:rgba(180,80,255,.16); }
+
+/* ---- light Liquid Glass (dark remains the hero) ---- */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:#eef1f7; --bg-2:#e6eaf3;
+  --glass:rgba(255,255,255,.55); --glass-2:rgba(255,255,255,.7); --glass-strong:rgba(255,255,255,.82);
+  --glass-brd:rgba(255,255,255,.7); --glass-brd-2:rgba(0,0,0,.08); --hi:rgba(255,255,255,.9);
+  --ink:#161a22; --ink-2:rgba(24,28,38,.66); --ink-3:rgba(24,28,38,.42);
+  --sh-1:0 2px 10px rgba(20,26,44,.08); --sh-2:0 14px 40px rgba(20,26,44,.14); --sh-3:0 30px 70px rgba(20,26,44,.18);
+  --a1:rgba(10,132,255,.16); --a2:rgba(125,91,237,.14); --a3:rgba(20,200,180,.12);
+}
+
+/* ---- the glass material ---- */
+.glass {
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  box-shadow: inset 0 1px 0 var(--hi), var(--sh-2);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(175%);
+  backdrop-filter: blur(var(--blur)) saturate(175%);
+}
+.glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 34%);
+}
+
+/* ---- perf fallback: no blur support OR low-power → solid translucent ---- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: color-mix(in srgb, var(--bg-2) 86%, transparent); }
+}
+:root[data-perf="low"] .glass {
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto; }
+}
