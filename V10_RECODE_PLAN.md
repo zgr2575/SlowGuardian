@@ -321,6 +321,8 @@ Frontend (`web/`, Astro static build) and backend (`src/`, Express) are **decoup
 
 ## 9. Decisions needed before build
 
+> **Update:** all resolved — see `v10/BUILD_STATUS.md` for the locked set. Summary: Scramjet-only · public proxy + admin gate (pluggable → future ZADMIN auth) · better-sqlite3 · Vercel frontend + Render backend · music slot reserved for a future project · mirrors post-1.0 · LTS 6+6 months · leave git history. Original recommendations below for reference.
+
 1. **Engine posture at 1.0:** ✅ **RESOLVED — Scramjet-only.** UV kept as a documented post-1.0 escape hatch, added only if the nightly live-site test proves a real compatibility gap.
 2. **Wisp server choice:** confirm `wisp-js/server` (pick) vs `wisp-server-node`. The research streams conflict; sign-off wanted before the Phase 1 spike.
 3. **Persistent storage default:** ship `better-sqlite3` as the recommended persistent adapter, or keep `memory` as the documented default and treat SQLite as opt-in?

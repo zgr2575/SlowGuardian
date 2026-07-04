@@ -4,10 +4,16 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 
 ## Locked decisions
 - **Proxy:** **Scramjet-only** over Wisp (`wisp-js/server`), single service worker, bare-mux transport. Drop UV/Rammerhead/Dynamic/bare v3. (UV = documented post-1.0 escape hatch, added only if the nightly live-site test proves a real gap.)
-- **Frontend:** Astro static MPA + Preact islands. **UI: Liquid Glass, dark-first** (Apple), Dynamic Island nav, light toggle, perf-gated blur.
-- **Backend:** Express kept; envalid config; storage adapter (memory/sqlite/mongo). Cut Spotify(→plugin)/KeyAuth/AdSense.
-- **Deploy:** Vercel (static frontend) + persistent host (Wisp backend) — split-deploy. **Replit removed** (nix + dead Replit DB dep).
-- **Kept in 1.0 scope:** multi-tab in-app browser (rebuilt clean), **about:blank cloak** (opt-in, gesture-triggered, single-shot, Firefox-gated — never auto-on), tab disguise, quick-exit.
+- **Frontend:** Astro static MPA + Preact islands. **UI: Liquid Glass, dark-first** (Apple), Dynamic Island nav (per-tab icons, icon-only collapse), light toggle, perf-gated blur.
+- **Backend:** Express + envalid config + pino logging. **Storage: better-sqlite3** (embedded file DB) for the small admin/global state. No MongoDB.
+- **Accounts:** **Public proxy** — no user sign-ups; user settings live client-side. Single **admin gate** for global controls (pause, blocklist).
+- **Admin auth:** pluggable behind an adapter interface; will use the maintainer's forthcoming **ZADMIN Auth system**. 1.0 interim = env-password gate implementing the same interface, hot-swapped for ZADMIN when ready.
+- **Deploy:** **Vercel** (static frontend) + **Render** (persistent Wisp backend) — split-deploy. Replit removed; one Docker image = canonical artifact.
+- **Kept in 1.0:** multi-tab in-app browser (rebuilt clean), **about:blank cloak** (opt-in, gesture-triggered — port of V8's working `static/assets/scripts/h.js` `createAboutBlank`, minus the V9 auto-run bug), tab disguise, quick-exit.
+- **Reserved slot:** the old music/Spotify position → held for a **future project integration (TBD by maintainer)**. Not building music.
+- **Reachability:** in-app signed "get latest link" mirror manifest → **post-1.0**.
+- **LTS window:** **6 months active + 6 months security-only** for v10.x.
+- **Git history:** leave history intact; stop tracking the big files (2.7MB maps, 1.2MB wallpaper) from here on (no force-push).
 - **Privacy scope:** shoulder-surf/history defense + reachability only. No monitoring-evasion / anti-screenshot / anti-close. (Settled.)
 
 ## Phases
