@@ -115,7 +115,8 @@ The proxy SW and all proxy runtime dirs live in Astro's `public/` (copied verbat
 | `connect-mongo`, `@replit/database`, `spotify-web-api-node`, `puppeteer`, `setup-scramjet.cjs` | deleted deps / serve package `dist` directly |
 | 2.7MB `.map`, `index-v8.html`, `settings.js.backup`, 1.2MB wallpaper | removed / WebP-optimized |
 | `process.exit(1)` on every rejection | crash-only **at the process level only**, subsystem errors isolated |
-| `vercel.json`, `replit.nix` | dropped targets (serverless can't hold WebSocket upgrades) |
+| `replit.nix` | dropped (Replit DB dep already dead) |
+| ~~`vercel.json`~~ | **KEPT** — via split-deploy (see §6.1): Vercel serves the static Astro frontend, the Wisp proxy backend runs on a persistent host |
 | `"upd": "git pull --force --allow-unrelated-histories"`, `npm audit fix` in build | deleted (non-reproducible / destructive) |
 
 ---
@@ -247,7 +248,21 @@ cloakProfile = { title, faviconDataUri, decoyUrl, panicKeys, mode }
 - **`/healthz`** (liveness, no dependency checks — for Docker `HEALTHCHECK`/Render) + **`/readyz`** (readiness, JSON per-subsystem: `{proxy:'ok', storage:'memory-fallback', plugins:{spotify:'disabled'}}`) + `/api/features` so the frontend hides UI for absent services instead of showing broken buttons.
 - **Crash-only, but at the right level:** keep `uncaughtException`/`unhandledRejection` → `pino.fatal` → `exit(1)`, and make **restart the supervisor's job** (Docker `restart: unless-stopped` / Render auto-restart). Until Express 5, a 5-line `asyncHandler` wraps routes so rejections reach the error middleware — **not** the `express-async-errors` monkey-patch.
 - **Fixed shutdown ordering** (V9 closed Mongo *before* the server): (1) `server.close()`, (2) close Wisp WebSockets, (3) drain in-flight HTTP with a 10s deadline then `closeAllConnections()`, (4) close storage, (5) exit 0.
-- **Deploy:** one canonical Docker image → **Render** (primary, `render.yaml` + `healthCheckPath: /healthz`); Railway documented as equivalent; self-hosted Docker for power users. Vercel/Replit dropped by design.
+- **Deploy:** see §6.1 — Vercel-hosted static frontend + persistent-host proxy backend (split-deploy), keeping Vercel support as required.
+
+### 6.1 Deploy topology — keeping Vercel (split-deploy)
+
+Vercel serverless/edge functions **cannot hold a long-lived WebSocket** (the Wisp transport is one persistent `wss://` connection), and they impose execution-time/streaming limits. Running the proxy engine *on* Vercel is exactly the class of flakiness that made V9 unstable. But Vercel is *excellent* at what the frontend needs. So we split the two concerns instead of dropping Vercel:
+
+| Piece | Host | Why |
+|---|---|---|
+| **Static frontend** (Astro `dist/` — home, catalog, settings, `sw.js`, Scramjet/bare-mux runtime) | **Vercel** (or Cloudflare Pages) | It's pure static output — Vercel's CDN, previews, and DX are ideal, and it's free/fast. |
+| **Wisp proxy backend** (persistent Node process: `/wisp/` WebSocket endpoint) | **Render / Railway / Fly / self-host Docker** | A WebSocket proxy needs an always-on process; serverless can't do it. |
+
+The frontend points `bare-mux` at the remote Wisp endpoint (`wss://proxy.<domain>/wisp/`) via `BareMux.SetTransport`. The backend enables CORS for the frontend origin and sets COOP/COEP. This is a clean, well-supported topology — the frontend can even be **all-Vercel with zero backend** if you ever host the Wisp endpoint on a subdomain you already run.
+
+- **Single-host alternative** (simplest ops): run the whole Express+Wisp app as one Docker image on Render, and *also* deploy the same static frontend to Vercel as a mirror/fallback. Same image, two front doors.
+- **What we do NOT do:** try to run Wisp/bare *as* Vercel functions. That path can't hold WebSockets and will generate a permanent stream of "proxy broken on my deploy" issues.
 
 ---
 
@@ -312,7 +327,7 @@ Frontend (`web/`, Astro static build) and backend (`src/`, Express) are **decoup
 4. **Spotify/music:** keep as an opt-in plugin (recommended), or cut entirely for 1.0 and reconsider later?
 5. **Auth scope for 1.0:** do we even need user accounts at launch, or is the core a **public unauth proxy** with an admin gate only? Simpler is more stable.
 6. **Frontend framework sign-off:** Astro MPA + Preact islands — approve, or prefer vanilla-TS + Vite (the runner-up, less structure for contributors)?
-7. **Deploy target:** Render as primary — confirm a Render account, or should the canonical target be self-hosted Docker?
+7. **Deploy target:** ~~drop Vercel~~ **RESOLVED — Vercel kept** via split-deploy (§6.1: static frontend on Vercel, Wisp backend on a persistent host). Remaining choice: which persistent host for the proxy backend — Render, Railway, Fly, or self-host Docker?
 8. **LTS support window:** approve 12 months active + 6 months security-only, or a different window?
 9. **Domain/mirror strategy:** is the signed mirror-manifest feature in scope post-1.0, or handled entirely outside the app (Discord announcements)?
 10. **Git history:** rewrite to purge the 2.7MB maps + 1.2MB wallpaper (smaller clones, rewritten history) or leave history and just stop tracking them going forward?
