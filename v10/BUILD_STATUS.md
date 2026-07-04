@@ -7,7 +7,7 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - **Frontend:** Astro static MPA + Preact islands. **UI: Liquid Glass, dark-first** (Apple), Dynamic Island nav (per-tab icons, icon-only collapse), light toggle, perf-gated blur.
 - **Backend:** Express + envalid config + pino logging. **Storage: better-sqlite3** (embedded file DB) for the small admin/global state. No MongoDB.
 - **Accounts:** **Public proxy** — no user sign-ups; user settings live client-side. Single **admin gate** for global controls (pause, blocklist).
-- **Admin auth:** pluggable behind an adapter interface; will use the maintainer's forthcoming **ZADMIN Auth system**. 1.0 interim = env-password gate implementing the same interface, hot-swapped for ZADMIN when ready.
+- **Admin auth:** 1.0 ships a **simple env-password admin gate** — that's it. ZADMIN Auth is a separate future maintainer project; **no ZADMIN work (not even an adapter) until the maintainer says so.**
 - **Deploy:** **Vercel** (static frontend) + **Render** (persistent Wisp backend) — split-deploy. Replit removed; one Docker image = canonical artifact.
 - **Kept in 1.0:** multi-tab in-app browser (rebuilt clean), **about:blank cloak** (opt-in, gesture-triggered — port of V8's working `static/assets/scripts/h.js` `createAboutBlank`, minus the V9 auto-run bug), tab disguise, quick-exit.
 - **Reserved slot:** the old music/Spotify position → held for a **future project integration (TBD by maintainer)**. Not building music.
