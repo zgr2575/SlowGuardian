@@ -3,7 +3,7 @@
 Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays shippable during the rebuild. Plan: `../V10_RECODE_PLAN.md` · Design: `../DESIGN_V10.md` + `../docs/design/v10-mockup.html`.
 
 ## Locked decisions
-- **Proxy:** Scramjet over Wisp (`wisp-js/server`), single service worker, bare-mux transport. Drop UV/Rammerhead/Dynamic/bare v3.
+- **Proxy:** **Scramjet-only** over Wisp (`wisp-js/server`), single service worker, bare-mux transport. Drop UV/Rammerhead/Dynamic/bare v3. (UV = documented post-1.0 escape hatch, added only if the nightly live-site test proves a real gap.)
 - **Frontend:** Astro static MPA + Preact islands. **UI: Liquid Glass, dark-first** (Apple), Dynamic Island nav, light toggle, perf-gated blur.
 - **Backend:** Express kept; envalid config; storage adapter (memory/sqlite/mongo). Cut Spotify(→plugin)/KeyAuth/AdSense.
 - **Deploy:** Vercel (static frontend) + persistent host (Wisp backend) — split-deploy. **Replit removed** (nix + dead Replit DB dep).

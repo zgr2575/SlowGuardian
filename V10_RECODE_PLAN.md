@@ -321,7 +321,7 @@ Frontend (`web/`, Astro static build) and backend (`src/`, Express) are **decoup
 
 ## 9. Decisions needed before build
 
-1. **Engine posture at 1.0:** Scramjet-only (recommended), or Scramjet + optional UV fallback shipped in 1.0? Recommendation: Scramjet-only, add UV post-1.0 only if the nightly job proves a real gap.
+1. **Engine posture at 1.0:** ✅ **RESOLVED — Scramjet-only.** UV kept as a documented post-1.0 escape hatch, added only if the nightly live-site test proves a real compatibility gap.
 2. **Wisp server choice:** confirm `wisp-js/server` (pick) vs `wisp-server-node`. The research streams conflict; sign-off wanted before the Phase 1 spike.
 3. **Persistent storage default:** ship `better-sqlite3` as the recommended persistent adapter, or keep `memory` as the documented default and treat SQLite as opt-in?
 4. **Spotify/music:** keep as an opt-in plugin (recommended), or cut entirely for 1.0 and reconsider later?
