@@ -40,7 +40,7 @@
 
     --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:32px; --r-pill:980px;
     --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:76px; --sp-9:112px;
-    --maxw:1080px; --nav-h:60px;
+    --maxw:1440px; --nav-h:56px;
 
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
@@ -127,9 +127,9 @@
   .kbd { font: 500 11px/1 var(--mono); color: var(--ink-3); border: 1px solid var(--glass-brd); border-radius: 6px; padding: 3px 6px; }
 
   /* ---------- Hero ---------- */
-  .hero { text-align: center; padding: var(--sp-9) 0 var(--sp-7); }
+  .hero { text-align: center; padding: var(--sp-7) 0 var(--sp-6); }
   .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
-  .hero h1 { font-size: clamp(2.7rem, 6.6vw, 4.8rem); font-weight: 600; line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; margin: 0 auto; max-width: 15ch;
+  .hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
     background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
   .hero h1 .soft { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); }
   .hero .lede { margin: 22px auto 0; max-width: 40ch; font-size: clamp(1.06rem, 2vw, 1.32rem); color: var(--ink-2); line-height: 1.5; }
@@ -153,7 +153,8 @@
   .meta-row .d { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
 
   /* ---------- Sections ---------- */
-  section { padding: var(--sp-8) 0; }
+  section { padding: var(--sp-6) 0; scroll-margin-top: 88px; }
+  #library { padding-top: var(--sp-5); }
   .sechead { max-width: 640px; margin-bottom: var(--sp-6); }
   .sechead.center { margin-left: auto; margin-right: auto; text-align: center; }
   .sechead .ey { font-size: 13px; font-weight: 600; color: var(--accent-2); margin-bottom: 12px; }
@@ -190,35 +191,35 @@
   .card.hide { display: none; }
 
   /* ---------- Netflix-style library ---------- */
-  .libhead { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-5); }
+  .libhead { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-4); }
   .libsearch { flex: 0 1 300px; min-width: 180px; }
-  .billboard { position: relative; overflow: hidden; border-radius: var(--r-lg); min-height: 300px; display: flex; align-items: flex-end; margin-bottom: var(--sp-7); box-shadow: var(--sh-2); }
+  .billboard { position: relative; overflow: hidden; border-radius: var(--r-lg); min-height: 208px; display: flex; align-items: flex-end; margin-bottom: var(--sp-5); box-shadow: var(--sh-2); }
   .bb-art { position: absolute; inset: 0; background: linear-gradient(120deg, #3a2fb0, #7d5bed 46%, #12b5a6); }
   .billboard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.74), rgba(0,0,0,0.28) 56%, transparent 80%), linear-gradient(0deg, rgba(0,0,0,0.5), transparent 55%); }
-  .bb-content { position: relative; z-index: 1; padding: var(--sp-6); max-width: 540px; }
+  .bb-content { position: relative; z-index: 1; padding: var(--sp-5); max-width: 500px; }
   .bb-tag { display: inline-flex; align-items: center; gap: 8px; color: #fff; opacity: 0.92; font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; }
   .bb-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
-  .billboard h3 { color: #fff; font-size: clamp(1.9rem, 4.2vw, 2.7rem); font-weight: 600; letter-spacing: -0.035em; margin: 11px 0 8px; }
-  .billboard p { color: rgba(255,255,255,0.82); margin-bottom: 18px; max-width: 40ch; line-height: 1.5; }
+  .billboard h3 { color: #fff; font-size: clamp(1.55rem, 3.4vw, 2.1rem); font-weight: 600; letter-spacing: -0.03em; margin: 8px 0 6px; }
+  .billboard p { color: rgba(255,255,255,0.82); margin-bottom: 14px; max-width: 38ch; line-height: 1.45; font-size: 0.95rem; }
   .bb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-  .rows { display: flex; flex-direction: column; gap: var(--sp-6); }
+  .rows { display: flex; flex-direction: column; gap: var(--sp-5); }
   .shelf .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
   .shelf .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
   .shelf .rowhead .more { font-size: 13px; color: var(--ink-3); cursor: pointer; transition: color .2s; white-space: nowrap; }
   .shelf .rowhead .more:hover { color: var(--accent-2); }
-  .strip { display: flex; gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; padding: 12px 2px 18px; scrollbar-width: none; }
+  .strip { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; padding: 10px 2px 12px; scrollbar-width: none; }
   .strip::-webkit-scrollbar { display: none; }
-  .tile { flex: 0 0 auto; width: 256px; scroll-snap-align: start; cursor: pointer; border-radius: 14px; overflow: hidden; position: relative; box-shadow: var(--sh-1); transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; }
+  .tile { flex: 0 0 auto; width: clamp(150px, 15vw, 196px); scroll-snap-align: start; cursor: pointer; border-radius: 12px; overflow: hidden; position: relative; box-shadow: var(--sh-1); transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; }
   .tile .art { aspect-ratio: 16/9; display: grid; place-items: center; position: relative; }
-  .tile .art .mono { font-size: 30px; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 16px rgba(0,0,0,0.4); z-index: 1; }
+  .tile .art .mono { font-size: 25px; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 16px rgba(0,0,0,0.4); z-index: 1; }
   .tile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.05), transparent 28%, rgba(0,0,0,0.64)); }
-  .tile .label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 10px 13px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .tile .label .tt { font-size: 13.5px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
-  .tile .label .cc { font-size: 11px; color: rgba(255,255,255,0.72); white-space: nowrap; }
+  .tile .label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 8px 11px 9px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .tile .label .tt { min-width: 0; font-size: 13px; font-weight: 600; color: #fff; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile .label .cc { flex: none; font-size: 10.5px; color: rgba(255,255,255,0.72); white-space: nowrap; }
   .tile:hover { transform: translateY(-4px) scale(1.035); box-shadow: var(--sh-3), var(--glow); z-index: 3; }
   .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .results { display: none; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .results { display: none; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .results .tile { width: auto; }
   .nomatch { grid-column: 1 / -1; color: var(--ink-3); padding: 24px 0; }
 
@@ -464,7 +465,7 @@
     var m = META[name] || { cat: "", hue: 210 };
     var a = document.createElement("a");
     a.className = "tile"; a.href = "#"; a.dataset.name = name.toLowerCase(); a.tabIndex = 0;
-    a.innerHTML = '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"><span class="mono">' + initials(name) + '</span></div>' +
+    a.innerHTML = '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"></div>' +
       '<div class="label"><span class="tt">' + name + '</span><span class="cc">' + m.cat + '</span></div>';
     a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + name + "</b>…"); });
     return a;
