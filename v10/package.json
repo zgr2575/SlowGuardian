@@ -1,0 +1,25 @@
+{
+  "name": "slowguardian-v10",
+  "version": "10.0.0-phase1",
+  "private": true,
+  "type": "module",
+  "description": "SlowGuardian V10 — Phase 1 proxy core: Scramjet over Wisp (wisp-js), single service worker, bare-mux + epoxy transport, COOP/COEP isolation.",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node --watch src/server.js"
+  },
+  "dependencies": {
+    "@mercuryworkshop/bare-mux": "2.1.9",
+    "@mercuryworkshop/epoxy-transport": "2.1.28",
+    "@mercuryworkshop/scramjet": "1.1.0",
+    "@mercuryworkshop/wisp-js": "0.4.1",
+    "envalid": "8.0.0",
+    "express": "4.21.2",
+    "pino": "9.9.0",
+    "pino-pretty": "13.1.1"
+  }
+}

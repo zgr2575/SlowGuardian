@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SlowGuardian V10 · Phase 1 Proxy Test</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: #0b0d10;
+        color: #e6e9ee;
+      }
+      main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 40px; }
+      h1 { font-size: 18px; font-weight: 600; margin: 0 0 4px; }
+      .sub { color: #8b93a1; font-size: 13px; margin: 0 0 20px; }
+      form { display: flex; gap: 8px; margin-bottom: 12px; }
+      input {
+        flex: 1; padding: 10px 12px; border-radius: 10px;
+        border: 1px solid #23272e; background: #12151a; color: #e6e9ee; font-size: 14px;
+      }
+      input:focus { outline: none; border-color: #3b82f6; }
+      button {
+        padding: 10px 18px; border-radius: 10px; border: 0;
+        background: #3b82f6; color: #fff; font-weight: 600; cursor: pointer;
+      }
+      button:hover { background: #2f6fe0; }
+      #status { color: #8b93a1; font-size: 12px; min-height: 16px; margin: 0 0 12px; }
+      #frame-container { border: 1px solid #23272e; border-radius: 12px; overflow: hidden; background: #000; }
+      #sj-frame { width: 100%; height: 70vh; border: 0; display: block; }
+    </style>
+    <!-- Load order matters: these define $scramjetLoadController and global BareMux -->
+    <script src="/scram/scramjet.all.js"></script>
+    <script src="/baremux/index.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>SlowGuardian V10 · Phase 1</h1>
+      <p class="sub">Scramjet over Wisp · single service worker · epoxy transport</p>
+      <form id="f">
+        <input id="url" type="text" value="https://example.com" autocomplete="off"
+               spellcheck="false" aria-label="URL to proxy" />
+        <button type="submit">Go</button>
+      </form>
+      <p id="status"></p>
+      <div id="frame-container"></div>
+    </main>
+    <script src="/boot.js"></script>
+  </body>
+</html>

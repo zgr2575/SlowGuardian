@@ -17,13 +17,26 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - **Privacy scope:** shoulder-surf/history defense + reachability only. No monitoring-evasion / anti-screenshot / anti-close. (Settled.)
 
 ## Phases
-- [ ] **Phase 0 — Foundations** *(in progress)*
+- [~] **Phase 0 — Foundations**
   - [x] Design tokens extracted → `web/src/styles/tokens.css`
-  - [ ] Astro project init (`web/`), base layout with pre-paint theme/cloak script
-  - [ ] Backend skeleton (`src/`): envalid config, pino logger, structure
+  - [x] Backend skeleton (`src/`): envalid config, pino logger, structure
+  - [ ] Astro project init (`web/`), base layout with pre-paint theme/cloak script (rolls into Phase 2)
   - [ ] Remove dead V9 artifacts at cutover
-- [ ] **Phase 1 — Single proxy path** (wisp-js + Scramjet + one SW, COOP/COEP)
+- [x] **Phase 1 — Single proxy path** ✅ **VERIFIED** — wisp-js + Scramjet + one SW + bare-mux/epoxy, COOP/COEP. Details below.
 - [ ] **Phase 2 — Frontend** (pages, catalog Content Collections, islands, **multi-tab browser**)
 - [ ] **Phase 3 — Privacy** (tab disguise, **about:blank cloak**, quick exit, clear traces, mirror rotation)
 - [ ] **Phase 4 — Stability** (Playwright proxy smoke test, CI, health/readyz, Docker)
 - [ ] **1.0 LTS** (v10.x branch, release-please, GHCR image)
+
+## Phase 1 verification (2026-07-04)
+Ran locally against `node src/server.js` + headless Chromium:
+- ✅ Server boots; `/healthz` 200; **COOP `same-origin` + COEP `require-corp`** on every response.
+- ✅ Bundles served straight from node_modules: `/scram/scramjet.all.js` (+ `scramjet.wasm.wasm`), `/baremux/{index.js,worker.js}`, `/epoxy/index.mjs`.
+- ✅ Wisp upgrade: `/wisp/` → `101 UPGRADED`; non-wisp upgrade → socket dropped. (`test/wisp-handshake.mjs`, zero-dep.)
+- ✅ End-to-end: SW registers + activates + controls; bare-mux sets the epoxy transport; wisp opens the target TCP stream; **a live HTTP site (httpforever.com) rendered fully-styled inside the Scramjet frame.**
+- ⚠️ HTTPS targets fail **in this dev sandbox ONLY**: outbound TLS is MITM-intercepted (cert issued by "Anthropic Egress Gateway CA"), which epoxy's bundled Mozilla root store correctly rejects. Not a wiring bug — a normal deploy (Render / real egress, no TLS MITM) validates real public certs. Re-confirm HTTPS on the first Render deploy.
+
+**Pinned co-released version set (bump together, one smoke-tested PR):** scramjet `1.1.0` · wisp-js `0.4.1` · bare-mux `2.1.9` · epoxy-transport `2.1.28`. epoxy stays on 2.x deliberately — its `node` conditional export exposes the `epoxyPath` helper the server imports; epoxy 3.x dropped that helper.
+
+## Fix applied during Phase 1
+- `public/boot.js`: register the service worker + set the transport **eagerly on load** (not on first form-submit), so the SW is active/controlling before the first navigation.
