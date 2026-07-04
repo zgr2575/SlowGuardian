@@ -134,9 +134,13 @@
     transition: max-width .46s cubic-bezier(.5,1.32,.4,1), opacity .3s ease, transform .46s cubic-bezier(.5,1.32,.4,1); }
   .island:hover .isl-panel, .island:focus-within .isl-panel, .island.open .isl-panel { max-width: 640px; opacity: 1; transform: none; }
   .isl-links { display: flex; gap: 2px; }
-  .isl-links a { padding: 8px 12px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .2s, background .2s; }
+  .isl-links a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .2s, background .2s; }
+  .isl-links a .ic { width: 16px; height: 16px; flex-shrink: 0; }
   .isl-links a:hover { color: var(--ink); background: var(--glass); }
   .isl-links a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
+  .isl-links a.on .ic { color: var(--accent-2); }
+  /* collapse to icon-only as the pill narrows */
+  @media (max-width: 900px) { .isl-links a .lbl { display: none; } .isl-links a { gap: 0; padding: 8px 10px; } }
   .isl-sep { width: 1px; height: 22px; background: var(--glass-brd); margin: 0 3px; flex-shrink: 0; }
   .isl-btn { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
     background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
@@ -295,7 +299,7 @@
     .island { gap: 6px; padding: 0 7px 0 9px; max-width: calc(100vw - 12px); }
     .isl-word { display: none; }
     .isl-links { gap: 0; }
-    .isl-links a { padding: 7px 7px; font-size: 12.5px; }
+    .isl-links a { padding: 7px 8px; }
     .isl-sep { display: none; }
     .isl-panel { gap: 3px; }
     .isl-btn { width: 30px; height: 30px; }
@@ -312,10 +316,22 @@
   <div class="isl-ambient"><span class="live"></span> Online</div>
   <div class="isl-panel">
     <nav class="isl-links">
-      <a href="#library" class="isl-link on">Games</a>
-      <a href="#library" class="isl-link">Apps</a>
-      <a href="#top" class="isl-link">Proxy</a>
-      <a href="#privacy" class="isl-link">Privacy</a>
+      <a href="#library" class="isl-link on" title="Games" aria-label="Games">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="20" height="10" rx="4"/><path d="M7 12h3M8.5 10.5v3M15.5 11.5h.01M17.5 13.5h.01"/></svg>
+        <span class="lbl">Games</span>
+      </a>
+      <a href="#library" class="isl-link" title="Apps" aria-label="Apps">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
+        <span class="lbl">Apps</span>
+      </a>
+      <a href="#top" class="isl-link" title="Proxy" aria-label="Proxy">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
+        <span class="lbl">Proxy</span>
+      </a>
+      <a href="#privacy" class="isl-link" title="Privacy" aria-label="Privacy">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span class="lbl">Privacy</span>
+      </a>
     </nav>
     <span class="isl-sep"></span>
     <button class="isl-btn" id="cmdBtn" title="Search (⌘K)" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
