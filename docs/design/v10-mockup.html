@@ -106,28 +106,45 @@
   }
   :root[data-perf="low"] .glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 88%, transparent); }
 
-  /* ---------- Nav (floating glass bar) ---------- */
-  .nav { position: sticky; top: 12px; z-index: 50; margin: 12px auto 0; max-width: calc(var(--maxw) + 48px); padding: 0 var(--sp-5); }
-  .navbar { height: var(--nav-h); border-radius: var(--r-pill); padding: 0 10px 0 20px; display: flex; align-items: center; gap: var(--sp-5); }
-  .navbar { background: var(--glass-2); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); -webkit-backdrop-filter: blur(var(--blur)) saturate(175%); backdrop-filter: blur(var(--blur)) saturate(175%); }
-  :root[data-perf="low"] .navbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 92%, transparent); }
-  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
-  .logo .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--on-accent);
+  /* ---------- Dynamic Island nav ---------- */
+  .island { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 60;
+    display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 10px 0 15px;
+    border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
+    box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); max-width: calc(100vw - 24px);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
+    transition: box-shadow .35s, background .35s; }
+  :root[data-theme="light"] .island { background: rgba(255,255,255,0.62); }
+  :root[data-perf="low"] .island { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 94%, transparent); }
+  .island:hover, .island:focus-within, .island.open { box-shadow: inset 0 1px 0 var(--hi), var(--sh-3), 0 0 0 1px var(--glass-brd-2); }
+
+  .isl-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; text-decoration: none; cursor: pointer; }
+  .isl-brand .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--on-accent); flex-shrink: 0;
     background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 10px var(--accent-tint); }
-  .logo .mark svg { width: 15px; height: 15px; }
-  .navlinks { display: flex; gap: 2px; margin-left: 4px; }
-  .navlinks a { padding: 8px 13px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); transition: color .2s, background .2s; }
-  .navlinks a:hover { color: var(--ink); }
-  .navlinks a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
-  .navtools { margin-left: auto; display: flex; align-items: center; gap: var(--sp-2); }
-  .ghost { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; height: 40px; padding: 0 14px; border-radius: var(--r-pill);
-    background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); font-family: var(--font); font-size: 13px; font-weight: 500; transition: .2s; }
-  .ghost:hover { color: var(--ink); background: var(--glass-2); }
-  .ghost svg { width: 16px; height: 16px; }
-  .kbd { font: 500 11px/1 var(--mono); color: var(--ink-3); border: 1px solid var(--glass-brd); border-radius: 6px; padding: 3px 6px; }
+  .isl-brand .mark svg { width: 15px; height: 15px; }
+
+  /* compact ambient status — morphs away on expand */
+  .isl-ambient { display: flex; align-items: center; gap: 7px; padding-right: 4px; font-size: 13px; color: var(--ink-2); white-space: nowrap;
+    max-width: 140px; opacity: 1; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .22s ease, padding .42s; }
+  .isl-ambient .live { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); flex-shrink: 0; animation: livep 2.4s ease-in-out infinite; }
+  @keyframes livep { 50% { opacity: .35; } }
+  .island:hover .isl-ambient, .island:focus-within .isl-ambient, .island.open .isl-ambient { max-width: 0; opacity: 0; padding-right: 0; }
+
+  /* expanded controls — the morph reveal */
+  .isl-panel { display: flex; align-items: center; gap: 6px; max-width: 0; opacity: 0; overflow: hidden; transform: translateX(-4px);
+    transition: max-width .46s cubic-bezier(.5,1.32,.4,1), opacity .3s ease, transform .46s cubic-bezier(.5,1.32,.4,1); }
+  .island:hover .isl-panel, .island:focus-within .isl-panel, .island.open .isl-panel { max-width: 640px; opacity: 1; transform: none; }
+  .isl-links { display: flex; gap: 2px; }
+  .isl-links a { padding: 8px 12px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .2s, background .2s; }
+  .isl-links a:hover { color: var(--ink); background: var(--glass); }
+  .isl-links a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
+  .isl-sep { width: 1px; height: 22px; background: var(--glass-brd); margin: 0 3px; flex-shrink: 0; }
+  .isl-btn { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+    background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
+  .isl-btn:hover { color: var(--ink); background: var(--glass-2); }
+  .isl-btn svg { width: 16px; height: 16px; }
 
   /* ---------- Hero ---------- */
-  .hero { text-align: center; padding: var(--sp-7) 0 var(--sp-6); }
+  .hero { text-align: center; padding: 82px 0 var(--sp-6); }
   .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
   .hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
     background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
@@ -274,28 +291,37 @@
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast b { color: var(--accent-2); font-weight: 600; }
 
-  @media (max-width: 800px) { .navlinks { display: none; } .hero { padding-top: var(--sp-7); } .navtools .lbltxt { display: none; } }
+  @media (max-width: 640px) {
+    .island { gap: 6px; padding: 0 7px 0 9px; max-width: calc(100vw - 12px); }
+    .isl-word { display: none; }
+    .isl-links { gap: 0; }
+    .isl-links a { padding: 7px 7px; font-size: 12.5px; }
+    .isl-sep { display: none; }
+    .isl-panel { gap: 3px; }
+    .isl-btn { width: 30px; height: 30px; }
+    .isl-btn svg { width: 15px; height: 15px; }
+  }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .cmd { animation: none; } html { scroll-behavior: auto; } * { transition-duration: .01ms !important; } }
 </style>
 
-<header class="nav">
-  <div class="navbar">
-    <a class="logo" href="#top">
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
-      SlowGuardian
-    </a>
-    <nav class="navlinks">
-      <a href="#library" class="on">Games</a>
-      <a href="#library">Apps</a>
-      <a href="#top">Proxy</a>
-      <a href="#privacy">Privacy</a>
+<div class="island" id="island" role="navigation" aria-label="Primary">
+  <a class="isl-brand" href="#top">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+    <span class="isl-word">SlowGuardian</span>
+  </a>
+  <div class="isl-ambient"><span class="live"></span> Online</div>
+  <div class="isl-panel">
+    <nav class="isl-links">
+      <a href="#library" class="isl-link on">Games</a>
+      <a href="#library" class="isl-link">Apps</a>
+      <a href="#top" class="isl-link">Proxy</a>
+      <a href="#privacy" class="isl-link">Privacy</a>
     </nav>
-    <div class="navtools">
-      <button class="ghost" id="cmdBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="lbltxt">Search</span><span class="kbd">⌘K</span></button>
-      <button class="ghost" id="themeBtn" title="Toggle appearance" aria-label="Toggle appearance"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
-    </div>
+    <span class="isl-sep"></span>
+    <button class="isl-btn" id="cmdBtn" title="Search (⌘K)" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+    <button class="isl-btn" id="themeBtn" title="Appearance" aria-label="Toggle appearance"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
   </div>
-</header>
+</div>
 
 <main id="top">
   <section class="hero">
@@ -319,13 +345,7 @@
 
   <section id="library">
     <div class="wrap">
-      <div class="libhead reveal">
-        <div class="ey">Library</div>
-        <label class="field glass libsearch">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input id="libSearch" placeholder="Search games &amp; apps" aria-label="Search titles" autocomplete="off">
-        </label>
-      </div>
+      <!-- search unified into the Dynamic Island / ⌘K palette -->
       <div class="billboard reveal" id="billboard">
         <div class="bb-art"></div>
         <div class="bb-content">
@@ -497,7 +517,7 @@
     if (!hits.length) { res.innerHTML = '<p class="nomatch">No titles match “' + q + '”.</p>'; return; }
     hits.forEach(function (n) { res.appendChild(tile(n)); });
   }
-  document.getElementById("libSearch").addEventListener("input", function () { search(this.value); });
+  var _ls = document.getElementById("libSearch"); if (_ls) _ls.addEventListener("input", function () { search(this.value); });
   var bbPlay = document.getElementById("bbPlay"); if (bbPlay) bbPlay.addEventListener("click", function () { toast("Opening <b>Retro Bowl</b>…"); });
 
   document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); });
@@ -508,9 +528,19 @@
 
   var CMDS = [["Open Games library","Nav"],["Open Apps","Nav"],["Appearance: Light","Theme"],["Appearance: Dark","Theme"],["Accent: Teal","Accent"],["Disguise this tab","Privacy"],["Quick exit","Privacy"],["Clear all traces","Privacy"]];
   var scrim = document.getElementById("scrim"), ci = document.getElementById("cmdInput"), cl = document.getElementById("cmdList"), sel = 0;
-  function paint(q) { q = (q || "").toLowerCase(); var rows = CMDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) !== -1; }); sel = 0; cl.innerHTML = rows.map(function (c, i) { return '<div class="row' + (i === 0 ? " sel" : "") + '" data-cmd="' + c[0] + '"><span class="rk">' + c[0] + '</span><span class="rd">' + c[1] + '</span></div>'; }).join("") || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>'; }
+  function paint(q) {
+    q = (q || "").trim().toLowerCase();
+    var games = q ? pool.filter(function (n) { return n.toLowerCase().indexOf(q) > -1; }).slice(0, 6) : [];
+    var cmds = CMDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) > -1; });
+    var html = "";
+    games.forEach(function (n) { html += '<div class="row" data-game="' + n + '"><span class="rk">' + n + '</span><span class="rd">Game</span></div>'; });
+    cmds.forEach(function (c) { html += '<div class="row" data-cmd="' + c[0] + '"><span class="rk">' + c[0] + '</span><span class="rd">' + c[1] + '</span></div>'; });
+    cl.innerHTML = html || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>';
+    sel = 0; var f = cl.querySelector(".row[data-cmd],.row[data-game]"); if (f) f.classList.add("sel");
+  }
   function open() { scrim.classList.add("open"); ci.value = ""; paint(""); ci.focus(); }
   function close() { scrim.classList.remove("open"); }
+  function exec(r) { if (!r) return; if (r.dataset.game) { close(); toast("Opening <b>" + r.dataset.game + "</b>…"); } else if (r.dataset.cmd) { run(r.dataset.cmd); } }
   function run(name) {
     close();
     if (name === "Appearance: Light") setTheme("light");
@@ -523,19 +553,28 @@
   }
   document.getElementById("cmdBtn").addEventListener("click", open);
   ci.addEventListener("input", function () { paint(this.value); });
-  cl.addEventListener("click", function (e) { var r = e.target.closest(".row"); if (r && r.dataset.cmd) run(r.dataset.cmd); });
+  cl.addEventListener("click", function (e) { exec(e.target.closest(".row")); });
   scrim.addEventListener("click", function (e) { if (e.target === scrim) close(); });
+
+  // Dynamic Island: tap to morph open on touch; hover handles desktop; outside tap closes
+  var island = document.getElementById("island");
+  island.addEventListener("click", function (e) {
+    if (e.target.closest(".isl-link") || e.target.closest(".isl-btn")) return;
+    island.classList.toggle("open");
+  });
+  island.querySelectorAll(".isl-link").forEach(function (a) { a.addEventListener("click", function () { island.classList.remove("open"); }); });
+  document.addEventListener("click", function (e) { if (!island.contains(e.target)) island.classList.remove("open"); });
 
   function panic() { toast("Quick exit — would <b>replace()</b> the tab with your decoy · no history left", 2600); }
   var lastEsc = 0;
   document.addEventListener("keydown", function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); scrim.classList.contains("open") ? close() : open(); return; }
     if (scrim.classList.contains("open")) {
-      var rows = Array.prototype.slice.call(cl.querySelectorAll(".row[data-cmd]"));
+      var rows = Array.prototype.slice.call(cl.querySelectorAll(".row[data-cmd],.row[data-game]"));
       if (e.key === "Escape") close();
       else if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, rows.length - 1); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
       else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
-      else if (e.key === "Enter") { e.preventDefault(); if (rows[sel]) run(rows[sel].dataset.cmd); }
+      else if (e.key === "Enter") { e.preventDefault(); exec(rows[sel]); }
       return;
     }
     if (e.key === "Escape") { var n = Date.now(); if (n - lastEsc < 500) panic(); lastEsc = n; }
