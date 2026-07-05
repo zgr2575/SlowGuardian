@@ -160,8 +160,7 @@
   /* library views stretch wider than the standard column so wide monitors aren't half-empty */
   #view-games .wrap, #view-apps .wrap { max-width: 1780px; }
   /* sparse pages fill the viewport and center their content — no dead space, footer stays at the bottom */
-  #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
-  #view-home { padding: 84px 0 var(--sp-6); gap: var(--sp-6); }
+  #view-home, #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
   /* settings grid */
   .setgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-5); }
   .setcard { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); display: flex; flex-direction: column; gap: 18px; }
@@ -231,13 +230,10 @@
   .ntp-card .cf { width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0; }
   .ntp-card .ct { font-size: 12.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* ---------- Home (Google-style search + content that fills the page) ---------- */
+  /* ---------- Home (Google-style search) ---------- */
   .home { text-align: center; width: 100%; }
-  .home-hero { display: flex; flex-direction: column; align-items: center; padding: var(--sp-6) var(--sp-5) var(--sp-7); }
-  .home-inner { display: flex; flex-direction: column; align-items: center; width: 100%; }
-  .home-shelves { text-align: left; }
-  .home-shelves .rowhead { margin-top: var(--sp-2); }
-  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-5); }
+  .home-inner { display: flex; flex-direction: column; align-items: center; }
+  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
   .home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
   .home-logo .mark svg { width: 31px; height: 31px; }
   .home-word { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
@@ -452,26 +448,21 @@
 <main id="top">
   <div class="view active" id="view-home">
   <section class="home">
-    <div class="home-hero">
-      <div class="wrap home-inner">
-        <a class="home-logo" href="#" id="homeLogo">
-          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
-          <span class="home-word">Slow<b>Guardian</b></span>
-        </a>
-        <form class="omni glass" id="omni" onsubmit="return false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
-          <button class="btn" type="submit">Open</button>
-        </form>
-        <div class="quicklinks">
-          <button class="qbtn" data-view="games" type="button">Games</button>
-          <button class="qbtn" data-view="apps" type="button">Apps</button>
-          <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
-        </div>
+    <div class="wrap home-inner">
+      <a class="home-logo" href="#" id="homeLogo">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+        <span class="home-word">Slow<b>Guardian</b></span>
+      </a>
+      <form class="omni glass" id="omni" onsubmit="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
+        <button class="btn" type="submit">Open</button>
+      </form>
+      <div class="quicklinks">
+        <button class="qbtn" data-view="games" type="button">Games</button>
+        <button class="qbtn" data-view="apps" type="button">Apps</button>
+        <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
       </div>
-    </div>
-    <div class="wrap home-shelves">
-      <div class="rows reveal" id="home-rows"></div>
     </div>
   </section>
   </div><!-- /view-home -->
@@ -807,14 +798,6 @@
   }
   fillGrid(GAMES, "allgames", "allgames-count");
   fillGrid(APPS, "allapps", "allapps-count");
-  /* Home fills below the search with real content — popular picks from both catalogs. */
-  var gNames = GAMES.map(function (g) { return g[0]; });
-  var aNames = APPS.map(function (g) { return g[0]; });
-  renderRows({
-    "Jump back in": gNames.slice(0, 9),
-    "Popular games": gNames.slice(9, 18),
-    "Top apps": aNames.slice(0, 9)
-  }, document.getElementById("home-rows"));
   var allGamesSec = document.getElementById("allgames-sec");
   var pool = Object.keys(META);
   function search(q) {
