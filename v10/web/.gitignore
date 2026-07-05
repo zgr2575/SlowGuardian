@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+*.log
+
+# catalog icons are synced from ../../static at build (see scripts/sync-icons.mjs)
+public/assets/media/icons/

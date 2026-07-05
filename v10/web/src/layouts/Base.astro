@@ -1,0 +1,417 @@
+---
+/**
+ * Base.astro — shared document shell for every SlowGuardian V10 page.
+ *
+ * Provides: <head> (pre-paint theme/accent/perf + tab-cloak boot),
+ * the Dynamic Island nav, <main> slot, footer, command palette,
+ * toast, and the global client script (island morph, theme/accent
+ * switching, ⌘K palette, double-Esc quick exit, reveal-on-scroll).
+ *
+ * localStorage contract (shared with the settings/privacy pages):
+ *   sg:theme     "dark" | "light"                    (default: dark)
+ *   sg:accent    "blue" | "indigo" | "teal" | "rose" (blue = attribute removed)
+ *   sg:perf      "high" | "low"                      (low drops runtime blur)
+ *   sg:cloak     JSON {"title": string, "favicon": url} — tab disguise
+ *   sg:panicUrl  decoy URL for double-Esc quick exit  (default: Google Classroom)
+ *
+ * Extension point for other pages/agents:
+ *   window.SG = { toast, setTheme, setAccent, toggleCloak, panic,
+ *                 clearTraces, openPalette, closePalette, paletteSources }
+ *   Push a function (q) => [{ name, kind, href }] onto SG.paletteSources
+ *   to surface catalog results in the ⌘K palette.
+ */
+import "../styles/tokens.css";
+import "../styles/global.css";
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "SlowGuardian",
+  description = "A fast, private gateway for the school Chromebook. Open a site or launch a game — it loads in a blink, even on the slow machines.",
+} = Astro.props;
+
+/* Active nav state — normalize trailing slashes ("/apps/" → "/apps"). */
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const on = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+
+/* Default favicon: the shield mark as a data URI (no extra request). */
+const FAVICON =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z' fill='%230a84ff'/%3E%3C/svg%3E";
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content={description} />
+    <link rel="icon" id="favicon" href={FAVICON} />
+    <title>{title}</title>
+    <script is:inline>
+      /* PRE-PAINT boot — runs before first render so there is no theme
+         flash and the tab cloak applies before anyone can glance at it.
+         Keys: sg:theme / sg:accent / sg:perf / sg:cloak (see Base.astro). */
+      (function () {
+        var root = document.documentElement;
+        function get(k) {
+          try { return localStorage.getItem(k); } catch (e) { return null; }
+        }
+        /* remember the real title so the cloak can be turned off later */
+        root.dataset.sgTitle = document.title;
+
+        var theme = get("sg:theme");
+        root.dataset.theme = theme === "light" ? "light" : "dark"; /* dark-first */
+
+        var accent = get("sg:accent");
+        if (accent && accent !== "blue") root.dataset.accent = accent;
+
+        var perf = get("sg:perf");
+        if (!perf) {
+          /* auto-detect low-power Chromebooks: step blur down to solid glass */
+          var mem = navigator.deviceMemory, cores = navigator.hardwareConcurrency;
+          if ((mem && mem <= 2) || (cores && cores <= 2)) perf = "low";
+        }
+        if (perf === "low") root.dataset.perf = "low";
+
+        /* Tab Disguise — applied before the page paints. */
+        try {
+          var cloak = JSON.parse(get("sg:cloak") || "null");
+          if (cloak && (cloak.title || cloak.favicon)) {
+            if (cloak.title) document.title = cloak.title;
+            if (cloak.favicon) {
+              var link = document.querySelector('link[rel~="icon"]');
+              if (!link) {
+                link = document.createElement("link");
+                link.rel = "icon";
+                document.head.appendChild(link);
+              }
+              link.href = cloak.favicon;
+            }
+            root.dataset.cloaked = "1";
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="island" id="island" role="navigation" aria-label="Primary">
+      <a class="isl-brand" href="/">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg></span>
+        <span class="isl-word">SlowGuardian</span>
+      </a>
+      <div class="isl-ambient"><span class="live"></span> Online</div>
+      <div class="isl-panel">
+        <nav class="isl-links">
+          <a href="/" class:list={["isl-link", { on: on("/") }]} title="Games" aria-label="Games">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="20" height="10" rx="4"></rect><path d="M7 12h3M8.5 10.5v3M15.5 11.5h.01M17.5 13.5h.01"></path></svg>
+            <span class="lbl">Games</span>
+          </a>
+          <a href="/apps" class:list={["isl-link", { on: on("/apps") }]} title="Apps" aria-label="Apps">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.6"></rect><rect x="14" y="3" width="7" height="7" rx="1.6"></rect><rect x="3" y="14" width="7" height="7" rx="1.6"></rect><rect x="14" y="14" width="7" height="7" rx="1.6"></rect></svg>
+            <span class="lbl">Apps</span>
+          </a>
+          <a href="/go" class:list={["isl-link", { on: on("/go") }]} title="Proxy" aria-label="Proxy">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"></path></svg>
+            <span class="lbl">Proxy</span>
+          </a>
+          <a href="/privacy" class:list={["isl-link", { on: on("/privacy") }]} title="Privacy" aria-label="Privacy">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10" width="16" height="11" rx="2.4"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+            <span class="lbl">Privacy</span>
+          </a>
+        </nav>
+        <span class="isl-sep"></span>
+        <button class="isl-btn" id="cmdBtn" title="Search (⌘K)" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></button>
+        <button class="isl-btn" id="themeBtn" title="Appearance" aria-label="Toggle appearance"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg></button>
+      </div>
+    </div>
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p><b>SlowGuardian 10</b> — Liquid Glass, dark-first. Translucent material, specular edges, one accent. Real <span style="font-family:var(--mono)">backdrop-filter</span> on capable devices; solid-glass fallback keeps 2016–2019 Chromebooks smooth. Press <span style="font-family:var(--mono)">⌘K</span> to search · <span style="font-family:var(--mono)">Esc Esc</span> for quick exit.</p>
+      </div>
+    </footer>
+
+    <div class="scrim" id="scrim">
+      <div class="cmd glass" role="dialog" aria-label="Command palette">
+        <div class="top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          <input id="cmdInput" placeholder="Search or type a command" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="list" id="cmdList"></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      /* Shared shell behavior — the GLOBAL parts of the approved mockup's JS:
+         island open/close morph, theme + accent switching (persisted),
+         command palette (⌘K), toast, reveal-on-scroll, tab cloak toggle,
+         double-Esc quick exit, clear-traces. Runs on every page. */
+      (function () {
+        var root = document.documentElement;
+        var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        var DEFAULT_FAVICON =
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z' fill='%230a84ff'/%3E%3C/svg%3E";
+        var DEFAULT_CLOAK = {
+          title: "Home — Google Classroom",
+          favicon: "https://ssl.gstatic.com/classroom/favicon.png",
+        };
+
+        function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+        function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+        function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+        /* ---------- toast ---------- */
+        var toastTimer;
+        function toast(html: string, ms?: number) {
+          var t = document.getElementById("toast");
+          if (!t) return;
+          t.innerHTML = html;
+          t.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { t.classList.remove("show"); }, ms || 2200);
+        }
+
+        /* ---------- reveal on scroll ---------- */
+        if (!reduced && "IntersectionObserver" in window) {
+          var io = new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+            });
+          }, { threshold: 0.12 });
+          document.querySelectorAll(".reveal:not(.in)").forEach(function (el) { io.observe(el); });
+        } else {
+          document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+        }
+
+        /* ---------- theme + accent (persisted) ---------- */
+        function setTheme(t: string) {
+          root.dataset.theme = t;
+          lsSet("sg:theme", t);
+          document.querySelectorAll("#themeSeg button").forEach(function (b: any) {
+            b.classList.toggle("on", b.dataset.theme === t);
+          });
+        }
+        function setAccent(a: string) {
+          if (a === "blue") { root.removeAttribute("data-accent"); lsDel("sg:accent"); }
+          else { root.dataset.accent = a; lsSet("sg:accent", a); }
+          document.querySelectorAll("#swatches .sw").forEach(function (s: any) {
+            s.classList.toggle("on", s.dataset.a === a);
+          });
+        }
+        var themeBtn = document.getElementById("themeBtn");
+        if (themeBtn) themeBtn.addEventListener("click", function () {
+          setTheme(root.dataset.theme === "light" ? "dark" : "light");
+        });
+        /* optional page affordances (settings/appearance section) — wired if present */
+        var seg = document.getElementById("themeSeg");
+        if (seg) {
+          document.querySelectorAll("#themeSeg button").forEach(function (b: any) {
+            b.classList.toggle("on", b.dataset.theme === (root.dataset.theme || "dark"));
+          });
+          seg.addEventListener("click", function (e: any) {
+            var b = e.target.closest("[data-theme]");
+            if (b) setTheme(b.dataset.theme);
+          });
+        }
+        var swatches = document.getElementById("swatches");
+        if (swatches) {
+          var cur = root.dataset.accent || "blue";
+          swatches.querySelectorAll(".sw").forEach(function (s: any) {
+            s.classList.toggle("on", s.dataset.a === cur);
+          });
+          swatches.addEventListener("click", function (e: any) {
+            var b = e.target.closest("[data-a]");
+            if (b) setAccent(b.dataset.a);
+          });
+        }
+
+        /* ---------- tab cloak ---------- */
+        function setFavicon(href: string) {
+          var link: any = document.querySelector('link[rel~="icon"]');
+          if (!link) {
+            link = document.createElement("link");
+            link.rel = "icon";
+            document.head.appendChild(link);
+          }
+          link.href = href;
+        }
+        function toggleCloak() {
+          if (lsGet("sg:cloak")) {
+            lsDel("sg:cloak");
+            root.removeAttribute("data-cloaked");
+            document.title = root.dataset.sgTitle || "SlowGuardian";
+            setFavicon(DEFAULT_FAVICON);
+            toast("Disguise off");
+          } else {
+            lsSet("sg:cloak", JSON.stringify(DEFAULT_CLOAK));
+            root.dataset.cloaked = "1";
+            document.title = DEFAULT_CLOAK.title;
+            setFavicon(DEFAULT_CLOAK.favicon);
+            toast("Tab disguised as <b>Google Classroom</b>");
+          }
+        }
+        var cloakToggle = document.getElementById("cloakToggle");
+        if (cloakToggle) cloakToggle.addEventListener("click", toggleCloak);
+
+        /* ---------- quick exit — replace(), no history entry ---------- */
+        function panic() {
+          var url = lsGet("sg:panicUrl") || "https://classroom.google.com/";
+          try { window.location.replace(url); } catch (e) { window.location.href = url; }
+        }
+
+        /* ---------- clear traces ---------- */
+        function clearTraces() {
+          try {
+            Object.keys(localStorage).forEach(function (k) {
+              if (k.indexOf("sg:") === 0) localStorage.removeItem(k);
+            });
+          } catch (e) {}
+          try { sessionStorage.clear(); } catch (e) {}
+          try {
+            if (window.caches && caches.keys) {
+              caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); });
+            }
+          } catch (e) {}
+          toast("Local traces cleared");
+        }
+
+        /* ---------- command palette (⌘K) ---------- */
+        var SG: any = ((window as any).SG = (window as any).SG || {});
+        SG.paletteSources = SG.paletteSources || []; /* push (q) => [{name, kind, href}] */
+
+        var CMDS = [
+          ["Open Games library", "Nav"],
+          ["Open Apps", "Nav"],
+          ["Open Proxy", "Nav"],
+          ["Open Privacy", "Nav"],
+          ["Appearance: Dark", "Theme"],
+          ["Appearance: Light", "Theme"],
+          ["Accent: Blue", "Accent"],
+          ["Accent: Indigo", "Accent"],
+          ["Accent: Teal", "Accent"],
+          ["Accent: Rose", "Accent"],
+          ["Disguise this tab", "Privacy"],
+          ["Quick exit", "Privacy"],
+          ["Clear all traces", "Privacy"],
+        ];
+        var NAV: any = {
+          "Open Games library": "/",
+          "Open Apps": "/apps",
+          "Open Proxy": "/go",
+          "Open Privacy": "/privacy",
+        };
+        var scrim = document.getElementById("scrim")!;
+        var ci = document.getElementById("cmdInput") as HTMLInputElement;
+        var cl = document.getElementById("cmdList")!;
+        var sel = 0;
+        function esc(s: any) {
+          return String(s).replace(/[&<>"]/g, function (c) {
+            return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" } as any)[c];
+          });
+        }
+        function paint(q: string) {
+          q = (q || "").trim().toLowerCase();
+          var html = "";
+          if (q) {
+            SG.paletteSources.forEach(function (src: any) {
+              var hits = [];
+              try { hits = src(q) || []; } catch (e) {}
+              hits.slice(0, 6).forEach(function (it: any) {
+                html += '<div class="row" data-href="' + esc(it.href) + '"><span class="rk">' + esc(it.name) + '</span><span class="rd">' + esc(it.kind || "Game") + "</span></div>";
+              });
+            });
+          }
+          CMDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) > -1; }).forEach(function (c) {
+            html += '<div class="row" data-cmd="' + esc(c[0]) + '"><span class="rk">' + esc(c[0]) + '</span><span class="rd">' + esc(c[1]) + "</span></div>";
+          });
+          cl.innerHTML = html || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>';
+          sel = 0;
+          var f = cl.querySelector(".row[data-cmd],.row[data-href]");
+          if (f) f.classList.add("sel");
+        }
+        function openPalette() { scrim.classList.add("open"); ci.value = ""; paint(""); ci.focus(); }
+        function closePalette() { scrim.classList.remove("open"); }
+        function exec(r: any) {
+          if (!r) return;
+          if (r.dataset.href) { closePalette(); window.location.href = r.dataset.href; }
+          else if (r.dataset.cmd) run(r.dataset.cmd);
+        }
+        function run(name: string) {
+          closePalette();
+          if (name === "Appearance: Light") setTheme("light");
+          else if (name === "Appearance: Dark") setTheme("dark");
+          else if (name.indexOf("Accent: ") === 0) setAccent(name.slice(8).toLowerCase());
+          else if (name === "Disguise this tab") toggleCloak();
+          else if (name === "Quick exit") panic();
+          else if (name === "Clear all traces") clearTraces();
+          else if (NAV[name]) window.location.href = NAV[name];
+        }
+        var cmdBtn = document.getElementById("cmdBtn");
+        if (cmdBtn) cmdBtn.addEventListener("click", openPalette);
+        ci.addEventListener("input", function () { paint(ci.value); });
+        cl.addEventListener("click", function (e: any) { exec(e.target.closest(".row")); });
+        scrim.addEventListener("click", function (e) { if (e.target === scrim) closePalette(); });
+
+        /* ---------- Dynamic Island: tap to morph open on touch; hover
+           handles desktop; outside tap closes ---------- */
+        var island = document.getElementById("island")!;
+        island.addEventListener("click", function (e: any) {
+          if (e.target.closest(".isl-link") || e.target.closest(".isl-btn")) return;
+          island.classList.toggle("open");
+        });
+        island.querySelectorAll(".isl-link").forEach(function (a) {
+          a.addEventListener("click", function () { island.classList.remove("open"); });
+        });
+        document.addEventListener("click", function (e: any) {
+          if (!island.contains(e.target)) island.classList.remove("open");
+        });
+
+        /* ---------- global keys: ⌘K, palette nav, double-Esc panic ---------- */
+        var lastEsc = 0;
+        document.addEventListener("keydown", function (e) {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            scrim.classList.contains("open") ? closePalette() : openPalette();
+            return;
+          }
+          if (scrim.classList.contains("open")) {
+            var rows = Array.prototype.slice.call(cl.querySelectorAll(".row[data-cmd],.row[data-href]"));
+            if (e.key === "Escape") closePalette();
+            else if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, rows.length - 1); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+            else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+            else if (e.key === "Enter") { e.preventDefault(); exec(rows[sel]); }
+            return;
+          }
+          if (e.key === "Escape") {
+            var n = Date.now();
+            if (n - lastEsc < 500) panic();
+            lastEsc = n;
+          }
+        });
+
+        /* ---------- expose the shared API ---------- */
+        SG.toast = toast;
+        SG.setTheme = setTheme;
+        SG.setAccent = setAccent;
+        SG.toggleCloak = toggleCloak;
+        SG.panic = panic;
+        SG.clearTraces = clearTraces;
+        SG.openPalette = openPalette;
+        SG.closePalette = closePalette;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,362 @@
+---
+/**
+ * Library.astro — the Netflix-style catalog (mockup #library section).
+ *
+ * Build-time: getCollection() → a featured Billboard + category SHELVES (a
+ * horizontal .strip of Tile cards per group). Reuses the mockup's exact classes
+ * (.billboard / .rows / .shelf / .rowhead / .strip / .tile / .results / .nomatch).
+ *
+ * Runtime: the inlined catalog JSON drives (a) the section search field, which
+ * swaps the shelves for a wrapping .results grid, and (b) the ⌘K palette's game
+ * results (see the client <script> at the bottom).
+ *
+ * Used for GAMES (default) and, via <Library collection="apps" />, for APPS.
+ */
+import { getCollection } from "astro:content";
+import Billboard from "./Billboard.astro";
+import Tile from "./Tile.astro";
+import type { CatalogItem, CatalogKind } from "../lib/catalog";
+
+interface Props {
+  collection?: CatalogKind;
+}
+const { collection = "games" } = Astro.props;
+
+const raw = await getCollection(collection);
+const items: CatalogItem[] = raw.map((e) => ({ id: e.id, ...e.data }));
+
+const isUtility = (it: CatalogItem) => it.custom === true || /^\s*!/.test(it.name);
+const playable = items.filter((it) => !isUtility(it));
+
+const inCat = (cat: string) => items.filter((it) => it.categories.includes(cat) && !isUtility(it));
+const azSort = (a: CatalogItem, b: CatalogItem) =>
+  a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+
+type Shelf = { key: string; label: string; cat?: string; items: CatalogItem[] };
+
+const gameShelves: Shelf[] = [
+  { key: "popular", label: "Popular Now", items: playable.slice(0, 16) },
+  { key: "2p", label: "2-Player", cat: "2p", items: inCat("2p") },
+  { key: "local", label: "Runs Offline", cat: "local", items: inCat("local") },
+  { key: "emu", label: "Emulators & Retro", cat: "emu", items: inCat("emu") },
+  { key: "android", label: "Android · now.gg", cat: "android", items: inCat("android") },
+  { key: "sports", label: "Sports", cat: "sports", items: inCat("sports") },
+  { key: "flash", label: "Flash Classics", cat: "flash", items: inCat("flash") },
+  { key: "all", label: "All Games", items: [...playable].sort(azSort) },
+];
+
+const appShelves: Shelf[] = [
+  { key: "popular", label: "Popular", items: playable.slice(0, 16) },
+  { key: "stream", label: "Streaming", cat: "stream", items: inCat("stream") },
+  { key: "media", label: "Media", cat: "media", items: inCat("media") },
+  { key: "social", label: "Social", cat: "social", items: inCat("social") },
+  { key: "message", label: "Messaging", cat: "message", items: inCat("message") },
+  { key: "game", label: "Games", cat: "game", items: inCat("game") },
+  { key: "ai", label: "AI", cat: "ai", items: inCat("ai") },
+  { key: "android", label: "Android · now.gg", cat: "android", items: inCat("android") },
+  { key: "tool", label: "Tools", cat: "tool", items: inCat("tool") },
+  { key: "mail", label: "Mail", cat: "mail", items: inCat("mail") },
+  { key: "all", label: "All Apps", items: [...playable].sort(azSort) },
+];
+
+const shelves = (collection === "apps" ? appShelves : gameShelves).filter((s) => s.items.length);
+
+const featured =
+  (collection === "apps"
+    ? items.find((it) => it.name === "Movie Web")
+    : items.find((it) => it.name === "Retro Bowl")) ?? playable[0];
+
+const eyebrow = collection === "apps" ? "Apps" : "Games";
+const heading = collection === "apps" ? "Everything, unblocked." : "Your whole library.";
+const noun = collection === "apps" ? "apps" : "games";
+
+// Inline the catalog for the client. Escape "<" so a name can never break out of
+// the <script> tag; the < escape stays valid JSON.
+const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
+---
+
+<section id="library" data-kind={collection}>
+  <div class="wrap">
+    <div class="libhead">
+      <div class="sechead" style="margin-bottom:0;">
+        <div class="ey">{eyebrow}</div>
+        <h2>{heading}</h2>
+      </div>
+      <form class="field libsearch glass" role="search" onsubmit="return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+        </svg>
+        <input
+          id="librarySearch"
+          type="search"
+          placeholder={`Search ${noun}…`}
+          autocomplete="off"
+          spellcheck="false"
+          aria-label={`Search ${noun}`}
+        />
+      </form>
+      <span class="count"><b>{items.length}</b> {noun}</span>
+    </div>
+
+    {featured && <Billboard item={featured} kind={collection} />}
+
+    <div class="rows reveal" id="rows">
+      {
+        shelves.map((shelf) => (
+          <div class="shelf" data-shelf={shelf.key}>
+            <div class="rowhead">
+              <h3>{shelf.label}</h3>
+              {shelf.cat && (
+                <span class="more" data-cat={shelf.cat} role="button" tabindex="0">
+                  Browse all ›
+                </span>
+              )}
+            </div>
+            <div class="strip">
+              {shelf.items.map((item) => (
+                <Tile item={item} kind={collection} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="results" id="results" aria-live="polite"></div>
+  </div>
+
+  <script type="application/json" id="catalog-data" set:html={catalogJSON}></script>
+</section>
+
+<style is:global>
+  /* Real-image treatment layered onto the mockup's gradient tiles/billboard.
+     Kept global so client-injected result tiles (which lack Astro's scoped
+     hash) pick it up too. */
+  .tile .art {
+    position: relative;
+    overflow: hidden;
+    background: var(--glass-2);
+  }
+  .tile .art .tile-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .results .tile .art {
+    aspect-ratio: 16 / 9;
+  }
+  .billboard {
+    position: relative;
+  }
+  .billboard .bb-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: saturate(112%);
+  }
+  /* library header row */
+  .libhead {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-5);
+  }
+  .libhead .sechead {
+    flex: 1 1 auto;
+  }
+</style>
+
+<script>
+  import {
+    search,
+    tileHTML,
+    rowHTML,
+    entryHref,
+    isBlank,
+    esc,
+    type CatalogItem,
+    type CatalogKind,
+  } from "../lib/catalog";
+
+  const section = document.getElementById("library");
+  if (section) {
+    const KIND: CatalogKind = section.dataset.kind === "apps" ? "apps" : "games";
+    const dataEl = document.getElementById("catalog-data");
+    const DATA: CatalogItem[] = dataEl ? JSON.parse(dataEl.textContent || "[]") : [];
+    const byId = new Map(DATA.map((it) => [it.id, it]));
+
+    const rows = document.getElementById("rows");
+    const results = document.getElementById("results");
+    const billboard = document.getElementById("billboard");
+    const input = document.getElementById("librarySearch") as HTMLInputElement | null;
+
+    let toastTimer: ReturnType<typeof setTimeout> | undefined;
+    function toast(html: string) {
+      const t = document.getElementById("toast");
+      if (t) {
+        t.innerHTML = html;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+      }
+      document.dispatchEvent(new CustomEvent("sg:toast", { detail: { html } }));
+    }
+
+    function showShelves() {
+      if (rows) rows.style.display = "";
+      if (billboard) billboard.style.display = "";
+      if (results) {
+        results.style.display = "none";
+        results.innerHTML = "";
+      }
+    }
+    function showResults(list: CatalogItem[], emptyMsg: string) {
+      if (rows) rows.style.display = "none";
+      if (billboard) billboard.style.display = "none";
+      if (!results) return;
+      results.style.display = "grid";
+      results.innerHTML = list.length
+        ? list.map((it) => tileHTML(it, KIND)).join("")
+        : `<p class="nomatch">${emptyMsg}</p>`;
+    }
+    function runSearch(q: string) {
+      const s = (q || "").trim();
+      if (!s) {
+        showShelves();
+        return;
+      }
+      showResults(search(DATA, s), `No titles match “${esc(s)}”.`);
+    }
+
+    if (input) input.addEventListener("input", () => runSearch(input.value));
+
+    // Let an external driver (the Dynamic Island / omni search) steer the grid.
+    document.addEventListener("sg:search", (e) => {
+      const q = (e as CustomEvent).detail?.q ?? "";
+      if (input) input.value = q;
+      runSearch(q);
+    });
+
+    // "Browse all ›" filters the results grid to a single category.
+    if (rows) {
+      const browse = (t: EventTarget | null) => {
+        const m = (t as Element | null)?.closest?.(".more[data-cat]") as HTMLElement | null;
+        if (!m) return false;
+        if (input) input.value = "";
+        showResults(
+          DATA.filter((it) => it.categories.includes(m.dataset.cat!)),
+          "Nothing here yet.",
+        );
+        return true;
+      };
+      rows.addEventListener("click", (e) => browse(e.target));
+      rows.addEventListener("keydown", (e) => {
+        if ((e as KeyboardEvent).key === "Enter" && browse(e.target)) e.preventDefault();
+      });
+    }
+
+    function openItem(it: CatalogItem | undefined) {
+      if (!it) return;
+      if (!it.url) {
+        toast(esc(it.note || it.name));
+        return;
+      }
+      if (isBlank(it)) {
+        window.open(it.url, "_blank", "noopener");
+        return;
+      }
+      const href = entryHref(it);
+      if (href) window.location.href = href;
+    }
+
+    // Real anchors navigate on their own; only trap the no-url ("disabled") tiles.
+    section.addEventListener("click", (e) => {
+      const a = (e.target as Element).closest("a.tile") as HTMLElement | null;
+      if (!a) return;
+      if (a.hasAttribute("data-disabled")) {
+        e.preventDefault();
+        toast(esc(a.getAttribute("data-note") || a.getAttribute("aria-label") || "Not available"));
+      }
+    });
+
+    // Billboard Play falls back to a toast when the featured entry has no url.
+    const bbPlay = document.getElementById("bbPlay");
+    if (bbPlay && bbPlay.tagName === "BUTTON") {
+      bbPlay.addEventListener("click", () =>
+        toast(esc((bbPlay as HTMLElement).dataset.note || "Not available")),
+      );
+    }
+
+    /* ---------- ⌘K command palette: game/app results ---------- *
+     * Expose the catalog so a Layout-owned palette can render results, and
+     * self-drive the palette when it exists and hasn't been claimed. A Layout
+     * that renders its own command rows should set data-managed="1" on #cmdList
+     * and call SGCatalog.paletteRows(q) itself. */
+    const cmdInput = document.getElementById("cmdInput") as HTMLInputElement | null;
+    const cmdList = document.getElementById("cmdList");
+    const paletteRows = (q: string, limit = 6) =>
+      search(DATA, q)
+        .slice(0, limit)
+        .map((it) => rowHTML(it, KIND))
+        .join("");
+
+    const w = window as unknown as { SGCatalog?: Record<string, unknown> };
+    w.SGCatalog = Object.assign(w.SGCatalog || {}, {
+      kind: KIND,
+      items: DATA,
+      [KIND]: DATA,
+      search: (q: string) => search(DATA, q),
+      paletteRows,
+      byId: (id: string) => byId.get(id),
+      open: openItem,
+    });
+
+    if (cmdInput && cmdList && cmdList.dataset.managed !== "1" && cmdList.dataset.sgWired !== "1") {
+      cmdList.dataset.sgWired = "1";
+      let sel = 0;
+      const rowEls = () =>
+        Array.prototype.slice.call(cmdList.querySelectorAll(".row[data-id]")) as HTMLElement[];
+      const paint = () => {
+        const html = paletteRows(cmdInput.value);
+        cmdList.innerHTML =
+          html || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>';
+        sel = 0;
+        const first = cmdList.querySelector(".row[data-id]");
+        if (first) first.classList.add("sel");
+      };
+      cmdInput.addEventListener("input", paint);
+      cmdInput.addEventListener("focus", paint);
+      cmdList.addEventListener("click", (e) => {
+        const r = (e.target as Element).closest(".row[data-id]") as HTMLElement | null;
+        if (r) openItem(byId.get(r.dataset.id!));
+      });
+      cmdInput.addEventListener("keydown", (e) => {
+        const els = rowEls();
+        if (!els.length) return;
+        const key = (e as KeyboardEvent).key;
+        if (key === "ArrowDown") {
+          e.preventDefault();
+          sel = Math.min(sel + 1, els.length - 1);
+        } else if (key === "ArrowUp") {
+          e.preventDefault();
+          sel = Math.max(sel - 1, 0);
+        } else if (key === "Enter") {
+          e.preventDefault();
+          openItem(byId.get(els[sel].dataset.id!));
+          return;
+        } else {
+          return;
+        }
+        els.forEach((r, i) => r.classList.toggle("sel", i === sel));
+      });
+      paint();
+    }
+  }
+</script>

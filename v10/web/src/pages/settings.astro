@@ -1,0 +1,127 @@
+---
+/**
+ * settings.astro — Appearance & performance.
+ *
+ * Theme (dark/light) and accent are wired by the Base shell script via the
+ * shared ids #themeSeg and #swatches (persists sg:theme / sg:accent and flips
+ * data-theme / data-accent on <html> live). This page adds Performance mode
+ * (sg:perf -> data-perf), which the Base shell does not own. Tab disguise,
+ * quick-exit, and about:blank cloak live on /privacy.
+ *
+ * Reuses the approved mockup's classes: .appear .segmented .swatches .sechead.
+ */
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Settings — SlowGuardian" description="Make SlowGuardian yours — theme, accent, and speed on slow machines. Everything applies live, no reload.">
+  <section class="set-top">
+    <div class="wrap">
+      <p class="kicker reveal in">Settings</p>
+      <h1 class="reveal in">Make it yours.</h1>
+      <p class="lede reveal in">Dark and light, a considered accent, and a speed dial for old Chromebooks. One attribute on the root retints the whole app — no reload, no download.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Appearance</div>
+        <h2>Theme &amp; accent</h2>
+        <p>Dark stays the hero. Pick a look and an accent — it applies the instant you click and is remembered on this device.</p>
+      </div>
+
+      <div class="appear glass reveal">
+        <div class="grp">
+          <span class="lbl">Appearance</span>
+          <div class="segmented" id="themeSeg" style="background:var(--glass);">
+            <button data-theme="dark" class="on">Dark</button>
+            <button data-theme="light">Light</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Accent</span>
+          <div class="swatches" id="swatches">
+            <button class="sw on" data-a="blue" aria-label="Blue"></button>
+            <button class="sw" data-a="indigo" aria-label="Indigo"></button>
+            <button class="sw" data-a="teal" aria-label="Teal"></button>
+            <button class="sw" data-a="rose" aria-label="Rose"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sechead reveal" style="margin-top: var(--sp-7);">
+        <div class="ey">Performance</div>
+        <h2>Speed on slow machines.</h2>
+        <p>The glass blur is the expensive part. On older Chromebooks it steps down to solid glass automatically — or pin it yourself.</p>
+      </div>
+
+      <div class="appear glass reveal">
+        <div class="grp">
+          <span class="lbl">Blur &amp; effects</span>
+          <div class="segmented" id="perfSeg" style="background:var(--glass);">
+            <button data-perf="auto">Auto</button>
+            <button data-perf="high">Full glass</button>
+            <button data-perf="low">Lite</button>
+          </div>
+        </div>
+        <span class="count" id="perfNote"></span>
+      </div>
+
+      <a class="set-link reveal" href="/privacy">Privacy &amp; disguise — tab cloak, quick exit, clear traces →</a>
+    </div>
+  </section>
+
+  <style>
+    .set-top { padding: 100px 0 var(--sp-3); text-align: center; }
+    .set-top h1 { font-size: clamp(2rem, 4.4vw, 3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
+      background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
+    .set-top .lede { margin: 20px auto 0; max-width: 46ch; font-size: clamp(1.02rem, 1.8vw, 1.2rem); color: var(--ink-2); line-height: 1.5; }
+    .set-link { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--sp-7); color: var(--accent-2); font-size: 14px; font-weight: 600; }
+    .set-link:hover { text-decoration: underline; }
+  </style>
+
+  <script>
+    /* Performance mode. Theme/accent are handled by the Base shell (it wires
+       #themeSeg and #swatches on every page). */
+    (function () {
+      const root = document.documentElement;
+      const w = window as any;
+      function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+      function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function lsDel(k: string) { try { localStorage.removeItem(k); } catch (e) {} }
+      function toast(m: string) { if (w.SG && w.SG.toast) w.SG.toast(m); }
+
+      function autoDetect(): "low" | "high" {
+        const mem = (navigator as any).deviceMemory;
+        const cores = navigator.hardwareConcurrency;
+        return ((mem && mem <= 2) || (cores && cores <= 2)) ? "low" : "high";
+      }
+      function currentPerf(): "auto" | "high" | "low" {
+        const p = lsGet("sg:perf");
+        return p === "low" || p === "high" ? p : "auto";
+      }
+      const perfSeg = document.getElementById("perfSeg");
+      const perfNote = document.getElementById("perfNote");
+      function reflectPerf(mode: string) {
+        if (perfSeg) perfSeg.querySelectorAll("[data-perf]").forEach((b: any) => b.classList.toggle("on", b.getAttribute("data-perf") === mode));
+        if (perfNote) {
+          const eff = autoDetect() === "low" ? "Lite" : "Full glass";
+          perfNote.innerHTML = mode === "auto"
+            ? "Auto — this device: <b>" + eff + "</b>"
+            : mode === "low" ? "<b>Lite</b> — solid glass, no runtime blur" : "<b>Full glass</b> — live blur everywhere";
+        }
+      }
+      function applyPerf(mode: string) {
+        if (mode === "low") { lsSet("sg:perf", "low"); root.dataset.perf = "low"; }
+        else if (mode === "high") { lsSet("sg:perf", "high"); root.removeAttribute("data-perf"); }
+        else { lsDel("sg:perf"); if (autoDetect() === "low") root.dataset.perf = "low"; else root.removeAttribute("data-perf"); }
+        reflectPerf(mode);
+        toast(mode === "auto" ? "Performance: Auto" : mode === "low" ? "Performance: Lite" : "Performance: Full glass");
+      }
+      if (perfSeg) {
+        reflectPerf(currentPerf());
+        perfSeg.addEventListener("click", (e: any) => { const b = e.target.closest("[data-perf]"); if (b) applyPerf(b.getAttribute("data-perf")); });
+      }
+    })();
+  </script>
+</Base>

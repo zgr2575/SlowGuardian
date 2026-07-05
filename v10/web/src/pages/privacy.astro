@@ -1,0 +1,410 @@
+---
+/**
+ * privacy.astro — Privacy & disguise (the Dynamic Island "Privacy" destination).
+ *
+ * Ports the mockup's honest privacy narrative and makes it real:
+ *   - Tab Disguise configurator with a LIVE preview (presets + custom title /
+ *     favicon) → writes sg:cloak (JSON {title, favicon}); the Base pre-paint
+ *     boot applies it before the page renders on every SlowGuardian tab.
+ *   - Quick Exit: decoy URL (sg:panicUrl) + rebindable single key (sg:panicKey),
+ *     honest that it uses location.replace (no history) — double-Esc still works.
+ *   - OPT-IN about:blank cloak, gesture-triggered, with a straight-talk note.
+ *   - Clear local traces (delegates to the Base shell's SG.clearTraces).
+ *
+ * Reuses mockup classes: .sechead .fgrid .feature .callout .field .controls
+ * .segmented .btn. localStorage keys match the Base.astro contract.
+ */
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Privacy — SlowGuardian" description="Quiet on a shared screen. Tab disguise, one-key quick exit, and an honest account of what this does — and what no website can.">
+  <section id="privacy" class="pri-top">
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Privacy</div>
+        <h2>Quiet on a shared screen.</h2>
+        <p>Designed for the real, solvable problem — a glance over your shoulder, someone scrolling your history. Honest about what it does, and what it doesn't.</p>
+      </div>
+
+      <div class="fgrid reveal">
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2.5"></rect><path d="M3 8h18"></path></svg></div>
+          <h3>Tab Disguise</h3>
+          <p>Make the tab look like something ordinary. Applied before the page paints, and re-applied if a site tries to change it back.</p>
+          <div class="tabprev"><span class="fav"></span><span class="tt">Home — Google Classroom</span></div>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"></path><path d="M12 2v10"></path></svg></div>
+          <h3>Quick Exit</h3>
+          <p>One key swaps to a normal-looking site and leaves nothing in the back button — it replaces the page instead of navigating.</p>
+          <span class="note">Default · Google Classroom · rebindable</span>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <h3>Clean by Default</h3>
+          <p>No trackers, no analytics, no referrers leaked. A one-tap “clear traces” wipes the history, cache, and local data this app created.</p>
+          <span class="note">Encrypted local settings · tight cookies</span>
+        </div>
+      </div>
+
+      <div class="callout glass reveal">
+        <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+        <p><b>Straight talk.</b> These features defend against people looking at your screen and casual history checks. They don't defeat network filtering or device monitoring — no website can — and SlowGuardian won't pretend otherwise.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Tab Disguise configurator ---------- -->
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Tab Disguise</div>
+        <h2>Look like schoolwork.</h2>
+        <p>Pick a preset or set your own title and favicon. The preview is exactly what your tab will read — saved to this browser and applied before the page paints.</p>
+      </div>
+
+      <div class="pnl glass reveal">
+        <div class="cloak-prev" id="cloakPrev">
+          <span class="cp-fav" id="cpFav"></span>
+          <span class="cp-title" id="cpTitle">SlowGuardian</span>
+        </div>
+
+        <div class="segmented pri-presets" id="cloakPresets" style="background:var(--glass);">
+          <button data-preset="classroom" type="button">Classroom</button>
+          <button data-preset="docs" type="button">Docs</button>
+          <button data-preset="drive" type="button">Drive</button>
+          <button data-preset="clever" type="button">Clever</button>
+          <button data-preset="off" type="button">Off</button>
+        </div>
+
+        <div class="controls" style="margin-top:16px;">
+          <label class="field glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M7 7v13M17 7v13M9 4h6"></path></svg>
+            <input id="cloakTitle" type="text" placeholder="Custom tab title" spellcheck="false" />
+          </label>
+          <label class="field glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+            <input id="cloakFav" type="text" placeholder="Favicon URL (optional)" spellcheck="false" />
+          </label>
+        </div>
+
+        <div class="row-actions">
+          <button class="btn sm" id="cloakApply" type="button">Apply disguise</button>
+          <button class="btn sm glassbtn" id="cloakOff" type="button">Turn off</button>
+        </div>
+        <p class="sg-note">Saved to this browser only. Applied before the page paints on every SlowGuardian tab, and re-applied if a page changes it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Quick Exit ---------- -->
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Quick Exit</div>
+        <h2>One key out.</h2>
+        <p>Set the decoy site and the panic key. It <b>replaces</b> the current tab — nothing is left in the back button. Double-tap <span style="font-family:var(--mono)">Esc</span> always works too.</p>
+      </div>
+
+      <div class="pnl glass reveal">
+        <div class="controls">
+          <label class="field glass" style="flex:1 1 320px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+            <input id="panicUrl" type="text" inputmode="url" placeholder="Decoy URL — https://classroom.google.com/" spellcheck="false" />
+          </label>
+        </div>
+        <div class="row-actions" style="align-items:center;">
+          <span class="ex-lbl">Panic key</span>
+          <button class="btn sm glassbtn" id="keyBtn" type="button">Double-Esc</button>
+          <button class="btn sm glassbtn" id="keyReset" type="button">Reset</button>
+          <span class="count" id="keyNote">Double-tap Esc to exit</span>
+        </div>
+        <div class="row-actions">
+          <button class="btn sm glassbtn" id="panicTest" type="button">Test quick exit</button>
+        </div>
+        <p class="sg-note">Uses <span style="font-family:var(--mono)">location.replace</span> to the decoy, so the page you left never shows up in Back or history.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- about:blank cloak (opt-in) ---------- -->
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">about:blank cloak</div>
+        <h2>Hide the address, honestly.</h2>
+        <p>Opt-in. Loads SlowGuardian inside a blank tab, so the address bar reads <span style="font-family:var(--mono)">about:blank</span> and the title stays generic. It needs a click to open — browsers block it otherwise.</p>
+      </div>
+
+      <div class="pnl glass reveal">
+        <label class="toggle-row" for="abEnable">
+          <input type="checkbox" id="abEnable" />
+          <span>Enable about:blank launching</span>
+        </label>
+        <div class="row-actions">
+          <button class="btn sm" id="abLaunch" type="button" disabled>Open in about:blank</button>
+        </div>
+        <p class="sg-note"><b>Straight talk.</b> Some managed Chromebooks disable about:blank embedding and a few sites break inside it. It hides the URL from a shoulder-glance — it does not bypass network filtering or device monitoring. It uses the tab title and favicon from your disguise above.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Clear traces ---------- -->
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Clean up</div>
+        <h2>Clear the traces you made.</h2>
+        <p>Wipes the SlowGuardian settings, session data, and proxy caches this app created on this device. It can't touch records kept by the network or the device itself.</p>
+      </div>
+      <div class="pnl glass reveal">
+        <div class="row-actions">
+          <button class="btn sm glassbtn" id="clearTraces" type="button">Clear local traces</button>
+        </div>
+        <a class="pri-link" href="/settings">Appearance &amp; performance — theme, accent, speed →</a>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .pri-top { padding-top: 96px; }
+    .pnl { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); }
+    .pnl .field.glass { flex: 1 1 240px; }
+    .row-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .ex-lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+    .sg-note { margin-top: 14px; color: var(--ink-3); font-size: 12.5px; line-height: 1.55; }
+    .sg-note b { color: var(--ink-2); font-weight: 600; }
+    .pri-presets { flex-wrap: wrap; }
+
+    /* live disguise preview — a browser-tab chip */
+    .cloak-prev { display: inline-flex; align-items: center; gap: 9px; max-width: 100%; margin-bottom: 18px;
+      background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 10px 10px 4px 4px; padding: 9px 14px; box-shadow: inset 0 1px 0 var(--hi); }
+    .cloak-prev .cp-fav { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; color: var(--ink-3); }
+    .cloak-prev .cp-fav img { width: 16px; height: 16px; object-fit: cover; border-radius: 3px; display: block; }
+    .cloak-prev .cp-fav svg { width: 15px; height: 15px; }
+    .cloak-prev .cp-title { font-size: 13px; color: var(--ink); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 44ch; }
+
+    .toggle-row { display: inline-flex; align-items: center; gap: 12px; font-size: 14.5px; color: var(--ink); cursor: pointer; }
+    .toggle-row input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+
+    .pri-link { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--sp-5); color: var(--accent-2); font-size: 14px; font-weight: 600; }
+    .pri-link:hover { text-decoration: underline; }
+
+    #keyBtn.arming { color: var(--accent-2); border-color: var(--glass-brd-2); }
+  </style>
+
+  <script>
+    /* Privacy controls: tab disguise (sg:cloak), quick exit (sg:panicUrl /
+       sg:panicKey), opt-in about:blank cloak (sg:aboutblank), clear traces. */
+    (function () {
+      const root = document.documentElement;
+      const w = window as any;
+      function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+      function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function lsDel(k: string) { try { localStorage.removeItem(k); } catch (e) {} }
+      function toast(m: string) { if (w.SG && w.SG.toast) w.SG.toast(m); }
+
+      const DEFAULT_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z' fill='%230a84ff'/%3E%3C/svg%3E";
+      const GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>';
+
+      const PRESETS: any = {
+        classroom: { title: "Home — Google Classroom", favicon: "https://ssl.gstatic.com/classroom/favicon.png" },
+        docs: { title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+        drive: { title: "My Drive - Google Drive", favicon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+        clever: { title: "Clever | Portal", favicon: "https://clever.com/favicon.ico" },
+        off: null,
+      };
+
+      function setFavicon(href: string) {
+        let link = document.querySelector('link[rel~="icon"]') as HTMLLinkElement | null;
+        if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+        link.href = href;
+      }
+
+      /* ---------- live preview ---------- */
+      const cpFav = document.getElementById("cpFav");
+      const cpTitle = document.getElementById("cpTitle");
+      const titleInput = document.getElementById("cloakTitle") as HTMLInputElement | null;
+      const favInput = document.getElementById("cloakFav") as HTMLInputElement | null;
+      function preview(title: string, favicon: string) {
+        if (cpTitle) cpTitle.textContent = title || "SlowGuardian";
+        if (cpFav) {
+          if (favicon) {
+            cpFav.innerHTML = "";
+            const im = document.createElement("img");
+            im.src = favicon; im.alt = "";
+            im.addEventListener("error", () => { if (cpFav) cpFav.innerHTML = GLOBE; });
+            cpFav.appendChild(im);
+          } else cpFav.innerHTML = GLOBE;
+        }
+      }
+      function livePreview() { preview((titleInput && titleInput.value) || "", (favInput && favInput.value) || ""); }
+
+      /* ---------- apply / clear ---------- */
+      function applyCloak(title: string, favicon: string) {
+        title = (title || "").trim();
+        favicon = (favicon || "").trim();
+        if (!title && !favicon) { clearCloak(); return; }
+        const payload: any = {};
+        if (title) payload.title = title;
+        if (favicon) payload.favicon = favicon;
+        lsSet("sg:cloak", JSON.stringify(payload));
+        root.dataset.cloaked = "1";
+        if (payload.title) document.title = payload.title;
+        if (payload.favicon) setFavicon(payload.favicon);
+        preview(title, favicon);
+        toast("Tab disguised");
+      }
+      function clearCloak() {
+        lsDel("sg:cloak");
+        root.removeAttribute("data-cloaked");
+        document.title = (root.dataset.sgTitle) || "SlowGuardian";
+        setFavicon(DEFAULT_FAVICON);
+        if (titleInput) titleInput.value = "";
+        if (favInput) favInput.value = "";
+        preview("", "");
+        markPreset(null);
+        toast("Disguise off");
+      }
+
+      const presetsEl = document.getElementById("cloakPresets");
+      function markPreset(name: string | null) {
+        if (!presetsEl) return;
+        presetsEl.querySelectorAll("[data-preset]").forEach((b: any) => b.classList.toggle("on", b.getAttribute("data-preset") === name));
+      }
+      if (presetsEl) presetsEl.addEventListener("click", (e: any) => {
+        const b = e.target.closest("[data-preset]"); if (!b) return;
+        const name = b.getAttribute("data-preset");
+        markPreset(name);
+        if (name === "off") { if (titleInput) titleInput.value = ""; if (favInput) favInput.value = ""; livePreview(); return; }
+        const p = PRESETS[name];
+        if (p) { if (titleInput) titleInput.value = p.title; if (favInput) favInput.value = p.favicon; livePreview(); }
+      });
+      if (titleInput) titleInput.addEventListener("input", () => { markPreset(null); livePreview(); });
+      if (favInput) favInput.addEventListener("input", () => { markPreset(null); livePreview(); });
+
+      const applyBtn = document.getElementById("cloakApply");
+      if (applyBtn) applyBtn.addEventListener("click", () => applyCloak((titleInput && titleInput.value) || "", (favInput && favInput.value) || ""));
+      const offBtn = document.getElementById("cloakOff");
+      if (offBtn) offBtn.addEventListener("click", clearCloak);
+
+      /* reflect current disguise on load */
+      (function reflectCloak() {
+        let cur: any = null;
+        try { cur = JSON.parse(lsGet("sg:cloak") || "null"); } catch (e) {}
+        if (cur && (cur.title || cur.favicon)) {
+          if (titleInput) titleInput.value = cur.title || "";
+          if (favInput) favInput.value = cur.favicon || "";
+          preview(cur.title || "", cur.favicon || "");
+          let matched: string | null = null;
+          Object.keys(PRESETS).forEach((k) => { const p = PRESETS[k]; if (p && p.title === cur.title && p.favicon === cur.favicon) matched = k; });
+          markPreset(matched);
+        } else { preview("", ""); }
+      })();
+
+      /* ---------- quick exit ---------- */
+      function quickExit() {
+        const url = lsGet("sg:panicUrl") || "https://classroom.google.com/";
+        try { (window.top || window).location.replace(url); } catch (e) { location.replace(url); }
+      }
+      const panicUrl = document.getElementById("panicUrl") as HTMLInputElement | null;
+      if (panicUrl) {
+        panicUrl.value = lsGet("sg:panicUrl") || "";
+        const save = () => {
+          let v = panicUrl.value.trim();
+          if (!v) { lsDel("sg:panicUrl"); return; }
+          if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) v = "https://" + v;
+          lsSet("sg:panicUrl", v);
+        };
+        panicUrl.addEventListener("change", save);
+        panicUrl.addEventListener("blur", save);
+      }
+      const panicTest = document.getElementById("panicTest");
+      if (panicTest) panicTest.addEventListener("click", quickExit);
+
+      /* rebindable single panic key */
+      const keyBtn = document.getElementById("keyBtn");
+      const keyReset = document.getElementById("keyReset");
+      const keyNote = document.getElementById("keyNote");
+      let arming = false;
+      function keyLabel(k: string | null) {
+        if (keyBtn) keyBtn.textContent = k ? (k.length === 1 ? k.toUpperCase() : k) : "Double-Esc";
+        if (keyNote) keyNote.innerHTML = k ? "Press <b>" + (k.length === 1 ? k.toUpperCase() : k) + "</b> to exit (double-Esc still works)" : "Double-tap Esc to exit";
+      }
+      keyLabel(lsGet("sg:panicKey"));
+      if (keyBtn) keyBtn.addEventListener("click", () => {
+        arming = !arming;
+        keyBtn.classList.toggle("arming", arming);
+        keyBtn.textContent = arming ? "Press a key…" : (lsGet("sg:panicKey") || "Double-Esc");
+      });
+      if (keyReset) keyReset.addEventListener("click", () => { lsDel("sg:panicKey"); arming = false; if (keyBtn) keyBtn.classList.remove("arming"); keyLabel(null); toast("Panic key reset to double-Esc"); });
+
+      document.addEventListener("keydown", (e) => {
+        if (arming) {
+          e.preventDefault();
+          if (e.key === "Escape") { arming = false; if (keyBtn) keyBtn.classList.remove("arming"); keyLabel(lsGet("sg:panicKey")); return; }
+          if (["Shift", "Control", "Alt", "Meta"].indexOf(e.key) > -1) return;
+          lsSet("sg:panicKey", e.key);
+          arming = false; if (keyBtn) keyBtn.classList.remove("arming");
+          keyLabel(e.key);
+          toast("Panic key set");
+          return;
+        }
+        /* honor the bound key on this page (Base owns the global double-Esc) */
+        const k = lsGet("sg:panicKey");
+        if (!k) return;
+        const el = e.target as HTMLElement;
+        const tag = (el && el.tagName || "").toLowerCase();
+        if (tag === "input" || tag === "textarea" || (el && el.isContentEditable)) return;
+        if (e.key && e.key.toLowerCase() === k.toLowerCase()) { e.preventDefault(); quickExit(); }
+      });
+
+      /* ---------- about:blank cloak (opt-in, gesture-triggered) ---------- */
+      const abEnable = document.getElementById("abEnable") as HTMLInputElement | null;
+      const abLaunch = document.getElementById("abLaunch") as HTMLButtonElement | null;
+      function reflectAb() {
+        const on = lsGet("sg:aboutblank") === "1";
+        if (abEnable) abEnable.checked = on;
+        if (abLaunch) abLaunch.disabled = !on;
+      }
+      reflectAb();
+      if (abEnable) abEnable.addEventListener("change", () => {
+        if (abEnable.checked) lsSet("sg:aboutblank", "1"); else lsDel("sg:aboutblank");
+        reflectAb();
+      });
+      function escAttr(s: string) { return String(s).replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+      function escHtml(s: string) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+      function launchAboutBlank() {
+        if (lsGet("sg:aboutblank") !== "1") return;
+        let win: any = null;
+        try { win = window.open("about:blank", "_blank"); } catch (e) {}
+        if (!win || !win.document) { toast("Popup blocked — allow pop-ups for this site, then try again"); return; }
+        let cloak: any = null;
+        try { cloak = JSON.parse(lsGet("sg:cloak") || "null"); } catch (e) {}
+        const title = (cloak && cloak.title) || "Home";
+        const fav = (cloak && cloak.favicon) || "";
+        const d = win.document;
+        d.open();
+        d.write(
+          "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escHtml(title) + "</title>" +
+          (fav ? "<link rel=\"icon\" href=\"" + escAttr(fav) + "\">" : "") +
+          "<style>html,body{margin:0;height:100%;background:#05060c}iframe{border:0;display:block;width:100%;height:100%}</style></head>" +
+          "<body><iframe src=\"" + location.origin + "/\" allow=\"autoplay; fullscreen; clipboard-read; clipboard-write\"></iframe></body></html>"
+        );
+        d.close();
+        toast("Opened in about:blank");
+      }
+      if (abLaunch) abLaunch.addEventListener("click", launchAboutBlank);
+
+      /* ---------- clear traces (Base owns SG.clearTraces) ---------- */
+      const clearBtn = document.getElementById("clearTraces");
+      if (clearBtn) clearBtn.addEventListener("click", () => {
+        if (w.SG && w.SG.clearTraces) { w.SG.clearTraces(); return; }
+        try { Object.keys(localStorage).forEach((k) => { if (k.indexOf("sg:") === 0) localStorage.removeItem(k); }); } catch (e) {}
+        try { sessionStorage.clear(); } catch (e) {}
+        try { if (window.caches && caches.keys) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))); } catch (e) {}
+        toast("Local traces cleared");
+      });
+    })();
+  </script>
+</Base>

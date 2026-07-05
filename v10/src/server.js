@@ -21,7 +21,12 @@ import { epoxyPath } from "@mercuryworkshop/epoxy-transport";   // -> .../epoxy-
 import { config, isDev } from "./config.js";
 import { logger } from "./logger.js";
 
-const publicPath = fileURLToPath(new URL("../public/", import.meta.url));
+// Serve the built Astro frontend (web/dist) in production; fall back to the
+// Phase 1 test page (public/) if the frontend hasn't been built yet.
+import { existsSync } from "node:fs";
+const distPath = fileURLToPath(new URL("../web/dist/", import.meta.url));
+const fallbackPath = fileURLToPath(new URL("../public/", import.meta.url));
+const publicPath = existsSync(distPath) ? distPath : fallbackPath;
 
 // --- Wisp engine config -----------------------------------------------------
 // NOTE: do NOT blacklist example.com here — the Phase 1 smoke test proxies it.

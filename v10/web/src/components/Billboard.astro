@@ -1,0 +1,57 @@
+---
+/**
+ * Billboard.astro — the featured hero atop a Library (mockup .billboard block).
+ *
+ * The featured entry's icon fills the art plate (cover, blurred-safe via the
+ * gradient scrims baked into the mockup CSS); the copy sits in .bb-content.
+ * The Play button is a real link to the launch target so it works without JS.
+ */
+import { entryHref, isBlank, type CatalogItem, type CatalogKind } from "../lib/catalog";
+
+interface Props {
+  item: CatalogItem;
+  kind?: CatalogKind;
+  eyebrow?: string;
+  tagline?: string;
+}
+const { item, kind = "games", eyebrow = "Featured today", tagline } = Astro.props;
+
+const href = entryHref(item);
+const blank = isBlank(item);
+const copy =
+  tagline ??
+  item.note ??
+  (kind === "apps"
+    ? `Open ${item.name} through the proxy — loads fast, even on a slow Chromebook.`
+    : `Jump into ${item.name}. It runs great even on a slow Chromebook.`);
+---
+
+<div class="billboard reveal" id="billboard">
+  <div class="bb-art"></div>
+  <img class="bb-img" src={item.image} alt="" aria-hidden="true" loading="eager" decoding="async" />
+  <div class="bb-content">
+    <span class="bb-tag">{eyebrow}</span>
+    <h3>{item.name}</h3>
+    <p>{copy}</p>
+    <div class="bb-actions">
+      {
+        href ? (
+          <a
+            class="btn"
+            id="bbPlay"
+            href={href}
+            data-id={item.id}
+            {...(blank ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
+            ▶&nbsp; Play
+          </a>
+        ) : (
+          <button class="btn" type="button" id="bbPlay" data-id={item.id} data-note={item.note ?? ""}>
+            ▶&nbsp; Play
+          </button>
+        )
+      }
+      <a class="btn glassbtn" href={href ?? "#"} data-id={item.id}>More info</a>
+    </div>
+  </div>
+</div>

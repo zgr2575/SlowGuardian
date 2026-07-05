@@ -20,10 +20,10 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - [~] **Phase 0 — Foundations**
   - [x] Design tokens extracted → `web/src/styles/tokens.css`
   - [x] Backend skeleton (`src/`): envalid config, pino logger, structure
-  - [ ] Astro project init (`web/`), base layout with pre-paint theme/cloak script (rolls into Phase 2)
+  - [x] Astro project init (`web/`), base layout with pre-paint theme/cloak script
   - [ ] Remove dead V9 artifacts at cutover
 - [x] **Phase 1 — Single proxy path** ✅ **VERIFIED** — wisp-js + Scramjet + one SW + bare-mux/epoxy, COOP/COEP. Details below.
-- [ ] **Phase 2 — Frontend** (pages, catalog Content Collections, islands, **multi-tab browser**)
+- [x] **Phase 2 — Frontend** ✅ **VERIFIED** — Astro 5 MPA, Liquid Glass + Dynamic Island, Netflix library over the real 284-game/55-app catalog, proxy-integrated multi-tab go page. Details below.
 - [ ] **Phase 3 — Privacy** (tab disguise, **about:blank cloak**, quick exit, clear traces, mirror rotation)
 - [ ] **Phase 4 — Stability** (Playwright proxy smoke test, CI, health/readyz, Docker)
 - [ ] **1.0 LTS** (v10.x branch, release-please, GHCR image)
@@ -40,3 +40,18 @@ Ran locally against `node src/server.js` + headless Chromium:
 
 ## Fix applied during Phase 1
 - `public/boot.js`: register the service worker + set the transport **eagerly on load** (not on first form-submit), so the SW is active/controlling before the first navigation.
+
+## Phase 2 verification (2026-07-05)
+Astro 5 static MPA under `v10/web/`, served by the Phase 1 Express server (which now serves `web/dist/`, falling back to `public/` if unbuilt). `npm run build` green — 5 pages.
+- ✅ **Home** — Dynamic Island (per-tab icons + collapse), hero + omnibox → `/go?url=`, and the **Netflix library over the real catalog**: featured billboard + shelves (Popular / 2-Player / Runs Offline / …), 838 tiles from the 284-game collection with real icons.
+- ✅ **Apps** — same Library over the 55-app collection.
+- ✅ **Go (proxy)** — Liquid Glass **multi-tab browser** (tab strip + new/close, address bar with back/forward/reload, always-visible **Exit**/quick-exit); reuses the verified Phase 1 wiring; **proxied a live site (httpforever.com) end-to-end through the new UI.**
+- ✅ **Settings / Privacy** — theme (dark/light) + accent swatches + performance mode, honest privacy copy.
+- Catalog: `src/content.config.ts` (Astro 5 file() loader, Zod schema), data in `src/content/{games,apps}.json` (284 / 55, converted from V9's g.json/a.json). Icons synced from committed `static/` at build (`scripts/sync-icons.mjs`, prebuild) — not duplicated in git.
+
+### Known follow-ups (not blocking)
+- `astro check` (strict TS) flags implicit-any/null in a few bundled `<script>` blocks — type-only, does not affect `astro build`. Fix in Phase 4 (CI) or loosen tsconfig for script blocks.
+- Duplicate ⌘K palette wiring (Base + Library both bind `#cmdList`) — minor last-writer-wins; reconcile via a `data-managed` gate.
+- `/settings` has no Dynamic Island nav link (reachable via privacy cross-link) — add if wanted.
+- Icon optimization: several catalog icons are >1MB; route through `astro:assets` / resize to tile size.
+- Fix applied: `index.astro` rendered a `<!-- LIBRARY -->` placeholder from the shell part; replaced with `<Library collection="games" />`.

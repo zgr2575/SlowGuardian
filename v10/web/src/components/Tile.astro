@@ -1,0 +1,18 @@
+---
+/**
+ * Tile.astro — one catalog card in a Netflix shelf or the search-results grid.
+ *
+ * Renders through the shared `tileHTML()` builder so a build-time shelf tile is
+ * identical to a tile injected client-side by the search <script>. Reuses the
+ * mockup's exact classes (.tile / .art / .label / .tt / .cc).
+ */
+import { tileHTML, type CatalogItem, type CatalogKind } from "../lib/catalog";
+
+interface Props {
+  item: CatalogItem;
+  kind?: CatalogKind;
+}
+const { item, kind = "games" } = Astro.props;
+---
+
+<Fragment set:html={tileHTML(item, kind)} />
