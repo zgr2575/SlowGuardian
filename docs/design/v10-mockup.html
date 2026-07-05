@@ -148,6 +148,31 @@
   .isl-btn svg { width: 16px; height: 16px; }
 
   /* ---------- Hero ---------- */
+  /* ---------- Views (client-side pages) ---------- */
+  .view { display: none; }
+  .view.active { display: block; animation: viewin .34s cubic-bezier(.16,.8,.3,1); }
+  @keyframes viewin { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
+  /* proxy workspace mock */
+  .gobar { border-radius: var(--r-lg); padding: 8px 8px 4px; margin-bottom: var(--sp-4); }
+  .tabstrip { display: flex; align-items: center; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid var(--glass-brd); }
+  .gtab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px 10px 0 0; font-size: 13px; color: var(--ink-2); max-width: 210px; }
+  .gtab.active { background: var(--glass-2); color: var(--ink); box-shadow: inset 0 1px 0 var(--hi); }
+  .gtab .gfav { width: 14px; height: 14px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
+  .gtab .gname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .gtab .gclose { margin-left: 2px; color: var(--ink-3); cursor: pointer; }
+  .gnew { width: 30px; height: 30px; border-radius: 8px; border: 0; background: var(--glass); color: var(--ink-2); font-size: 18px; cursor: pointer; }
+  .addrbar { display: flex; align-items: center; gap: 8px; padding: 8px 4px 4px; }
+  .navb { width: 32px; height: 32px; border-radius: 8px; border: 0; background: var(--glass); color: var(--ink-2); font-size: 15px; cursor: pointer; flex-shrink: 0; }
+  .addr { flex: 1; display: flex; align-items: center; gap: 9px; padding: 9px 15px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); background: var(--glass); border: 1px solid var(--glass-brd); }
+  .addr svg { width: 15px; height: 15px; color: var(--ink-3); flex-shrink: 0; }
+  .exitbtn { flex-shrink: 0; background: linear-gradient(180deg,#ff8090,var(--err)); }
+  .frame-mock { border-radius: var(--r-lg); min-height: 440px; display: grid; place-items: center; text-align: center; }
+  .frame-note { max-width: 440px; padding: var(--sp-6); }
+  .frame-note > svg { width: 46px; height: 46px; color: var(--accent-2); margin-bottom: 16px; }
+  .frame-note h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .frame-note p { color: var(--ink-2); line-height: 1.55; }
+
   .hero { text-align: center; padding: 82px 0 var(--sp-6); }
   .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
   .hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
@@ -316,21 +341,25 @@
   <div class="isl-ambient"><span class="live"></span> Online</div>
   <div class="isl-panel">
     <nav class="isl-links">
-      <a href="#library" class="isl-link on" title="Games" aria-label="Games">
+      <a href="#" class="isl-link on" data-view="games" title="Games" aria-label="Games">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="20" height="10" rx="4"/><path d="M7 12h3M8.5 10.5v3M15.5 11.5h.01M17.5 13.5h.01"/></svg>
         <span class="lbl">Games</span>
       </a>
-      <a href="#library" class="isl-link" title="Apps" aria-label="Apps">
+      <a href="#" class="isl-link" data-view="apps" title="Apps" aria-label="Apps">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
         <span class="lbl">Apps</span>
       </a>
-      <a href="#top" class="isl-link" title="Proxy" aria-label="Proxy">
+      <a href="#" class="isl-link" data-view="proxy" title="Proxy" aria-label="Proxy">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
         <span class="lbl">Proxy</span>
       </a>
-      <a href="#privacy" class="isl-link" title="Privacy" aria-label="Privacy">
+      <a href="#" class="isl-link" data-view="privacy" title="Privacy" aria-label="Privacy">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
         <span class="lbl">Privacy</span>
+      </a>
+      <a href="#" class="isl-link" data-view="settings" title="Settings" aria-label="Settings">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+        <span class="lbl">Settings</span>
       </a>
     </nav>
     <span class="isl-sep"></span>
@@ -340,6 +369,7 @@
 </div>
 
 <main id="top">
+  <div class="view active" id="view-games">
   <section class="hero">
     <div class="wrap">
       <p class="kicker reveal in">SlowGuardian&nbsp;10</p>
@@ -378,7 +408,45 @@
       <div class="results" id="results"></div>
     </div>
   </section>
+  </div><!-- /view-games -->
 
+  <div class="view" id="view-apps">
+    <section>
+      <div class="wrap">
+        <div class="sechead reveal" style="margin-bottom:var(--sp-4)"><div class="ey">Apps</div><h2>Everything, unblocked.</h2></div>
+        <div class="rows reveal" id="rows-apps"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="view" id="view-proxy">
+    <section>
+      <div class="wrap" style="padding-top:var(--sp-5)">
+        <div class="sechead reveal" style="margin-bottom:var(--sp-4)"><div class="ey">Proxy</div><h2>Your private browser.</h2></div>
+        <div class="gobar glass reveal">
+          <div class="tabstrip">
+            <div class="gtab active"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
+            <div class="gtab"><span class="gfav"></span><span class="gname">example.com</span><span class="gclose">×</span></div>
+            <button class="gnew" aria-label="New tab">+</button>
+          </div>
+          <div class="addrbar">
+            <button class="navb" aria-label="Back">‹</button><button class="navb" aria-label="Forward">›</button><button class="navb" aria-label="Reload">⟳</button>
+            <div class="addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>https://example.com</div>
+            <button class="btn sm exitbtn" type="button">Exit</button>
+          </div>
+        </div>
+        <div class="frame-mock glass reveal">
+          <div class="frame-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
+            <h3>Open anything, in a tab you can disguise.</h3>
+            <p>Type a site in the bar above and it loads right here — multi-tab, with an always-there Exit. The live proxy runs on the SlowGuardian server; this preview shows the workspace.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="view" id="view-privacy">
   <section id="privacy">
     <div class="wrap">
       <div class="sechead reveal">
@@ -412,7 +480,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /view-privacy -->
 
+  <div class="view" id="view-settings">
   <section>
     <div class="wrap">
       <div class="sechead center reveal">
@@ -441,6 +511,7 @@
       </div>
     </div>
   </section>
+  </div><!-- /view-settings -->
 </main>
 
 <footer>
@@ -496,13 +567,21 @@
     ["Slope","Arcade"],["Madalin Cars","Racing"],["Yohoho.io","IO"],["Celeste","Action"],
     ["Retro Bowl","Sports"],["1v1.LOL","Action"],["Tanuki Sunset","Racing"],["Bloxd.io","IO"]
   ];
-  var META = {}; GAMES.forEach(function (g, i) { META[g[0]] = { cat: g[1], hue: (i * 41 + 205) % 360 }; });
+  var APPS = [
+    ["Amazon","Media"],["Steam","Games"],["Discord","Social"],["Spotify","Media"],
+    ["YouTube","Media"],["Netflix","Media"],["Notion","Tools"],["Canva","Tools"],
+    ["Figma","Tools"],["Khan Academy","Learn"],["Google Drive","Tools"],["Twitch","Media"],
+    ["Reddit","Social"],["Now.gg","Games"],["GeForce NOW","Games"],["ChatGPT","AI"]
+  ];
+  var META = {}; GAMES.concat(APPS).forEach(function (g, i) { META[g[0]] = { cat: g[1], icon: g[2], hue: (i * 41 + 205) % 360 }; });
   function tile(name) {
     var m = META[name] || { cat: "", hue: 210 };
     var a = document.createElement("a");
     a.className = "tile"; a.href = "#"; a.dataset.name = name.toLowerCase(); a.tabIndex = 0;
-    a.innerHTML = '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"></div>' +
-      '<div class="label"><span class="tt">' + name + '</span><span class="cc">' + m.cat + '</span></div>';
+    var art = m.icon
+      ? '<div class="art" style="background:#0d1220"><img src="' + m.icon + '" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover"></div>'
+      : '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"></div>';
+    a.innerHTML = art + '<div class="label"><span class="tt">' + name + '</span><span class="cc">' + m.cat + '</span></div>';
     a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + name + "</b>…"); });
     return a;
   }
@@ -514,15 +593,27 @@
     "Racing": ["Moto X3M", "Madalin Cars", "Tanuki Sunset"],
     "Arcade & Classics": ["Duck Life", "Cookie Clicker", "Age of War", "Jacksmith", "Papa's Cheeseria", "Slope"]
   };
+  var APPS_CATALOG = {
+    "Popular": ["YouTube", "Discord", "Spotify", "Netflix", "Now.gg", "ChatGPT", "Reddit"],
+    "Media & Streaming": ["YouTube", "Netflix", "Spotify", "Twitch", "Amazon"],
+    "Tools": ["Notion", "Canva", "Figma", "Google Drive", "Khan Academy"],
+    "Cloud Gaming": ["Now.gg", "GeForce NOW", "Steam"],
+    "All Apps": ["Amazon", "Steam", "Discord", "Spotify", "YouTube", "Netflix", "Notion", "Canva", "Figma", "Khan Academy", "Google Drive", "Twitch", "Reddit", "Now.gg", "GeForce NOW", "ChatGPT"]
+  };
+  function renderRows(catalog, el) {
+    if (!el) return;
+    Object.keys(catalog).forEach(function (title) {
+      var row = document.createElement("div"); row.className = "shelf";
+      var head = document.createElement("div"); head.className = "rowhead";
+      head.innerHTML = "<h3>" + title + "</h3><span class=\"more\">Browse all ›</span>";
+      var strip = document.createElement("div"); strip.className = "strip";
+      catalog[title].forEach(function (n) { strip.appendChild(tile(n)); });
+      row.appendChild(head); row.appendChild(strip); el.appendChild(row);
+    });
+  }
   var rowsEl = document.getElementById("rows");
-  Object.keys(CATALOG).forEach(function (title) {
-    var row = document.createElement("div"); row.className = "shelf";
-    var head = document.createElement("div"); head.className = "rowhead";
-    head.innerHTML = "<h3>" + title + "</h3><span class=\"more\">Browse all ›</span>";
-    var strip = document.createElement("div"); strip.className = "strip";
-    CATALOG[title].forEach(function (n) { strip.appendChild(tile(n)); });
-    row.appendChild(head); row.appendChild(strip); rowsEl.appendChild(row);
-  });
+  renderRows(CATALOG, rowsEl);
+  renderRows(APPS_CATALOG, document.getElementById("rows-apps"));
   var pool = Object.keys(META);
   function search(q) {
     q = q.trim().toLowerCase();
@@ -536,7 +627,7 @@
   var _ls = document.getElementById("libSearch"); if (_ls) _ls.addEventListener("input", function () { search(this.value); });
   var bbPlay = document.getElementById("bbPlay"); if (bbPlay) bbPlay.addEventListener("click", function () { toast("Opening <b>Retro Bowl</b>…"); });
 
-  document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); });
+  document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); if (v) showView("proxy"); });
 
   var cloaked = false, real = "SlowGuardian";
   function toggleCloak() { cloaked = !cloaked; document.title = cloaked ? "Home — Google Classroom" : real; toast(cloaked ? "Tab disguised as <b>Google Classroom</b>" : "Disguise off"); }
@@ -564,7 +655,8 @@
     else if (name === "Accent: Teal") { root.dataset.accent = "teal"; document.querySelectorAll("#swatches .sw").forEach(function (s) { s.classList.toggle("on", s.dataset.a === "teal"); }); }
     else if (name === "Disguise this tab") toggleCloak();
     else if (name === "Quick exit") panic();
-    else if (name.indexOf("library") > -1 || name.indexOf("Apps") > -1) document.getElementById("library").scrollIntoView();
+    else if (name.indexOf("Apps") > -1) showView("apps");
+    else if (name.indexOf("library") > -1 || name.indexOf("Games") > -1) showView("games");
     else toast("<b>" + name + "</b>");
   }
   document.getElementById("cmdBtn").addEventListener("click", open);
@@ -580,6 +672,18 @@
   });
   island.querySelectorAll(".isl-link").forEach(function (a) { a.addEventListener("click", function () { island.classList.remove("open"); }); });
   document.addEventListener("click", function (e) { if (!island.contains(e.target)) island.classList.remove("open"); });
+
+  // ---- client-side router: the Dynamic Island nav switches pages ----
+  function showView(v) {
+    document.querySelectorAll(".view").forEach(function (el) { el.classList.toggle("active", el.id === "view-" + v); });
+    document.querySelectorAll(".isl-links a").forEach(function (a) { a.classList.toggle("on", a.dataset.view === v); });
+    window.scrollTo(0, 0);
+  }
+  window.SGshowView = showView;
+  document.querySelectorAll(".isl-links a[data-view]").forEach(function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); showView(a.dataset.view); island.classList.remove("open"); });
+  });
+  document.querySelector(".isl-brand").addEventListener("click", function (e) { e.preventDefault(); showView("games"); });
 
   function panic() { toast("Quick exit — would <b>replace()</b> the tab with your decoy · no history left", 2600); }
   var lastEsc = 0;
