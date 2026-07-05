@@ -72,7 +72,9 @@
     background: var(--bg); color: var(--ink); font-family: var(--font);
     line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     overflow-x: hidden; min-height: 100vh;
+    display: flex; flex-direction: column;
   }
+  main#top { flex: 1 0 auto; display: flex; flex-direction: column; }
   /* ambient light field — static gradients, cheap; gives glass its glow */
   body::before {
     content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -150,11 +152,26 @@
   /* ---------- Hero ---------- */
   /* ---------- Views (client-side pages) ---------- */
   .view { display: none; }
-  .view.active { display: block; animation: viewin .34s cubic-bezier(.16,.8,.3,1); }
+  .view.active { display: flex; flex-direction: column; flex: 1 0 auto; animation: viewin .34s cubic-bezier(.16,.8,.3,1); }
   @keyframes viewin { from { opacity: 0; transform: translateY(8px); } }
   @media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
-  /* clear the floating island on content pages (home + proxy set their own) */
-  #view-games, #view-apps, #view-privacy, #view-settings { padding-top: 74px; }
+  /* content-rich pages sit below the island and scroll */
+  #view-games, #view-apps, #view-settings { padding-top: 74px; }
+  /* sparse pages fill the viewport and center their content — no dead space, footer stays at the bottom */
+  #view-home, #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
+  /* settings grid */
+  .setgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-5); }
+  .setcard { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); display: flex; flex-direction: column; gap: 18px; }
+  .setcard h3 { font-size: 1.08rem; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .setcard h3 svg { width: 18px; height: 18px; color: var(--accent-2); }
+  .setrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .setrow .rt { font-size: 14px; color: var(--ink); font-weight: 500; }
+  .setrow .rd { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+  .toggle { width: 44px; height: 26px; border-radius: var(--r-pill); border: 1px solid var(--glass-brd); background: var(--glass); position: relative; cursor: pointer; flex-shrink: 0; transition: .2s; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink-2); transition: .2s; }
+  .toggle.on { background: var(--accent); border-color: transparent; }
+  .toggle.on::after { left: 20px; background: #fff; }
+  .setdiv { height: 1px; background: var(--glass-brd); }
   /* proxy workspace mock */
   .gobar { border-radius: var(--r-lg); padding: 8px 8px 4px; margin-bottom: var(--sp-4); }
   .tabstrip { display: flex; align-items: center; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid var(--glass-brd); }
@@ -180,7 +197,7 @@
   .frame-note p { color: var(--ink-2); line-height: 1.55; }
 
   /* ---------- Home (Google-style search) ---------- */
-  .home { text-align: center; padding: clamp(64px, 13vh, 150px) 0 var(--sp-8); }
+  .home { text-align: center; width: 100%; }
   .home-inner { display: flex; flex-direction: column; align-items: center; }
   .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
   .home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
@@ -315,7 +332,7 @@
   .sw.on { border-color: var(--ink); }
   .sw[data-a="blue"]{background:#0a84ff;} .sw[data-a="indigo"]{background:#7d5bed;} .sw[data-a="teal"]{background:#12b5a6;} .sw[data-a="rose"]{background:#ff5d8f;}
 
-  footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-7) 0; margin-top: var(--sp-6); }
+  footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-6) 0; flex-shrink: 0; }
   footer p { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
   footer b { color: var(--ink-2); font-weight: 600; }
 
@@ -502,10 +519,10 @@
   <div class="view" id="view-settings">
   <section>
     <div class="wrap">
-      <div class="sechead center reveal">
+      <div class="sechead reveal">
         <div class="ey">Make it yours</div>
         <h2>Glass that doesn't cost you speed.</h2>
-        <p>Dark and light, with a considered accent — one attribute on the root rethemes the whole app, no reload, no download. On older Chromebooks the blur gracefully steps down to solid glass. Try it.</p>
+        <p>One attribute on the root rethemes the whole app — no reload, no download. On older Chromebooks the blur gracefully steps down to solid glass, so nothing stutters.</p>
       </div>
       <div class="appear glass reveal">
         <div class="grp">
@@ -525,6 +542,55 @@
           </div>
         </div>
         <button class="btn sm" id="cloakToggle">Preview tab disguise</button>
+      </div>
+
+      <div class="setgrid reveal">
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>Performance</h3>
+          <div class="setrow">
+            <div><div class="rt">Glass blur</div><div class="rd">Real backdrop-filter on capable devices</div></div>
+            <div class="toggle on" role="switch" aria-checked="true"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Reduce motion</div><div class="rd">Trim page transitions and reveals</div></div>
+            <div class="toggle" role="switch" aria-checked="false"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Low-power mode</div><div class="rd">Solid glass, lighter shadows — for 2016 Chromebooks</div></div>
+            <div class="toggle" role="switch" aria-checked="false"></div>
+          </div>
+        </div>
+
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Privacy &amp; exit</h3>
+          <div class="setrow">
+            <div><div class="rt">Tab disguise</div><div class="rd">Home — Google Classroom</div></div>
+            <div class="toggle on" role="switch" aria-checked="true"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Quick-exit target</div><div class="rd">Esc Esc → Google Classroom · rebindable</div></div>
+            <button class="btn sm" style="background:var(--glass);color:var(--ink)">Change</button>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Clear traces</div><div class="rd">Wipe history, cache &amp; local data this app made</div></div>
+            <button class="btn sm" style="background:var(--glass);color:var(--ink)">Clear</button>
+          </div>
+        </div>
+
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>About</h3>
+          <div class="setrow"><span class="rt">Version</span><span class="rd" style="margin:0">10.0.0 · LTS</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Engine</span><span class="rd" style="margin:0">Scramjet over Wisp</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Support window</span><span class="rd" style="margin:0">6 mo active + 6 mo security</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Status</span><span class="rd" style="margin:0;color:var(--ok,#34c759)">● All systems online</span></div>
+        </div>
       </div>
     </div>
   </section>
