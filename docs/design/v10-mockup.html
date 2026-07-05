@@ -160,7 +160,8 @@
   /* library views stretch wider than the standard column so wide monitors aren't half-empty */
   #view-games .wrap, #view-apps .wrap { max-width: 1780px; }
   /* sparse pages fill the viewport and center their content — no dead space, footer stays at the bottom */
-  #view-home, #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
+  #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
+  #view-home { padding: 84px 0 var(--sp-6); gap: var(--sp-6); }
   /* settings grid */
   .setgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-5); }
   .setcard { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); display: flex; flex-direction: column; gap: 18px; }
@@ -205,7 +206,7 @@
   .chr-avatar { width: 26px; height: 26px; border-radius: 50%; margin-left: 4px; flex-shrink: 0; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
   .exitbtn { flex-shrink: 0; margin-left: 6px; background: linear-gradient(180deg,#ff8090,var(--err)); }
   /* content = Chrome-style new-tab page */
-  .frame-mock { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--chr-ntp); padding: var(--sp-6) var(--sp-5); }
+  .frame-mock { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; background: var(--chr-ntp); padding: clamp(40px, 8vh, 96px) var(--sp-5) var(--sp-6); overflow-y: auto; }
   .ntp { width: 100%; max-width: 580px; }
   .ntp-word { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); margin-bottom: var(--sp-5); }
   .ntp-word b { color: var(--accent-2); font-weight: 700; }
@@ -219,11 +220,24 @@
   .ntp-tile:hover .ntp-ic { background: var(--chr-hover); transform: translateY(-1px); }
   .ntp-tile .ntp-ic svg { width: 22px; height: 22px; }
   .ntp-tile span { font-size: 12px; color: var(--ink-2); max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ntp-recent { margin-top: var(--sp-7); }
+  .ntp-recent .ntp-rlabel { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; text-align: left; }
+  .ntp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 560px) { .ntp-cards { grid-template-columns: repeat(2, 1fr); } }
+  .ntp-card { display: flex; flex-direction: column; gap: 0; border-radius: 12px; overflow: hidden; background: var(--chr-bar); border: 1px solid var(--glass-brd); text-decoration: none; transition: .16s; }
+  .ntp-card:hover { transform: translateY(-2px); box-shadow: var(--sh-2); }
+  .ntp-card .thumb { height: 76px; background: linear-gradient(135deg, var(--accent-2), var(--accent)); }
+  .ntp-card .ntp-meta { display: flex; align-items: center; gap: 8px; padding: 9px 11px; }
+  .ntp-card .cf { width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0; }
+  .ntp-card .ct { font-size: 12.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* ---------- Home (Google-style search) ---------- */
+  /* ---------- Home (Google-style search + content that fills the page) ---------- */
   .home { text-align: center; width: 100%; }
-  .home-inner { display: flex; flex-direction: column; align-items: center; }
-  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
+  .home-hero { display: flex; flex-direction: column; align-items: center; padding: var(--sp-6) var(--sp-5) var(--sp-7); }
+  .home-inner { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .home-shelves { text-align: left; }
+  .home-shelves .rowhead { margin-top: var(--sp-2); }
+  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-5); }
   .home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
   .home-logo .mark svg { width: 31px; height: 31px; }
   .home-word { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
@@ -438,21 +452,26 @@
 <main id="top">
   <div class="view active" id="view-home">
   <section class="home">
-    <div class="wrap home-inner">
-      <a class="home-logo" href="#" id="homeLogo">
-        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
-        <span class="home-word">Slow<b>Guardian</b></span>
-      </a>
-      <form class="omni glass" id="omni" onsubmit="return false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
-        <button class="btn" type="submit">Open</button>
-      </form>
-      <div class="quicklinks">
-        <button class="qbtn" data-view="games" type="button">Games</button>
-        <button class="qbtn" data-view="apps" type="button">Apps</button>
-        <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
+    <div class="home-hero">
+      <div class="wrap home-inner">
+        <a class="home-logo" href="#" id="homeLogo">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+          <span class="home-word">Slow<b>Guardian</b></span>
+        </a>
+        <form class="omni glass" id="omni" onsubmit="return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
+          <button class="btn" type="submit">Open</button>
+        </form>
+        <div class="quicklinks">
+          <button class="qbtn" data-view="games" type="button">Games</button>
+          <button class="qbtn" data-view="apps" type="button">Apps</button>
+          <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
+        </div>
       </div>
+    </div>
+    <div class="wrap home-shelves">
+      <div class="rows reveal" id="home-rows"></div>
     </div>
   </section>
   </div><!-- /view-home -->
@@ -547,6 +566,14 @@
             <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#000;color:#fff">R</span><span>Reddit</span></a>
             <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#191414;color:#1db954">♪</span><span>Spotify</span></a>
             <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span><span>Add shortcut</span></a>
+          </div>
+          <div class="ntp-recent">
+            <div class="ntp-rlabel">Recently visited</div>
+            <div class="ntp-cards">
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#ea4335,#ff7a45)"></div><div class="ntp-meta"><span class="cf" style="background:#ea4335"></span><span class="ct">YouTube — Home</span></div></a>
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#1a73e8,#4facfe)"></div><div class="ntp-meta"><span class="cf" style="background:#1a73e8"></span><span class="ct">Google Classroom</span></div></a>
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#5865f2,#8a63d2)"></div><div class="ntp-meta"><span class="cf" style="background:#5865f2"></span><span class="ct">Discord</span></div></a>
+            </div>
           </div>
         </div>
       </div>
@@ -780,6 +807,14 @@
   }
   fillGrid(GAMES, "allgames", "allgames-count");
   fillGrid(APPS, "allapps", "allapps-count");
+  /* Home fills below the search with real content — popular picks from both catalogs. */
+  var gNames = GAMES.map(function (g) { return g[0]; });
+  var aNames = APPS.map(function (g) { return g[0]; });
+  renderRows({
+    "Jump back in": gNames.slice(0, 9),
+    "Popular games": gNames.slice(9, 18),
+    "Top apps": aNames.slice(0, 9)
+  }, document.getElementById("home-rows"));
   var allGamesSec = document.getElementById("allgames-sec");
   var pool = Object.keys(META);
   function search(q) {
