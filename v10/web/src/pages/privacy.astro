@@ -133,7 +133,7 @@ import Base from "../layouts/Base.astro";
       <div class="sechead reveal">
         <div class="ey">about:blank cloak</div>
         <h2>Hide the address, honestly.</h2>
-        <p>Opt-in. Loads SlowGuardian inside a blank tab, so the address bar reads <span style="font-family:var(--mono)">about:blank</span> and the title stays generic. It needs a click to open — browsers block it otherwise.</p>
+        <p>Opt-in. Opens SlowGuardian inside a blank window, so its address bar reads <span style="font-family:var(--mono)">about:blank</span> and the title stays generic. It needs a click to open — browsers block it otherwise.</p>
       </div>
 
       <div class="pnl glass reveal">
@@ -144,7 +144,8 @@ import Base from "../layouts/Base.astro";
         <div class="row-actions">
           <button class="btn sm" id="abLaunch" type="button" disabled>Open in about:blank</button>
         </div>
-        <p class="sg-note"><b>Straight talk.</b> Some managed Chromebooks disable about:blank embedding and a few sites break inside it. It hides the URL from a shoulder-glance — it does not bypass network filtering or device monitoring. It uses the tab title and favicon from your disguise above.</p>
+        <p class="sg-note"><b>How it works.</b> A blank window opens with SlowGuardian inside it, wearing the title and favicon from your disguise above — and <b>this tab switches to your decoy</b> (the Quick&nbsp;Exit site), so nothing on screen points back here. Keep browsing in the blank window.</p>
+        <p class="sg-note"><b>Straight talk.</b> Some managed Chromebooks disable about:blank embedding, Firefox blocks it outright, and a few sites break inside it. It hides the URL from a shoulder-glance — it does <b>not</b> bypass network filtering or device monitoring.</p>
       </div>
     </div>
   </section>
@@ -374,25 +375,54 @@ import Base from "../layouts/Base.astro";
       });
       function escAttr(s: string) { return String(s).replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
       function escHtml(s: string) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+      /* about:blank cloak — a clean port of V8's proven createAboutBlank
+         (static/assets/scripts/h.js), minus the V9 auto-run bug:
+           1. gesture-triggered only (this runs from a click), so the popup
+              isn't blocked and there's no infinite-loop-on-load;
+           2. SlowGuardian loads inside a full-page iframe of an about:blank
+              popup, disguised with the tab title/favicon from sg:cloak;
+           3. the ORIGINAL tab is redirected to the decoy (sg:panicUrl) so
+              nothing left on screen points back at SlowGuardian;
+           4. a beforeunload guard makes an accidental close ask first.
+         Firefox blocks scripting an about:blank popup, so bail honestly. */
       function launchAboutBlank() {
         if (lsGet("sg:aboutblank") !== "1") return;
+        if (/firefox/i.test(navigator.userAgent)) {
+          toast("Firefox blocks about:blank embedding — use Tab Disguise instead");
+          return;
+        }
         let win: any = null;
         try { win = window.open("about:blank", "_blank"); } catch (e) {}
         if (!win || !win.document) { toast("Popup blocked — allow pop-ups for this site, then try again"); return; }
+
         let cloak: any = null;
         try { cloak = JSON.parse(lsGet("sg:cloak") || "null"); } catch (e) {}
         const title = (cloak && cloak.title) || "Home";
         const fav = (cloak && cloak.favicon) || "";
-        const d = win.document;
-        d.open();
-        d.write(
-          "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escHtml(title) + "</title>" +
-          (fav ? "<link rel=\"icon\" href=\"" + escAttr(fav) + "\">" : "") +
-          "<style>html,body{margin:0;height:100%;background:#05060c}iframe{border:0;display:block;width:100%;height:100%}</style></head>" +
-          "<body><iframe src=\"" + location.origin + "/\" allow=\"autoplay; fullscreen; clipboard-read; clipboard-write\"></iframe></body></html>"
-        );
-        d.close();
-        toast("Opened in about:blank");
+        const decoy = lsGet("sg:panicUrl") || "https://classroom.google.com/";
+
+        try {
+          const d = win.document;
+          d.open();
+          d.write(
+            "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + escHtml(title) + "</title>" +
+            (fav ? "<link rel=\"icon\" href=\"" + escAttr(fav) + "\">" : "") +
+            "<style>html,body{margin:0;height:100%;background:#05060c}iframe{border:0;display:block;width:100%;height:100%}</style></head>" +
+            "<body><iframe src=\"" + location.origin + "/\" allow=\"autoplay; fullscreen; clipboard-read; clipboard-write; encrypted-media; picture-in-picture\"></iframe>" +
+            "<script>window.onbeforeunload=function(e){(e||window.event).returnValue='Leave site?';return 'Leave site?';};<\/script>" +
+            "</body></html>"
+          );
+          d.close();
+        } catch (e) {
+          try { win.close(); } catch (e2) {}
+          toast("Couldn't set up about:blank — try again");
+          return;
+        }
+
+        /* Hide the origin: send THIS tab to the decoy (replace = no history). */
+        setTimeout(function () {
+          try { location.replace(decoy); } catch (e) { try { location.href = decoy; } catch (e2) {} }
+        }, 150);
       }
       if (abLaunch) abLaunch.addEventListener("click", launchAboutBlank);
 

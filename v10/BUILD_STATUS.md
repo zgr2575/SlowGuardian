@@ -25,7 +25,7 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - [x] **Phase 1 — Single proxy path** ✅ **VERIFIED** — wisp-js + Scramjet + one SW + bare-mux/epoxy, COOP/COEP. Details below.
 - [x] **Phase 2 — Frontend** ✅ **VERIFIED** — Astro 5 MPA, Liquid Glass + Dynamic Island, Netflix library over the real 284-game/55-app catalog, proxy-integrated multi-tab go page. Details below.
 - [x] **Phase 2.1 — Design sync** ✅ **VERIFIED** — real app brought in line with the approved mockup (`docs/design/v10-mockup.html`, artifact 950d7919). `/` = Google-style search **lander**; the games library moved to `/games` (nav + ⌘K updated). Games/Apps gained a dense full-width **"All" grid** (283/55 tiles, real icons) below the shelves; the in-library search field was dropped (unified into ⌘K). The `/go` proxy was reskinned to **look like Google Chrome** (tab strip, pill omnibox, menu/avatar, Chrome new-tab page with shortcut tiles) — the verified multi-tab Scramjet wiring is untouched. `/settings` became the three-card grid (Performance/Privacy&exit/About). Sticky-footer full-height layout across all pages. `npm run build` green (6 routes); every page rendered against `src/server.js` with zero console errors and the proxy engine reaching "ready".
-- [ ] **Phase 3 — Privacy** (tab disguise, **about:blank cloak**, quick exit, clear traces, mirror rotation)
+- [x] **Phase 3 — Privacy** ✅ **VERIFIED** — tab-disguise configurator (live preview, presets, custom title/favicon → `sg:cloak`), quick exit (decoy `sg:panicUrl` + rebindable `sg:panicKey`, double-Esc global), clear-traces, and the **opt-in about:blank cloak**. Mirror rotation stays **post-1.0** (locked decision). Details below.
 - [ ] **Phase 4 — Stability** (Playwright proxy smoke test, CI, health/readyz, Docker)
 - [ ] **1.0 LTS** (v10.x branch, release-please, GHCR image)
 
@@ -49,6 +49,14 @@ Astro 5 static MPA under `v10/web/`, served by the Phase 1 Express server (which
 - ✅ **Go (proxy)** — Liquid Glass **multi-tab browser** (tab strip + new/close, address bar with back/forward/reload, always-visible **Exit**/quick-exit); reuses the verified Phase 1 wiring; **proxied a live site (httpforever.com) end-to-end through the new UI.**
 - ✅ **Settings / Privacy** — theme (dark/light) + accent swatches + performance mode, honest privacy copy.
 - Catalog: `src/content.config.ts` (Astro 5 file() loader, Zod schema), data in `src/content/{games,apps}.json` (284 / 55, converted from V9's g.json/a.json). Icons synced from committed `static/` at build (`scripts/sync-icons.mjs`, prebuild) — not duplicated in git.
+
+## Phase 3 verification (2026-07-05)
+Privacy features live on `/privacy` (configurators) with the actions exposed on `window.SG` from the Base shell. `npm run build` green — 6 routes.
+- ✅ **Tab disguise** — presets (Classroom/Docs/Drive/Clever) + custom title/favicon with a live tab-chip preview → `sg:cloak`; the Base pre-paint boot applies it before first paint on every tab.
+- ✅ **Quick exit** — decoy URL (`sg:panicUrl`) + rebindable single key (`sg:panicKey`) via `location.replace` (no history); global double-Esc owned by Base.
+- ✅ **about:blank cloak** — opt-in (`sg:aboutblank`), **gesture-triggered** port of V8's `createAboutBlank` (`static/assets/scripts/h.js`) minus the V9 auto-run bug: opens an about:blank popup, loads SlowGuardian in a full-page iframe wearing the `sg:cloak` title/favicon, adds a `beforeunload` guard, then **redirects the origin tab to the decoy**. Firefox is guarded (it blocks the pattern). **Driven end-to-end in headless Chromium:** popup opened with the disguise title, iframe `src` = origin, `beforeunload` set, origin tab redirected to the decoy — no console errors.
+- ✅ **Clear traces** — wipes `sg:*` localStorage, sessionStorage, and Cache Storage (Base `SG.clearTraces`).
+- ⏭ **Mirror rotation** — deferred to post-1.0 (locked decision).
 
 ### Known follow-ups (not blocking)
 - `astro check` (strict TS) flags implicit-any/null in a few bundled `<script>` blocks — type-only, does not affect `astro build`. Fix in Phase 4 (CI) or loosen tsconfig for script blocks.
