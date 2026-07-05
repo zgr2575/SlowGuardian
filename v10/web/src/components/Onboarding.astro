@@ -1,0 +1,179 @@
+---
+/**
+ * Onboarding.astro — first-run welcome flow (V9 parity, rebuilt clean).
+ *
+ * A one-time modal shown on the first visit (guard: localStorage sg:onboarded).
+ * Four steps mapped to V10's actual features: welcome → appearance (theme +
+ * accent, applied live) → privacy (tab disguise / quick-exit / about:blank) →
+ * done. Everything it sets uses the same sg:* keys and window.SG API as the
+ * Settings and Privacy pages, so choices persist and apply immediately.
+ *
+ * Rendered once from Base (below the shell). Purely progressive: if JS is off
+ * or SG isn't ready, the modal simply never shows and nothing breaks.
+ */
+---
+
+<div class="ob-scrim" id="obScrim" hidden>
+  <div class="ob glass" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+    <div class="ob-steps" id="obDots" aria-hidden="true"></div>
+
+    <!-- Step 1 — welcome -->
+    <section class="ob-step" data-step="0">
+      <div class="ob-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg></div>
+      <h2 id="obTitle">Welcome to SlowGuardian</h2>
+      <p>A fast, private gateway for the school Chromebook — open any site, launch a game, all in a blink even on the slow machines. Two things to know:</p>
+      <ul class="ob-tips">
+        <li><kbd>⌘K</kbd> / <kbd>Ctrl&nbsp;K</kbd> — search games, apps, and commands anywhere.</li>
+        <li><kbd>Esc</kbd> <kbd>Esc</kbd> — quick exit to a decoy site, instantly.</li>
+      </ul>
+    </section>
+
+    <!-- Step 2 — appearance -->
+    <section class="ob-step" data-step="1" hidden>
+      <h2>Make it yours</h2>
+      <p>Pick a look and an accent. It applies instantly and is remembered on this device.</p>
+      <div class="ob-group">
+        <span class="ob-lbl">Appearance</span>
+        <div class="segmented" id="obThemeSeg" style="background:var(--glass);">
+          <button data-theme="dark" class="on" type="button">Dark</button>
+          <button data-theme="light" type="button">Light</button>
+        </div>
+      </div>
+      <div class="ob-group">
+        <span class="ob-lbl">Accent</span>
+        <div class="swatches" id="obSwatches">
+          <button class="sw on" data-a="blue" aria-label="Blue" type="button"></button>
+          <button class="sw" data-a="indigo" aria-label="Indigo" type="button"></button>
+          <button class="sw" data-a="teal" aria-label="Teal" type="button"></button>
+          <button class="sw" data-a="rose" aria-label="Rose" type="button"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3 — privacy -->
+    <section class="ob-step" data-step="2" hidden>
+      <h2>Quiet on a shared screen</h2>
+      <p>Optional privacy defenses for a glance over your shoulder. You can change all of this later on the Privacy page.</p>
+      <label class="ob-check"><input type="checkbox" id="obCloak" /><span><b>Disguise this tab</b> — look like Google&nbsp;Classroom in the tab bar.</span></label>
+      <label class="ob-check"><input type="checkbox" id="obAbout" /><span><b>about:blank cloak</b> — opt in to launching inside a blank window.</span></label>
+      <p class="ob-fine">Straight talk: these hide things from a shoulder-glance. They don't defeat network filtering or device monitoring — no website can.</p>
+    </section>
+
+    <!-- Step 4 — done -->
+    <section class="ob-step" data-step="3" hidden>
+      <div class="ob-mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg></div>
+      <h2>You're all set</h2>
+      <p>Jump into the search bar, browse the game library, or open the proxy. Everything else lives under <b>Settings</b> and <b>Privacy</b> in the nav.</p>
+    </section>
+
+    <div class="ob-actions">
+      <button class="btn glassbtn sm" id="obSkip" type="button">Skip</button>
+      <div class="ob-nav">
+        <button class="btn glassbtn sm" id="obBack" type="button" hidden>Back</button>
+        <button class="btn sm" id="obNext" type="button">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ob-scrim { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: var(--sp-4);
+    background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .ob-scrim[hidden] { display: none; }
+  .ob { width: min(520px, 100%); border-radius: var(--r-lg); padding: var(--sp-6); animation: obpop .3s cubic-bezier(.16,.8,.3,1); }
+  @keyframes obpop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+  .ob-steps { display: flex; gap: 7px; margin-bottom: var(--sp-5); }
+  .ob-steps i { width: 26px; height: 4px; border-radius: 2px; background: var(--glass-strong); transition: background .25s; }
+  .ob-steps i.on { background: var(--accent); }
+  .ob-mark { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 18px; color: var(--on-accent);
+    background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 24px var(--accent-tint); }
+  .ob-mark.ok { background: linear-gradient(160deg, #43d17f, #16a34a); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 24px rgba(22,163,74,.3); }
+  .ob-mark svg { width: 26px; height: 26px; }
+  .ob h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 10px; }
+  .ob p { color: var(--ink-2); line-height: 1.55; font-size: 0.98rem; }
+  .ob-tips { list-style: none; margin: 18px 0 0; display: flex; flex-direction: column; gap: 12px; }
+  .ob-tips li { color: var(--ink-2); font-size: 0.95rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ob kbd { font-family: var(--mono); font-size: 12px; background: var(--glass-strong); border: 1px solid var(--glass-brd); border-radius: 6px; padding: 3px 7px; color: var(--ink); }
+  .ob-group { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px; }
+  .ob-lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .ob-check { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; cursor: pointer; font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+  .ob-check input { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
+  .ob-check b { color: var(--ink); font-weight: 600; }
+  .ob-fine { margin-top: 18px; font-size: 12.5px; color: var(--ink-3); }
+  .ob-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: var(--sp-6); }
+  .ob-nav { display: flex; gap: 10px; }
+  @media (prefers-reduced-motion: reduce) { .ob { animation: none; } }
+</style>
+
+<script>
+  (function () {
+    var KEY = "sg:onboarded";
+    function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    var scrim = document.getElementById("obScrim");
+    if (!scrim || lsGet(KEY)) return; // already onboarded (or no DOM)
+
+    var steps = Array.prototype.slice.call(scrim.querySelectorAll(".ob-step"));
+    var dots = document.getElementById("obDots");
+    var back = document.getElementById("obBack") as HTMLButtonElement | null;
+    var next = document.getElementById("obNext") as HTMLButtonElement | null;
+    var skip = document.getElementById("obSkip");
+    var i = 0;
+
+    if (dots) dots.innerHTML = steps.map(function () { return "<i></i>"; }).join("");
+    var dotEls = dots ? Array.prototype.slice.call(dots.querySelectorAll("i")) : [];
+
+    function render() {
+      steps.forEach(function (s, n) { (s as HTMLElement).hidden = n !== i; });
+      dotEls.forEach(function (d, n) { (d as HTMLElement).classList.toggle("on", n <= i); });
+      if (back) back.hidden = i === 0;
+      if (next) next.textContent = i === steps.length - 1 ? "Get started" : "Next";
+    }
+
+    function open() { (scrim as HTMLElement).hidden = false; render(); }
+    function finish() { lsSet(KEY, "1"); (scrim as HTMLElement).hidden = true; }
+
+    /* Prefer the shared SG API (same as Settings/Privacy); fall back to direct
+       localStorage so onboarding still works if SG hasn't attached yet. */
+    var SG = () => (window as any).SG || null;
+    var root = document.documentElement;
+
+    function setTheme(t: string) { var s = SG(); if (s && s.setTheme) s.setTheme(t); else { root.dataset.theme = t; lsSet("sg:theme", t); } markSeg(t); }
+    function setAccent(a: string) {
+      var s = SG();
+      if (s && s.setAccent) s.setAccent(a);
+      else { if (a === "blue") { root.removeAttribute("data-accent"); try { localStorage.removeItem("sg:accent"); } catch (e) {} } else { root.dataset.accent = a; lsSet("sg:accent", a); } }
+      markSw(a);
+    }
+    function markSeg(t: string) { scrim!.querySelectorAll("#obThemeSeg button").forEach(function (b: any) { b.classList.toggle("on", b.dataset.theme === t); }); }
+    function markSw(a: string) { scrim!.querySelectorAll("#obSwatches .sw").forEach(function (b: any) { b.classList.toggle("on", b.dataset.a === a); }); }
+
+    var seg = document.getElementById("obThemeSeg");
+    if (seg) seg.addEventListener("click", function (e: any) { var b = e.target.closest("[data-theme]"); if (b) setTheme(b.dataset.theme); });
+    var sw = document.getElementById("obSwatches");
+    if (sw) sw.addEventListener("click", function (e: any) { var b = e.target.closest("[data-a]"); if (b) setAccent(b.dataset.a); });
+    markSeg(root.dataset.theme || "dark");
+    markSw(root.dataset.accent || "blue");
+
+    function applyPrivacyChoices() {
+      var cloak = document.getElementById("obCloak") as HTMLInputElement | null;
+      var about = document.getElementById("obAbout") as HTMLInputElement | null;
+      if (cloak && cloak.checked && !lsGet("sg:cloak")) {
+        var s = SG();
+        if (s && s.toggleCloak) s.toggleCloak();
+        else lsSet("sg:cloak", JSON.stringify({ title: "Home — Google Classroom", favicon: "https://ssl.gstatic.com/classroom/favicon.png" }));
+      }
+      if (about && about.checked) lsSet("sg:aboutblank", "1");
+    }
+
+    if (next) next.addEventListener("click", function () {
+      if (i === 2) applyPrivacyChoices();
+      if (i < steps.length - 1) { i++; render(); } else finish();
+    });
+    if (back) back.addEventListener("click", function () { if (i > 0) { i--; render(); } });
+    if (skip) skip.addEventListener("click", finish);
+
+    open();
+  })();
+</script>

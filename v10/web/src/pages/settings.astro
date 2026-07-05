@@ -42,6 +42,25 @@ import Base from "../layouts/Base.astro";
         <button class="btn sm" id="cloakToggle" type="button">Preview tab disguise</button>
       </div>
 
+      <div class="appear glass reveal" style="margin-top: var(--sp-4);">
+        <div class="grp">
+          <span class="lbl">Search engine</span>
+          <select id="engineSel" class="selctl" aria-label="Search engine">
+            <option value="">Google</option>
+            <option value="https://www.bing.com/search?q=%s">Bing</option>
+            <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
+            <option value="https://www.startpage.com/sp/search?query=%s">Startpage</option>
+            <option value="https://search.brave.com/search?q=%s">Brave</option>
+            <option value="https://www.ecosia.org/search?q=%s">Ecosia</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </div>
+        <label class="field glass" id="engineCustomWrap" style="flex:1 1 260px; display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          <input id="engineCustom" type="text" placeholder="https://example.com/search?q=%s" spellcheck="false" />
+        </label>
+      </div>
+
       <div class="setgrid reveal">
         <div class="setcard glass">
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"></path></svg>Performance</h3>
@@ -93,6 +112,9 @@ import Base from "../layouts/Base.astro";
 
   <style>
     .set-page { padding: 84px 0 var(--sp-6); }
+    .selctl { background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink); border-radius: var(--r-pill);
+      padding: 8px 14px; font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; }
+    .selctl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
 
   <script>
@@ -144,6 +166,43 @@ import Base from "../layouts/Base.astro";
       if (cloak2) cloak2.addEventListener("click", () => { if (w.SG && w.SG.toggleCloak) w.SG.toggleCloak(); });
       const clr = document.getElementById("clearTraces");
       if (clr) clr.addEventListener("click", () => { if (w.SG && w.SG.clearTraces) w.SG.clearTraces(); });
+
+      /* search engine (sg:engine = URL template with %s; empty = Google default) */
+      const engineSel = document.getElementById("engineSel") as HTMLSelectElement | null;
+      const engineWrap = document.getElementById("engineCustomWrap");
+      const engineCustom = document.getElementById("engineCustom") as HTMLInputElement | null;
+      const PRESET_ENGINES = [
+        "https://www.bing.com/search?q=%s",
+        "https://duckduckgo.com/?q=%s",
+        "https://www.startpage.com/sp/search?query=%s",
+        "https://search.brave.com/search?q=%s",
+        "https://www.ecosia.org/search?q=%s",
+      ];
+      function showCustom(on: boolean) { if (engineWrap) engineWrap.style.display = on ? "" : "none"; }
+      if (engineSel) {
+        const cur = lsGet("sg:engine") || "";
+        if (!cur) engineSel.value = "";
+        else if (PRESET_ENGINES.indexOf(cur) > -1) engineSel.value = cur;
+        else { engineSel.value = "custom"; showCustom(true); if (engineCustom) engineCustom.value = cur; }
+        engineSel.addEventListener("change", () => {
+          if (engineSel.value === "custom") { showCustom(true); if (engineCustom) engineCustom.focus(); return; }
+          showCustom(false);
+          if (!engineSel.value) lsDel("sg:engine"); else lsSet("sg:engine", engineSel.value);
+          toast("Search engine updated");
+        });
+      }
+      if (engineCustom) {
+        const saveCustom = () => {
+          let v = engineCustom.value.trim();
+          if (!v) { lsDel("sg:engine"); return; }
+          if (v.indexOf("%s") < 0) v += (v.indexOf("?") < 0 ? "?q=%s" : "&q=%s");
+          if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) v = "https://" + v;
+          lsSet("sg:engine", v);
+          toast("Custom search engine saved");
+        };
+        engineCustom.addEventListener("change", saveCustom);
+        engineCustom.addEventListener("blur", saveCustom);
+      }
     })();
   </script>
 </Base>

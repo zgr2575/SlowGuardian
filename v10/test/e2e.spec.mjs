@@ -30,6 +30,29 @@ test.afterAll(async () => {
   await new Promise((r) => fixture.close(r));
 });
 
+// Most tests don't want the first-run modal in the way — seed the guard.
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => {
+    try { localStorage.setItem("sg:onboarded", "1"); } catch (e) {}
+  });
+});
+
+test("first-run onboarding shows and completes", async ({ browser }) => {
+  // fresh context = no sg:onboarded → the modal appears
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto("/");
+  await expect(page.locator("#obScrim")).toBeVisible();
+  await expect(page.locator("#obTitle")).toContainText("Welcome");
+  // step through and finish; the guard persists so it won't show again
+  for (let i = 0; i < 3; i++) await page.click("#obNext");
+  await page.click("#obNext"); // "Get started"
+  await expect(page.locator("#obScrim")).toBeHidden();
+  await page.reload();
+  await expect(page.locator("#obScrim")).toBeHidden();
+  await ctx.close();
+});
+
 test("home lander renders with the omnibox", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/SlowGuardian/);

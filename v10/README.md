@@ -1,72 +1,154 @@
-# SlowGuardian V10 — Phase 1 Proxy Core
+# SlowGuardian V10
 
-Scramjet-over-Wisp proxy core: a single service worker, `wisp-js` handling the
-WebSocket upgrade, `bare-mux` + `epoxy-transport` as the client transport, and
-COOP/COEP cross-origin isolation. Backend is Express on a raw `node:http` server;
-the frontend for this phase is a minimal dark test page (the Astro UI lands in
-Phase 2).
+A fast, private gateway for the school Chromebook — open any site, launch a
+game or an app, all in a blink even on the slow machines. V10 is a ground-up,
+LTS-focused rebuild of V9: one proxy engine, one service worker, an Astro
+static frontend, and an honest privacy story.
+
+- **Design:** Apple-style **Liquid Glass**, dark-first, with a **Dynamic Island**
+  nav. Runs on 2016–2019 Chromebooks (blur steps down to solid glass).
+- **Proxy:** **Scramjet** over **Wisp** (`wisp-js`), a single service worker,
+  `bare-mux` + `epoxy-transport` transport, COOP/COEP cross-origin isolation.
+- **Backend:** Express on a raw `node:http` server (crash-only), envalid config,
+  pino logging.
+
+> Interactive design showcase: `docs/design/v10-mockup.html`.
 
 ## Layout
 
 ```
 v10/
-  package.json         # pinned proxy stack + envalid/pino
-  src/
-    config.js          # envalid, fail-fast (PORT/HOST/NODE_ENV)
-    logger.js          # pino; pino-pretty only in dev
-    server.js          # express + http upgrade -> wisp-js, COOP/COEP, graceful shutdown
-  public/
-    index.html         # minimal test page (URL input + Go + iframe)
-    boot.js            # register SW, set epoxy transport -> /wisp/, navigate
-    sw.js              # Scramjet service worker
+  src/                 # the proxy server
+    server.js          #   express + http upgrade → wisp-js, COOP/COEP, /healthz + /readyz
+    config.js          #   envalid, fail-fast (PORT / HOST / NODE_ENV)
+    logger.js          #   pino (pretty in dev)
+  public/              # Phase-1 fallback page + the Scramjet service worker (sw.js)
+  web/                 # the Astro static frontend (built to web/dist, served by src/server.js)
+    src/pages/         #   index (lander) · games · apps · go (proxy) · privacy · settings
+    src/components/    #   Library, Tile, Billboard, Onboarding
+    src/layouts/Base.astro   #   shell: Dynamic Island, ⌘K palette, theme/accent/cloak/panic
+    src/content/       #   games.json (284) + apps.json (55) catalogs
+  test/                # wisp-handshake.mjs (zero-dep) + e2e.spec.mjs (Playwright)
+  Dockerfile           # canonical image (build from the repo root)
+  playwright.config.mjs
 ```
 
-The Scramjet / bare-mux / epoxy browser bundles are NOT copied into `public/` —
-`server.js` serves them straight out of `node_modules` via each package's own
-path helper (`/scram/`, `/baremux/`, `/epoxy/`), so the served bytes always match
-the installed version.
+The Scramjet / bare-mux / epoxy browser bundles are **not** copied into the
+repo — `server.js` serves them straight out of `node_modules` (`/scram/`,
+`/baremux/`, `/epoxy/`), so the served bytes always match the installed version.
+
+## Features
+
+- **Home** — a Google-style search lander: one omnibox (→ the proxy) and quick
+  links to Games / Apps / Surprise me.
+- **Games / Apps** — a Netflix-style library over the real catalog: a featured
+  billboard, category shelves, and a dense full-width "All" grid. Search lives
+  in the **⌘K** palette.
+- **Proxy (`/go`)** — a Chrome-style multi-tab in-app browser: tab strip, pill
+  omnibox, back/forward/reload, **fullscreen**, **open-in-new-window**, an
+  always-there **Quick Exit**, and a Chrome-style new-tab page.
+- **Privacy** — tab disguise (a dozen school-app presets + custom title/favicon,
+  live preview), one-key **Quick Exit** (decoy URL + rebindable key; double-Esc
+  is global), the opt-in **about:blank cloak**, and one-tap **clear traces**.
+- **Settings** — dark/light theme, four accents, a performance dial (Auto / Full
+  glass / Lite for old Chromebooks), and a **search-engine** picker (Google,
+  Bing, DuckDuckGo, Startpage, Brave, Ecosia, or custom).
+- **Onboarding** — a one-time first-run flow (welcome → appearance → privacy →
+  done) that persists its choices.
+
+Everything is client-side and remembered per device (`sg:*` localStorage keys);
+there are no accounts. See `src/layouts/Base.astro` for the storage contract.
 
 ## Install & run
 
 ```bash
 cd v10
 npm install
-npm run dev      # NODE_ENV=development, pretty logs, --watch
-# or
-npm start        # plain node src/server.js
+npm run build:web        # build the Astro frontend into web/dist
+npm run dev              # or: npm start   (serves web/dist + the proxy)
 ```
 
-Then open http://localhost:8080, type a URL (default `https://example.com`),
-and click **Go**. The live site renders inside the proxied iframe.
+Open <http://localhost:8080>. Config via env (all optional): `PORT` (8080),
+`HOST` (0.0.0.0), `NODE_ENV` (`development` | `production` | `test`). Invalid
+values fail fast at boot.
 
-Config via env (all optional): `PORT` (default 8080), `HOST` (default 0.0.0.0),
-`NODE_ENV` (development|production|test). Invalid values fail fast at boot.
+> **Secure-context note:** service workers / WASM require a secure context.
+> `http://localhost` and `http://127.0.0.1` count as secure, so local dev needs
+> no HTTPS. Any non-loopback host must be served over real HTTPS.
 
-> Secure-context note: service workers / SharedWorker / WASM require a secure
-> context. `http://localhost` and `http://127.0.0.1` count as secure, so local
-> dev needs no HTTPS. Any non-loopback host must be served over real HTTPS.
+### Docker
 
-## Phase 1 exit criteria
+Build from the **repo root** (the frontend build sources the catalog icon set
+from the repo-root `static/` tree):
 
-From a clean browser you can:
-1. Enter a URL and proxy a **live** site through **one** service worker (scope `/`).
-2. `wisp-js` handles the WebSocket **upgrade** at `/wisp/` (everything else on the
-   upgrade event is `socket.destroy()`'d).
-3. **COOP** (`same-origin`) + **COEP** (`require-corp`) are set on every response.
-4. A bad proxied URL **never** crashes the server — `uncaughtException` /
-   `unhandledRejection` are logged, not `process.exit()`'d.
+```bash
+docker build -f v10/Dockerfile -t slowguardian:10 .
+docker run --rm -p 8080:8080 slowguardian:10
+```
 
-## Verify
+The image is multi-stage (build frontend → prod-only deps → slim runtime), runs
+as a non-root user, and has a `HEALTHCHECK` on `/readyz`.
 
-- Headers: `curl -sI http://localhost:8080/ | grep -i cross-origin` shows both
-  `Cross-Origin-Opener-Policy: same-origin` and
-  `Cross-Origin-Embedder-Policy: require-corp`.
-- Assets: `/scram/scramjet.all.js`, `/scram/scramjet.wasm.wasm`,
-  `/baremux/worker.js`, `/epoxy/index.mjs` all return 200.
-- Wisp upgrade: a WebSocket to `ws://localhost:8080/wisp/` upgrades (101) and
-  stays open; a WebSocket to any other path is dropped immediately.
-- End-to-end: the browser test page renders `https://example.com` ("Example
-  Domain") inside `#sj-frame`.
+## Health & deploy
 
-See the project test plan for the automated wisp-handshake check and the
-Playwright smoke test.
+- `GET /healthz` → `{ ok, version, uptime }` (liveness).
+- `GET /readyz` → `200`/`503` with a per-asset check list — the proxy bundles
+  **and** the built frontend must actually resolve (gate a load balancer here).
+
+Intended deploy is a **split**: the static frontend on **Vercel**, the
+persistent Wisp backend on **Render** (one Docker image is the canonical
+artifact). Re-confirm HTTPS proxying on the first real deploy — a dev sandbox
+with a TLS-intercepting egress will (correctly) fail epoxy's cert validation.
+
+## Testing
+
+```bash
+npm run build:web        # required — /readyz gates the test server on a built frontend
+npm run test:e2e         # Playwright: lander, library, health, COOP/COEP, and a
+                         #   full proxy round-trip against a LOCAL fixture (no live net)
+npm run test:wisp        # zero-dep: /wisp/ upgrades (101), non-wisp upgrades are dropped
+```
+
+CI (`.github/workflows/v10-ci.yml`) runs both suites plus a Docker build on
+every change to `v10/**`.
+
+## What changed from V9 (nothing silently dropped)
+
+**Carried over (rebuilt clean):** tab disguise, quick exit / panic key,
+about:blank cloak (a faithful port of V8's `createAboutBlank`), clear-traces,
+onboarding, the multi-tab proxy browser, search-engine choice, the games/apps
+catalogs, and the Dynamic Island nav (replacing V9's hover sidebar).
+
+**Intentionally not carried over** (scope decisions for a stable LTS):
+
+- **One proxy engine.** Scramjet-only over Wisp. Dropped Ultraviolet, Dynamic,
+  Rammerhead, and the multi-engine failover — they were the main source of V9's
+  instability. (UV is a documented post-1.0 escape hatch, added only if a live
+  test proves a real gap.)
+- **No accounts / monetization.** Dropped the KeyAuth/premium system, ads &
+  AdSense, the cookie-consent vendor, and the elaborate admin panel. 1.0 ships a
+  **public proxy** with a single **env-password admin gate**; user settings are
+  client-side. (ZADMIN Auth is a separate future maintainer project.)
+- **No MongoDB.** Small global/admin state uses embedded SQLite.
+- **No monitoring-evasion.** No anti-screenshot / anti-screen-record /
+  anti-close. The privacy features defend against a shoulder-glance and casual
+  history checks; they do **not** defeat network filtering or device monitoring,
+  and the UI says so plainly.
+- **Music/Spotify** — the old player slot is reserved for a future project
+  integration (TBD by the maintainer); not building music in 1.0.
+- **Superseded by the new design:** the theme zoo (Cyberpunk/Ocean/Sunset/
+  Catppuccin), background-image + particles, the 100-toggle "features manager,"
+  the movable floating-button widgets, the plugin system, and the home
+  quotes/quick-access widgets — all replaced by the approved Liquid-Glass system
+  (dark/light + accents + a performance dial) and the minimal lander.
+- **Reachability** (signed "get the latest link" mirror manifest) → **post-1.0**.
+
+**Deferred (post-1.0):** proxy session save/restore & bookmarks, URL-bar search
+autocomplete, and reachability mirrors.
+
+## LTS
+
+v10.x support window: **6 months active + 6 months security-only.** History is
+left intact; the big binary assets (maps, wallpaper) are no longer tracked going
+forward. The V8 and V9 code is preserved on the `legacy/v8` and `legacy/v9`
+branches.

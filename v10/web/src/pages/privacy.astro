@@ -72,8 +72,16 @@ import Base from "../layouts/Base.astro";
         <div class="segmented pri-presets" id="cloakPresets" style="background:var(--glass);">
           <button data-preset="classroom" type="button">Classroom</button>
           <button data-preset="docs" type="button">Docs</button>
+          <button data-preset="slides" type="button">Slides</button>
           <button data-preset="drive" type="button">Drive</button>
+          <button data-preset="gmail" type="button">Gmail</button>
+          <button data-preset="meet" type="button">Meet</button>
+          <button data-preset="canvas" type="button">Canvas</button>
+          <button data-preset="schoology" type="button">Schoology</button>
+          <button data-preset="khan" type="button">Khan</button>
           <button data-preset="clever" type="button">Clever</button>
+          <button data-preset="wikipedia" type="button">Wikipedia</button>
+          <button data-preset="powerschool" type="button">PowerSchool</button>
           <button data-preset="off" type="button">Off</button>
         </div>
 
@@ -211,8 +219,16 @@ import Base from "../layouts/Base.astro";
       const PRESETS: any = {
         classroom: { title: "Home — Google Classroom", favicon: "https://ssl.gstatic.com/classroom/favicon.png" },
         docs: { title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+        slides: { title: "Untitled presentation - Google Slides", favicon: "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico" },
         drive: { title: "My Drive - Google Drive", favicon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+        gmail: { title: "Inbox (1) - Gmail", favicon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" },
+        meet: { title: "Meet", favicon: "https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v6/web-96dp/logo_meet_2020q4_color_1x_web_96dp.png" },
+        canvas: { title: "Dashboard", favicon: "https://canvas.instructure.com/favicon.ico" },
+        schoology: { title: "Home | Schoology", favicon: "https://app.schoology.com/sites/all/themes/schoology_theme/favicon.ico" },
+        khan: { title: "Dashboard | Khan Academy", favicon: "https://cdn.kastatic.org/images/favicon.ico" },
         clever: { title: "Clever | Portal", favicon: "https://clever.com/favicon.ico" },
+        wikipedia: { title: "Wikipedia, the free encyclopedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
+        powerschool: { title: "PowerSchool SIS", favicon: "https://www.powerschool.com/favicon.ico" },
         off: null,
       };
 

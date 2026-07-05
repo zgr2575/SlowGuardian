@@ -37,6 +37,11 @@ import Base from "../layouts/Base.astro";
       var form = document.getElementById("omni") as HTMLFormElement | null;
       var input = document.getElementById("omniInput") as HTMLInputElement | null;
 
+      function searchUrl(q: string): string {
+        var tmpl: string | null = null;
+        try { tmpl = localStorage.getItem("sg:engine"); } catch (e) {}
+        return (tmpl || "https://www.google.com/search?q=%s").replace("%s", encodeURIComponent(q));
+      }
       function normalize(raw: string): string {
         raw = raw.trim();
         if (!raw) return "";
@@ -46,7 +51,7 @@ import Base from "../layouts/Base.astro";
         if (looksUrlish) {
           try { return new URL(raw).toString(); } catch (e) { return "https://" + raw; }
         }
-        return "https://www.google.com/search?q=" + encodeURIComponent(raw);
+        return searchUrl(raw);
       }
 
       if (form && input) {

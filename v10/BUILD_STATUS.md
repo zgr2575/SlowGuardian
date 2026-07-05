@@ -27,7 +27,8 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - [x] **Phase 2.1 — Design sync** ✅ **VERIFIED** — real app brought in line with the approved mockup (`docs/design/v10-mockup.html`, artifact 950d7919). `/` = Google-style search **lander**; the games library moved to `/games` (nav + ⌘K updated). Games/Apps gained a dense full-width **"All" grid** (283/55 tiles, real icons) below the shelves; the in-library search field was dropped (unified into ⌘K). The `/go` proxy was reskinned to **look like Google Chrome** (tab strip, pill omnibox, menu/avatar, Chrome new-tab page with shortcut tiles) — the verified multi-tab Scramjet wiring is untouched. `/settings` became the three-card grid (Performance/Privacy&exit/About). Sticky-footer full-height layout across all pages. `npm run build` green (6 routes); every page rendered against `src/server.js` with zero console errors and the proxy engine reaching "ready".
 - [x] **Phase 3 — Privacy** ✅ **VERIFIED** — tab-disguise configurator (live preview, presets, custom title/favicon → `sg:cloak`), quick exit (decoy `sg:panicUrl` + rebindable `sg:panicKey`, double-Esc global), clear-traces, and the **opt-in about:blank cloak**. Mirror rotation stays **post-1.0** (locked decision). Details below.
 - [x] **Phase 4 — Stability** ✅ **VERIFIED** — Playwright proxy smoke test (local fixture, no live internet), `/healthz` + `/readyz`, GitHub Actions CI, and the canonical Docker image. Details below.
-- [ ] **1.0 LTS** (v10.x branch, release tooling, GHCR image push)
+- [x] **Feature parity + legacy backups** ✅ — V8/V9 preserved on `legacy/v8` (`a91599b`, Version8.9a) and `legacy/v9` (`main`). V9 features audited; gaps closed (onboarding, search-engine choice, expanded cloak presets, proxy fullscreen/pop-out). README rewritten with a full carried-over / superseded / dropped map. Details below.
+- [ ] **1.0 LTS** (flip `10.0.0-rc.1` → `10.0.0`, GHCR image push, cutover)
 
 ## Phase 1 verification (2026-07-04)
 Ran locally against `node src/server.js` + headless Chromium:
@@ -68,8 +69,18 @@ Stability + release plumbing. `npm run build:web` green; both test suites pass l
 - ✅ **Docker** — `v10/Dockerfile` (multi-stage: build Astro frontend → prod-only server deps [drops the test browser] → slim runtime; `HEALTHCHECK` hits `/readyz`; runs as `node`). Build **from the repo root** (`docker build -f v10/Dockerfile .`) because the web build sources the catalog icons from repo-root `static/`. `.dockerignore` added at the root. Not built in-sandbox (no daemon) — validated by the CI docker-build job and by verifying every constituent step locally.
 - Version bumped `10.0.0-phase1` → **`10.0.0-rc.1`**.
 
+## Feature parity + legacy backups (2026-07-05)
+- ✅ **Legacy preserved** — `legacy/v8` → `a91599b` (Version8.9a, last V8 commit before the V9 transition); `legacy/v9` → `main` (V9 `9.0.0`). Both pushed.
+- ✅ **V9 audited** against V10; gaps closed with clean rebuilds:
+  - **Onboarding** — first-run modal (`web/src/components/Onboarding.astro`, rendered from Base): welcome → appearance (theme+accent, live) → privacy (disguise / about:blank opt-in) → done; guard `sg:onboarded`. Playwright-tested.
+  - **Search-engine choice** — Settings picker (Google/Bing/DuckDuckGo/Startpage/Brave/Ecosia/custom) → `sg:engine` template; both the lander and proxy omniboxes honor it.
+  - **Cloak presets** — expanded 4 → 12 (Classroom/Docs/Slides/Drive/Gmail/Meet/Canvas/Schoology/Khan/Clever/Wikipedia/PowerSchool) + custom.
+  - **Proxy utilities** — added **Fullscreen** + **Open-in-new-window** (Ctrl+T/W/L intentionally skipped — they collide with the host browser).
+- 📄 **README** rewritten (`v10/README.md`) with a transparent "carried over / intentionally not carried over / deferred" map so nothing is silently lost. Intentional drops (all previously agreed): multi-engine proxy/Rammerhead, accounts/premium/ads/KeyAuth, MongoDB, monitoring-evasion, music/Spotify, theme-zoo/particles/plugins/movable-buttons/features-manager, home widgets.
+
 ### Known follow-ups (not blocking)
 - `astro check` (strict TS) flags implicit-any/null in a few bundled `<script>` blocks — type-only, does not affect `astro build`. Fix at 1.0 (CI) or loosen tsconfig for script blocks.
+- Some cloak-preset favicons are cross-origin; under COEP they may fall back to the globe glyph (the tab **title** still disguises). Cosmetic.
 - Duplicate ⌘K palette wiring (Base + Library both bind `#cmdList`) — minor last-writer-wins; reconcile via a `data-managed` gate.
 - `/settings` has no Dynamic Island nav link (reachable via privacy cross-link) — add if wanted.
 - Icon optimization: several catalog icons are >1MB; route through `astro:assets` / resize to tile size.

@@ -73,12 +73,15 @@ import Base from "../layouts/Base.astro";
             />
           </form>
 
+          <button class="gg-navbtn" id="ggPopout" type="button" title="Open in a new window" aria-label="Open in a new window">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"></path></svg>
+          </button>
+          <button class="gg-navbtn" id="ggFull" type="button" title="Fullscreen" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+          </button>
           <button class="gg-exit" id="ggExit" type="button" title="Quick exit — replaces this tab with your decoy">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
             <span class="lbl">Exit</span>
-          </button>
-          <button class="gg-menu" type="button" title="Menu" aria-label="Menu">
-            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg>
           </button>
           <div class="gg-avatar" title="You" aria-hidden="true">S</div>
         </div>
@@ -303,7 +306,8 @@ import Base from "../layouts/Base.astro";
         if (!raw) return "";
         const looksUrlish = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) || (!/\s/.test(raw) && /\.[a-z]{2,}(\/|$|:|\?)/i.test(raw));
         if (looksUrlish) { try { return new URL(raw).toString(); } catch (e) { return "https://" + raw; } }
-        return "https://www.google.com/search?q=" + encodeURIComponent(raw);
+        const tmpl = lsGet("sg:engine") || "https://www.google.com/search?q=%s";
+        return tmpl.replace("%s", encodeURIComponent(raw));
       }
       function hostFrom(u: string) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return u || "New tab"; } }
 
@@ -527,6 +531,24 @@ import Base from "../layouts/Base.astro";
       }
       const exitBtn = document.getElementById("ggExit");
       if (exitBtn) exitBtn.addEventListener("click", quickExit);
+
+      /* Open in a new window — pops the active tab's URL into a fresh /go tab. */
+      const popoutBtn = document.getElementById("ggPopout");
+      if (popoutBtn) popoutBtn.addEventListener("click", () => {
+        const t = activeTab();
+        const url = t && t.url;
+        window.open(url ? "/go?url=" + encodeURIComponent(url) : "/go", "_blank", "noopener");
+      });
+
+      /* Fullscreen — distraction-free proxy workspace (the shell element). */
+      const fullBtn = document.getElementById("ggFull");
+      const shell = document.querySelector(".gg-shell");
+      if (fullBtn && shell) fullBtn.addEventListener("click", () => {
+        try {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else (shell as any).requestFullscreen?.();
+        } catch (e) { toast("Fullscreen isn't available here"); }
+      });
 
       /* Optional rebindable single-key panic (sg:panicKey). Base already owns
          the global double-Esc; this adds the user's chosen key on the browser

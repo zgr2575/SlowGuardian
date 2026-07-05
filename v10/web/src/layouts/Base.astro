@@ -22,6 +22,7 @@
  */
 import "../styles/tokens.css";
 import "../styles/global.css";
+import Onboarding from "../components/Onboarding.astro";
 
 export interface Props {
   title?: string;
@@ -152,6 +153,8 @@ const FAVICON =
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <Onboarding />
 
     <script>
       /* Shared shell behavior — the GLOBAL parts of the approved mockup's JS:
