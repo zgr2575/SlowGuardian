@@ -153,6 +153,8 @@
   .view.active { display: block; animation: viewin .34s cubic-bezier(.16,.8,.3,1); }
   @keyframes viewin { from { opacity: 0; transform: translateY(8px); } }
   @media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
+  /* clear the floating island on content pages (home + proxy set their own) */
+  #view-games, #view-apps, #view-privacy, #view-settings { padding-top: 74px; }
   /* proxy workspace mock */
   .gobar { border-radius: var(--r-lg); padding: 8px 8px 4px; margin-bottom: var(--sp-4); }
   .tabstrip { display: flex; align-items: center; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid var(--glass-brd); }
@@ -167,11 +169,28 @@
   .addr { flex: 1; display: flex; align-items: center; gap: 9px; padding: 9px 15px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); background: var(--glass); border: 1px solid var(--glass-brd); }
   .addr svg { width: 15px; height: 15px; color: var(--ink-3); flex-shrink: 0; }
   .exitbtn { flex-shrink: 0; background: linear-gradient(180deg,#ff8090,var(--err)); }
-  .frame-mock { border-radius: var(--r-lg); min-height: 440px; display: grid; place-items: center; text-align: center; }
+  #view-proxy { padding: 72px var(--sp-4) var(--sp-3); }
+  .browser { max-width: 1400px; margin: 0 auto; height: calc(100vh - 88px); min-height: 460px; display: flex; flex-direction: column; border-radius: var(--r-lg); overflow: hidden; }
+  .browser .tabstrip { padding: 10px 10px 8px; }
+  .browser .addrbar { padding: 8px 12px 10px; border-bottom: 1px solid var(--glass-brd); }
+  .frame-mock { flex: 1; min-height: 240px; display: grid; place-items: center; text-align: center; background: color-mix(in srgb, var(--bg-2) 68%, transparent); }
   .frame-note { max-width: 440px; padding: var(--sp-6); }
   .frame-note > svg { width: 46px; height: 46px; color: var(--accent-2); margin-bottom: 16px; }
   .frame-note h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
   .frame-note p { color: var(--ink-2); line-height: 1.55; }
+
+  /* ---------- Home (Google-style search) ---------- */
+  .home { text-align: center; padding: clamp(64px, 13vh, 150px) 0 var(--sp-8); }
+  .home-inner { display: flex; flex-direction: column; align-items: center; }
+  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
+  .home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
+  .home-logo .mark svg { width: 31px; height: 31px; }
+  .home-word { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
+  .home-word b { color: var(--accent); font-weight: 700; }
+  .home .omni { width: 100%; max-width: 600px; margin: 0 auto; }
+  .quicklinks { margin-top: var(--sp-5); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .qbtn { cursor: pointer; border: 1px solid var(--glass-brd); background: var(--glass); color: var(--ink-2); font-family: var(--font); font-size: 14px; font-weight: 500; padding: 9px 18px; border-radius: var(--r-pill); transition: .2s; }
+  .qbtn:hover { color: var(--ink); background: var(--glass-2); }
 
   .hero { text-align: center; padding: 82px 0 var(--sp-6); }
   .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
@@ -341,7 +360,7 @@
   <div class="isl-ambient"><span class="live"></span> Online</div>
   <div class="isl-panel">
     <nav class="isl-links">
-      <a href="#" class="isl-link on" data-view="games" title="Games" aria-label="Games">
+      <a href="#" class="isl-link" data-view="games" title="Games" aria-label="Games">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="20" height="10" rx="4"/><path d="M7 12h3M8.5 10.5v3M15.5 11.5h.01M17.5 13.5h.01"/></svg>
         <span class="lbl">Games</span>
       </a>
@@ -369,25 +388,28 @@
 </div>
 
 <main id="top">
-  <div class="view active" id="view-games">
-  <section class="hero">
-    <div class="wrap">
-      <p class="kicker reveal in">SlowGuardian&nbsp;10</p>
-      <h1 class="reveal in">Everything you need.<br><span class="soft">Nothing in your way.</span></h1>
-      <p class="lede reveal in">A fast, private gateway for the school Chromebook. Open a site or launch a game — it loads in a blink, even on the slow machines.</p>
-      <form class="omni glass reveal in" id="omni" onsubmit="return false">
+  <div class="view active" id="view-home">
+  <section class="home">
+    <div class="wrap home-inner">
+      <a class="home-logo" href="#" id="homeLogo">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+        <span class="home-word">Slow<b>Guardian</b></span>
+      </a>
+      <form class="omni glass" id="omni" onsubmit="return false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
         <button class="btn" type="submit">Open</button>
       </form>
-      <div class="meta-row reveal in">
-        <span><span class="d"></span>All systems online</span>
-        <span>312 games</span>
-        <span>48 apps</span>
-        <span>Loads in &lt;1.5s on a 2018 Chromebook</span>
+      <div class="quicklinks">
+        <button class="qbtn" data-view="games" type="button">Games</button>
+        <button class="qbtn" data-view="apps" type="button">Apps</button>
+        <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
       </div>
     </div>
   </section>
+  </div><!-- /view-home -->
+
+  <div class="view" id="view-games">
 
   <section id="library">
     <div class="wrap">
@@ -420,30 +442,25 @@
   </div>
 
   <div class="view" id="view-proxy">
-    <section>
-      <div class="wrap" style="padding-top:var(--sp-5)">
-        <div class="sechead reveal" style="margin-bottom:var(--sp-4)"><div class="ey">Proxy</div><h2>Your private browser.</h2></div>
-        <div class="gobar glass reveal">
-          <div class="tabstrip">
-            <div class="gtab active"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
-            <div class="gtab"><span class="gfav"></span><span class="gname">example.com</span><span class="gclose">×</span></div>
-            <button class="gnew" aria-label="New tab">+</button>
-          </div>
-          <div class="addrbar">
-            <button class="navb" aria-label="Back">‹</button><button class="navb" aria-label="Forward">›</button><button class="navb" aria-label="Reload">⟳</button>
-            <div class="addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>https://example.com</div>
-            <button class="btn sm exitbtn" type="button">Exit</button>
-          </div>
-        </div>
-        <div class="frame-mock glass reveal">
-          <div class="frame-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
-            <h3>Open anything, in a tab you can disguise.</h3>
-            <p>Type a site in the bar above and it loads right here — multi-tab, with an always-there Exit. The live proxy runs on the SlowGuardian server; this preview shows the workspace.</p>
-          </div>
+    <div class="browser glass">
+      <div class="tabstrip">
+        <div class="gtab active"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
+        <div class="gtab"><span class="gfav"></span><span class="gname">example.com</span><span class="gclose">×</span></div>
+        <button class="gnew" aria-label="New tab">+</button>
+      </div>
+      <div class="addrbar">
+        <button class="navb" aria-label="Back">‹</button><button class="navb" aria-label="Forward">›</button><button class="navb" aria-label="Reload">⟳</button>
+        <div class="addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>https://example.com</div>
+        <button class="btn sm exitbtn" type="button">Exit</button>
+      </div>
+      <div class="frame-mock">
+        <div class="frame-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
+          <h3>Open anything, in a tab you can disguise.</h3>
+          <p>Type a site in the bar above and it loads right here — multi-tab, with an always-there Exit. The live proxy runs on the SlowGuardian server; this preview shows the workspace.</p>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <div class="view" id="view-privacy">
@@ -683,7 +700,10 @@
   document.querySelectorAll(".isl-links a[data-view]").forEach(function (a) {
     a.addEventListener("click", function (e) { e.preventDefault(); showView(a.dataset.view); island.classList.remove("open"); });
   });
-  document.querySelector(".isl-brand").addEventListener("click", function (e) { e.preventDefault(); showView("games"); });
+  document.querySelector(".isl-brand").addEventListener("click", function (e) { e.preventDefault(); showView("home"); });
+  document.querySelectorAll(".qbtn[data-view]").forEach(function (b) { b.addEventListener("click", function () { showView(b.dataset.view); }); });
+  var homeLogo = document.getElementById("homeLogo"); if (homeLogo) homeLogo.addEventListener("click", function (e) { e.preventDefault(); showView("home"); });
+  var luckyBtn = document.getElementById("luckyBtn"); if (luckyBtn) luckyBtn.addEventListener("click", function () { var ns = Object.keys(META); var n = ns[Math.floor(Math.random() * ns.length)]; toast("Opening <b>" + n + "</b>…"); showView("proxy"); });
 
   function panic() { toast("Quick exit — would <b>replace()</b> the tab with your decoy · no history left", 2600); }
   var lastEsc = 0;
