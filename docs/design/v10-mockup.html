@@ -157,6 +157,8 @@
   @media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
   /* content-rich pages sit below the island and scroll */
   #view-games, #view-apps, #view-settings { padding-top: 74px; }
+  /* library views stretch wider than the standard column so wide monitors aren't half-empty */
+  #view-games .wrap, #view-apps .wrap { max-width: 1780px; }
   /* sparse pages fill the viewport and center their content — no dead space, footer stays at the bottom */
   #view-home, #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
   /* settings grid */
@@ -326,6 +328,13 @@
   .results { display: none; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
   .results .tile { width: auto; }
   .nomatch { grid-column: 1 / -1; color: var(--ink-3); padding: 24px 0; }
+  /* full-width dense grid — packs every title edge to edge so no width is wasted */
+  .allsec { margin-top: var(--sp-6); }
+  .allsec .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+  .allsec .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; }
+  .allsec .rowhead .more { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+  .allgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(138px, 13vw, 178px), 1fr)); gap: 14px; }
+  .allgrid .tile { width: auto; }
 
   /* ---------- Features ---------- */
   .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); }
@@ -466,6 +475,10 @@
         </div>
       </div>
       <div class="rows reveal" id="rows"></div>
+      <div class="allsec reveal" id="allgames-sec">
+        <div class="rowhead"><h3>All games</h3><span class="more" id="allgames-count"></span></div>
+        <div class="allgrid" id="allgames"></div>
+      </div>
       <div class="results" id="results"></div>
     </div>
   </section>
@@ -487,6 +500,10 @@
           </div>
         </div>
         <div class="rows reveal" id="rows-apps"></div>
+        <div class="allsec reveal" id="allapps-sec">
+          <div class="rowhead"><h3>All apps</h3><span class="more" id="allapps-count"></span></div>
+          <div class="allgrid" id="allapps"></div>
+        </div>
       </div>
     </section>
   </div>
@@ -753,12 +770,23 @@
   var rowsEl = document.getElementById("rows");
   renderRows(CATALOG, rowsEl);
   renderRows(APPS_CATALOG, document.getElementById("rows-apps"));
+  /* Dense full-width grids of the entire catalog — every title, edge to edge. */
+  function fillGrid(list, gridId, countId) {
+    var el = document.getElementById(gridId);
+    if (!el) return;
+    list.forEach(function (g) { el.appendChild(tile(g[0])); });
+    var c = document.getElementById(countId);
+    if (c) c.textContent = list.length + " titles";
+  }
+  fillGrid(GAMES, "allgames", "allgames-count");
+  fillGrid(APPS, "allapps", "allapps-count");
+  var allGamesSec = document.getElementById("allgames-sec");
   var pool = Object.keys(META);
   function search(q) {
     q = q.trim().toLowerCase();
     var res = document.getElementById("results"), bb = document.getElementById("billboard");
-    if (!q) { rowsEl.style.display = ""; res.style.display = "none"; if (bb) bb.style.display = ""; return; }
-    rowsEl.style.display = "none"; if (bb) bb.style.display = "none"; res.style.display = "grid"; res.innerHTML = "";
+    if (!q) { rowsEl.style.display = ""; if (allGamesSec) allGamesSec.style.display = ""; res.style.display = "none"; if (bb) bb.style.display = ""; return; }
+    rowsEl.style.display = "none"; if (allGamesSec) allGamesSec.style.display = "none"; if (bb) bb.style.display = "none"; res.style.display = "grid"; res.innerHTML = "";
     var hits = pool.filter(function (n) { return n.toLowerCase().indexOf(q) > -1; });
     if (!hits.length) { res.innerHTML = '<p class="nomatch">No titles match “' + q + '”.</p>'; return; }
     hits.forEach(function (n) { res.appendChild(tile(n)); });
