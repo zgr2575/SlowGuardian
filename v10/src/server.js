@@ -12,6 +12,7 @@
 import express from "express";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import { scramjetPath } from "@mercuryworkshop/scramjet/path"; // -> node_modules/@mercuryworkshop/scramjet/dist
@@ -35,6 +36,11 @@ Object.assign(wisp.options, {
   allow_udp_streams: false,
   hostname_blacklist: [],
   dns_servers: ["1.1.1.3", "1.0.0.3"],
+  // SSRF hygiene: a PUBLIC proxy must never reach loopback/private ranges.
+  // The Playwright smoke test proxies a 127.0.0.1 fixture, so allow loopback
+  // ONLY under NODE_ENV=test — never in development or production.
+  allow_loopback_ips: config.NODE_ENV === "test",
+  allow_private_ips: false,
 });
 
 const app = express();
@@ -46,7 +52,27 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/healthz", (req, res) => res.json({ ok: true }));
+// --- Health & readiness ------------------------------------------------------
+// /healthz = liveness (the process is up). /readyz = readiness: the assets a
+// real request needs must actually resolve — the proxy bundles from
+// node_modules AND the built frontend (or the Phase 1 fallback page). A load
+// balancer should gate traffic on /readyz, restart on /healthz.
+const VERSION = "10.0.0";
+const READY_CHECKS = [
+  ["scramjet", join(scramjetPath, "scramjet.all.js")],
+  ["scramjet-wasm", join(scramjetPath, "scramjet.wasm.wasm")],
+  ["baremux", join(baremuxPath, "worker.js")],
+  ["epoxy", join(epoxyPath, "index.mjs")],
+  ["frontend", join(publicPath, "index.html")],
+];
+
+app.get("/healthz", (req, res) => res.json({ ok: true, version: VERSION, uptime: process.uptime() }));
+
+app.get("/readyz", (req, res) => {
+  const checks = READY_CHECKS.map(([name, file]) => ({ name, ok: existsSync(file) }));
+  const ready = checks.every((c) => c.ok);
+  res.status(ready ? 200 : 503).json({ ready, version: VERSION, checks });
+});
 
 // --- Serve proxy bundles straight from node_modules (trailing slash matters) -
 app.use("/scram/", express.static(scramjetPath));   // scramjet.all.js, scramjet.sync.js, scramjet.wasm.wasm

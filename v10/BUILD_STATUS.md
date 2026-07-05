@@ -26,8 +26,8 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
 - [x] **Phase 2 — Frontend** ✅ **VERIFIED** — Astro 5 MPA, Liquid Glass + Dynamic Island, Netflix library over the real 284-game/55-app catalog, proxy-integrated multi-tab go page. Details below.
 - [x] **Phase 2.1 — Design sync** ✅ **VERIFIED** — real app brought in line with the approved mockup (`docs/design/v10-mockup.html`, artifact 950d7919). `/` = Google-style search **lander**; the games library moved to `/games` (nav + ⌘K updated). Games/Apps gained a dense full-width **"All" grid** (283/55 tiles, real icons) below the shelves; the in-library search field was dropped (unified into ⌘K). The `/go` proxy was reskinned to **look like Google Chrome** (tab strip, pill omnibox, menu/avatar, Chrome new-tab page with shortcut tiles) — the verified multi-tab Scramjet wiring is untouched. `/settings` became the three-card grid (Performance/Privacy&exit/About). Sticky-footer full-height layout across all pages. `npm run build` green (6 routes); every page rendered against `src/server.js` with zero console errors and the proxy engine reaching "ready".
 - [x] **Phase 3 — Privacy** ✅ **VERIFIED** — tab-disguise configurator (live preview, presets, custom title/favicon → `sg:cloak`), quick exit (decoy `sg:panicUrl` + rebindable `sg:panicKey`, double-Esc global), clear-traces, and the **opt-in about:blank cloak**. Mirror rotation stays **post-1.0** (locked decision). Details below.
-- [ ] **Phase 4 — Stability** (Playwright proxy smoke test, CI, health/readyz, Docker)
-- [ ] **1.0 LTS** (v10.x branch, release-please, GHCR image)
+- [x] **Phase 4 — Stability** ✅ **VERIFIED** — Playwright proxy smoke test (local fixture, no live internet), `/healthz` + `/readyz`, GitHub Actions CI, and the canonical Docker image. Details below.
+- [ ] **1.0 LTS** (v10.x branch, release tooling, GHCR image push)
 
 ## Phase 1 verification (2026-07-04)
 Ran locally against `node src/server.js` + headless Chromium:
@@ -58,8 +58,18 @@ Privacy features live on `/privacy` (configurators) with the actions exposed on 
 - ✅ **Clear traces** — wipes `sg:*` localStorage, sessionStorage, and Cache Storage (Base `SG.clearTraces`).
 - ⏭ **Mirror rotation** — deferred to post-1.0 (locked decision).
 
+## Phase 4 verification (2026-07-05)
+Stability + release plumbing. `npm run build:web` green; both test suites pass locally.
+- ✅ **Health/readiness** — `/healthz` (liveness: `{ok, version, uptime}`) and `/readyz` (readiness: 200/503 with a per-asset check list — proxy bundles + built frontend must actually resolve). Load balancers gate on `/readyz`.
+- ✅ **Proxy smoke test** — `test/e2e.spec.mjs` (Playwright). Boots the real server (webServer waits on `/readyz`), asserts the lander/games render, health + COOP/COEP headers, and — the key test — **proxies a local fixture end-to-end** (SW → bare-mux → epoxy → wisp TCP → Scramjet rewrite → fixture DOM), so it never depends on live internet. **5/5 pass** in headless Chromium.
+  - Needed one server change: wisp-js blocks loopback/private IPs by default (SSRF hygiene). Enabled `allow_loopback_ips` **only under `NODE_ENV=test`** so the fixture is reachable; dev/prod stay locked (`allow_private_ips:false` always).
+- ✅ **Wisp handshake** — `test/wisp-handshake.mjs` still green (`/wisp/` → 101, non-wisp upgrade dropped).
+- ✅ **CI** — `.github/workflows/v10-ci.yml` (scoped to `v10/**`, independent of the legacy `test-sw.yml`): build frontend → install Chromium → wisp handshake → Playwright e2e; plus a parallel **docker-build** job that builds the image (no push) so the Dockerfile is validated on every change.
+- ✅ **Docker** — `v10/Dockerfile` (multi-stage: build Astro frontend → prod-only server deps [drops the test browser] → slim runtime; `HEALTHCHECK` hits `/readyz`; runs as `node`). Build **from the repo root** (`docker build -f v10/Dockerfile .`) because the web build sources the catalog icons from repo-root `static/`. `.dockerignore` added at the root. Not built in-sandbox (no daemon) — validated by the CI docker-build job and by verifying every constituent step locally.
+- Version bumped `10.0.0-phase1` → **`10.0.0-rc.1`**.
+
 ### Known follow-ups (not blocking)
-- `astro check` (strict TS) flags implicit-any/null in a few bundled `<script>` blocks — type-only, does not affect `astro build`. Fix in Phase 4 (CI) or loosen tsconfig for script blocks.
+- `astro check` (strict TS) flags implicit-any/null in a few bundled `<script>` blocks — type-only, does not affect `astro build`. Fix at 1.0 (CI) or loosen tsconfig for script blocks.
 - Duplicate ⌘K palette wiring (Base + Library both bind `#cmdList`) — minor last-writer-wins; reconcile via a `data-managed` gate.
 - `/settings` has no Dynamic Island nav link (reachable via privacy cross-link) — add if wanted.
 - Icon optimization: several catalog icons are >1MB; route through `astro:assets` / resize to tile size.

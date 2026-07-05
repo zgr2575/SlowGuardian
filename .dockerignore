@@ -1,0 +1,10 @@
+# Docker build context is the repo root (v10/Dockerfile needs static/ icons).
+# Keep the context small: never ship installed deps, build output, or VCS/logs.
+**/node_modules
+**/dist
+**/.astro
+.git
+.github
+**/*.log
+*.log
+v10/web/public/assets/media/icons
