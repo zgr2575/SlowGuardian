@@ -173,28 +173,50 @@
   .toggle.on::after { left: 20px; background: #fff; }
   .setdiv { height: 1px; background: var(--glass-brd); }
   /* proxy workspace mock */
-  .gobar { border-radius: var(--r-lg); padding: 8px 8px 4px; margin-bottom: var(--sp-4); }
-  .tabstrip { display: flex; align-items: center; gap: 6px; padding: 2px 4px 8px; border-bottom: 1px solid var(--glass-brd); }
-  .gtab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px 10px 0 0; font-size: 13px; color: var(--ink-2); max-width: 210px; }
-  .gtab.active { background: var(--glass-2); color: var(--ink); box-shadow: inset 0 1px 0 var(--hi); }
-  .gtab .gfav { width: 14px; height: 14px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
-  .gtab .gname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .gtab .gclose { margin-left: 2px; color: var(--ink-3); cursor: pointer; }
-  .gnew { width: 30px; height: 30px; border-radius: 8px; border: 0; background: var(--glass); color: var(--ink-2); font-size: 18px; cursor: pointer; }
-  .addrbar { display: flex; align-items: center; gap: 8px; padding: 8px 4px 4px; }
-  .navb { width: 32px; height: 32px; border-radius: 8px; border: 0; background: var(--glass); color: var(--ink-2); font-size: 15px; cursor: pointer; flex-shrink: 0; }
-  .addr { flex: 1; display: flex; align-items: center; gap: 9px; padding: 9px 15px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); background: var(--glass); border: 1px solid var(--glass-brd); }
+  /* ---------- Proxy: Google-Chrome-style workspace ---------- */
+  :root { --chr-strip:#171a1f; --chr-bar:#282a2e; --chr-omni:#131417; --chr-ntp:#1c1d21; --chr-hover:rgba(255,255,255,.09); }
+  :root[data-theme="light"] { --chr-strip:#dee1e6; --chr-bar:#f1f3f4; --chr-omni:#e5e8eb; --chr-ntp:#ffffff; --chr-hover:rgba(0,0,0,.06); }
+  #view-proxy { padding: 68px var(--sp-4) var(--sp-4); }
+  .browser { max-width: 1500px; margin: 0 auto; width: 100%; height: calc(100vh - 92px); min-height: 480px; display: flex; flex-direction: column; border-radius: 13px; overflow: hidden; border: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: var(--sh-3); }
+  /* tab strip */
+  .tabstrip { display: flex; align-items: flex-end; gap: 1px; padding: 8px 8px 0; background: var(--chr-strip); }
+  .gtab { position: relative; display: inline-flex; align-items: center; gap: 9px; padding: 9px 12px 11px; font-size: 12.5px; color: var(--ink-2); min-width: 110px; max-width: 230px; border-radius: 9px 9px 0 0; cursor: default; }
+  .gtab.active { background: var(--chr-bar); color: var(--ink); }
+  .gtab:not(.active):hover { background: var(--chr-hover); }
+  .gtab .gfav { width: 15px; height: 15px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
+  .gtab .gname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .gtab .gclose { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; margin-left: 2px; color: var(--ink-3); font-size: 14px; cursor: pointer; }
+  .gtab .gclose:hover { background: var(--chr-hover); color: var(--ink); }
+  .gnew { width: 28px; height: 28px; margin: 0 0 5px 4px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); font-size: 17px; cursor: pointer; flex-shrink: 0; }
+  .gnew:hover { background: var(--chr-hover); }
+  /* toolbar */
+  .addrbar { display: flex; align-items: center; gap: 4px; padding: 6px 9px; background: var(--chr-bar); }
+  .navb { width: 30px; height: 30px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); font-size: 16px; cursor: pointer; flex-shrink: 0; display: grid; place-items: center; }
+  .navb:hover { background: var(--chr-hover); color: var(--ink); }
+  .addr { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px; margin: 0 6px; padding: 8px 16px; border-radius: var(--r-pill); font-size: 13.5px; color: var(--ink); background: var(--chr-omni); }
   .addr svg { width: 15px; height: 15px; color: var(--ink-3); flex-shrink: 0; }
-  .exitbtn { flex-shrink: 0; background: linear-gradient(180deg,#ff8090,var(--err)); }
-  #view-proxy { padding: 72px var(--sp-4) var(--sp-3); }
-  .browser { max-width: 1400px; margin: 0 auto; height: calc(100vh - 88px); min-height: 460px; display: flex; flex-direction: column; border-radius: var(--r-lg); overflow: hidden; }
-  .browser .tabstrip { padding: 10px 10px 8px; }
-  .browser .addrbar { padding: 8px 12px 10px; border-bottom: 1px solid var(--glass-brd); }
-  .frame-mock { flex: 1; min-height: 240px; display: grid; place-items: center; text-align: center; background: color-mix(in srgb, var(--bg-2) 68%, transparent); }
-  .frame-note { max-width: 440px; padding: var(--sp-6); }
-  .frame-note > svg { width: 46px; height: 46px; color: var(--accent-2); margin-bottom: 16px; }
-  .frame-note h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-  .frame-note p { color: var(--ink-2); line-height: 1.55; }
+  .addr span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chr-tools { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+  .chr-ic { width: 30px; height: 30px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
+  .chr-ic:hover { background: var(--chr-hover); color: var(--ink); }
+  .chr-ic svg { width: 17px; height: 17px; }
+  .chr-avatar { width: 26px; height: 26px; border-radius: 50%; margin-left: 4px; flex-shrink: 0; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
+  .exitbtn { flex-shrink: 0; margin-left: 6px; background: linear-gradient(180deg,#ff8090,var(--err)); }
+  /* content = Chrome-style new-tab page */
+  .frame-mock { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--chr-ntp); padding: var(--sp-6) var(--sp-5); }
+  .ntp { width: 100%; max-width: 580px; }
+  .ntp-word { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); margin-bottom: var(--sp-5); }
+  .ntp-word b { color: var(--accent-2); font-weight: 700; }
+  .ntp-omni { display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-radius: var(--r-pill); background: var(--chr-omni); border: 1px solid var(--glass-brd); margin-bottom: var(--sp-6); text-align: left; }
+  .ntp-omni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
+  .ntp-omni span { color: var(--ink-3); font-size: 14.5px; }
+  .ntp-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-4) var(--sp-3); }
+  @media (max-width: 560px) { .ntp-tiles { grid-template-columns: repeat(4, 1fr); } }
+  .ntp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; text-decoration: none; }
+  .ntp-tile .ntp-ic { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--chr-bar); color: var(--ink); font-size: 18px; font-weight: 600; transition: .16s; }
+  .ntp-tile:hover .ntp-ic { background: var(--chr-hover); transform: translateY(-1px); }
+  .ntp-tile .ntp-ic svg { width: 22px; height: 22px; }
+  .ntp-tile span { font-size: 12px; color: var(--ink-2); max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* ---------- Home (Google-style search) ---------- */
   .home { text-align: center; width: 100%; }
@@ -450,31 +472,65 @@
   </div><!-- /view-games -->
 
   <div class="view" id="view-apps">
-    <section>
+    <section id="library">
       <div class="wrap">
-        <div class="sechead reveal" style="margin-bottom:var(--sp-4)"><div class="ey">Apps</div><h2>Everything, unblocked.</h2></div>
+        <div class="billboard reveal" id="billboard-apps">
+          <div class="bb-art" style="background:linear-gradient(120deg,#b0142f,#e0245e 46%,#ff6a3d)"></div>
+          <div class="bb-content">
+            <span class="bb-tag">Featured app</span>
+            <h3>YouTube</h3>
+            <p>The whole library, unblocked and full-speed — proxied through SlowGuardian so it opens right in a disguisable tab.</p>
+            <div class="bb-actions">
+              <button class="btn" type="button">▶&nbsp; Open</button>
+              <button class="btn glassbtn" type="button">More info</button>
+            </div>
+          </div>
+        </div>
         <div class="rows reveal" id="rows-apps"></div>
       </div>
     </section>
   </div>
 
   <div class="view" id="view-proxy">
-    <div class="browser glass">
+    <div class="browser">
       <div class="tabstrip">
-        <div class="gtab active"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
+        <div class="gtab active"><span class="gfav"></span><span class="gname">New Tab</span><span class="gclose">×</span></div>
         <div class="gtab"><span class="gfav"></span><span class="gname">example.com</span><span class="gclose">×</span></div>
-        <button class="gnew" aria-label="New tab">+</button>
+        <div class="gtab"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
+        <button class="gnew" aria-label="New tab" title="New tab">+</button>
       </div>
       <div class="addrbar">
         <button class="navb" aria-label="Back">‹</button><button class="navb" aria-label="Forward">›</button><button class="navb" aria-label="Reload">⟳</button>
-        <div class="addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>https://example.com</div>
-        <button class="btn sm exitbtn" type="button">Exit</button>
+        <div class="addr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span style="flex:1">Search SlowGuardian or type a URL</span>
+        </div>
+        <div class="chr-tools">
+          <button class="chr-ic" aria-label="Bookmark" title="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z"/></svg></button>
+          <button class="btn sm exitbtn" type="button">Exit</button>
+          <button class="chr-ic" aria-label="Menu" title="Menu"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+          <div class="chr-avatar" title="You">S</div>
+        </div>
       </div>
       <div class="frame-mock">
-        <div class="frame-note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
-          <h3>Open anything, in a tab you can disguise.</h3>
-          <p>Type a site in the bar above and it loads right here — multi-tab, with an always-there Exit. The live proxy runs on the SlowGuardian server; this preview shows the workspace.</p>
+        <div class="ntp">
+          <div class="ntp-word">Slow<b>Guardian</b></div>
+          <div class="ntp-omni">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <span>Search the web or enter an address — it loads right here</span>
+          </div>
+          <div class="ntp-tiles">
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="16" cy="12" r="1.4" fill="currentColor"/></svg></span><span>Games</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></span><span>Apps</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#1a73e8;color:#fff">C</span><span>Classroom</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#0f9d58;color:#fff">D</span><span>Drive</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#ea4335;color:#fff">▶</span><span>YouTube</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#4285f4;color:#fff">W</span><span>Docs</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#d93025;color:#fff">M</span><span>Gmail</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#000;color:#fff">R</span><span>Reddit</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#191414;color:#1db954">♪</span><span>Spotify</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span><span>Add shortcut</span></a>
+          </div>
         </div>
       </div>
     </div>
