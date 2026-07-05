@@ -24,6 +24,7 @@ Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays
   - [ ] Remove dead V9 artifacts at cutover
 - [x] **Phase 1 — Single proxy path** ✅ **VERIFIED** — wisp-js + Scramjet + one SW + bare-mux/epoxy, COOP/COEP. Details below.
 - [x] **Phase 2 — Frontend** ✅ **VERIFIED** — Astro 5 MPA, Liquid Glass + Dynamic Island, Netflix library over the real 284-game/55-app catalog, proxy-integrated multi-tab go page. Details below.
+- [x] **Phase 2.1 — Design sync** ✅ **VERIFIED** — real app brought in line with the approved mockup (`docs/design/v10-mockup.html`, artifact 950d7919). `/` = Google-style search **lander**; the games library moved to `/games` (nav + ⌘K updated). Games/Apps gained a dense full-width **"All" grid** (283/55 tiles, real icons) below the shelves; the in-library search field was dropped (unified into ⌘K). The `/go` proxy was reskinned to **look like Google Chrome** (tab strip, pill omnibox, menu/avatar, Chrome new-tab page with shortcut tiles) — the verified multi-tab Scramjet wiring is untouched. `/settings` became the three-card grid (Performance/Privacy&exit/About). Sticky-footer full-height layout across all pages. `npm run build` green (6 routes); every page rendered against `src/server.js` with zero console errors and the proxy engine reaching "ready".
 - [ ] **Phase 3 — Privacy** (tab disguise, **about:blank cloak**, quick exit, clear traces, mirror rotation)
 - [ ] **Phase 4 — Stability** (Playwright proxy smoke test, CI, health/readyz, Docker)
 - [ ] **1.0 LTS** (v10.x branch, release-please, GHCR image)

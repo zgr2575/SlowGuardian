@@ -1,70 +1,78 @@
 ---
 /**
- * index.astro — Home (Games). Hero + omnibox + meta row, then the
- * Netflix-style library. The library shelves are owned by the catalog
- * agent: fill the marked slot below (or drop in a <Library/> component).
+ * index.astro — Home. The Google-style lander: brand wordmark, one omnibox,
+ * and quick links. The omnibox normalizes its entry the same way the proxy
+ * client does and hands off to /go?url=…; the games/apps libraries live at
+ * /games and /apps. Everything else (nav, palette, theme) is the Base shell.
  */
 import Base from "../layouts/Base.astro";
-import Library from "../components/Library.astro";
-
-/* Honest catalog counts (static/assets/json: 284 games, 55 apps). */
-const GAMES = 284;
-const APPS = 55;
 ---
 
 <Base title="SlowGuardian" description="A fast, private gateway for the school Chromebook. Open a site or launch a game — it loads in a blink, even on the slow machines.">
-  <section class="hero">
-    <div class="wrap">
-      <p class="kicker reveal in">SlowGuardian&nbsp;10</p>
-      <h1 class="reveal in">Everything you need.<br /><span class="soft">Nothing in your way.</span></h1>
-      <p class="lede reveal in">A fast, private gateway for the school Chromebook. Open a site or launch a game — it loads in a blink, even on the slow machines.</p>
-      <form class="omni glass reveal in" id="omni" action="/go" method="get">
+  <section class="home">
+    <div class="wrap home-inner">
+      <a class="home-logo" href="/" aria-label="SlowGuardian home">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg></span>
+        <span class="home-word">Slow<b>Guardian</b></span>
+      </a>
+      <form class="omni glass" id="omni" action="/go" method="get">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
         <input id="omniInput" name="url" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false" />
         <button class="btn" type="submit">Open</button>
       </form>
-      <div class="meta-row reveal in">
-        <span><span class="d"></span>All systems online</span>
-        <span>{GAMES} games</span>
-        <span>{APPS} apps</span>
-        <span>Loads in &lt;1.5s on a 2018 Chromebook</span>
+      <div class="quicklinks">
+        <a class="qbtn" href="/games">Games</a>
+        <a class="qbtn" href="/apps">Apps</a>
+        <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
       </div>
     </div>
   </section>
 
-  <Library collection="games" />
-
   <script>
-    /* Omnibox → /go?url=… — normalize the entry the same way the Phase 1
-       proxy client does: a valid URL is passed through, a bare host gets
-       https://, and anything else becomes a web search. Progressive
-       enhancement: without JS the form still GETs /go?url=<raw>. */
+    /* Omnibox → /go?url=… — normalize the entry the same way the proxy client
+       does: a valid URL passes through, a bare host gets https://, anything
+       else becomes a web search. Progressive enhancement: without JS the form
+       still GETs /go?url=<raw>. "Surprise me" opens a random catalog game. */
     (function () {
       var form = document.getElementById("omni") as HTMLFormElement | null;
       var input = document.getElementById("omniInput") as HTMLInputElement | null;
-      if (!form || !input) return;
 
       function normalize(raw: string): string {
         raw = raw.trim();
         if (!raw) return "";
-        /* looks like a domain/URL (has a dot or scheme, no spaces) */
-        var looksUrlish = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ||
-          (!/\s/.test(raw) && /\.[a-z]{2,}(\/|$|:)/i.test(raw));
+        var looksUrlish =
+          /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ||
+          (!/\s/.test(raw) && /\.[a-z]{2,}(\/|$|:|\?)/i.test(raw));
         if (looksUrlish) {
           try { return new URL(raw).toString(); } catch (e) { return "https://" + raw; }
         }
         return "https://www.google.com/search?q=" + encodeURIComponent(raw);
       }
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var url = normalize(input!.value);
-        if (!url) {
-          if ((window as any).SG) (window as any).SG.toast("Type a site or a search first");
-          input!.focus();
-          return;
+      if (form && input) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var url = normalize(input!.value);
+          if (!url) {
+            if ((window as any).SG) (window as any).SG.toast("Type a site or a search first");
+            input!.focus();
+            return;
+          }
+          window.location.href = "/go?url=" + encodeURIComponent(url);
+        });
+      }
+
+      var lucky = document.getElementById("luckyBtn");
+      if (lucky) lucky.addEventListener("click", function () {
+        /* Prefer a real catalog pick if the games catalog is loaded; else /games. */
+        var cat = (window as any).SGCatalog;
+        var items = cat && (cat.games || cat.items);
+        if (items && items.length) {
+          var pool = items.filter(function (it: any) { return it.url && it.custom !== true; });
+          var pick = pool[Math.floor(Math.random() * pool.length)];
+          if (pick && cat.open) { cat.open(pick); return; }
         }
-        window.location.href = "/go?url=" + encodeURIComponent(url);
+        window.location.href = "/games";
       });
     })();
   </script>

@@ -59,7 +59,11 @@ const appShelves: Shelf[] = [
   { key: "all", label: "All Apps", items: [...playable].sort(azSort) },
 ];
 
-const shelves = (collection === "apps" ? appShelves : gameShelves).filter((s) => s.items.length);
+const allShelves = (collection === "apps" ? appShelves : gameShelves).filter((s) => s.items.length);
+/* The "all" shelf renders as a dense full-width grid below the horizontal
+   shelves (mockup: shelves → packed grid), not as another scrolling strip. */
+const shelves = allShelves.filter((s) => s.key !== "all");
+const allShelf = allShelves.find((s) => s.key === "all");
 
 const featured =
   (collection === "apps"
@@ -82,20 +86,7 @@ const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
         <div class="ey">{eyebrow}</div>
         <h2>{heading}</h2>
       </div>
-      <form class="field libsearch glass" role="search" onsubmit="return false;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
-        </svg>
-        <input
-          id="librarySearch"
-          type="search"
-          placeholder={`Search ${noun}…`}
-          autocomplete="off"
-          spellcheck="false"
-          aria-label={`Search ${noun}`}
-        />
-      </form>
-      <span class="count"><b>{items.length}</b> {noun}</span>
+      <span class="count"><b>{items.length}</b> {noun} · <span class="cmdk-hint">⌘K to search</span></span>
     </div>
 
     {featured && <Billboard item={featured} kind={collection} />}
@@ -121,6 +112,20 @@ const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
         ))
       }
     </div>
+
+    {allShelf && (
+      <div class="allsec reveal" id="allsec">
+        <div class="rowhead">
+          <h3>{allShelf.label}</h3>
+          <span class="more">{allShelf.items.length} titles</span>
+        </div>
+        <div class="allgrid">
+          {allShelf.items.map((item) => (
+            <Tile item={item} kind={collection} />
+          ))}
+        </div>
+      </div>
+    )}
 
     <div class="results" id="results" aria-live="polite"></div>
   </div>
@@ -195,6 +200,7 @@ const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
     const rows = document.getElementById("rows");
     const results = document.getElementById("results");
     const billboard = document.getElementById("billboard");
+    const allsec = document.getElementById("allsec");
     const input = document.getElementById("librarySearch") as HTMLInputElement | null;
 
     let toastTimer: ReturnType<typeof setTimeout> | undefined;
@@ -212,6 +218,7 @@ const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
     function showShelves() {
       if (rows) rows.style.display = "";
       if (billboard) billboard.style.display = "";
+      if (allsec) allsec.style.display = "";
       if (results) {
         results.style.display = "none";
         results.innerHTML = "";
@@ -220,6 +227,7 @@ const catalogJSON = JSON.stringify(items).replace(/</g, "\\u003c");
     function showResults(list: CatalogItem[], emptyMsg: string) {
       if (rows) rows.style.display = "none";
       if (billboard) billboard.style.display = "none";
+      if (allsec) allsec.style.display = "none";
       if (!results) return;
       results.style.display = "grid";
       results.innerHTML = list.length

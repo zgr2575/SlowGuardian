@@ -77,6 +77,10 @@ import Base from "../layouts/Base.astro";
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
             <span class="lbl">Exit</span>
           </button>
+          <button class="gg-menu" type="button" title="Menu" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg>
+          </button>
+          <div class="gg-avatar" title="You" aria-hidden="true">S</div>
         </div>
 
         <div class="gg-progress" id="ggProgress" aria-hidden="true"></div>
@@ -84,24 +88,27 @@ import Base from "../layouts/Base.astro";
         <!-- ---------- views: one Scramjet frame per tab, only active shown ---------- -->
         <div class="gg-views" id="ggViews">
           <div class="gg-start" id="ggStart">
-            <span class="gg-mark">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg>
-            </span>
-            <h2>Where to?</h2>
-            <p>Type an address or a search. It opens right here — a real tab, private and fast.</p>
-            <form class="gg-startomni glass" id="ggStartForm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
-              <input id="ggStartUrl" type="text" placeholder="Search or enter an address" aria-label="Search or enter an address" spellcheck="false" />
-              <button class="btn" type="submit">Open</button>
-            </form>
-            <div class="gg-chips">
-              <button class="gg-chip" type="button" data-openurl="https://www.google.com/">Google</button>
-              <button class="gg-chip" type="button" data-openurl="https://www.youtube.com/">YouTube</button>
-              <button class="gg-chip" type="button" data-openurl="https://en.wikipedia.org/">Wikipedia</button>
-              <button class="gg-chip" type="button" data-openurl="https://www.reddit.com/">Reddit</button>
-              <button class="gg-chip" type="button" data-openurl="https://github.com/">GitHub</button>
+            <div class="gg-ntp">
+              <div class="gg-ntp-word">Slow<b>Guardian</b></div>
+              <form class="gg-startomni glass" id="ggStartForm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+                <input id="ggStartUrl" type="text" placeholder="Search the web or enter an address" aria-label="Search or enter an address" spellcheck="false" />
+                <button class="btn" type="submit">Open</button>
+              </form>
+              <div class="gg-ntp-tiles">
+                <a class="gg-ntp-tile" href="/games"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"></rect><circle cx="8" cy="12" r="1.4" fill="currentColor"></circle><circle cx="16" cy="12" r="1.4" fill="currentColor"></circle></svg></span><span>Games</span></a>
+                <a class="gg-ntp-tile" href="/apps"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.6"></rect><rect x="14" y="3" width="7" height="7" rx="1.6"></rect><rect x="3" y="14" width="7" height="7" rx="1.6"></rect><rect x="14" y="14" width="7" height="7" rx="1.6"></rect></svg></span><span>Apps</span></a>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://classroom.google.com/"><span class="gg-ntp-ic" style="background:#1a73e8;color:#fff">C</span><span>Classroom</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://drive.google.com/"><span class="gg-ntp-ic" style="background:#0f9d58;color:#fff">D</span><span>Drive</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.youtube.com/"><span class="gg-ntp-ic" style="background:#ea4335;color:#fff">▶</span><span>YouTube</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://docs.google.com/"><span class="gg-ntp-ic" style="background:#4285f4;color:#fff">W</span><span>Docs</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://mail.google.com/"><span class="gg-ntp-ic" style="background:#d93025;color:#fff">M</span><span>Gmail</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.reddit.com/"><span class="gg-ntp-ic" style="background:#000;color:#fff">R</span><span>Reddit</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://en.wikipedia.org/"><span class="gg-ntp-ic" style="background:#101418;color:#fff">W</span><span>Wikipedia</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.google.com/"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span><span>Add shortcut</span></button>
+              </div>
+              <p class="gg-fineprint">Quiet on a shared screen — not a way past network filtering or device monitoring. <a href="/privacy">What that means →</a></p>
             </div>
-            <p class="gg-fineprint">Quiet on a shared screen — not a way past network filtering or device monitoring. <a href="/privacy">What that means →</a></p>
           </div>
         </div>
       </div>
@@ -111,62 +118,76 @@ import Base from "../layouts/Base.astro";
   </section>
 
   <style is:global>
-    /* ---- proxy workspace (go.astro). is:global so JS-created tab elements
-       still pick these up (Astro's scoped CSS only tags static markup). ---- */
-    .gg-page { padding-top: 80px; padding-bottom: var(--sp-6); }
-    .gg-wrap { max-width: min(1440px, 100% - 28px); margin: 0 auto; padding: 0 var(--sp-4); position: relative; z-index: 1; }
+    /* ---- proxy workspace (go.astro) styled to resemble Google Chrome.
+       is:global so JS-created tab elements pick these up (Astro scopes only
+       static markup). Class names/IDs are unchanged — the verified multi-tab
+       wiring is untouched; this is purely the Chrome skin. ---- */
+    :root { --chr-strip: #171a1f; --chr-bar: #282a2e; --chr-omni: #131417; --chr-ntp: #1c1d21; --chr-hover: rgba(255,255,255,.09); }
+    :root[data-theme="light"] { --chr-strip: #dee1e6; --chr-bar: #f1f3f4; --chr-omni: #e5e8eb; --chr-ntp: #ffffff; --chr-hover: rgba(0,0,0,.06); }
 
-    .gg-shell { border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
+    .gg-page { flex: 1 0 auto; display: flex; flex-direction: column; padding-top: 74px; padding-bottom: var(--sp-4); }
+    .gg-wrap { max-width: min(1500px, 100% - 24px); margin: 0 auto; width: 100%; padding: 0 var(--sp-4); position: relative; z-index: 1;
+      flex: 1 0 auto; display: flex; flex-direction: column; }
 
-    /* tab strip */
-    .gg-tabstrip { display: flex; align-items: center; gap: 6px; padding: 8px 10px 0; border-bottom: 1px solid var(--glass-brd); }
-    .gg-tabs { display: flex; gap: 5px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }
+    .gg-shell { flex: 1 0 auto; min-height: 480px; border-radius: 13px; overflow: hidden; display: flex; flex-direction: column;
+      border: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: var(--sh-3); }
+
+    /* tab strip — Chrome-shaped tabs on a darker title bar */
+    .gg-tabstrip { display: flex; align-items: flex-end; gap: 1px; padding: 8px 8px 0; background: var(--chr-strip); }
+    .gg-tabs { display: flex; gap: 1px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
     .gg-tabs::-webkit-scrollbar { display: none; }
-    .gg-tab { display: inline-flex; align-items: center; gap: 8px; flex: 0 1 190px; min-width: 118px; max-width: 220px;
-      padding: 8px 8px 8px 11px; border-radius: 12px; background: var(--glass); border: 1px solid transparent;
-      color: var(--ink-2); cursor: pointer; transition: background .18s, color .18s, box-shadow .18s; user-select: none; }
-    .gg-tab:hover { background: var(--glass-2); color: var(--ink); }
-    .gg-tab.on { background: var(--glass-strong); color: var(--ink); border-color: var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi); }
+    .gg-tab { display: inline-flex; align-items: center; gap: 9px; flex: 0 1 210px; min-width: 110px; max-width: 240px;
+      padding: 9px 10px 11px 13px; border-radius: 10px 10px 0 0; background: transparent; border: none;
+      color: var(--ink-2); cursor: default; transition: background .16s, color .16s; user-select: none; }
+    .gg-tab:not(.on):hover { background: var(--chr-hover); }
+    .gg-tab.on { background: var(--chr-bar); color: var(--ink); }
     .gg-tab .gg-fav { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; color: var(--ink-3); }
     .gg-tab.on .gg-fav { color: var(--accent-2); }
     .gg-tab .gg-fav img { width: 16px; height: 16px; object-fit: cover; border-radius: 3px; display: block; }
     .gg-tab .gg-fav svg { width: 15px; height: 15px; }
     .gg-tab .gg-ti { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .gg-tab .gg-x { width: 18px; height: 18px; flex-shrink: 0; display: grid; place-items: center; border: none; background: none; color: inherit;
-      border-radius: 50%; opacity: .55; cursor: pointer; transition: opacity .15s, background .15s; }
-    .gg-tab .gg-x:hover { opacity: 1; background: var(--glass-2); }
+      border-radius: 50%; opacity: .6; cursor: pointer; transition: opacity .15s, background .15s; }
+    .gg-tab .gg-x:hover { opacity: 1; background: var(--chr-hover); }
     .gg-tab .gg-x svg { width: 12px; height: 12px; }
     .gg-spin { animation: ggspin .8s linear infinite; }
     @keyframes ggspin { to { transform: rotate(360deg); } }
 
-    .gg-newtab { flex: 0 0 auto; width: 32px; height: 32px; margin-bottom: 8px; display: grid; place-items: center; cursor: pointer;
-      border-radius: 9px; background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
-    .gg-newtab:hover { color: var(--ink); background: var(--glass-2); }
+    .gg-newtab { flex: 0 0 auto; width: 28px; height: 28px; margin: 0 0 6px 4px; display: grid; place-items: center; cursor: pointer;
+      border-radius: 50%; background: transparent; border: none; color: var(--ink-2); transition: .18s; }
+    .gg-newtab:hover { color: var(--ink); background: var(--chr-hover); }
     .gg-newtab svg { width: 15px; height: 15px; }
 
-    /* toolbar */
-    .gg-toolbar { display: flex; align-items: center; gap: 9px; padding: 11px 12px; }
-    .gg-nav { display: flex; gap: 4px; flex-shrink: 0; }
-    .gg-navbtn { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
-      background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
-    .gg-navbtn:hover { color: var(--ink); background: var(--glass-2); }
+    /* toolbar — Chrome omnibox row */
+    .gg-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 9px; background: var(--chr-bar); }
+    .gg-nav { display: flex; gap: 2px; flex-shrink: 0; }
+    .gg-navbtn { width: 30px; height: 30px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+      background: transparent; border: none; color: var(--ink-2); transition: .18s; }
+    .gg-navbtn:hover { color: var(--ink); background: var(--chr-hover); }
     .gg-navbtn svg { width: 16px; height: 16px; }
 
-    .gg-omni { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; border-radius: var(--r-pill);
-      padding: 8px 16px; background: var(--glass); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi); transition: box-shadow .2s, border-color .2s; }
-    .gg-omni:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), 0 0 0 3px var(--accent-tint); }
+    .gg-omni { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px; border-radius: var(--r-pill);
+      margin: 0 6px; padding: 8px 16px; background: var(--chr-omni); border: 1px solid transparent; transition: box-shadow .2s, border-color .2s; }
+    .gg-omni:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
     .gg-scheme { display: grid; place-items: center; color: var(--ink-3); flex-shrink: 0; }
-    .gg-scheme svg { width: 16px; height: 16px; display: block; }
+    .gg-scheme svg { width: 15px; height: 15px; display: block; }
     .gg-scheme.secure { color: var(--ok); }
     .gg-omni input { flex: 1; min-width: 0; border: none; outline: none; background: none; color: var(--ink);
-      font-family: var(--font); font-size: 14px; padding: 5px 0; }
+      font-family: var(--font); font-size: 13.5px; padding: 4px 0; }
     .gg-omni input::placeholder { color: var(--ink-3); }
 
     .gg-exit { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border-radius: var(--r-pill);
-      padding: 9px 15px; font-family: var(--font); font-size: 13.5px; font-weight: 600; color: var(--err);
-      background: color-mix(in srgb, var(--err) 12%, transparent); border: 1px solid color-mix(in srgb, var(--err) 34%, transparent); transition: .18s; }
-    .gg-exit:hover { background: color-mix(in srgb, var(--err) 20%, transparent); }
+      margin-left: 4px; padding: 7px 14px; font-family: var(--font); font-size: 13px; font-weight: 600; color: #fff;
+      background: linear-gradient(180deg, #ff8090, var(--err)); border: none; transition: .18s; }
+    .gg-exit:hover { filter: brightness(1.06); }
     .gg-exit svg { width: 15px; height: 15px; }
+    .gg-menu, .gg-avatar { flex-shrink: 0; }
+    .gg-menu { width: 30px; height: 30px; margin-left: 2px; display: grid; place-items: center; cursor: pointer; border-radius: 50%;
+      background: transparent; border: none; color: var(--ink-2); transition: .18s; }
+    .gg-menu:hover { color: var(--ink); background: var(--chr-hover); }
+    .gg-menu svg { width: 17px; height: 17px; }
+    .gg-avatar { width: 26px; height: 26px; margin-left: 4px; border-radius: 50%; display: grid; place-items: center;
+      font-size: 12px; font-weight: 600; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
 
     /* thin loading bar */
     .gg-progress { height: 2px; width: 100%; position: relative; overflow: hidden; background: transparent; }
@@ -175,39 +196,39 @@ import Base from "../layouts/Base.astro";
     .gg-progress.on::before { animation: ggbar 1.05s ease-in-out infinite; }
     @keyframes ggbar { to { transform: translateX(320%); } }
 
-    /* views */
-    .gg-views { position: relative; height: clamp(420px, 68vh, 780px); background: #0a0b10; }
-    :root[data-theme="light"] .gg-views { background: #f4f6fb; }
+    /* views — fill the shell */
+    .gg-views { position: relative; flex: 1; min-height: 320px; background: var(--chr-ntp); }
     .gg-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff; }
 
-    /* new-tab / empty state */
-    .gg-start { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 16px; text-align: center; padding: 28px; }
-    .gg-start .gg-mark { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; color: var(--on-accent);
-      background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 20px var(--accent-tint); }
-    .gg-start .gg-mark svg { width: 22px; height: 22px; }
-    .gg-start h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 600; letter-spacing: -0.03em; }
-    .gg-start p { color: var(--ink-2); font-size: 0.98rem; max-width: 42ch; }
-    .gg-startomni { width: min(520px, 100%); display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 20px; margin-top: 4px; }
+    /* new-tab page — Chrome NTP */
+    .gg-start { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      text-align: center; background: var(--chr-ntp); padding: clamp(40px, 8vh, 96px) var(--sp-5) var(--sp-6); overflow-y: auto; }
+    .gg-ntp { width: 100%; max-width: 580px; }
+    .gg-ntp-word { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); margin-bottom: var(--sp-5); }
+    .gg-ntp-word b { color: var(--accent-2); font-weight: 700; }
+    .gg-startomni { width: 100%; display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 20px; margin-bottom: var(--sp-6);
+      background: var(--chr-omni); border: 1px solid var(--glass-brd); }
     .gg-startomni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
     .gg-startomni input { flex: 1; min-width: 0; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 15px; padding: 11px 0; }
     .gg-startomni input::placeholder { color: var(--ink-3); }
-    .gg-startomni:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2), 0 0 0 4px var(--accent-tint); }
-    .gg-chips { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; }
-    .gg-chip { cursor: pointer; border-radius: var(--r-pill); padding: 8px 15px; font-family: var(--font); font-size: 13px; font-weight: 500;
-      color: var(--ink-2); background: var(--glass); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi); transition: .18s; }
-    .gg-chip:hover { color: var(--ink); background: var(--glass-2); transform: translateY(-1px); }
-    .gg-fineprint { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
+    .gg-startomni:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+    .gg-ntp-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-4) var(--sp-3); }
+    .gg-ntp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; text-decoration: none; cursor: pointer; border: none; background: none; padding: 0; font-family: var(--font); }
+    .gg-ntp-tile .gg-ntp-ic { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--chr-bar); color: var(--ink); font-size: 18px; font-weight: 600; transition: .16s; }
+    .gg-ntp-tile:hover .gg-ntp-ic { background: var(--chr-hover); transform: translateY(-1px); }
+    .gg-ntp-tile .gg-ntp-ic svg { width: 22px; height: 22px; }
+    .gg-ntp-tile span:last-child { font-size: 12px; color: var(--ink-2); max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gg-fineprint { font-size: 12.5px; color: var(--ink-3); margin-top: var(--sp-6); }
     .gg-fineprint a { color: var(--accent-2); }
     .gg-fineprint a:hover { text-decoration: underline; }
 
     .gg-status { margin: 12px 2px 0; min-height: 16px; font-size: 12.5px; color: var(--ink-3); font-family: var(--mono); }
 
     @media (max-width: 640px) {
-      .gg-page { padding-top: 72px; }
+      .gg-page { padding-top: 70px; }
       .gg-exit .lbl { display: none; }
-      .gg-exit { padding: 9px 11px; }
-      .gg-views { height: 66vh; }
+      .gg-exit { padding: 8px 11px; }
+      .gg-ntp-tiles { grid-template-columns: repeat(4, 1fr); }
     }
   </style>
 

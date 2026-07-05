@@ -11,7 +11,10 @@ body {
   background: var(--bg); color: var(--ink); font-family: var(--font);
   line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   overflow-x: hidden; min-height: 100vh;
+  /* sticky-footer column: main grows, footer sits at the bottom on short pages */
+  display: flex; flex-direction: column;
 }
+main#top { flex: 1 0 auto; display: flex; flex-direction: column; }
 /* ambient light field — static gradients, cheap; gives glass its glow */
 body::before {
   content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -212,7 +215,7 @@ section { padding: var(--sp-6) 0; scroll-margin-top: 88px; }
 .sw.on { border-color: var(--ink); }
 .sw[data-a="blue"]{background:#0a84ff;} .sw[data-a="indigo"]{background:#7d5bed;} .sw[data-a="teal"]{background:#12b5a6;} .sw[data-a="rose"]{background:#ff5d8f;}
 
-footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-7) 0; margin-top: var(--sp-6); }
+footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-6) 0; flex-shrink: 0; }
 footer p { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
 footer b { color: var(--ink-2); font-weight: 600; }
 
@@ -246,4 +249,42 @@ footer b { color: var(--ink-2); font-weight: 600; }
   .isl-btn { width: 30px; height: 30px; }
   .isl-btn svg { width: 15px; height: 15px; }
 }
+/* ---------- Home (Google-style lander) ---------- */
+.home { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; width: 100%; padding: 96px var(--sp-5) var(--sp-6); }
+.home-inner { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
+.home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent);
+  background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
+.home-logo .mark svg { width: 31px; height: 31px; }
+.home-word { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
+.home-word b { color: var(--accent); font-weight: 700; }
+.home .omni { width: 100%; max-width: 600px; margin: 0 auto; }
+.quicklinks { margin-top: var(--sp-5); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.qbtn { cursor: pointer; border: 1px solid var(--glass-brd); background: var(--glass); color: var(--ink-2); font-family: var(--font);
+  font-size: 14px; font-weight: 500; padding: 9px 18px; border-radius: var(--r-pill); transition: .2s; text-decoration: none; }
+.qbtn:hover { color: var(--ink); background: var(--glass-2); }
+
+/* ---------- Dense, full-width "All" grid (packs the page edge to edge) ---------- */
+.allsec { margin-top: var(--sp-6); }
+.allsec .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.allsec .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; }
+.allsec .rowhead .more { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+.allgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(138px, 13vw, 178px), 1fr)); gap: 14px; }
+.allgrid .tile { width: auto; }
+
+/* library views stretch wider than the standard column so wide monitors aren't half-empty */
+#library { max-width: none; }
+#library > .wrap { max-width: 1780px; }
+
+/* ---------- Settings: three-card grid ---------- */
+.setgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-5); }
+.setcard { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); display: flex; flex-direction: column; gap: 18px; }
+.setcard h3 { font-size: 1.08rem; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.setcard h3 svg { width: 18px; height: 18px; color: var(--accent-2); }
+.setrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.setrow .rt { font-size: 14px; color: var(--ink); font-weight: 500; }
+.setrow .rd { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+.setdiv { height: 1px; background: var(--glass-brd); }
+
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .cmd { animation: none; } html { scroll-behavior: auto; } * { transition-duration: .01ms !important; } }

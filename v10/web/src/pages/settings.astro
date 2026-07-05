@@ -1,33 +1,25 @@
 ---
 /**
- * settings.astro — Appearance & performance.
+ * settings.astro — Appearance, performance, privacy & about.
  *
- * Theme (dark/light) and accent are wired by the Base shell script via the
- * shared ids #themeSeg and #swatches (persists sg:theme / sg:accent and flips
- * data-theme / data-accent on <html> live). This page adds Performance mode
- * (sg:perf -> data-perf), which the Base shell does not own. Tab disguise,
- * quick-exit, and about:blank cloak live on /privacy.
+ * Theme (dark/light) and accent are wired by the Base shell via the shared
+ * ids #themeSeg / #swatches (persist sg:theme / sg:accent, flip data-theme /
+ * data-accent live). This page owns Performance mode (sg:perf → data-perf)
+ * and surfaces the privacy actions the Base shell exposes on window.SG.
  *
- * Reuses the approved mockup's classes: .appear .segmented .swatches .sechead.
+ * Layout follows the approved mockup: appearance bar + a three-card grid
+ * (Performance · Privacy & exit · About).
  */
 import Base from "../layouts/Base.astro";
 ---
 
 <Base title="Settings — SlowGuardian" description="Make SlowGuardian yours — theme, accent, and speed on slow machines. Everything applies live, no reload.">
-  <section class="set-top">
-    <div class="wrap">
-      <p class="kicker reveal in">Settings</p>
-      <h1 class="reveal in">Make it yours.</h1>
-      <p class="lede reveal in">Dark and light, a considered accent, and a speed dial for old Chromebooks. One attribute on the root retints the whole app — no reload, no download.</p>
-    </div>
-  </section>
-
-  <section>
+  <section class="set-page">
     <div class="wrap">
       <div class="sechead reveal">
-        <div class="ey">Appearance</div>
-        <h2>Theme &amp; accent</h2>
-        <p>Dark stays the hero. Pick a look and an accent — it applies the instant you click and is remembered on this device.</p>
+        <div class="ey">Make it yours</div>
+        <h2>Glass that doesn't cost you speed.</h2>
+        <p>One attribute on the root rethemes the whole app — no reload, no download. On older Chromebooks the blur gracefully steps down to solid glass, so nothing stutters.</p>
       </div>
 
       <div class="appear glass reveal">
@@ -47,42 +39,66 @@ import Base from "../layouts/Base.astro";
             <button class="sw" data-a="rose" aria-label="Rose"></button>
           </div>
         </div>
+        <button class="btn sm" id="cloakToggle" type="button">Preview tab disguise</button>
       </div>
 
-      <div class="sechead reveal" style="margin-top: var(--sp-7);">
-        <div class="ey">Performance</div>
-        <h2>Speed on slow machines.</h2>
-        <p>The glass blur is the expensive part. On older Chromebooks it steps down to solid glass automatically — or pin it yourself.</p>
-      </div>
-
-      <div class="appear glass reveal">
-        <div class="grp">
-          <span class="lbl">Blur &amp; effects</span>
-          <div class="segmented" id="perfSeg" style="background:var(--glass);">
-            <button data-perf="auto">Auto</button>
-            <button data-perf="high">Full glass</button>
-            <button data-perf="low">Lite</button>
+      <div class="setgrid reveal">
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"></path></svg>Performance</h3>
+          <div class="setrow">
+            <div><div class="rt">Glass &amp; blur</div><div class="rd" id="perfNote">Auto</div></div>
+            <div class="segmented" id="perfSeg" style="background:var(--glass);">
+              <button data-perf="auto">Auto</button>
+              <button data-perf="high">Full</button>
+              <button data-perf="low">Lite</button>
+            </div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">For older Chromebooks</div><div class="rd">Lite drops runtime blur to solid glass — smoother on 2016–2019 machines.</div></div>
           </div>
         </div>
-        <span class="count" id="perfNote"></span>
-      </div>
 
-      <a class="set-link reveal" href="/privacy">Privacy &amp; disguise — tab cloak, quick exit, clear traces →</a>
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Privacy &amp; exit</h3>
+          <div class="setrow">
+            <div><div class="rt">Tab disguise</div><div class="rd">Make this tab look like Google Classroom</div></div>
+            <button class="btn sm" id="cloakToggle2" type="button" style="background:var(--glass);color:var(--ink)">Toggle</button>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Quick exit</div><div class="rd">Double-tap Esc → your decoy · rebindable</div></div>
+            <a class="btn sm" href="/privacy" style="background:var(--glass);color:var(--ink)">Set up</a>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Clear traces</div><div class="rd">Wipe history, cache &amp; local data this app made</div></div>
+            <button class="btn sm" id="clearTraces" type="button" style="background:var(--glass);color:var(--ink)">Clear</button>
+          </div>
+        </div>
+
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>About</h3>
+          <div class="setrow"><span class="rt">Version</span><span class="rd" style="margin:0">10.0.0 · LTS</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Engine</span><span class="rd" style="margin:0">Scramjet over Wisp</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Support window</span><span class="rd" style="margin:0">6 mo active + 6 mo security</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Status</span><span class="rd" style="margin:0;color:var(--ok)">● All systems online</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
   <style>
-    .set-top { padding: 100px 0 var(--sp-3); text-align: center; }
-    .set-top h1 { font-size: clamp(2rem, 4.4vw, 3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
-      background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
-    .set-top .lede { margin: 20px auto 0; max-width: 46ch; font-size: clamp(1.02rem, 1.8vw, 1.2rem); color: var(--ink-2); line-height: 1.5; }
-    .set-link { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--sp-7); color: var(--accent-2); font-size: 14px; font-weight: 600; }
-    .set-link:hover { text-decoration: underline; }
+    .set-page { padding: 84px 0 var(--sp-6); }
   </style>
 
   <script>
-    /* Performance mode. Theme/accent are handled by the Base shell (it wires
-       #themeSeg and #swatches on every page). */
+    /* Performance mode + privacy actions. Theme/accent + tab-disguise (#cloakToggle)
+       are wired by the Base shell; this adds the perf segmented control, a second
+       disguise trigger, and clear-traces. */
     (function () {
       const root = document.documentElement;
       const w = window as any;
@@ -108,7 +124,7 @@ import Base from "../layouts/Base.astro";
           const eff = autoDetect() === "low" ? "Lite" : "Full glass";
           perfNote.innerHTML = mode === "auto"
             ? "Auto — this device: <b>" + eff + "</b>"
-            : mode === "low" ? "<b>Lite</b> — solid glass, no runtime blur" : "<b>Full glass</b> — live blur everywhere";
+            : mode === "low" ? "Lite — solid glass, no runtime blur" : "Full glass — live blur everywhere";
         }
       }
       function applyPerf(mode: string) {
@@ -122,6 +138,12 @@ import Base from "../layouts/Base.astro";
         reflectPerf(currentPerf());
         perfSeg.addEventListener("click", (e: any) => { const b = e.target.closest("[data-perf]"); if (b) applyPerf(b.getAttribute("data-perf")); });
       }
+
+      /* second disguise trigger + clear traces (Base owns the implementations) */
+      const cloak2 = document.getElementById("cloakToggle2");
+      if (cloak2) cloak2.addEventListener("click", () => { if (w.SG && w.SG.toggleCloak) w.SG.toggleCloak(); });
+      const clr = document.getElementById("clearTraces");
+      if (clr) clr.addEventListener("click", () => { if (w.SG && w.SG.clearTraces) w.SG.clearTraces(); });
     })();
   </script>
 </Base>
