@@ -128,12 +128,14 @@ import Base from "../layouts/Base.astro";
     :root { --chr-strip: #171a1f; --chr-bar: #282a2e; --chr-omni: #131417; --chr-ntp: #1c1d21; --chr-hover: rgba(255,255,255,.09); }
     :root[data-theme="light"] { --chr-strip: #dee1e6; --chr-bar: #f1f3f4; --chr-omni: #e5e8eb; --chr-ntp: #ffffff; --chr-hover: rgba(0,0,0,.06); }
 
-    .gg-page { flex: 1 0 auto; display: flex; flex-direction: column; padding-top: 74px; padding-bottom: var(--sp-4); }
-    .gg-wrap { max-width: min(1500px, 100% - 24px); margin: 0 auto; width: 100%; padding: 0 var(--sp-4); position: relative; z-index: 1;
-      flex: 1 0 auto; display: flex; flex-direction: column; }
+    /* Fullscreen browser: fill the whole viewport edge-to-edge, no footer,
+       just a thin gap up top for the floating Dynamic Island. */
+    .gg-page { height: 100vh; display: flex; flex-direction: column; padding: 54px 0 0; }
+    .gg-wrap { max-width: none; margin: 0; width: 100%; padding: 0; position: relative; z-index: 1;
+      flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-    .gg-shell { flex: 1 0 auto; min-height: 480px; border-radius: 13px; overflow: hidden; display: flex; flex-direction: column;
-      border: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: var(--sh-3); }
+    .gg-shell { flex: 1; min-height: 0; border-radius: 0; overflow: hidden; display: flex; flex-direction: column;
+      border: none; border-top: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: none; }
 
     /* tab strip — Chrome-shaped tabs on a darker title bar */
     .gg-tabstrip { display: flex; align-items: flex-end; gap: 1px; padding: 8px 8px 0; background: var(--chr-strip); }
@@ -225,10 +227,11 @@ import Base from "../layouts/Base.astro";
     .gg-fineprint a { color: var(--accent-2); }
     .gg-fineprint a:hover { text-decoration: underline; }
 
-    .gg-status { margin: 12px 2px 0; min-height: 16px; font-size: 12.5px; color: var(--ink-3); font-family: var(--mono); }
+    .gg-status { flex: 0 0 auto; margin: 0; padding: 3px 12px; min-height: 0; font-size: 12px; color: var(--ink-3); font-family: var(--mono); background: var(--chr-strip); }
+    .gg-status:empty { display: none; }
 
     @media (max-width: 640px) {
-      .gg-page { padding-top: 70px; }
+      .gg-page { padding-top: 50px; }
       .gg-exit .lbl { display: none; }
       .gg-exit { padding: 8px 11px; }
       .gg-ntp-tiles { grid-template-columns: repeat(4, 1fr); }
