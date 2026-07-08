@@ -2,6 +2,9 @@
 
 Ground-up recode. Built under `v10/` alongside V9 until cutover, so `main` stays shippable during the rebuild. Plan: `../V10_RECODE_PLAN.md` · Design: `../DESIGN_V10.md` + `../docs/design/v10-mockup.html`.
 
+## 🟢 LIVE (2026-07-08)
+First real deployment is up and **verified end-to-end**: **https://slowguardian-v10.onrender.com** (Render Web Service, one Node service serving frontend + proxy, deployed from `claude/slowguardian-v10-recode-ji8x55`, Root Directory `v10`, build `npm ci && npm run build:web`, start `node src/server.js`, health check `/readyz`). Confirmed on the live host: `/healthz` + `/readyz` all 5 checks green, lander + onboarding render, and **the proxy loaded a live HTTPS site (example.com) end-to-end through Wisp/Scramjet** — closing the Phase 1 "re-confirm HTTPS on a real egress" caveat. Note: Free tier spins down after ~15 min idle (~30 s cold start); bump to Starter for always-warm.
+
 ## Locked decisions
 - **Proxy:** **Scramjet-only** over Wisp (`wisp-js/server`), single service worker, bare-mux transport. Drop UV/Rammerhead/Dynamic/bare v3. (UV = documented post-1.0 escape hatch, added only if the nightly live-site test proves a real gap.)
 - **Frontend:** Astro static MPA + Preact islands. **UI: Liquid Glass, dark-first** (Apple), Dynamic Island nav (per-tab icons, icon-only collapse), light toggle, perf-gated blur.
