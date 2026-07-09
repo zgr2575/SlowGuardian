@@ -50,41 +50,43 @@ a { color: inherit; text-decoration: none; }
 }
 :root[data-perf="low"] .glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 88%, transparent); }
 
-/* ---------- Dynamic Island nav ---------- */
-.island { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 60;
-  display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 10px 0 15px;
+/* ---------- Dynamic Island nav (left-docked, icon-first) ---------- */
+.island { position: fixed; top: 14px; left: 14px; z-index: 60;
+  display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 7px;
   border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
-  box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); max-width: calc(100vw - 24px);
+  box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); max-width: calc(100vw - 28px);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
   transition: box-shadow .35s, background .35s; }
 :root[data-theme="light"] .island { background: rgba(255,255,255,0.62); }
+/* immersive game/app launch (go.astro ?app=1) hides the global nav */
+.sg-immersive .island { display: none; }
 :root[data-perf="low"] .island { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 94%, transparent); }
 .island:hover, .island:focus-within, .island.open { box-shadow: inset 0 1px 0 var(--hi), var(--sh-3), 0 0 0 1px var(--glass-brd-2); }
 
-.isl-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; text-decoration: none; cursor: pointer; }
-.isl-brand .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--on-accent); flex-shrink: 0;
+.isl-brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; text-decoration: none; cursor: pointer; padding-left: 2px; }
+.isl-brand .mark { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; color: var(--on-accent); flex-shrink: 0;
   background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 10px var(--accent-tint); }
-.isl-brand .mark svg { width: 15px; height: 15px; }
+.isl-brand .mark svg { width: 17px; height: 17px; }
+/* brand word morphs in only when the pill is expanded */
+.isl-word { max-width: 0; opacity: 0; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .24s ease; }
+.island:hover .isl-word, .island:focus-within .isl-word, .island.open .isl-word { max-width: 170px; opacity: 1; }
 
-/* compact ambient status — morphs away on expand */
-.isl-ambient { display: flex; align-items: center; gap: 7px; padding-right: 4px; font-size: 13px; color: var(--ink-2); white-space: nowrap;
-  max-width: 140px; opacity: 1; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .22s ease, padding .42s; }
-.isl-ambient .live { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); flex-shrink: 0; animation: livep 2.4s ease-in-out infinite; }
+/* the compact "Online" pill is retired in the icon-first layout */
+.isl-ambient { display: none; }
 @keyframes livep { 50% { opacity: .35; } }
-.island:hover .isl-ambient, .island:focus-within .isl-ambient, .island.open .isl-ambient { max-width: 0; opacity: 0; padding-right: 0; }
 
-/* expanded controls — the morph reveal */
-.isl-panel { display: flex; align-items: center; gap: 6px; max-width: 0; opacity: 0; overflow: hidden; transform: translateX(-4px);
-  transition: max-width .46s cubic-bezier(.5,1.32,.4,1), opacity .3s ease, transform .46s cubic-bezier(.5,1.32,.4,1); }
-.island:hover .isl-panel, .island:focus-within .isl-panel, .island.open .isl-panel { max-width: 640px; opacity: 1; transform: none; }
-.isl-links { display: flex; gap: 2px; }
-.isl-links a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .2s, background .2s; }
-.isl-links a .ic { width: 16px; height: 16px; flex-shrink: 0; }
+/* panel stays visible as icons; only the labels morph in on expand */
+.isl-panel { display: flex; align-items: center; gap: 4px; }
+.isl-links { display: flex; align-items: center; gap: 2px; }
+.isl-links a { display: inline-flex; align-items: center; gap: 0; padding: 9px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap;
+  transition: color .2s, background .2s, gap .32s cubic-bezier(.5,1.3,.4,1), padding .32s cubic-bezier(.5,1.3,.4,1); }
+.isl-links a .ic { width: 18px; height: 18px; flex-shrink: 0; }
+.isl-links a .lbl { max-width: 0; opacity: 0; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .24s ease; }
+.island:hover .isl-links a, .island:focus-within .isl-links a, .island.open .isl-links a { gap: 7px; padding: 8px 13px; }
+.island:hover .isl-links a .lbl, .island:focus-within .isl-links a .lbl, .island.open .isl-links a .lbl { max-width: 96px; opacity: 1; }
 .isl-links a:hover { color: var(--ink); background: var(--glass); }
 .isl-links a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
 .isl-links a.on .ic { color: var(--accent-2); }
-/* collapse to icon-only as the pill narrows */
-@media (max-width: 900px) { .isl-links a .lbl { display: none; } .isl-links a { gap: 0; padding: 8px 10px; } }
 .isl-sep { width: 1px; height: 22px; background: var(--glass-brd); margin: 0 3px; flex-shrink: 0; }
 .isl-btn { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
   background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
@@ -240,12 +242,15 @@ footer b { color: var(--ink-2); font-weight: 600; }
 .toast b { color: var(--accent-2); font-weight: 600; }
 
 @media (max-width: 640px) {
-  .island { gap: 6px; padding: 0 7px 0 9px; max-width: calc(100vw - 12px); }
-  .isl-word { display: none; }
+  .island { gap: 3px; padding: 0 6px; max-width: calc(100vw - 20px); }
+  .isl-word, .island.open .isl-word, .island:focus-within .isl-word { max-width: 0; opacity: 0; }
+  .isl-brand { padding-left: 0; }
   .isl-links { gap: 0; }
-  .isl-links a { padding: 7px 8px; }
+  /* stay icon-only on phones — expanding all four labels would overflow */
+  .isl-links a, .island.open .isl-links a, .island:focus-within .isl-links a { gap: 0; padding: 8px; }
+  .isl-links a .lbl, .island.open .isl-links a .lbl, .island:focus-within .isl-links a .lbl { max-width: 0; opacity: 0; }
   .isl-sep { display: none; }
-  .isl-panel { gap: 3px; }
+  .isl-panel { gap: 2px; }
   .isl-btn { width: 30px; height: 30px; }
   .isl-btn svg { width: 15px; height: 15px; }
 }

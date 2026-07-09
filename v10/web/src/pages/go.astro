@@ -116,6 +116,23 @@ import Base from "../layouts/Base.astro";
         </div>
       </div>
 
+      <!-- ---------- immersive controls (shown only when launched from the library) ---------- -->
+      <div class="gg-immbar" id="ggImmBar" aria-hidden="true">
+        <button class="gg-immbtn" id="ggImmReload" type="button" title="Reload" aria-label="Reload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"></path></svg>
+        </button>
+        <button class="gg-immbtn" id="ggImmFull" type="button" title="Fullscreen" aria-label="Fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+        </button>
+        <button class="gg-immbtn gg-immpanic" id="ggImmExit" type="button" title="Quick exit — replaces this tab with your decoy" aria-label="Quick exit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+        </button>
+        <button class="gg-immbtn gg-immclose" id="ggImmClose" type="button" title="Close — back to the library" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          <span class="lbl">Close</span>
+        </button>
+      </div>
+
       <p class="gg-status" id="ggStatus" role="status" aria-live="polite"></p>
     </div>
   </section>
@@ -230,11 +247,44 @@ import Base from "../layouts/Base.astro";
     .gg-status { flex: 0 0 auto; margin: 0; padding: 3px 12px; min-height: 0; font-size: 12px; color: var(--ink-3); font-family: var(--mono); background: var(--chr-strip); }
     .gg-status:empty { display: none; }
 
+    /* ---- IMMERSIVE mode: launched from the library (?app=1). Strip the whole
+       browser chrome so it's a fullscreen view of just the game/app, with a
+       small floating control cluster. The global nav island is hidden too
+       (see .sg-immersive in global.css). ---- */
+    .gg-immbar { display: none; }
+    .gg-page.gg-immersive { padding: 0; height: 100dvh; }
+    .gg-page.gg-immersive .gg-tabstrip,
+    .gg-page.gg-immersive .gg-toolbar,
+    .gg-page.gg-immersive .gg-progress,
+    .gg-page.gg-immersive .gg-status { display: none; }
+    .gg-page.gg-immersive .gg-shell { border-top: none; }
+    .gg-page.gg-immersive .gg-immbar {
+      position: fixed; top: 12px; right: 12px; z-index: 70; display: flex; align-items: center; gap: 4px;
+      padding: 5px; border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
+      box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); opacity: 0.45;
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
+      transition: opacity .2s; }
+    .gg-page.gg-immersive .gg-immbar:hover,
+    .gg-page.gg-immersive .gg-immbar:focus-within { opacity: 1; }
+    :root[data-theme="light"] .gg-page.gg-immersive .gg-immbar { background: rgba(255,255,255,0.66); }
+    .gg-immbtn { width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+      background: transparent; border: none; color: var(--ink-2); transition: .16s; }
+    .gg-immbtn:hover { color: var(--ink); background: var(--glass-2); }
+    .gg-immbtn svg { width: 16px; height: 16px; }
+    .gg-immpanic:hover { color: #fff; background: var(--err); }
+    .gg-immclose { width: auto; gap: 6px; padding: 0 13px 0 10px; border-radius: var(--r-pill);
+      font-family: var(--font); font-size: 13px; font-weight: 600; color: #fff;
+      background: linear-gradient(180deg, #ff8090, var(--err)); }
+    .gg-immclose:hover { filter: brightness(1.06); background: linear-gradient(180deg, #ff8090, var(--err)); }
+    .gg-immclose .lbl { line-height: 1; }
+
     @media (max-width: 640px) {
       .gg-page { padding-top: 50px; }
       .gg-exit .lbl { display: none; }
       .gg-exit { padding: 8px 11px; }
       .gg-ntp-tiles { grid-template-columns: repeat(4, 1fr); }
+      .gg-immclose .lbl { display: none; }
+      .gg-immclose { width: 32px; padding: 0; }
     }
   </style>
 
@@ -565,8 +615,40 @@ import Base from "../layouts/Base.astro";
         if (e.key && e.key.toLowerCase() === key.toLowerCase()) { e.preventDefault(); quickExit(); }
       });
 
-      /* ---------- boot: honor ?url=, else an empty start tab ---------- */
+      /* ---------- immersive mode (?app=1 from the library) ----------
+         Launching a game/app strips the whole browser chrome AND the global
+         nav island, leaving a fullscreen view of just the content plus a
+         small floating control cluster (reload / fullscreen / exit / close). */
       const params = new URLSearchParams(location.search);
+      const immersive = params.get("app") === "1" || params.get("immersive") === "1";
+      const ggPage = document.querySelector(".gg-page");
+      if (immersive && ggPage) {
+        ggPage.classList.add("gg-immersive");
+        document.documentElement.classList.add("sg-immersive");
+        const immBar = document.getElementById("ggImmBar");
+        if (immBar) immBar.setAttribute("aria-hidden", "false");
+
+        const immReload = document.getElementById("ggImmReload");
+        if (immReload) immReload.addEventListener("click", () => {
+          const t = activeTab(); if (!t) return;
+          try { if (t.el && t.el.contentWindow) { t.loading = true; setProgress(true); renderTabs(); t.el.contentWindow.location.reload(); return; } } catch (e) {}
+          if (t.url) openInTab(t, t.url);
+        });
+        const immFull = document.getElementById("ggImmFull");
+        if (immFull && shell) immFull.addEventListener("click", () => {
+          try { if (document.fullscreenElement) document.exitFullscreen(); else (shell as any).requestFullscreen?.(); }
+          catch (e) { toast("Fullscreen isn't available here"); }
+        });
+        const immExit = document.getElementById("ggImmExit");
+        if (immExit) immExit.addEventListener("click", quickExit);
+        const immClose = document.getElementById("ggImmClose");
+        if (immClose) immClose.addEventListener("click", () => {
+          if (/\/(games|apps)\b/.test(document.referrer || "")) history.back();
+          else location.href = "/games";
+        });
+      }
+
+      /* ---------- boot: honor ?url=, else an empty start tab ---------- */
       const initial = params.get("url");
       newTab(initial ? normalize(initial) : "");
     })();

@@ -63,14 +63,15 @@ export function isBlank(item: CatalogItem): boolean {
  * Where a tile/row points. Matches the Phase-1 wiring convention:
  *   • no url            → undefined (rendered as a non-navigating tile)
  *   • blank flag        → the raw url, opened in a new tab (bypasses the launch bay)
- *   • root-relative "/" → same-origin asset, opened directly
- *   • everything else   → /go?url=<encoded> so the Launch Bay (boot.js) proxies it
+ *   • root-relative "/" → same-origin asset, opened directly (already full-screen)
+ *   • everything else   → /go?url=<encoded>&app=1 → the proxy in IMMERSIVE mode:
+ *                         a full-viewport view of just the game/app, no tab chrome.
  */
 export function entryHref(item: CatalogItem): string | undefined {
   if (!item.url) return undefined;
   if (isBlank(item)) return item.url;
   if (item.url.startsWith("/")) return item.url;
-  return "/go?url=" + encodeURIComponent(item.url);
+  return "/go?url=" + encodeURIComponent(item.url) + "&app=1";
 }
 
 /* ---------- html escaping (text + attribute contexts) ---------- */
