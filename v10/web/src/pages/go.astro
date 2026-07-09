@@ -28,6 +28,9 @@ import Base from "../layouts/Base.astro";
   description="Open any site through SlowGuardian's fast, private gateway."
 >
   <Fragment slot="head">
+    {/* Dock the nav pill top-left + icon-first on the proxy page only. Set
+        synchronously in <head> so the island never flashes centered first. */}
+    <script is:inline>document.documentElement.classList.add("sg-proxy");</script>
     {/* Load order matters — these define $scramjetLoadController + global BareMux,
         exactly as the verified Phase 1 index.html does. Served by Express. */}
     <script is:inline src="/scram/scramjet.all.js"></script>
