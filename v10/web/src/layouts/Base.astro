@@ -187,7 +187,11 @@ const FAVICON =
             es.forEach(function (e) {
               if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
             });
-          }, { threshold: 0.12 });
+            /* threshold 0 + a bottom margin: a percentage threshold can never
+               fire for an element taller than viewport/threshold (the "All"
+               grid is ~6000px, so 12% needed 758px of a 660px Chromebook
+               viewport and the whole section stayed invisible). */
+          }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
           document.querySelectorAll(".reveal:not(.in)").forEach(function (el) { io.observe(el); });
         } else {
           document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
@@ -398,6 +402,26 @@ const FAVICON =
             lastEsc = n;
           }
         });
+
+        /* ---------- square-art fit ----------
+           Tiles are 16:9 but much of the catalog art is square logo art, which
+           cover-crop decapitates. Once an image reports its natural size, tag
+           anything near-square (or taller) so CSS letterboxes it instead.
+           Capture phase + a load pass covers cached and late-injected tiles. */
+        function fitIfSquare(img: any) {
+          if (!img || img.dataset.fitChecked) return;
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (!w || !h) return;
+          img.dataset.fitChecked = "1";
+          if (w / h < 1.45) img.classList.add("fit");
+        }
+        document.addEventListener("load", function (e: any) {
+          var t = e.target;
+          if (t && t.tagName === "IMG" && t.classList.contains("tile-img")) fitIfSquare(t);
+        }, true);
+        function sweepTiles() { document.querySelectorAll("img.tile-img").forEach(function (i: any) { if (i.complete) fitIfSquare(i); }); }
+        sweepTiles();
+        window.addEventListener("load", sweepTiles);
 
         /* ---------- icon fallback ----------
            A catalog icon can 404 (renamed/removed asset). Without this the tile

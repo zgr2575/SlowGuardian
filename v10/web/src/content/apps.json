@@ -22,7 +22,7 @@
     "id": "steam",
     "name": "Steam",
     "url": "https://steampowered.com/",
-    "image": "/assets/media/icons/steam.ico",
+    "image": "/assets/media/icons/steam.png",
     "categories": [
       "all"
     ],
@@ -42,7 +42,7 @@
     "id": "guilded",
     "name": "Guilded",
     "url": "https://guilded.gg",
-    "image": "/assets/media/icons/guilded.webp",
+    "image": "/assets/media/icons/guilded.png",
     "categories": [
       "all",
       "social"
@@ -73,17 +73,6 @@
     "name": "Character AI",
     "url": "https://now.gg/iframe/snippet?app_pkg=ai.character.app&partner=interstellar",
     "image": "/assets/media/icons/characterai.webp",
-    "categories": [
-      "all",
-      "emu",
-      "android"
-    ]
-  },
-  {
-    "id": "aptoide",
-    "name": "Aptoide",
-    "url": "https://now.gg/iframe/snippet?app_pkg=com.aptoide.partners.nowgg.store&partner=interstellar",
-    "image": "/assets/media/icons/aptoide.webp",
     "categories": [
       "all",
       "emu",
@@ -167,16 +156,6 @@
     "name": "Fifa Rosters",
     "url": "https://fifarosters.com/",
     "image": "/assets/media/icons/fifa.webp",
-    "categories": [
-      "all",
-      "media"
-    ]
-  },
-  {
-    "id": "firefox-web-browser",
-    "name": "Firefox Web Browser",
-    "url": "https://replit.com/@cooleddie001/Firefox-Legacy?v=1",
-    "image": "/assets/media/icons/firefox.webp",
     "categories": [
       "all",
       "media"
@@ -445,7 +424,7 @@
   {
     "id": "hd-today",
     "name": "HD Today",
-    "url": "https://hdtoday.tv",
+    "url": "https://hdtoday.one/home/",
     "image": "/assets/media/icons/hd.webp",
     "categories": [
       "all",
@@ -479,7 +458,7 @@
     "id": "vercel",
     "name": "Vercel",
     "url": "https://vercel.com",
-    "image": "/assets/media/icons/vercel.webp",
+    "image": "/assets/media/icons/vercel.png",
     "categories": [
       "all",
       "tool"
@@ -511,7 +490,7 @@
     "id": "google-mail-gmail",
     "name": "Google Mail (Gmail)",
     "url": "https://mail.google.com/",
-    "image": "/assets/media/icons/gmail.webp",
+    "image": "/assets/media/icons/gmail.png",
     "categories": [
       "all",
       "mail"
@@ -522,7 +501,7 @@
     "id": "outlook",
     "name": "Outlook",
     "url": "https://outlook.live.com/",
-    "image": "/assets/media/icons/outlook.webp",
+    "image": "/assets/media/icons/outlook.png",
     "categories": [
       "all",
       "mail"
@@ -543,7 +522,7 @@
     "id": "w3schools",
     "name": "W3Schools",
     "url": "https://www.w3schools.com",
-    "image": "/assets/media/icons/W3Schools.png",
+    "image": "/assets/media/icons/w3schools.png",
     "categories": [
       "all"
     ]

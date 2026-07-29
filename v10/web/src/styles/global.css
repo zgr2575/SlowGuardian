@@ -115,7 +115,10 @@ a { color: inherit; text-decoration: none; }
 
 .omni { margin: var(--sp-6) auto 0; max-width: 560px; display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 22px; }
 .omni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
-.omni input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; padding: 12px 0; }
+/* min-width:0 — a flex item defaults to min-width:auto, so the input refused to
+   shrink below its intrinsic width and pushed the nowrap Open button out of the
+   pill (and off-screen) on phones. */
+.omni input { flex: 1; min-width: 0; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; padding: 12px 0; }
 .omni input::placeholder { color: var(--ink-3); }
 .omni:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2), 0 0 0 4px var(--accent-tint); }
 
@@ -236,7 +239,11 @@ footer b { color: var(--ink-2); font-weight: 600; }
 /* ---------- Command palette ---------- */
 .scrim { position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.4); display: none; align-items: flex-start; justify-content: center; padding-top: 14vh; }
 .scrim.open { display: flex; }
-.cmd { width: min(540px, 92vw); border-radius: var(--r-lg); overflow: hidden; animation: pop .2s cubic-bezier(.16,.8,.3,1); }
+/* own tint, not the bare --glass token — otherwise billboard artwork behind the
+   scrim reads straight through the dialog */
+.cmd { width: min(540px, 92vw); border-radius: var(--r-lg); overflow: hidden; animation: pop .2s cubic-bezier(.16,.8,.3,1);
+  background: rgba(12,14,20,0.88); }
+:root[data-theme="light"] .cmd { background: rgba(250,251,253,0.94); }
 @keyframes pop { from { opacity: 0; transform: translateY(-10px) scale(.98); } }
 .cmd .top { display: flex; align-items: center; gap: 11px; padding: 16px 18px; border-bottom: 1px solid var(--glass-brd); }
 .cmd .top svg { width: 17px; height: 17px; color: var(--ink-3); }
@@ -248,9 +255,13 @@ footer b { color: var(--ink-2); font-weight: 600; }
 .row .rk { font-size: 14px; font-weight: 500; }
 .row .rd { margin-left: auto; font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
 
-.toast { position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 16px); z-index: 100; border-radius: var(--r-pill); padding: 13px 20px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: 90vw; text-align: center; color: var(--ink);
-  background: var(--glass-strong); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
+/* left:50% capped the usable width at 50vw, so max-width:90vw never applied and
+   a long message wrapped into a tall pill whose radius clipped the text. Anchor
+   both edges and auto-center instead, and use a near-opaque tint so the message
+   is legible over tile artwork. */
+.toast { position: fixed; left: 0; right: 0; bottom: 30px; width: fit-content; margin-inline: auto; transform: translateY(16px); z-index: 100; border-radius: var(--r-lg); padding: 13px 20px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: min(90vw, 480px); text-align: center; color: var(--ink);
+  background: color-mix(in srgb, var(--bg-2) 92%, transparent); border: 1px solid var(--glass-brd-2); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+.toast.show { opacity: 1; transform: translateY(0); }
 .toast b { color: var(--accent-2); font-weight: 600; }
 
 @media (max-width: 640px) {

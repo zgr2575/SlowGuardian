@@ -137,7 +137,12 @@ import Base from "../layouts/Base.astro";
 
   <style>
     .set-page { padding: 84px 0 var(--sp-6); flex: 1 0 auto; }
-    .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-4); align-items: start; }
+    /* no align-items:start — stretch gives equal-height cards per row so the
+       existing margin-top:auto actually bottom-aligns each card's control */
+    .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-4); }
+    /* keep the pill controls their natural width instead of blockifying to the
+       full card and leaving an empty pill tail */
+    .set-card > .segmented, .set-card > .swatches { align-self: flex-start; }
     .set-card { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-5); border-radius: var(--r-lg); }
     .set-card-head h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 5px; }
     .set-card-head p { font-size: 13px; line-height: 1.5; color: var(--ink-3); margin: 0; }

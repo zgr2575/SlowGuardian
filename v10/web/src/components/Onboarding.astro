@@ -76,14 +76,21 @@
 </div>
 
 <style>
-  .ob-scrim { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: var(--sp-4);
+  /* scrim scrolls and top-aligns when the modal is taller than the viewport —
+     otherwise a short screen (e.g. 390x480) clips the top off and puts Skip/Next
+     off-screen with no way to dismiss. */
+  .ob-scrim { position: fixed; inset: 0; z-index: 200; display: flex; align-items: safe center; justify-content: center; padding: var(--sp-4);
+    overflow-y: auto; overscroll-behavior: contain;
     background: rgba(0,0,0,0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
   .ob-scrim[hidden] { display: none; }
-  .ob { width: min(520px, 100%); border-radius: var(--r-lg); padding: var(--sp-6); animation: obpop .3s cubic-bezier(.16,.8,.3,1); }
+  .ob { width: min(520px, 100%); border-radius: var(--r-lg); padding: var(--sp-6); animation: obpop .3s cubic-bezier(.16,.8,.3,1);
+    max-height: calc(100dvh - 2 * var(--sp-4)); overflow-y: auto; flex: 0 0 auto; }
   @keyframes obpop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
   .ob-steps { display: flex; gap: 7px; margin-bottom: var(--sp-5); }
-  .ob-steps i { width: 26px; height: 4px; border-radius: 2px; background: var(--glass-strong); transition: background .25s; }
-  .ob-steps i.on { background: var(--accent); }
+  /* :global — the dots are injected by JS at runtime, so they carry no Astro
+     scope id and a scoped selector would never match them. */
+  .ob-steps :global(i) { width: 26px; height: 4px; border-radius: 2px; background: var(--glass-strong); transition: background .25s; }
+  .ob-steps :global(i.on) { background: var(--accent); }
   .ob-mark { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 18px; color: var(--on-accent);
     background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 24px var(--accent-tint); }
   .ob-mark.ok { background: linear-gradient(160deg, #43d17f, #16a34a); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 24px rgba(22,163,74,.3); }
@@ -98,7 +105,10 @@
   .ob-check { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; cursor: pointer; font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
   .ob-check input { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
   .ob-check b { color: var(--ink); font-weight: 600; }
-  .ob-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: var(--sp-6); }
+  /* sticky so Skip/Next stay reachable while the modal body scrolls on short screens */
+  .ob-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: var(--sp-6);
+    position: sticky; bottom: calc(-1 * var(--sp-6)); padding: var(--sp-4) 0 0;
+    background: linear-gradient(180deg, transparent, var(--bg-2) 38%); }
   .ob-nav { display: flex; gap: 10px; }
   @media (prefers-reduced-motion: reduce) { .ob { animation: none; } }
 </style>

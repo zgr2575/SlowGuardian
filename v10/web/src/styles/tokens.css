@@ -75,7 +75,11 @@
   --bg:#eef1f7; --bg-2:#e6eaf3;
   --glass:rgba(255,255,255,.55); --glass-2:rgba(255,255,255,.7); --glass-strong:rgba(255,255,255,.82);
   --glass-brd:rgba(255,255,255,.7); --glass-brd-2:rgba(0,0,0,.08); --hi:rgba(255,255,255,.9);
-  --ink:#161a22; --ink-2:rgba(24,28,38,.66); --ink-3:rgba(24,28,38,.42);
+  /* ink-3 raised from .42 (2.6:1 — under AA) so secondary copy is readable on
+     the light background; accent-2 darkened because the dark-theme highlight
+     blue only hit 2.56:1 on light. */
+  --ink:#161a22; --ink-2:rgba(24,28,38,.72); --ink-3:rgba(24,28,38,.60);
+  --accent-2:#0b6bcb;
   --sh-1:0 2px 10px rgba(20,26,44,.08); --sh-2:0 14px 40px rgba(20,26,44,.14); --sh-3:0 30px 70px rgba(20,26,44,.18);
   --a1:rgba(10,132,255,.16); --a2:rgba(125,91,237,.14); --a3:rgba(20,200,180,.12);
 }
