@@ -2,13 +2,13 @@
 /**
  * privacy.astro — Privacy & disguise (the Dynamic Island "Privacy" destination).
  *
- * Ports the mockup's honest privacy narrative and makes it real:
+ * The privacy controls:
  *   - Tab Disguise configurator with a LIVE preview (presets + custom title /
  *     favicon) → writes sg:cloak (JSON {title, favicon}); the Base pre-paint
  *     boot applies it before the page renders on every SlowGuardian tab.
- *   - Quick Exit: decoy URL (sg:panicUrl) + rebindable single key (sg:panicKey),
- *     honest that it uses location.replace (no history) — double-Esc still works.
- *   - OPT-IN about:blank cloak, gesture-triggered, with a straight-talk note.
+ *   - Quick Exit: decoy URL (sg:panicUrl) + rebindable single key (sg:panicKey);
+ *     uses location.replace (no history) — double-Esc still works.
+ *   - OPT-IN about:blank cloak, gesture-triggered.
  *   - Clear local traces (delegates to the Base shell's SG.clearTraces).
  *
  * Reuses mockup classes: .sechead .fgrid .feature .callout .field .controls
@@ -17,13 +17,13 @@
 import Base from "../layouts/Base.astro";
 ---
 
-<Base title="Privacy — SlowGuardian" description="Quiet on a shared screen. Tab disguise, one-key quick exit, and an honest account of what this does — and what no website can.">
+<Base title="Privacy — SlowGuardian" description="Tab disguise, one-key quick exit, an about:blank launcher, and one-tap cleanup.">
   <section id="privacy" class="pri-top">
     <div class="wrap">
       <div class="sechead reveal">
         <div class="ey">Privacy</div>
-        <h2>Quiet on a shared screen.</h2>
-        <p>Designed for the real, solvable problem — a glance over your shoulder, someone scrolling your history. Honest about what it does, and what it doesn't.</p>
+        <h2>Privacy controls.</h2>
+        <p>Disguise the tab, jump to a decoy site with one key, and clear what this app stored on this device.</p>
       </div>
 
       <div class="fgrid reveal">
@@ -47,10 +47,6 @@ import Base from "../layouts/Base.astro";
         </div>
       </div>
 
-      <div class="callout glass reveal">
-        <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
-        <p><b>Straight talk.</b> These features defend against people looking at your screen and casual history checks. They don't defeat network filtering or device monitoring — no website can — and SlowGuardian won't pretend otherwise.</p>
-      </div>
     </div>
   </section>
 
@@ -140,8 +136,8 @@ import Base from "../layouts/Base.astro";
     <div class="wrap">
       <div class="sechead reveal">
         <div class="ey">about:blank cloak</div>
-        <h2>Hide the address, honestly.</h2>
-        <p>Opt-in. Opens SlowGuardian inside a blank window, so its address bar reads <span style="font-family:var(--mono)">about:blank</span> and the title stays generic. It needs a click to open — browsers block it otherwise.</p>
+        <h2>Hide the address bar.</h2>
+        <p>Opt-in. Opens SlowGuardian inside a blank window, so its address bar reads <span style="font-family:var(--mono)">about:blank</span> and the title stays generic. Open it with the button below.</p>
       </div>
 
       <div class="pnl glass reveal">
@@ -152,9 +148,7 @@ import Base from "../layouts/Base.astro";
         <div class="row-actions">
           <button class="btn sm" id="abLaunch" type="button" disabled>Open in about:blank</button>
         </div>
-        <p class="sg-note"><b>How it works.</b> A blank window opens with SlowGuardian inside it, wearing the title and favicon from your disguise above — and <b>this tab switches to your decoy</b> (the Quick&nbsp;Exit site), so nothing on screen points back here. Keep browsing in the blank window.</p>
-        <p class="sg-note"><b>Straight talk.</b> Some managed Chromebooks disable about:blank embedding, Firefox blocks it outright, and a few sites break inside it. It hides the URL from a shoulder-glance — it does <b>not</b> bypass network filtering or device monitoring.</p>
-      </div>
+        <p class="sg-note"><b>How it works.</b> A blank window opens with SlowGuardian inside it, wearing the title and favicon from your disguise above — and <b>this tab switches to your decoy</b> (the Quick&nbsp;Exit site), so nothing on screen points back here. Keep browsing in the blank window.</p>      </div>
     </div>
   </section>
 
@@ -164,7 +158,7 @@ import Base from "../layouts/Base.astro";
       <div class="sechead reveal">
         <div class="ey">Clean up</div>
         <h2>Clear the traces you made.</h2>
-        <p>Wipes the SlowGuardian settings, session data, and proxy caches this app created on this device. It can't touch records kept by the network or the device itself.</p>
+        <p>Wipes the SlowGuardian settings, session data, and proxy caches this app created on this device.</p>
       </div>
       <div class="pnl glass reveal">
         <div class="row-actions">
@@ -400,7 +394,7 @@ import Base from "../layouts/Base.astro";
            3. the ORIGINAL tab is redirected to the decoy (sg:panicUrl) so
               nothing left on screen points back at SlowGuardian;
            4. a beforeunload guard makes an accidental close ask first.
-         Firefox blocks scripting an about:blank popup, so bail honestly. */
+         Firefox blocks scripting an about:blank popup, so bail out there. */
       function launchAboutBlank() {
         if (lsGet("sg:aboutblank") !== "1") return;
         if (/firefox/i.test(navigator.userAgent)) {

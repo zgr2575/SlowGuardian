@@ -52,11 +52,10 @@
 
     <!-- Step 3 — privacy -->
     <section class="ob-step" data-step="2" hidden>
-      <h2>Quiet on a shared screen</h2>
-      <p>Optional privacy defenses for a glance over your shoulder. You can change all of this later on the Privacy page.</p>
+      <h2>Privacy</h2>
+      <p>Turn these on now if you want them. You can change all of this later on the Privacy page.</p>
       <label class="ob-check"><input type="checkbox" id="obCloak" /><span><b>Disguise this tab</b> — look like Google&nbsp;Classroom in the tab bar.</span></label>
-      <label class="ob-check"><input type="checkbox" id="obAbout" /><span><b>about:blank cloak</b> — opt in to launching inside a blank window.</span></label>
-      <p class="ob-fine">Straight talk: these hide things from a shoulder-glance. They don't defeat network filtering or device monitoring — no website can.</p>
+      <label class="ob-check"><input type="checkbox" id="obAbout" /><span><b>about:blank cloak</b> — launch inside a blank window.</span></label>
     </section>
 
     <!-- Step 4 — done -->
@@ -99,7 +98,6 @@
   .ob-check { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; cursor: pointer; font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
   .ob-check input { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
   .ob-check b { color: var(--ink); font-weight: 600; }
-  .ob-fine { margin-top: 18px; font-size: 12.5px; color: var(--ink-3); }
   .ob-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: var(--sp-6); }
   .ob-nav { display: flex; gap: 10px; }
   @media (prefers-reduced-motion: reduce) { .ob { animation: none; } }

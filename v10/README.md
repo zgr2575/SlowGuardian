@@ -3,7 +3,7 @@
 A fast, private gateway for the school Chromebook — open any site, launch a
 game or an app, all in a blink even on the slow machines. V10 is a ground-up,
 LTS-focused rebuild of V9: one proxy engine, one service worker, an Astro
-static frontend, and an honest privacy story.
+static frontend, and a clean set of privacy controls.
 
 - **Design:** Apple-style **Liquid Glass**, dark-first, with a **Dynamic Island**
   nav. Runs on 2016–2019 Chromebooks (blur steps down to solid glass).
@@ -131,9 +131,8 @@ catalogs, and the Dynamic Island nav (replacing V9's hover sidebar).
   client-side. (ZADMIN Auth is a separate future maintainer project.)
 - **No MongoDB.** Small global/admin state uses embedded SQLite.
 - **No monitoring-evasion.** No anti-screenshot / anti-screen-record /
-  anti-close. The privacy features defend against a shoulder-glance and casual
-  history checks; they do **not** defeat network filtering or device monitoring,
-  and the UI says so plainly.
+  anti-close. The privacy surface is tab disguise, quick exit, the about:blank
+  launcher, and local cleanup.
 - **Music/Spotify** — the old player slot is reserved for a future project
   integration (TBD by the maintainer); not building music in 1.0.
 - **Superseded by the new design:** the theme zoo (Cyberpunk/Ocean/Sunset/

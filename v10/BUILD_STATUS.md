@@ -51,7 +51,7 @@ Astro 5 static MPA under `v10/web/`, served by the Phase 1 Express server (which
 - ✅ **Home** — Dynamic Island (per-tab icons + collapse), hero + omnibox → `/go?url=`, and the **Netflix library over the real catalog**: featured billboard + shelves (Popular / 2-Player / Runs Offline / …), 838 tiles from the 284-game collection with real icons.
 - ✅ **Apps** — same Library over the 55-app collection.
 - ✅ **Go (proxy)** — Liquid Glass **multi-tab browser** (tab strip + new/close, address bar with back/forward/reload, always-visible **Exit**/quick-exit); reuses the verified Phase 1 wiring; **proxied a live site (httpforever.com) end-to-end through the new UI.**
-- ✅ **Settings / Privacy** — theme (dark/light) + accent swatches + performance mode, honest privacy copy.
+- ✅ **Settings / Privacy** — theme (dark/light) + accent swatches + performance mode, plain privacy copy.
 - Catalog: `src/content.config.ts` (Astro 5 file() loader, Zod schema), data in `src/content/{games,apps}.json` (284 / 55, converted from V9's g.json/a.json). Icons synced from committed `static/` at build (`scripts/sync-icons.mjs`, prebuild) — not duplicated in git.
 
 ## Phase 3 verification (2026-07-05)
