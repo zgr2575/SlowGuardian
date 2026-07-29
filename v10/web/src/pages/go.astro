@@ -274,10 +274,13 @@ import Base from "../layouts/Base.astro";
     .gg-immbtn:hover { color: var(--ink); background: var(--glass-2); }
     .gg-immbtn svg { width: 16px; height: 16px; }
     .gg-immpanic:hover { color: #fff; background: var(--err); }
-    .gg-immclose { width: auto; gap: 6px; padding: 0 13px 0 10px; border-radius: var(--r-pill);
-      font-family: var(--font); font-size: 13px; font-weight: 600; color: #fff;
+    /* inline-flex, not the icon buttons' grid — grid stacks the icon above the label */
+    .gg-immclose { width: auto; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+      gap: 7px; padding: 0 14px 0 11px; border-radius: var(--r-pill); white-space: nowrap;
+      font-family: var(--font); font-size: 13px; font-weight: 600; line-height: 1; color: #fff;
       background: linear-gradient(180deg, #ff8090, var(--err)); }
     .gg-immclose:hover { filter: brightness(1.06); background: linear-gradient(180deg, #ff8090, var(--err)); }
+    .gg-immclose svg { width: 15px; height: 15px; flex-shrink: 0; }
     .gg-immclose .lbl { line-height: 1; }
 
     @media (max-width: 640px) {

@@ -399,6 +399,33 @@ const FAVICON =
           }
         });
 
+        /* ---------- icon fallback ----------
+           A catalog icon can 404 (renamed/removed asset). Without this the tile
+           renders the browser's broken-image glyph. Capture phase, because
+           img 'error' does not bubble — this also covers tiles injected later
+           by search / the palette. Degrades to the first letter over the
+           tile's gradient, which is what .art/.mono already style. */
+        document.addEventListener(
+          "error",
+          function (e) {
+            var el = e.target;
+            if (!el || el.tagName !== "IMG") return;
+            if (!el.classList.contains("tile-img") && !el.classList.contains("bb-img")) return;
+            if (el.dataset.fellBack) return;
+            el.dataset.fellBack = "1";
+            el.style.display = "none";
+            var art = el.parentNode;
+            if (!art || art.querySelector(".mono")) return;
+            var tile = art.closest ? art.closest(".tile, .billboard") : null;
+            var name = (tile && (tile.getAttribute("aria-label") || tile.dataset.name)) || "";
+            var s = document.createElement("span");
+            s.className = "mono";
+            s.textContent = (name.trim()[0] || "?").toUpperCase();
+            art.appendChild(s);
+          },
+          true
+        );
+
         /* ---------- expose the shared API ---------- */
         SG.toast = toast;
         SG.setTheme = setTheme;
