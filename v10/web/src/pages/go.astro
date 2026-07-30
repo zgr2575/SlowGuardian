@@ -365,6 +365,18 @@ import Base from "../layouts/Base.astro";
           }
           await navigator.serviceWorker.register("/sw.js", { scope: "/" });
           await navigator.serviceWorker.ready;
+          /* .ready means "a worker is active", NOT "this page is controlled".
+             On a first visit controller is null until the worker claims us, and
+             an unintercepted /scramjet/<url> request falls through to the host —
+             a static host answers it with index.html, so the frame would render
+             our own home page instead of the target site. Wait for control. */
+          if (!navigator.serviceWorker.controller) {
+            await new Promise<void>((resolve) => {
+              const done = () => { clearTimeout(timer); resolve(); };
+              const timer = setTimeout(resolve, 5000); // never hang the UI on this
+              navigator.serviceWorker.addEventListener("controllerchange", done, { once: true });
+            });
+          }
         };
         const setEpoxyTransport = async () => {
           /* Wisp endpoint. Defaults to this origin (the single-service Render
