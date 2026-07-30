@@ -83,6 +83,28 @@ export function escAttr(s: unknown = ""): string {
 }
 
 /**
+ * Deterministic hue from a name, so an art-less tile always renders the same
+ * colour and the grid reads as a designed set rather than a row of failures.
+ */
+export function nameHue(name: string): number {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+  return h;
+}
+
+/** Gradient plate + wordmark for entries that have no artwork. */
+export function artPlate(name: string): string {
+  const h = nameHue(name);
+  const style =
+    `background:linear-gradient(150deg,hsl(${h} 62% 30%),hsl(${(h + 42) % 360} 58% 16%))`;
+  return (
+    `<span class="art noart" style="${style}">` +
+    `<span class="mono plate">${esc(name)}</span>` +
+    `</span>`
+  );
+}
+
+/**
  * One source of truth for a tile's markup (mockup classes: .tile/.art/.label/.tt/.cc).
  * Returns a full <a> element string so SSR shelves and client search results match.
  */
@@ -105,9 +127,14 @@ export function tileHTML(item: CatalogItem, kind: CatalogKind): string {
   ]
     .filter(Boolean)
     .join(" ");
+  /* no image → render the gradient wordmark plate instead of firing a request
+     we know will 404 and fall back */
+  const art = item.image
+    ? `<span class="art"><img class="tile-img" src="${escAttr(item.image)}" alt="" loading="lazy" decoding="async" /></span>`
+    : artPlate(item.name);
   return (
     `<a ${attrs}>` +
-    `<span class="art"><img class="tile-img" src="${escAttr(item.image)}" alt="" loading="lazy" decoding="async" /></span>` +
+    art +
     `<span class="label"><span class="tt">${esc(item.name)}</span><span class="cc">${esc(label)}</span></span>` +
     `</a>`
   );
