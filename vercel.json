@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm --prefix v10 install --omit=dev && npm --prefix v10/web install",
-  "buildCommand": "npm --prefix v10/web run build",
+  "buildCommand": "PUBLIC_WISP_URL=\"${PUBLIC_WISP_URL:-wss://slowguardian-v10.onrender.com/wisp/}\" npm --prefix v10/web run build",
   "outputDirectory": "v10/web/dist",
   "cleanUrls": true,
   "headers": [
