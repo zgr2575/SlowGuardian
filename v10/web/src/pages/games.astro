@@ -1,0 +1,16 @@
+---
+/**
+ * /games — the Games catalog. Netflix-style Library (billboard + shelves +
+ * a dense "All games" grid) over the 'games' content collection.
+ *
+ * The home route ("/") is the search lander; this is the game library it
+ * links to. Chrome (Dynamic Island nav, ⌘K palette, toast, theme/accent)
+ * comes from the shared Base layout.
+ */
+import Base from "../layouts/Base.astro";
+import Library from "../components/Library.astro";
+---
+
+<Base title="Games · SlowGuardian" description="Hundreds of games, unblocked and fast — even on a 2018 Chromebook.">
+  <Library collection="games" />
+</Base>

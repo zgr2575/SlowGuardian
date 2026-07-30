@@ -1,0 +1,17 @@
+---
+/**
+ * /apps — the Apps catalog. Same Netflix Library treatment as the games library,
+ * driven by the 'apps' content collection.
+ *
+ * Chrome (Dynamic Island nav, ⌘K palette shell, toast, theme/accent, ambient
+ * background) comes from the shared Base layout — the sibling Phase-2 deliverable.
+ * This page only supplies the <Library> for apps. If the layout component is named
+ * differently, update the import below; the page body is layout-agnostic.
+ */
+import Base from "../layouts/Base.astro";
+import Library from "../components/Library.astro";
+---
+
+<Base title="Apps · SlowGuardian" active="apps">
+  <Library collection="apps" />
+</Base>

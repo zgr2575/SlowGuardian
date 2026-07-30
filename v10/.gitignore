@@ -1,0 +1,13 @@
+node_modules/
+*.log
+data/
+*.sqlite
+*.sqlite3
+.env
+.env.*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/

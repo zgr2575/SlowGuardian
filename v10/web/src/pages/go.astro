@@ -1,0 +1,711 @@
+---
+/**
+ * go.astro — the proxy workspace (Liquid Glass) with a MULTI-TAB browser.
+ *
+ * Each tab is its own Scramjet frame. The proxy wiring is a 1:1 port of the
+ * VERIFIED Phase 1 client (v10/public/boot.js + index.html):
+ *   - /scram/scramjet.all.js and /baremux/index.js are loaded as classic
+ *     <script is:inline> in <head> so they define $scramjetLoadController and
+ *     the global BareMux BEFORE the bundled module below runs.
+ *   - $scramjetLoadController() -> new ScramjetController({ prefix:"/scramjet/",
+ *     files:{ all, sync, wasm } }) -> scramjet.init()
+ *   - new BareMux.BareMuxConnection("/baremux/worker.js")
+ *   - navigator.serviceWorker.register("/sw.js", { scope:"/" })
+ *   - connection.setTransport("/epoxy/index.mjs", [{ wisp: ws(s)://host/wisp/ }])
+ *   - per tab: scramjet.createFrame(); frame.go(url)
+ *
+ * The Express server (v10/src/server.js) serves /scram /baremux /epoxy and the
+ * /wisp/ upgrade — the frontend never bundles the engine, it only talks to it.
+ *
+ * ?url= auto-opens in the first tab. A visible, always-available Quick Exit
+ * button does top.location.replace() to the decoy (sg:panicUrl).
+ */
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="New Tab"
+  description="Open any site through SlowGuardian's fast, private gateway."
+>
+  <Fragment slot="head">
+    {/* Hide the floating nav pill on this page — /go is a full-screen browser
+        and the SlowGuardian logo lives in its toolbar instead. Set synchronously
+        in <head> so the pill never flashes in before the CSS applies. */}
+    <script is:inline>document.documentElement.classList.add("sg-proxy");</script>
+    {/* Load order matters — these define $scramjetLoadController + global BareMux,
+        exactly as the verified Phase 1 index.html does. Served by Express. */}
+    <script is:inline src="/scram/scramjet.all.js"></script>
+    <script is:inline src="/baremux/index.js"></script>
+  </Fragment>
+
+  <section class="gg-page">
+    <div class="gg-wrap">
+      <div class="gg-shell glass reveal in">
+        <!-- ---------- tab strip ---------- -->
+        <div class="gg-tabstrip">
+          <div class="gg-tabs" id="ggTabs" role="tablist" aria-label="Open tabs"></div>
+          <button class="gg-newtab" id="ggNewTab" type="button" title="New tab" aria-label="New tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+
+        <!-- ---------- toolbar / Dynamic-Island-consistent omnibox ---------- -->
+        <div class="gg-toolbar">
+          {/* the logo lives with the browser controls and is the way back to
+              SlowGuardian — /go has no floating nav pill */}
+          <a class="gg-home" href="/" title="Back to SlowGuardian" aria-label="Back to SlowGuardian">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg>
+          </a>
+          <span class="gg-tbsep" aria-hidden="true"></span>
+          <div class="gg-nav">
+            <button class="gg-navbtn" id="ggBack" type="button" title="Back" aria-label="Back">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+            </button>
+            <button class="gg-navbtn" id="ggFwd" type="button" title="Forward" aria-label="Forward">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg>
+            </button>
+            <button class="gg-navbtn" id="ggReload" type="button" title="Reload" aria-label="Reload">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"></path></svg>
+            </button>
+          </div>
+
+          <form class="gg-omni" id="ggOmni" autocomplete="off">
+            <span class="gg-scheme" id="ggScheme" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+            </span>
+            <input
+              id="ggUrl"
+              type="text"
+              inputmode="url"
+              placeholder="Search the web or enter an address"
+              aria-label="Address bar"
+              spellcheck="false"
+            />
+          </form>
+
+          <button class="gg-navbtn" id="ggPopout" type="button" title="Open in a new window" aria-label="Open in a new window">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"></path></svg>
+          </button>
+          <button class="gg-navbtn" id="ggFull" type="button" title="Fullscreen" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+          </button>
+          <button class="gg-exit" id="ggExit" type="button" title="Quick exit — replaces this tab with your decoy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+            <span class="lbl">Exit</span>
+          </button>
+        </div>
+
+        <div class="gg-progress" id="ggProgress" aria-hidden="true"></div>
+
+        <!-- ---------- views: one Scramjet frame per tab, only active shown ---------- -->
+        <div class="gg-views" id="ggViews">
+          <div class="gg-start" id="ggStart">
+            <div class="gg-ntp">
+              <div class="gg-ntp-word">Slow<b>Guardian</b></div>
+              <form class="gg-startomni glass" id="ggStartForm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+                <input id="ggStartUrl" type="text" placeholder="Search the web or enter an address" aria-label="Search or enter an address" spellcheck="false" />
+                <button class="btn" type="submit">Open</button>
+              </form>
+              <div class="gg-ntp-tiles">
+                <a class="gg-ntp-tile" href="/games"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"></rect><circle cx="8" cy="12" r="1.4" fill="currentColor"></circle><circle cx="16" cy="12" r="1.4" fill="currentColor"></circle></svg></span><span>Games</span></a>
+                <a class="gg-ntp-tile" href="/apps"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.6"></rect><rect x="14" y="3" width="7" height="7" rx="1.6"></rect><rect x="3" y="14" width="7" height="7" rx="1.6"></rect><rect x="14" y="14" width="7" height="7" rx="1.6"></rect></svg></span><span>Apps</span></a>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://classroom.google.com/"><span class="gg-ntp-ic" style="background:#1a73e8;color:#fff">C</span><span>Classroom</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://drive.google.com/"><span class="gg-ntp-ic" style="background:#0f9d58;color:#fff">D</span><span>Drive</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.youtube.com/"><span class="gg-ntp-ic" style="background:#ea4335;color:#fff">▶</span><span>YouTube</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://docs.google.com/"><span class="gg-ntp-ic" style="background:#4285f4;color:#fff">W</span><span>Docs</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://mail.google.com/"><span class="gg-ntp-ic" style="background:#d93025;color:#fff">M</span><span>Gmail</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.reddit.com/"><span class="gg-ntp-ic" style="background:#000;color:#fff">R</span><span>Reddit</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://en.wikipedia.org/"><span class="gg-ntp-ic" style="background:#101418;color:#fff">W</span><span>Wikipedia</span></button>
+                <button class="gg-ntp-tile" type="button" data-openurl="https://www.google.com/"><span class="gg-ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span><span>Add shortcut</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- immersive controls (shown only when launched from the library) ---------- -->
+      <div class="gg-immbar" id="ggImmBar" aria-hidden="true">
+        <a class="gg-immbtn gg-immhome" href="/" title="Back to SlowGuardian" aria-label="Back to SlowGuardian">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg>
+        </a>
+        <span class="gg-immsep" aria-hidden="true"></span>
+        <button class="gg-immbtn" id="ggImmReload" type="button" title="Reload" aria-label="Reload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"></path></svg>
+        </button>
+        <button class="gg-immbtn" id="ggImmFull" type="button" title="Fullscreen" aria-label="Fullscreen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+        </button>
+        <button class="gg-immbtn gg-immpanic" id="ggImmExit" type="button" title="Quick exit — replaces this tab with your decoy" aria-label="Quick exit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+        </button>
+        <button class="gg-immbtn gg-immclose" id="ggImmClose" type="button" title="Close — back to the library" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          <span class="lbl">Close</span>
+        </button>
+      </div>
+
+      <p class="gg-status" id="ggStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <style is:global>
+    /* ---- proxy workspace (go.astro) styled to resemble Google Chrome.
+       is:global so JS-created tab elements pick these up (Astro scopes only
+       static markup). Class names/IDs are unchanged — the verified multi-tab
+       wiring is untouched; this is purely the Chrome skin. ---- */
+    :root { --chr-strip: #171a1f; --chr-bar: #282a2e; --chr-omni: #131417; --chr-ntp: #1c1d21; --chr-hover: rgba(255,255,255,.09); }
+    :root[data-theme="light"] { --chr-strip: #dee1e6; --chr-bar: #f1f3f4; --chr-omni: #e5e8eb; --chr-ntp: #ffffff; --chr-hover: rgba(0,0,0,.06); }
+
+    /* Fullscreen browser: fill the whole viewport edge-to-edge. No top gap —
+       the floating nav pill is hidden on this page and the SlowGuardian logo
+       lives in the toolbar instead, so the browser owns the entire screen. */
+    .gg-page { height: 100dvh; display: flex; flex-direction: column; padding: 0; }
+    .gg-wrap { max-width: none; margin: 0; width: 100%; padding: 0; position: relative; z-index: 1;
+      flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+    .gg-shell { flex: 1; min-height: 0; border-radius: 0; overflow: hidden; display: flex; flex-direction: column;
+      border: none; border-top: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: none; }
+
+    /* tab strip — Chrome-shaped tabs on a darker title bar */
+    .gg-tabstrip { display: flex; align-items: flex-end; justify-content: flex-start; gap: 1px; padding: 5px 6px 0; background: var(--chr-strip); }
+    .gg-tabs { display: flex; gap: 1px; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .gg-tabs::-webkit-scrollbar { display: none; }
+    .gg-tab { display: inline-flex; align-items: center; gap: 9px; flex: 0 1 210px; min-width: 110px; max-width: 240px;
+      padding: 7px 9px 9px 12px; border-radius: 9px 9px 0 0; background: transparent; border: none;
+      color: var(--ink-2); cursor: pointer; transition: background .16s, color .16s; user-select: none; }
+    .gg-tab:not(.on):hover { background: var(--chr-hover); }
+    .gg-tab.on { background: var(--chr-bar); color: var(--ink); }
+    .gg-tab .gg-fav { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; color: var(--ink-3); }
+    .gg-tab.on .gg-fav { color: var(--accent-2); }
+    .gg-tab .gg-fav img { width: 16px; height: 16px; object-fit: cover; border-radius: 3px; display: block; }
+    .gg-tab .gg-fav svg { width: 15px; height: 15px; }
+    .gg-tab .gg-ti { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .gg-tab .gg-x { width: 18px; height: 18px; flex-shrink: 0; display: grid; place-items: center; border: none; background: none; color: inherit;
+      border-radius: 50%; opacity: .6; cursor: pointer; transition: opacity .15s, background .15s; }
+    .gg-tab .gg-x:hover { opacity: 1; background: var(--chr-hover); }
+    .gg-tab .gg-x svg { width: 12px; height: 12px; }
+    .gg-spin { animation: ggspin .8s linear infinite; }
+    @keyframes ggspin { to { transform: rotate(360deg); } }
+
+    .gg-newtab { flex: 0 0 auto; width: 28px; height: 28px; margin: 0 0 6px 4px; display: grid; place-items: center; cursor: pointer;
+      border-radius: 50%; background: transparent; border: none; color: var(--ink-2); transition: .18s; }
+    .gg-newtab:hover { color: var(--ink); background: var(--chr-hover); }
+    .gg-newtab svg { width: 15px; height: 15px; }
+
+    /* toolbar — Chrome omnibox row */
+    .gg-toolbar { position: relative; display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--chr-bar); }
+    .gg-nav { display: flex; gap: 2px; flex-shrink: 0; }
+    .gg-navbtn { width: 30px; height: 30px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+      background: transparent; border: none; color: var(--ink-2); transition: .18s; }
+    .gg-navbtn:hover { color: var(--ink); background: var(--chr-hover); }
+    .gg-navbtn svg { width: 16px; height: 16px; }
+
+    .gg-omni { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px; border-radius: var(--r-pill);
+      margin: 0 6px; padding: 5px 14px; background: var(--chr-omni); border: 1px solid transparent; transition: box-shadow .2s, border-color .2s; }
+    .gg-omni:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+    .gg-scheme { display: grid; place-items: center; color: var(--ink-3); flex-shrink: 0; }
+    .gg-scheme svg { width: 15px; height: 15px; display: block; }
+    .gg-scheme.secure { color: var(--ok); }
+    .gg-omni input { flex: 1; min-width: 0; border: none; outline: none; background: none; color: var(--ink);
+      font-family: var(--font); font-size: 13.5px; padding: 4px 0; }
+    .gg-omni input::placeholder { color: var(--ink-3); }
+
+    .gg-exit { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; border-radius: var(--r-pill);
+      margin-left: 4px; padding: 7px 14px; font-family: var(--font); font-size: 13px; font-weight: 600; color: #fff;
+      background: linear-gradient(180deg, #ff8090, var(--err)); border: none; transition: .18s; }
+    .gg-exit:hover { filter: brightness(1.06); }
+    .gg-exit svg { width: 15px; height: 15px; }
+    /* SlowGuardian logo — sits with the browser controls and is the way back */
+    .gg-home { width: 30px; height: 30px; margin-right: 2px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+      color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 3px 10px var(--accent-tint); transition: filter .18s, transform .1s; }
+    .gg-home:hover { filter: brightness(1.09); }
+    .gg-tbsep { width: 1px; height: 20px; margin: 0 5px 0 3px; background: var(--glass-brd); flex-shrink: 0; }
+    .gg-home:active { transform: scale(0.95); }
+    .gg-home svg { width: 17px; height: 17px; }
+
+    /* thin loading bar */
+    .gg-progress { position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; overflow: hidden; background: transparent; pointer-events: none; }
+    .gg-progress::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 38%;
+      background: linear-gradient(90deg, transparent, var(--accent-2), transparent); transform: translateX(-120%); }
+    .gg-progress.on::before { animation: ggbar 1.05s ease-in-out infinite; }
+    @keyframes ggbar { to { transform: translateX(320%); } }
+
+    /* views — fill the shell */
+    .gg-views { position: relative; flex: 1; min-height: 0; background: var(--chr-ntp); }
+    .gg-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+
+    /* new-tab page — Chrome NTP */
+    .gg-start { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      text-align: center; background: var(--chr-ntp); padding: clamp(40px, 8vh, 96px) var(--sp-5) var(--sp-6); overflow-y: auto; }
+    .gg-ntp { width: 100%; max-width: 580px; }
+    .gg-ntp-word { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); margin-bottom: var(--sp-5); }
+    .gg-ntp-word b { color: var(--accent-2); font-weight: 700; }
+    .gg-startomni { width: 100%; display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 20px; margin-bottom: var(--sp-6);
+      background: var(--chr-omni); border: 1px solid var(--glass-brd); }
+    .gg-startomni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
+    .gg-startomni input { flex: 1; min-width: 0; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 15px; padding: 11px 0; }
+    .gg-startomni input::placeholder { color: var(--ink-3); }
+    .gg-startomni:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+    .gg-ntp-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-4) var(--sp-3); }
+    .gg-ntp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; text-decoration: none; cursor: pointer; border: none; background: none; padding: 0; font-family: var(--font); }
+    .gg-ntp-tile .gg-ntp-ic { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--chr-bar); color: var(--ink); font-size: 18px; font-weight: 600; transition: .16s; }
+    .gg-ntp-tile:hover .gg-ntp-ic { background: var(--chr-hover); transform: translateY(-1px); }
+    .gg-ntp-tile .gg-ntp-ic svg { width: 22px; height: 22px; }
+    .gg-ntp-tile span:last-child { font-size: 12px; color: var(--ink-2); max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gg-fineprint { font-size: 12.5px; color: var(--ink-3); margin-top: var(--sp-6); }
+    .gg-fineprint a { color: var(--accent-2); }
+    .gg-fineprint a:hover { text-decoration: underline; }
+
+    /* transient corner bubble, like a real browser's link/status hint — not a
+       permanent full-width band. :empty hides it, so idle states must set "". */
+    .gg-status { position: absolute; left: 0; bottom: 0; z-index: 3; margin: 0; padding: 4px 12px;
+      border-radius: 0 8px 0 0; font-size: 12px; color: var(--ink-2); font-family: var(--mono);
+      background: var(--chr-bar); box-shadow: 0 -1px 0 var(--glass-brd), 1px 0 0 var(--glass-brd); pointer-events: none; }
+    .gg-status:empty { display: none; }
+
+    /* ---- IMMERSIVE mode: launched from the library (?app=1). Strip the whole
+       browser chrome so it's a fullscreen view of just the game/app, with a
+       small floating control cluster. The global nav island is hidden too
+       (see .sg-immersive in global.css). ---- */
+    .gg-immbar { display: none; }
+    .gg-page.gg-immersive { padding: 0; height: 100dvh; }
+    .gg-page.gg-immersive .gg-tabstrip,
+    .gg-page.gg-immersive .gg-toolbar,
+    .gg-page.gg-immersive .gg-progress,
+    .gg-page.gg-immersive .gg-status { display: none; }
+    .gg-page.gg-immersive .gg-shell { border-top: none; }
+    .gg-page.gg-immersive .gg-immbar {
+      position: fixed; top: 12px; right: 12px; z-index: 70; display: flex; align-items: center; gap: 4px;
+      padding: 5px; border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
+      box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); opacity: 0.82;
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
+      transition: opacity .2s; }
+    .gg-page.gg-immersive .gg-immbar:hover,
+    .gg-page.gg-immersive .gg-immbar:focus-within { opacity: 1; }
+    :root[data-theme="light"] .gg-page.gg-immersive .gg-immbar { background: rgba(255,255,255,0.66); }
+    .gg-immbtn { width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+      background: transparent; border: none; color: var(--ink-2); transition: .16s; }
+    .gg-immbtn:hover { color: var(--ink); background: var(--glass-2); }
+    /* logo first in the cluster, then a hairline, then the controls */
+    .gg-immhome { color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent));
+      border-radius: 9px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35); }
+    .gg-immhome:hover { color: var(--on-accent); filter: brightness(1.09); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
+    .gg-immsep { width: 1px; height: 20px; margin: 0 3px; background: var(--glass-brd); flex-shrink: 0; }
+    .gg-immbtn svg { width: 16px; height: 16px; }
+    .gg-immpanic:hover { color: #fff; background: var(--err); }
+    /* inline-flex, not the icon buttons' grid — grid stacks the icon above the label */
+    .gg-immclose { width: auto; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+      gap: 7px; padding: 0 14px 0 11px; border-radius: var(--r-pill); white-space: nowrap;
+      font-family: var(--font); font-size: 13px; font-weight: 600; line-height: 1; color: #fff;
+      background: linear-gradient(180deg, #ff8090, var(--err)); }
+    .gg-immclose:hover { filter: brightness(1.06); background: linear-gradient(180deg, #ff8090, var(--err)); }
+    .gg-immclose svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .gg-immclose .lbl { line-height: 1; }
+
+    @media (max-width: 640px) {
+      .gg-page { padding-top: 0; }
+      .gg-exit .lbl { display: none; }
+      .gg-exit { padding: 8px 11px; }
+      /* the address bar is the primary control — give it the room. Real mobile
+         browsers drop forward/popout/fullscreen too. */
+      #ggFwd, #ggPopout, #ggFull, .gg-tbsep { display: none; }
+      .gg-omni { margin: 0 4px; }
+      .gg-ntp-tiles { grid-template-columns: repeat(4, 1fr); }
+      .gg-immclose .lbl { display: none; }
+      .gg-immclose { width: 32px; padding: 0; }
+    }
+  </style>
+
+  <script>
+    /* Multi-tab Scramjet browser — verified Phase 1 wiring, one frame per tab. */
+    (function () {
+      const w = window as any;
+
+      const viewsEl = document.getElementById("ggViews");
+      const startEl = document.getElementById("ggStart");
+      const tabsEl = document.getElementById("ggTabs");
+      const urlInput = document.getElementById("ggUrl") as HTMLInputElement;
+      const omniForm = document.getElementById("ggOmni") as HTMLFormElement;
+      const startForm = document.getElementById("ggStartForm") as HTMLFormElement | null;
+      const startInput = document.getElementById("ggStartUrl") as HTMLInputElement | null;
+      const progress = document.getElementById("ggProgress");
+      const schemeEl = document.getElementById("ggScheme");
+      const statusEl = document.getElementById("ggStatus");
+      if (!viewsEl || !tabsEl || !urlInput || !omniForm) return;
+
+      function toast(msg: string) { if (w.SG && w.SG.toast) w.SG.toast(msg); }
+      function setStatus(m: string) { if (statusEl) statusEl.textContent = m || ""; }
+      function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+      /* ---------- engine bootstrap (mirrors boot.js) ---------- */
+      let scramjet: any = null;
+      let connection: any = null;
+      let ready: Promise<any>;
+
+      if (w.$scramjetLoadController && w.BareMux) {
+        const { ScramjetController } = w.$scramjetLoadController();
+        scramjet = new ScramjetController({
+          prefix: "/scramjet/",
+          files: {
+            all: "/scram/scramjet.all.js",
+            sync: "/scram/scramjet.sync.js",
+            wasm: "/scram/scramjet.wasm.wasm",
+          },
+        });
+        scramjet.init(); // publishes the shared config the SW reads via loadConfig()
+        connection = new w.BareMux.BareMuxConnection("/baremux/worker.js");
+
+        const registerSW = async () => {
+          if (!navigator.serviceWorker) {
+            const local = ["localhost", "127.0.0.1"].includes(location.hostname);
+            if (location.protocol !== "https:" && !local) throw new Error("Service workers require https (or localhost).");
+            throw new Error("Service workers unsupported in this browser.");
+          }
+          await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+          await navigator.serviceWorker.ready;
+          /* .ready means "a worker is active", NOT "this page is controlled".
+             On a first visit controller is null until the worker claims us, and
+             an unintercepted /scramjet/<url> request falls through to the host —
+             a static host answers it with index.html, so the frame would render
+             our own home page instead of the target site. Wait for control. */
+          if (!navigator.serviceWorker.controller) {
+            await new Promise<void>((resolve) => {
+              const done = () => { clearTimeout(timer); resolve(); };
+              const timer = setTimeout(resolve, 5000); // never hang the UI on this
+              navigator.serviceWorker.addEventListener("controllerchange", done, { once: true });
+            });
+          }
+        };
+        const setEpoxyTransport = async () => {
+          /* Wisp endpoint. Defaults to this origin (the single-service Render
+             deploy). Set PUBLIC_WISP_URL at build time to point a STATIC deploy
+             (Vercel/Netlify — no WebSocket server of its own) at a remote wisp
+             backend; Vite constant-folds it and the fallback disappears.
+             Verified working split-origin: wisp-js does not check Origin, and
+             COEP does not gate WebSockets. */
+          let wispUrl =
+            (import.meta.env.PUBLIC_WISP_URL as string | undefined) ||
+            (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+          /* an https page cannot open a ws:// socket — Chrome blocks it as mixed
+             content, which is the easiest way to misconfigure this. Upgrade. */
+          if (location.protocol === "https:" && wispUrl.startsWith("ws://")) {
+            wispUrl = "wss://" + wispUrl.slice("ws://".length);
+          }
+          if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+            await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+          }
+        };
+        // Eagerly register + set transport so the SW is controlling before the
+        // first navigation. Both calls are idempotent.
+        setStatus("");
+        ready = registerSW().then(setEpoxyTransport).then(() => setStatus(""));
+        ready.catch((err: any) => { setStatus("init error: " + ((err && err.message) || err)); toast("Proxy init error — " + ((err && err.message) || err)); });
+      } else {
+        setStatus("proxy engine not loaded (serve via the SlowGuardian server)");
+        ready = Promise.reject(new Error("Proxy engine not loaded"));
+        ready.catch(() => {});
+      }
+
+      /* ---------- entry normalization (same rules as the home omnibox) ---------- */
+      function normalize(raw: string) {
+        raw = (raw || "").trim();
+        if (!raw) return "";
+        const looksUrlish = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) || (!/\s/.test(raw) && /\.[a-z]{2,}(\/|$|:|\?)/i.test(raw));
+        if (looksUrlish) { try { return new URL(raw).toString(); } catch (e) { return "https://" + raw; } }
+        const tmpl = lsGet("sg:engine") || "https://www.google.com/search?q=%s";
+        return tmpl.replace("%s", encodeURIComponent(raw));
+      }
+      function hostFrom(u: string) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return u || "New tab"; } }
+
+      const GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>';
+      const LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>';
+      const CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>';
+      const SPINNER = '<svg class="gg-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 1 1-6.2-8.5" stroke-linecap="round"></path></svg>';
+
+      /* ---------- tab state ---------- */
+      type Tab = { id: number; frame: any; el: any; url: string; title: string; favicon: string; loading: boolean };
+      const tabs: Tab[] = [];
+      let activeId: number | null = null;
+      let seq = 0;
+
+      function activeTab(): Tab | null { return tabs.find((t) => t.id === activeId) || null; }
+      function setProgress(on: boolean) { if (progress) progress.classList.toggle("on", !!on); }
+
+      function renderTabs() {
+        tabsEl.innerHTML = "";
+        tabs.forEach((t) => {
+          const el = document.createElement("div");
+          el.className = "gg-tab" + (t.id === activeId ? " on" : "");
+          el.setAttribute("role", "tab");
+          el.setAttribute("aria-selected", t.id === activeId ? "true" : "false");
+          el.title = t.title || hostFrom(t.url);
+
+          const fav = document.createElement("span");
+          fav.className = "gg-fav";
+          if (t.loading) fav.innerHTML = SPINNER;
+          else if (t.favicon) {
+            const im = document.createElement("img");
+            im.src = t.favicon; im.alt = "";
+            im.addEventListener("error", () => { fav.innerHTML = GLOBE; });
+            fav.appendChild(im);
+          } else fav.innerHTML = GLOBE;
+
+          const ti = document.createElement("span");
+          ti.className = "gg-ti";
+          ti.textContent = t.title || hostFrom(t.url) || "New tab";
+
+          const x = document.createElement("button");
+          x.className = "gg-x"; x.type = "button";
+          x.setAttribute("aria-label", "Close tab");
+          x.innerHTML = CLOSE;
+          x.addEventListener("click", (e) => { e.stopPropagation(); closeTab(t.id); });
+
+          el.appendChild(fav); el.appendChild(ti); el.appendChild(x);
+          el.addEventListener("click", () => switchTab(t.id));
+          tabsEl.appendChild(el);
+        });
+      }
+
+      function updateAddressBar() {
+        const t = activeTab();
+        const u = t ? (t.url || "") : "";
+        if (document.activeElement !== urlInput) urlInput.value = u;
+        if (schemeEl) {
+          const secure = /^https:/i.test(u);
+          schemeEl.innerHTML = secure ? LOCK : GLOBE;
+          schemeEl.classList.toggle("secure", secure);
+        }
+      }
+
+      function syncDocTitle() {
+        const t = activeTab();
+        if (!t) return;
+        /* respect an active tab-disguise — never override the cloak title */
+        if (document.documentElement.dataset.cloaked === "1") return;
+        document.title = t.title || "New Tab";
+      }
+
+      function showActive() {
+        tabs.forEach((t) => { if (t.el) t.el.style.display = t.id === activeId ? "block" : "none"; });
+        const t = activeTab();
+        const hasFrame = !!(t && t.el);
+        if (startEl) startEl.style.display = hasFrame ? "none" : "flex";
+        setProgress(!!(t && t.loading));
+        updateAddressBar();
+        renderTabs();
+        syncDocTitle();
+      }
+
+      function switchTab(id: number) { activeId = id; showActive(); }
+
+      function newTab(url?: string): Tab {
+        const tab: Tab = { id: ++seq, frame: null, el: null, url: "", title: "New tab", favicon: "", loading: false };
+        tabs.push(tab);
+        activeId = tab.id;
+        showActive();
+        if (url) openInTab(tab, url);
+        else { urlInput.value = ""; }
+        return tab;
+      }
+
+      function closeTab(id: number) {
+        const idx = tabs.findIndex((t) => t.id === id);
+        if (idx < 0) return;
+        const tab = tabs[idx];
+        tabs.splice(idx, 1);
+        try { if (tab.el && tab.el.parentNode) tab.el.parentNode.removeChild(tab.el); } catch (e) {}
+        try { if (tab.frame && typeof tab.frame.destroy === "function") tab.frame.destroy(); } catch (e) {}
+        if (activeId === id) {
+          const next = tabs[idx] || tabs[idx - 1];
+          if (next) { activeId = next.id; showActive(); }
+          else newTab();
+        } else renderTabs();
+      }
+
+      function wireFrame(tab: Tab) {
+        /* Scramjet frame URL changes (feature-detected — falls back to the
+           user-entered URL if the build doesn't emit the event). */
+        try {
+          if (tab.frame && typeof tab.frame.addEventListener === "function") {
+            tab.frame.addEventListener("urlchange", (e: any) => {
+              const u = e && (e.url || (e.detail && e.detail.url));
+              if (u) { tab.url = u; if (tab.id === activeId) updateAddressBar(); }
+            });
+          }
+        } catch (e) {}
+        tab.el.addEventListener("load", () => {
+          tab.loading = false;
+          if (tab.id === activeId) { setProgress(false); setStatus(""); }
+          readMeta(tab, 0);
+        });
+      }
+
+      /* Best-effort title/favicon read. Frames are same-origin (Scramjet serves
+         them under our /scramjet/ prefix), so contentDocument is readable. */
+      function readMeta(tab: Tab, tries: number) {
+        let title = "", fav = "";
+        try {
+          const doc = tab.el && tab.el.contentDocument;
+          if (doc) {
+            title = (doc.title || "").trim();
+            const link = doc.querySelector('link[rel~="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]') as HTMLLinkElement | null;
+            if (link && link.href) fav = link.href;
+          }
+        } catch (e) {}
+        if (title) tab.title = title;
+        else if (!tab.title || tab.title === "New tab") tab.title = hostFrom(tab.url);
+        if (fav) tab.favicon = fav;
+        renderTabs();
+        if (tab.id === activeId) { updateAddressBar(); syncDocTitle(); }
+        const delays = [300, 900, 2200];
+        if (tries < delays.length) setTimeout(() => readMeta(tab, tries + 1), delays[tries]);
+      }
+
+      async function openInTab(tab: Tab, url: string) {
+        if (!url) return;
+        tab.loading = true;
+        tab.url = url;
+        tab.title = hostFrom(url);
+        if (tab.id === activeId) { updateAddressBar(); setProgress(true); if (startEl) startEl.style.display = "none"; setStatus("connecting to " + hostFrom(url) + "…"); }
+        renderTabs();
+        try {
+          await ready;
+          if (!tab.frame) {
+            tab.frame = scramjet.createFrame();
+            tab.el = tab.frame.frame;
+            tab.el.className = "gg-frame";
+            tab.el.setAttribute("allow", "autoplay; fullscreen; clipboard-read; clipboard-write; encrypted-media; gamepad; picture-in-picture");
+            tab.el.style.display = tab.id === activeId ? "block" : "none";
+            wireFrame(tab);
+            viewsEl.appendChild(tab.el);
+            if (tab.id === activeId && startEl) startEl.style.display = "none";
+          }
+          tab.frame.go(url); // scramjet.encodeUrl(url) + points the iframe at the prefix
+        } catch (e: any) {
+          tab.loading = false;
+          renderTabs();
+          if (tab.id === activeId) { setProgress(false); setStatus("couldn't reach the proxy engine"); }
+          toast("Couldn't open — " + ((e && e.message) || e));
+        }
+      }
+
+      /* ---------- toolbar wiring ---------- */
+      omniForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const url = normalize(urlInput.value);
+        if (!url) { toast("Type a site or a search"); return; }
+        let t = activeTab(); if (!t) t = newTab();
+        openInTab(t, url);
+        urlInput.blur();
+      });
+      if (startForm && startInput) {
+        startForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const url = normalize(startInput.value);
+          if (!url) { toast("Type a site or a search"); return; }
+          let t = activeTab(); if (!t) t = newTab();
+          openInTab(t, url);
+        });
+      }
+
+      const newTabBtn = document.getElementById("ggNewTab");
+      if (newTabBtn) newTabBtn.addEventListener("click", () => newTab());
+
+      const backBtn = document.getElementById("ggBack");
+      if (backBtn) backBtn.addEventListener("click", () => { const t = activeTab(); try { if (t && t.el && t.el.contentWindow) t.el.contentWindow.history.back(); } catch (e) {} });
+      const fwdBtn = document.getElementById("ggFwd");
+      if (fwdBtn) fwdBtn.addEventListener("click", () => { const t = activeTab(); try { if (t && t.el && t.el.contentWindow) t.el.contentWindow.history.forward(); } catch (e) {} });
+      const reloadBtn = document.getElementById("ggReload");
+      if (reloadBtn) reloadBtn.addEventListener("click", () => {
+        const t = activeTab(); if (!t) return;
+        try { if (t.el && t.el.contentWindow) { t.loading = true; setProgress(true); renderTabs(); t.el.contentWindow.location.reload(); return; } } catch (e) {}
+        if (t.url) openInTab(t, t.url);
+      });
+
+      document.querySelectorAll("[data-openurl]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const u = (b as HTMLElement).getAttribute("data-openurl") || "";
+          let t = activeTab(); if (!t) t = newTab();
+          openInTab(t, u);
+        });
+      });
+
+      /* ---------- Quick Exit — always available, replaces the TOP tab ---------- */
+      function quickExit() {
+        let url = lsGet("sg:panicUrl") || "https://classroom.google.com/";
+        try { (window.top || window).location.replace(url); } catch (e) { location.replace(url); }
+      }
+      const exitBtn = document.getElementById("ggExit");
+      if (exitBtn) exitBtn.addEventListener("click", quickExit);
+
+      /* Open in a new window — pops the active tab's URL into a fresh /go tab. */
+      const popoutBtn = document.getElementById("ggPopout");
+      if (popoutBtn) popoutBtn.addEventListener("click", () => {
+        const t = activeTab();
+        const url = t && t.url;
+        window.open(url ? "/go?url=" + encodeURIComponent(url) : "/go", "_blank", "noopener");
+      });
+
+      /* Fullscreen — distraction-free proxy workspace (the shell element). */
+      const fullBtn = document.getElementById("ggFull");
+      const shell = document.querySelector(".gg-shell");
+      if (fullBtn && shell) fullBtn.addEventListener("click", () => {
+        try {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else (shell as any).requestFullscreen?.();
+        } catch (e) { toast("Fullscreen isn't available here"); }
+      });
+
+      /* Optional rebindable single-key panic (sg:panicKey). Base already owns
+         the global double-Esc; this adds the user's chosen key on the browser
+         page. Never fires while typing in a field. */
+      document.addEventListener("keydown", (e) => {
+        const key = lsGet("sg:panicKey");
+        if (!key) return;
+        const el = e.target as HTMLElement;
+        const tag = (el && el.tagName || "").toLowerCase();
+        if (tag === "input" || tag === "textarea" || (el && el.isContentEditable)) return;
+        if (e.key && e.key.toLowerCase() === key.toLowerCase()) { e.preventDefault(); quickExit(); }
+      });
+
+      /* ---------- immersive mode (?app=1 from the library) ----------
+         Launching a game/app strips the whole browser chrome AND the global
+         nav island, leaving a fullscreen view of just the content plus a
+         small floating control cluster (reload / fullscreen / exit / close). */
+      const params = new URLSearchParams(location.search);
+      const immersive = params.get("app") === "1" || params.get("immersive") === "1";
+      const ggPage = document.querySelector(".gg-page");
+      if (immersive && ggPage) {
+        ggPage.classList.add("gg-immersive");
+        document.documentElement.classList.add("sg-immersive");
+        const immBar = document.getElementById("ggImmBar");
+        if (immBar) immBar.setAttribute("aria-hidden", "false");
+
+        const immReload = document.getElementById("ggImmReload");
+        if (immReload) immReload.addEventListener("click", () => {
+          const t = activeTab(); if (!t) return;
+          try { if (t.el && t.el.contentWindow) { t.loading = true; setProgress(true); renderTabs(); t.el.contentWindow.location.reload(); return; } } catch (e) {}
+          if (t.url) openInTab(t, t.url);
+        });
+        const immFull = document.getElementById("ggImmFull");
+        if (immFull && shell) immFull.addEventListener("click", () => {
+          try { if (document.fullscreenElement) document.exitFullscreen(); else (shell as any).requestFullscreen?.(); }
+          catch (e) { toast("Fullscreen isn't available here"); }
+        });
+        const immExit = document.getElementById("ggImmExit");
+        if (immExit) immExit.addEventListener("click", quickExit);
+        const immClose = document.getElementById("ggImmClose");
+        if (immClose) immClose.addEventListener("click", () => {
+          if (/\/(games|apps)\b/.test(document.referrer || "")) history.back();
+          else location.href = "/games";
+        });
+      }
+
+      /* ---------- boot: honor ?url=, else an empty start tab ---------- */
+      const initial = params.get("url");
+      newTab(initial ? normalize(initial) : "");
+    })();
+  </script>
+</Base>

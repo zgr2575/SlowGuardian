@@ -72,3 +72,5 @@ static/scramjet/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+# generated UI showcase artifact (embeds icons; publish via Artifact, not git)
+docs/design/v10-showcase.html

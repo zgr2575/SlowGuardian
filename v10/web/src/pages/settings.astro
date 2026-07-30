@@ -1,0 +1,248 @@
+---
+/**
+ * settings.astro — a plain card grid, one card per setting (V8/V9-style).
+ *
+ * Each card is a clear title + one-line description + its control. No page
+ * heading, no marketing copy. Theme (dark/light) and accent are wired by the
+ * Base shell via the shared ids #themeSeg / #swatches; this page owns
+ * Performance mode, the search-engine picker, and the privacy quick-actions.
+ */
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Settings — SlowGuardian" description="Appearance, performance, search, and privacy — all applied live on this device.">
+  <section class="set-page">
+    <div class="wrap">
+      <div class="set-grid">
+        <!-- Appearance -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Appearance</h3>
+            <p>Switch between a dark and light look.</p>
+          </div>
+          <div class="segmented" id="themeSeg" style="background:var(--glass);">
+            <button data-theme="dark" class="on">Dark</button>
+            <button data-theme="light">Light</button>
+          </div>
+        </div>
+
+        <!-- Accent -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Accent color</h3>
+            <p>Pick the highlight color used across the site.</p>
+          </div>
+          <div class="swatches" id="swatches">
+            <button class="sw on" data-a="blue" aria-label="Blue"></button>
+            <button class="sw" data-a="indigo" aria-label="Indigo"></button>
+            <button class="sw" data-a="teal" aria-label="Teal"></button>
+            <button class="sw" data-a="rose" aria-label="Rose"></button>
+          </div>
+        </div>
+
+        <!-- Performance -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Performance</h3>
+            <p id="perfNote">Turn the glass effects down on older Chromebooks.</p>
+          </div>
+          <div class="segmented" id="perfSeg" style="background:var(--glass);">
+            <button data-perf="auto">Auto</button>
+            <button data-perf="high">Full</button>
+            <button data-perf="low">Lite</button>
+          </div>
+        </div>
+
+        <!-- Search engine -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Search engine</h3>
+            <p>Used when you type a search instead of a web address.</p>
+          </div>
+          <select id="engineSel" class="selctl" aria-label="Search engine">
+            <option value="">Google</option>
+            <option value="https://www.bing.com/search?q=%s">Bing</option>
+            <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
+            <option value="https://www.startpage.com/sp/search?query=%s">Startpage</option>
+            <option value="https://search.brave.com/search?q=%s">Brave</option>
+            <option value="https://www.ecosia.org/search?q=%s">Ecosia</option>
+            <option value="custom">Custom…</option>
+          </select>
+          <label class="field glass" id="engineCustomRow" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+            <input id="engineCustom" type="text" placeholder="https://…/?q=%s" spellcheck="false" />
+          </label>
+        </div>
+
+        <!-- Tab disguise -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Tab disguise</h3>
+            <p>Show a fake tab title and icon so a glance looks like schoolwork.</p>
+          </div>
+          <div class="set-card-actions">
+            <button class="btn sm glassbtn" id="cloakToggle2" type="button">Toggle disguise</button>
+            <a class="set-link" href="/privacy">More disguises →</a>
+          </div>
+        </div>
+
+        <!-- Quick exit -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Quick exit</h3>
+            <p>Set a panic key and a decoy site to jump to in a hurry. Double-Esc works anywhere.</p>
+          </div>
+          <div class="set-card-actions">
+            <a class="btn sm glassbtn" href="/privacy">Set up quick exit</a>
+          </div>
+        </div>
+
+        <!-- about:blank -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>about:blank cloak</h3>
+            <p>Open the site inside a blank tab so it doesn't show in history.</p>
+          </div>
+          <div class="set-card-actions">
+            <a class="btn sm glassbtn" href="/privacy">Open cloak</a>
+          </div>
+        </div>
+
+        <!-- Clear data -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>Clear data</h3>
+            <p>Wipe your settings and this site's cache from this device.</p>
+          </div>
+          <div class="set-card-actions">
+            <button class="btn sm glassbtn" id="clearTraces" type="button">Clear</button>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="set-card glass reveal">
+          <div class="set-card-head">
+            <h3>About</h3>
+            <p>SlowGuardian — a fast, private gateway for the school Chromebook.</p>
+          </div>
+          <div class="set-info">
+            <div class="set-info-row"><span>Version</span><span>10.0.0</span></div>
+            <div class="set-info-row"><span>Status</span><span>🟢 Active</span></div>
+            <div class="set-info-row"><span>License</span><span>GPL-3.0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .set-page { padding: 84px 0 var(--sp-6); flex: 1 0 auto; }
+    /* no align-items:start — stretch gives equal-height cards per row so the
+       existing margin-top:auto actually bottom-aligns each card's control */
+    .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-4); }
+    /* keep the pill controls their natural width instead of blockifying to the
+       full card and leaving an empty pill tail */
+    .set-card > .segmented, .set-card > .swatches { align-self: flex-start; }
+    .set-card { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-5); border-radius: var(--r-lg); }
+    .set-card-head h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 5px; }
+    .set-card-head p { font-size: 13px; line-height: 1.5; color: var(--ink-3); margin: 0; }
+    .set-card > .segmented, .set-card > .swatches, .set-card > .selctl { margin-top: auto; }
+    .set-card-actions { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; margin-top: auto; }
+    .set-link { font-size: 13px; font-weight: 500; color: var(--accent-2); text-decoration: none; }
+    .set-link:hover { text-decoration: underline; }
+    .selctl { width: 100%; background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink); border-radius: var(--r-pill);
+      padding: 10px 16px; font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; }
+    .selctl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    #engineCustomRow { margin-top: var(--sp-3); }
+    .set-info { display: flex; flex-direction: column; gap: 2px; margin-top: auto; }
+    .set-info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 13px; }
+    .set-info-row + .set-info-row { border-top: 1px solid var(--glass-brd); }
+    .set-info-row span:first-child { color: var(--ink-3); }
+    .set-info-row span:last-child { color: var(--ink-2); font-weight: 500; }
+  </style>
+
+  <script>
+    /* Performance mode, search engine, and privacy quick-actions. Theme/accent
+       are wired by the Base shell (#themeSeg / #swatches). */
+    (function () {
+      const root = document.documentElement;
+      const w = window as any;
+      function lsGet(k: string) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+      function lsSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch (e) {} }
+      function lsDel(k: string) { try { localStorage.removeItem(k); } catch (e) {} }
+      function toast(m: string) { if (w.SG && w.SG.toast) w.SG.toast(m); }
+
+      function autoDetect(): "low" | "high" {
+        const mem = (navigator as any).deviceMemory;
+        const cores = navigator.hardwareConcurrency;
+        return ((mem && mem <= 2) || (cores && cores <= 2)) ? "low" : "high";
+      }
+      function currentPerf(): "auto" | "high" | "low" {
+        const p = lsGet("sg:perf");
+        return p === "low" || p === "high" ? p : "auto";
+      }
+      const perfSeg = document.getElementById("perfSeg");
+      const perfNote = document.getElementById("perfNote");
+      function reflectPerf(mode: string) {
+        if (perfSeg) perfSeg.querySelectorAll("[data-perf]").forEach((b: any) => b.classList.toggle("on", b.getAttribute("data-perf") === mode));
+        if (perfNote) {
+          perfNote.textContent = mode === "auto"
+            ? "Auto — picks the best setting for this device."
+            : mode === "low" ? "Lite — no blur, best on old machines." : "Full — every glass effect on.";
+        }
+      }
+      function applyPerf(mode: string) {
+        if (mode === "low") { lsSet("sg:perf", "low"); root.dataset.perf = "low"; }
+        else if (mode === "high") { lsSet("sg:perf", "high"); root.removeAttribute("data-perf"); }
+        else { lsDel("sg:perf"); if (autoDetect() === "low") root.dataset.perf = "low"; else root.removeAttribute("data-perf"); }
+        reflectPerf(mode);
+      }
+      if (perfSeg) {
+        reflectPerf(currentPerf());
+        perfSeg.addEventListener("click", (e: any) => { const b = e.target.closest("[data-perf]"); if (b) applyPerf(b.getAttribute("data-perf")); });
+      }
+
+      const cloak2 = document.getElementById("cloakToggle2");
+      if (cloak2) cloak2.addEventListener("click", () => { if (w.SG && w.SG.toggleCloak) w.SG.toggleCloak(); });
+      const clr = document.getElementById("clearTraces");
+      if (clr) clr.addEventListener("click", () => { if (w.SG && w.SG.clearTraces) w.SG.clearTraces(); });
+
+      /* search engine (sg:engine = URL template with %s; empty = Google) */
+      const engineSel = document.getElementById("engineSel") as HTMLSelectElement | null;
+      const engineRow = document.getElementById("engineCustomRow");
+      const engineCustom = document.getElementById("engineCustom") as HTMLInputElement | null;
+      const PRESET_ENGINES = [
+        "https://www.bing.com/search?q=%s",
+        "https://duckduckgo.com/?q=%s",
+        "https://www.startpage.com/sp/search?query=%s",
+        "https://search.brave.com/search?q=%s",
+        "https://www.ecosia.org/search?q=%s",
+      ];
+      function showCustom(on: boolean) { if (engineRow) engineRow.style.display = on ? "flex" : "none"; }
+      if (engineSel) {
+        const cur = lsGet("sg:engine") || "";
+        if (!cur) engineSel.value = "";
+        else if (PRESET_ENGINES.indexOf(cur) > -1) engineSel.value = cur;
+        else { engineSel.value = "custom"; showCustom(true); if (engineCustom) engineCustom.value = cur; }
+        engineSel.addEventListener("change", () => {
+          if (engineSel.value === "custom") { showCustom(true); if (engineCustom) engineCustom.focus(); return; }
+          showCustom(false);
+          if (!engineSel.value) lsDel("sg:engine"); else lsSet("sg:engine", engineSel.value);
+          toast("Search engine updated");
+        });
+      }
+      if (engineCustom) {
+        const saveCustom = () => {
+          let v = engineCustom.value.trim();
+          if (!v) { lsDel("sg:engine"); return; }
+          if (v.indexOf("%s") < 0) v += (v.indexOf("?") < 0 ? "?q=%s" : "&q=%s");
+          if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(v)) v = "https://" + v;
+          lsSet("sg:engine", v);
+          toast("Custom search engine saved");
+        };
+        engineCustom.addEventListener("change", saveCustom);
+        engineCustom.addEventListener("blur", saveCustom);
+      }
+    })();
+  </script>
+</Base>

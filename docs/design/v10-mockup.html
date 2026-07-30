@@ -1,0 +1,891 @@
+<title>SlowGuardian</title>
+<style>
+  /* ============================================================
+     SlowGuardian V10 — Liquid Glass, dark-first
+     Apple's translucent material language: frosted layers,
+     specular edges, ambient light, floating depth.
+     Real backdrop-filter on capable devices; a solid-translucent
+     fallback keeps old Chromebooks smooth (see @supports / perf).
+     ============================================================ */
+
+  :root {
+    color-scheme: dark;
+
+    --bg:        #05060c;
+    --bg-2:      #090b14;
+
+    /* glass material */
+    --glass:      rgba(255,255,255,0.055);
+    --glass-2:    rgba(255,255,255,0.085);
+    --glass-strong: rgba(255,255,255,0.11);
+    --glass-brd:  rgba(255,255,255,0.11);
+    --glass-brd-2:rgba(255,255,255,0.16);
+    --hi:         rgba(255,255,255,0.22);   /* top specular highlight */
+    --blur: 26px;
+
+    --ink:   #f4f6fb;
+    --ink-2: rgba(233,238,248,0.68);
+    --ink-3: rgba(233,238,248,0.42);
+
+    --accent:   #0a84ff;
+    --accent-2: #2f9bff;
+    --accent-tint: rgba(10,132,255,0.16);
+    --on-accent: #ffffff;
+    --ok: #34d17a;
+
+    --sh-1: 0 2px 10px rgba(0,0,0,0.35);
+    --sh-2: 0 14px 40px rgba(0,0,0,0.5);
+    --sh-3: 0 30px 80px rgba(0,0,0,0.6);
+    --glow: 0 8px 30px var(--accent-tint);
+
+    --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:32px; --r-pill:980px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:76px; --sp-9:112px;
+    --maxw:1440px; --nav-h:56px;
+
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+    /* ambient light hues (feed the orbs so glass has something to refract) */
+    --a1: rgba(10,132,255,0.22);
+    --a2: rgba(125,91,237,0.20);
+    --a3: rgba(20,200,180,0.14);
+  }
+
+  :root[data-accent="indigo"] { --accent:#7d5bed; --accent-2:#9a7bff; --accent-tint:rgba(125,91,237,0.18); --a1:rgba(125,91,237,0.24); --a2:rgba(70,110,255,0.18); }
+  :root[data-accent="teal"]   { --accent:#12b5a6; --accent-2:#33d3c4; --accent-tint:rgba(18,181,166,0.18); --a1:rgba(18,181,166,0.22); --a2:rgba(20,140,255,0.16); --a3:rgba(120,90,240,0.12); }
+  :root[data-accent="rose"]   { --accent:#ff5d8f; --accent-2:#ff82a9; --accent-tint:rgba(255,93,143,0.18); --a1:rgba(255,93,143,0.22); --a2:rgba(180,80,255,0.16); }
+
+  /* Light Liquid Glass (toggle) — dark stays the hero */
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg:#eef1f7; --bg-2:#e6eaf3;
+    --glass:rgba(255,255,255,0.55); --glass-2:rgba(255,255,255,0.7); --glass-strong:rgba(255,255,255,0.82);
+    --glass-brd:rgba(255,255,255,0.7); --glass-brd-2:rgba(0,0,0,0.08); --hi:rgba(255,255,255,0.9);
+    --ink:#161a22; --ink-2:rgba(24,28,38,0.66); --ink-3:rgba(24,28,38,0.42);
+    --sh-1:0 2px 10px rgba(20,26,44,0.08); --sh-2:0 14px 40px rgba(20,26,44,0.14); --sh-3:0 30px 70px rgba(20,26,44,0.18);
+    --a1:rgba(10,132,255,0.16); --a2:rgba(125,91,237,0.14); --a3:rgba(20,200,180,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font);
+    line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overflow-x: hidden; min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  main#top { flex: 1 0 auto; display: flex; flex-direction: column; }
+  /* ambient light field — static gradients, cheap; gives glass its glow */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(620px 460px at 12% 4%, var(--a1), transparent 62%),
+      radial-gradient(560px 520px at 88% 14%, var(--a2), transparent 60%),
+      radial-gradient(760px 560px at 72% 100%, var(--a3), transparent 62%);
+  }
+  ::selection { background: var(--accent-tint); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--sp-5); position: relative; z-index: 1; }
+
+  /* ---------- Glass material ---------- */
+  .glass {
+    position: relative;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    box-shadow: inset 0 1px 0 var(--hi), inset 0 0 0 0.5px rgba(255,255,255,0.03), var(--sh-2);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(175%);
+            backdrop-filter: blur(var(--blur)) saturate(175%);
+  }
+  /* specular sheen on the top edge */
+  .glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent 34%);
+    opacity: .8;
+  }
+  /* Perf fallback: no blur support OR low-power → solid translucent, no runtime filter */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: color-mix(in srgb, var(--bg-2) 86%, transparent); }
+  }
+  :root[data-perf="low"] .glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 88%, transparent); }
+
+  /* ---------- Dynamic Island nav ---------- */
+  .island { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 60;
+    display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 10px 0 15px;
+    border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
+    box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); max-width: calc(100vw - 24px);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
+    transition: box-shadow .35s, background .35s; }
+  :root[data-theme="light"] .island { background: rgba(255,255,255,0.62); }
+  :root[data-perf="low"] .island { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg-2) 94%, transparent); }
+  .island:hover, .island:focus-within, .island.open { box-shadow: inset 0 1px 0 var(--hi), var(--sh-3), 0 0 0 1px var(--glass-brd-2); }
+
+  .isl-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; text-decoration: none; cursor: pointer; }
+  .isl-brand .mark { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; color: var(--on-accent); flex-shrink: 0;
+    background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 10px var(--accent-tint); }
+  .isl-brand .mark svg { width: 15px; height: 15px; }
+
+  /* compact ambient status — morphs away on expand */
+  .isl-ambient { display: flex; align-items: center; gap: 7px; padding-right: 4px; font-size: 13px; color: var(--ink-2); white-space: nowrap;
+    max-width: 140px; opacity: 1; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .22s ease, padding .42s; }
+  .isl-ambient .live { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); flex-shrink: 0; animation: livep 2.4s ease-in-out infinite; }
+  @keyframes livep { 50% { opacity: .35; } }
+  .island:hover .isl-ambient, .island:focus-within .isl-ambient, .island.open .isl-ambient { max-width: 0; opacity: 0; padding-right: 0; }
+
+  /* expanded controls — the morph reveal */
+  .isl-panel { display: flex; align-items: center; gap: 6px; max-width: 0; opacity: 0; overflow: hidden; transform: translateX(-4px);
+    transition: max-width .46s cubic-bezier(.5,1.32,.4,1), opacity .3s ease, transform .46s cubic-bezier(.5,1.32,.4,1); }
+  .island:hover .isl-panel, .island:focus-within .isl-panel, .island.open .isl-panel { max-width: 640px; opacity: 1; transform: none; }
+  .isl-links { display: flex; gap: 2px; }
+  .isl-links a { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: var(--r-pill); font-size: 14px; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .2s, background .2s; }
+  .isl-links a .ic { width: 16px; height: 16px; flex-shrink: 0; }
+  .isl-links a:hover { color: var(--ink); background: var(--glass); }
+  .isl-links a.on { color: var(--ink); background: var(--glass-strong); box-shadow: inset 0 1px 0 var(--hi); }
+  .isl-links a.on .ic { color: var(--accent-2); }
+  /* collapse to icon-only as the pill narrows */
+  @media (max-width: 900px) { .isl-links a .lbl { display: none; } .isl-links a { gap: 0; padding: 8px 10px; } }
+  .isl-sep { width: 1px; height: 22px; background: var(--glass-brd); margin: 0 3px; flex-shrink: 0; }
+  .isl-btn { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
+    background: var(--glass); border: 1px solid var(--glass-brd); color: var(--ink-2); transition: .2s; }
+  .isl-btn:hover { color: var(--ink); background: var(--glass-2); }
+  .isl-btn svg { width: 16px; height: 16px; }
+
+  /* ---------- Hero ---------- */
+  /* ---------- Views (client-side pages) ---------- */
+  .view { display: none; }
+  .view.active { display: flex; flex-direction: column; flex: 1 0 auto; animation: viewin .34s cubic-bezier(.16,.8,.3,1); }
+  @keyframes viewin { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .view.active { animation: none; } }
+  /* content-rich pages sit below the island and scroll */
+  #view-games, #view-apps, #view-settings { padding-top: 74px; }
+  /* library views stretch wider than the standard column so wide monitors aren't half-empty */
+  #view-games .wrap, #view-apps .wrap { max-width: 1780px; }
+  /* sparse pages fill the viewport and center their content — no dead space, footer stays at the bottom */
+  #view-home, #view-privacy { justify-content: center; padding: 88px var(--sp-5) var(--sp-6); }
+  /* settings grid */
+  .setgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-5); }
+  .setcard { border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); display: flex; flex-direction: column; gap: 18px; }
+  .setcard h3 { font-size: 1.08rem; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .setcard h3 svg { width: 18px; height: 18px; color: var(--accent-2); }
+  .setrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .setrow .rt { font-size: 14px; color: var(--ink); font-weight: 500; }
+  .setrow .rd { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+  .toggle { width: 44px; height: 26px; border-radius: var(--r-pill); border: 1px solid var(--glass-brd); background: var(--glass); position: relative; cursor: pointer; flex-shrink: 0; transition: .2s; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink-2); transition: .2s; }
+  .toggle.on { background: var(--accent); border-color: transparent; }
+  .toggle.on::after { left: 20px; background: #fff; }
+  .setdiv { height: 1px; background: var(--glass-brd); }
+  /* proxy workspace mock */
+  /* ---------- Proxy: Google-Chrome-style workspace ---------- */
+  :root { --chr-strip:#171a1f; --chr-bar:#282a2e; --chr-omni:#131417; --chr-ntp:#1c1d21; --chr-hover:rgba(255,255,255,.09); }
+  :root[data-theme="light"] { --chr-strip:#dee1e6; --chr-bar:#f1f3f4; --chr-omni:#e5e8eb; --chr-ntp:#ffffff; --chr-hover:rgba(0,0,0,.06); }
+  #view-proxy { padding: 68px var(--sp-4) var(--sp-4); }
+  .browser { max-width: 1500px; margin: 0 auto; width: 100%; height: calc(100vh - 92px); min-height: 480px; display: flex; flex-direction: column; border-radius: 13px; overflow: hidden; border: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: var(--sh-3); }
+  /* tab strip */
+  .tabstrip { display: flex; align-items: flex-end; gap: 1px; padding: 8px 8px 0; background: var(--chr-strip); }
+  .gtab { position: relative; display: inline-flex; align-items: center; gap: 9px; padding: 9px 12px 11px; font-size: 12.5px; color: var(--ink-2); min-width: 110px; max-width: 230px; border-radius: 9px 9px 0 0; cursor: default; }
+  .gtab.active { background: var(--chr-bar); color: var(--ink); }
+  .gtab:not(.active):hover { background: var(--chr-hover); }
+  .gtab .gfav { width: 15px; height: 15px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
+  .gtab .gname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .gtab .gclose { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; margin-left: 2px; color: var(--ink-3); font-size: 14px; cursor: pointer; }
+  .gtab .gclose:hover { background: var(--chr-hover); color: var(--ink); }
+  .gnew { width: 28px; height: 28px; margin: 0 0 5px 4px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); font-size: 17px; cursor: pointer; flex-shrink: 0; }
+  .gnew:hover { background: var(--chr-hover); }
+  /* toolbar */
+  .addrbar { display: flex; align-items: center; gap: 4px; padding: 6px 9px; background: var(--chr-bar); }
+  .navb { width: 30px; height: 30px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); font-size: 16px; cursor: pointer; flex-shrink: 0; display: grid; place-items: center; }
+  .navb:hover { background: var(--chr-hover); color: var(--ink); }
+  .addr { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px; margin: 0 6px; padding: 8px 16px; border-radius: var(--r-pill); font-size: 13.5px; color: var(--ink); background: var(--chr-omni); }
+  .addr svg { width: 15px; height: 15px; color: var(--ink-3); flex-shrink: 0; }
+  .addr span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chr-tools { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+  .chr-ic { width: 30px; height: 30px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
+  .chr-ic:hover { background: var(--chr-hover); color: var(--ink); }
+  .chr-ic svg { width: 17px; height: 17px; }
+  .chr-avatar { width: 26px; height: 26px; border-radius: 50%; margin-left: 4px; flex-shrink: 0; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
+  .exitbtn { flex-shrink: 0; margin-left: 6px; background: linear-gradient(180deg,#ff8090,var(--err)); }
+  /* content = Chrome-style new-tab page */
+  .frame-mock { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; background: var(--chr-ntp); padding: clamp(40px, 8vh, 96px) var(--sp-5) var(--sp-6); overflow-y: auto; }
+  .ntp { width: 100%; max-width: 580px; }
+  .ntp-word { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); margin-bottom: var(--sp-5); }
+  .ntp-word b { color: var(--accent-2); font-weight: 700; }
+  .ntp-omni { display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-radius: var(--r-pill); background: var(--chr-omni); border: 1px solid var(--glass-brd); margin-bottom: var(--sp-6); text-align: left; }
+  .ntp-omni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
+  .ntp-omni span { color: var(--ink-3); font-size: 14.5px; }
+  .ntp-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-4) var(--sp-3); }
+  @media (max-width: 560px) { .ntp-tiles { grid-template-columns: repeat(4, 1fr); } }
+  .ntp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; text-decoration: none; }
+  .ntp-tile .ntp-ic { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--chr-bar); color: var(--ink); font-size: 18px; font-weight: 600; transition: .16s; }
+  .ntp-tile:hover .ntp-ic { background: var(--chr-hover); transform: translateY(-1px); }
+  .ntp-tile .ntp-ic svg { width: 22px; height: 22px; }
+  .ntp-tile span { font-size: 12px; color: var(--ink-2); max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ntp-recent { margin-top: var(--sp-7); }
+  .ntp-recent .ntp-rlabel { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; text-align: left; }
+  .ntp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 560px) { .ntp-cards { grid-template-columns: repeat(2, 1fr); } }
+  .ntp-card { display: flex; flex-direction: column; gap: 0; border-radius: 12px; overflow: hidden; background: var(--chr-bar); border: 1px solid var(--glass-brd); text-decoration: none; transition: .16s; }
+  .ntp-card:hover { transform: translateY(-2px); box-shadow: var(--sh-2); }
+  .ntp-card .thumb { height: 76px; background: linear-gradient(135deg, var(--accent-2), var(--accent)); }
+  .ntp-card .ntp-meta { display: flex; align-items: center; gap: 8px; padding: 9px 11px; }
+  .ntp-card .cf { width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0; }
+  .ntp-card .ct { font-size: 12.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- Home (Google-style search) ---------- */
+  .home { text-align: center; width: 100%; }
+  .home-inner { display: flex; flex-direction: column; align-items: center; }
+  .home-logo { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: var(--sp-6); }
+  .home-logo .mark { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 30px var(--accent-tint); }
+  .home-logo .mark svg { width: 31px; height: 31px; }
+  .home-word { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 700; letter-spacing: -0.035em; color: var(--ink); }
+  .home-word b { color: var(--accent); font-weight: 700; }
+  .home .omni { width: 100%; max-width: 600px; margin: 0 auto; }
+  .quicklinks { margin-top: var(--sp-5); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .qbtn { cursor: pointer; border: 1px solid var(--glass-brd); background: var(--glass); color: var(--ink-2); font-family: var(--font); font-size: 14px; font-weight: 500; padding: 9px 18px; border-radius: var(--r-pill); transition: .2s; }
+  .qbtn:hover { color: var(--ink); background: var(--glass-2); }
+
+  .hero { text-align: center; padding: 82px 0 var(--sp-6); }
+  .kicker { font-size: 14px; font-weight: 600; color: var(--accent-2); margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.3rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; margin: 0 auto; max-width: 16ch;
+    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, transparent)); -webkit-background-clip: text; background-clip: text; }
+  .hero h1 .soft { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); }
+  .hero .lede { margin: 22px auto 0; max-width: 40ch; font-size: clamp(1.06rem, 2vw, 1.32rem); color: var(--ink-2); line-height: 1.5; }
+
+  .omni { margin: var(--sp-6) auto 0; max-width: 560px; display: flex; align-items: center; gap: 8px; border-radius: var(--r-pill); padding: 8px 8px 8px 22px; }
+  .omni svg { width: 18px; height: 18px; color: var(--ink-3); flex-shrink: 0; }
+  .omni input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; padding: 12px 0; }
+  .omni input::placeholder { color: var(--ink-3); }
+  .omni:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), var(--sh-2), 0 0 0 4px var(--accent-tint); }
+
+  .btn { cursor: pointer; border: none; border-radius: var(--r-pill); font-family: var(--font); font-size: 15px; font-weight: 500; letter-spacing: -0.01em;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--on-accent); padding: 12px 24px; white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 6px 20px var(--accent-tint); transition: filter .2s, transform .1s; }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: scale(0.98); }
+  .btn.sm { padding: 10px 18px; font-size: 14px; }
+  .btn.glassbtn { background: var(--glass-2); color: var(--ink); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-1); }
+
+  .meta-row { margin-top: var(--sp-5); display: flex; gap: var(--sp-5); justify-content: center; flex-wrap: wrap; color: var(--ink-3); font-size: 13.5px; }
+  .meta-row span { display: inline-flex; align-items: center; gap: 7px; }
+  .meta-row .d { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+
+  /* ---------- Sections ---------- */
+  section { padding: var(--sp-6) 0; scroll-margin-top: 88px; }
+  #library { padding-top: var(--sp-5); }
+  .sechead { max-width: 640px; margin-bottom: var(--sp-6); }
+  .sechead.center { margin-left: auto; margin-right: auto; text-align: center; }
+  .sechead .ey { font-size: 13px; font-weight: 600; color: var(--accent-2); margin-bottom: 12px; }
+  .sechead h2 { font-size: clamp(1.8rem, 3.8vw, 2.6rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; text-wrap: balance; }
+  .sechead p { margin-top: 14px; font-size: 1.06rem; color: var(--ink-2); line-height: 1.5; }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s cubic-bezier(.16,.8,.3,1), transform .7s cubic-bezier(.16,.8,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Library ---------- */
+  .controls { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-5); }
+  .field { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 220px; border-radius: var(--r-sm); padding: 0 15px; }
+  .field svg { width: 16px; height: 16px; color: var(--ink-3); }
+  .field input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 15px; padding: 12px 0; }
+  .field input::placeholder { color: var(--ink-3); }
+  .field:focus-within { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--hi), 0 0 0 3px var(--accent-tint); }
+
+  .segmented { display: inline-flex; border-radius: var(--r-pill); padding: 4px; gap: 2px; }
+  .segmented button { cursor: pointer; border: none; background: none; color: var(--ink-2); font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 15px; border-radius: var(--r-pill); transition: .18s; }
+  .segmented button.on { background: var(--glass-strong); color: var(--ink); box-shadow: inset 0 1px 0 var(--hi), var(--sh-1); }
+
+  .count { font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; margin-left: auto; }
+  .count b { color: var(--ink); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--sp-4); }
+  .card { display: flex; flex-direction: column; cursor: pointer; border-radius: var(--r-md); overflow: hidden; transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; contain: layout paint style; }
+  .card:hover { transform: translateY(-5px); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3), var(--glow); }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card .cover { aspect-ratio: 16/10; display: grid; place-items: center; position: relative; }
+  .card .cover .mono { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,0.35); z-index: 1; }
+  .card .cover::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent 40%, rgba(0,0,0,0.16)); }
+  .card .body { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 3px; }
+  .card .t { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+  .card .c { font-size: 12px; color: var(--ink-3); }
+  .card.hide { display: none; }
+
+  /* ---------- Netflix-style library ---------- */
+  .libhead { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+  .libsearch { flex: 0 1 300px; min-width: 180px; }
+  .billboard { position: relative; overflow: hidden; border-radius: var(--r-lg); min-height: 208px; display: flex; align-items: flex-end; margin-bottom: var(--sp-5); box-shadow: var(--sh-2); }
+  .bb-art { position: absolute; inset: 0; background: linear-gradient(120deg, #3a2fb0, #7d5bed 46%, #12b5a6); }
+  .billboard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.74), rgba(0,0,0,0.28) 56%, transparent 80%), linear-gradient(0deg, rgba(0,0,0,0.5), transparent 55%); }
+  .bb-content { position: relative; z-index: 1; padding: var(--sp-5); max-width: 500px; }
+  .bb-tag { display: inline-flex; align-items: center; gap: 8px; color: #fff; opacity: 0.92; font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; }
+  .bb-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .billboard h3 { color: #fff; font-size: clamp(1.55rem, 3.4vw, 2.1rem); font-weight: 600; letter-spacing: -0.03em; margin: 8px 0 6px; }
+  .billboard p { color: rgba(255,255,255,0.82); margin-bottom: 14px; max-width: 38ch; line-height: 1.45; font-size: 0.95rem; }
+  .bb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .rows { display: flex; flex-direction: column; gap: var(--sp-5); }
+  .shelf .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+  .shelf .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+  .shelf .rowhead .more { font-size: 13px; color: var(--ink-3); cursor: pointer; transition: color .2s; white-space: nowrap; }
+  .shelf .rowhead .more:hover { color: var(--accent-2); }
+  .strip { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; padding: 10px 2px 12px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .tile { flex: 0 0 auto; width: clamp(150px, 15vw, 196px); scroll-snap-align: start; cursor: pointer; border-radius: 12px; overflow: hidden; position: relative; box-shadow: var(--sh-1); transition: transform .28s cubic-bezier(.16,.8,.3,1), box-shadow .28s; }
+  .tile .art { aspect-ratio: 16/9; display: grid; place-items: center; position: relative; }
+  .tile .art .mono { font-size: 25px; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-shadow: 0 2px 16px rgba(0,0,0,0.4); z-index: 1; }
+  .tile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.05), transparent 28%, rgba(0,0,0,0.64)); }
+  .tile .label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 8px 11px 9px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .tile .label .tt { min-width: 0; font-size: 13px; font-weight: 600; color: #fff; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile .label .cc { flex: none; font-size: 10.5px; color: rgba(255,255,255,0.72); white-space: nowrap; }
+  .tile:hover { transform: translateY(-4px) scale(1.035); box-shadow: var(--sh-3), var(--glow); z-index: 3; }
+  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .results { display: none; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .results .tile { width: auto; }
+  .nomatch { grid-column: 1 / -1; color: var(--ink-3); padding: 24px 0; }
+  /* full-width dense grid — packs every title edge to edge so no width is wasted */
+  .allsec { margin-top: var(--sp-6); }
+  .allsec .rowhead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+  .allsec .rowhead h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.02em; }
+  .allsec .rowhead .more { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+  .allgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(138px, 13vw, 178px), 1fr)); gap: 14px; }
+  .allgrid .tile { width: auto; }
+
+  /* ---------- Features ---------- */
+  .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); }
+  .feature { border-radius: var(--r-lg); padding: var(--sp-6); }
+  .feature .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 18px; color: var(--accent-2);
+    background: var(--accent-tint); box-shadow: inset 0 1px 0 var(--hi); }
+  .feature .ic svg { width: 22px; height: 22px; }
+  .feature h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .feature p { color: var(--ink-2); font-size: 0.97rem; line-height: 1.5; }
+  .feature .tabprev { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--glass); border: 1px solid var(--glass-brd); border-radius: 10px; padding: 8px 12px; }
+  .feature .tabprev .fav { width: 15px; height: 15px; border-radius: 4px; background: conic-gradient(from 200deg,#4285F4,#34A853,#FBBC05,#EA4335,#4285F4); flex-shrink: 0; }
+  .feature .tabprev .tt { font-size: 12.5px; color: var(--ink-2); }
+  .feature .note { margin-top: 14px; font-size: 12.5px; color: var(--ink-3); }
+
+  .callout { display: flex; gap: 14px; align-items: flex-start; border-radius: var(--r-md); padding: var(--sp-5); margin-top: var(--sp-5); }
+  .callout .ci { width: 22px; height: 22px; color: var(--ink-3); flex-shrink: 0; margin-top: 1px; }
+  .callout p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.55; }
+  .callout b { color: var(--ink); font-weight: 600; }
+
+  .appear { display: flex; gap: var(--sp-5); flex-wrap: wrap; align-items: center; justify-content: space-between; border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6); }
+  .appear .grp { display: flex; align-items: center; gap: 14px; }
+  .appear .lbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .swatches { display: flex; gap: 10px; }
+  .sw { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid var(--glass-brd); transition: transform .12s; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); }
+  .sw:hover { transform: scale(1.12); }
+  .sw.on { border-color: var(--ink); }
+  .sw[data-a="blue"]{background:#0a84ff;} .sw[data-a="indigo"]{background:#7d5bed;} .sw[data-a="teal"]{background:#12b5a6;} .sw[data-a="rose"]{background:#ff5d8f;}
+
+  footer { border-top: 1px solid var(--glass-brd); padding: var(--sp-6) 0; flex-shrink: 0; }
+  footer p { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+  footer b { color: var(--ink-2); font-weight: 600; }
+
+  /* ---------- Command palette ---------- */
+  .scrim { position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.4); display: none; align-items: flex-start; justify-content: center; padding-top: 14vh; }
+  .scrim.open { display: flex; }
+  .cmd { width: min(540px, 92vw); border-radius: var(--r-lg); overflow: hidden; animation: pop .2s cubic-bezier(.16,.8,.3,1); }
+  @keyframes pop { from { opacity: 0; transform: translateY(-10px) scale(.98); } }
+  .cmd .top { display: flex; align-items: center; gap: 11px; padding: 16px 18px; border-bottom: 1px solid var(--glass-brd); }
+  .cmd .top svg { width: 17px; height: 17px; color: var(--ink-3); }
+  .cmd .top input { flex: 1; border: none; outline: none; background: none; color: var(--ink); font-family: var(--font); font-size: 16px; }
+  .cmd .top input::placeholder { color: var(--ink-3); }
+  .cmd .list { max-height: 320px; overflow-y: auto; padding: 8px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--r-sm); cursor: pointer; }
+  .row.sel, .row:hover { background: var(--accent-tint); }
+  .row .rk { font-size: 14px; font-weight: 500; }
+  .row .rd { margin-left: auto; font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .toast { position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 16px); z-index: 100; border-radius: var(--r-pill); padding: 13px 20px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: 90vw; text-align: center; color: var(--ink);
+    background: var(--glass-strong); border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 var(--hi), var(--sh-3); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast b { color: var(--accent-2); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .island { gap: 6px; padding: 0 7px 0 9px; max-width: calc(100vw - 12px); }
+    .isl-word { display: none; }
+    .isl-links { gap: 0; }
+    .isl-links a { padding: 7px 8px; }
+    .isl-sep { display: none; }
+    .isl-panel { gap: 3px; }
+    .isl-btn { width: 30px; height: 30px; }
+    .isl-btn svg { width: 15px; height: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } .cmd { animation: none; } html { scroll-behavior: auto; } * { transition-duration: .01ms !important; } }
+</style>
+
+<div class="island" id="island" role="navigation" aria-label="Primary">
+  <a class="isl-brand" href="#top">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+    <span class="isl-word">SlowGuardian</span>
+  </a>
+  <div class="isl-ambient"><span class="live"></span> Online</div>
+  <div class="isl-panel">
+    <nav class="isl-links">
+      <a href="#" class="isl-link" data-view="games" title="Games" aria-label="Games">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="7" width="20" height="10" rx="4"/><path d="M7 12h3M8.5 10.5v3M15.5 11.5h.01M17.5 13.5h.01"/></svg>
+        <span class="lbl">Games</span>
+      </a>
+      <a href="#" class="isl-link" data-view="apps" title="Apps" aria-label="Apps">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
+        <span class="lbl">Apps</span>
+      </a>
+      <a href="#" class="isl-link" data-view="proxy" title="Proxy" aria-label="Proxy">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
+        <span class="lbl">Proxy</span>
+      </a>
+      <a href="#" class="isl-link" data-view="privacy" title="Privacy" aria-label="Privacy">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10" width="16" height="11" rx="2.4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span class="lbl">Privacy</span>
+      </a>
+      <a href="#" class="isl-link" data-view="settings" title="Settings" aria-label="Settings">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+        <span class="lbl">Settings</span>
+      </a>
+    </nav>
+    <span class="isl-sep"></span>
+    <button class="isl-btn" id="cmdBtn" title="Search (⌘K)" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+    <button class="isl-btn" id="themeBtn" title="Appearance" aria-label="Toggle appearance"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
+  </div>
+</div>
+
+<main id="top">
+  <div class="view active" id="view-home">
+  <section class="home">
+    <div class="wrap home-inner">
+      <a class="home-logo" href="#" id="homeLogo">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg></span>
+        <span class="home-word">Slow<b>Guardian</b></span>
+      </a>
+      <form class="omni glass" id="omni" onsubmit="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="omniInput" placeholder="Search the web or enter an address" aria-label="Search or enter a URL" autocomplete="off" spellcheck="false">
+        <button class="btn" type="submit">Open</button>
+      </form>
+      <div class="quicklinks">
+        <button class="qbtn" data-view="games" type="button">Games</button>
+        <button class="qbtn" data-view="apps" type="button">Apps</button>
+        <button class="qbtn" id="luckyBtn" type="button">Surprise me</button>
+      </div>
+    </div>
+  </section>
+  </div><!-- /view-home -->
+
+  <div class="view" id="view-games">
+
+  <section id="library">
+    <div class="wrap">
+      <!-- search unified into the Dynamic Island / ⌘K palette -->
+      <div class="billboard reveal" id="billboard">
+        <div class="bb-art"></div>
+        <div class="bb-content">
+          <span class="bb-tag">Featured today</span>
+          <h3>Retro Bowl</h3>
+          <p>The throwback football sim everyone's hooked on. Jump in — it runs great even on a slow Chromebook.</p>
+          <div class="bb-actions">
+            <button class="btn" type="button" id="bbPlay">▶&nbsp; Play</button>
+            <button class="btn glassbtn" type="button">More info</button>
+          </div>
+        </div>
+      </div>
+      <div class="rows reveal" id="rows"></div>
+      <div class="allsec reveal" id="allgames-sec">
+        <div class="rowhead"><h3>All games</h3><span class="more" id="allgames-count"></span></div>
+        <div class="allgrid" id="allgames"></div>
+      </div>
+      <div class="results" id="results"></div>
+    </div>
+  </section>
+  </div><!-- /view-games -->
+
+  <div class="view" id="view-apps">
+    <section id="library">
+      <div class="wrap">
+        <div class="billboard reveal" id="billboard-apps">
+          <div class="bb-art" style="background:linear-gradient(120deg,#b0142f,#e0245e 46%,#ff6a3d)"></div>
+          <div class="bb-content">
+            <span class="bb-tag">Featured app</span>
+            <h3>YouTube</h3>
+            <p>The whole library, unblocked and full-speed — proxied through SlowGuardian so it opens right in a disguisable tab.</p>
+            <div class="bb-actions">
+              <button class="btn" type="button">▶&nbsp; Open</button>
+              <button class="btn glassbtn" type="button">More info</button>
+            </div>
+          </div>
+        </div>
+        <div class="rows reveal" id="rows-apps"></div>
+        <div class="allsec reveal" id="allapps-sec">
+          <div class="rowhead"><h3>All apps</h3><span class="more" id="allapps-count"></span></div>
+          <div class="allgrid" id="allapps"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="view" id="view-proxy">
+    <div class="browser">
+      <div class="tabstrip">
+        <div class="gtab active"><span class="gfav"></span><span class="gname">New Tab</span><span class="gclose">×</span></div>
+        <div class="gtab"><span class="gfav"></span><span class="gname">example.com</span><span class="gclose">×</span></div>
+        <div class="gtab"><span class="gfav"></span><span class="gname">Home — Google Classroom</span><span class="gclose">×</span></div>
+        <button class="gnew" aria-label="New tab" title="New tab">+</button>
+      </div>
+      <div class="addrbar">
+        <button class="navb" aria-label="Back">‹</button><button class="navb" aria-label="Forward">›</button><button class="navb" aria-label="Reload">⟳</button>
+        <div class="addr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span style="flex:1">Search SlowGuardian or type a URL</span>
+        </div>
+        <div class="chr-tools">
+          <button class="chr-ic" aria-label="Bookmark" title="Bookmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.3l-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z"/></svg></button>
+          <button class="btn sm exitbtn" type="button">Exit</button>
+          <button class="chr-ic" aria-label="Menu" title="Menu"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+          <div class="chr-avatar" title="You">S</div>
+        </div>
+      </div>
+      <div class="frame-mock">
+        <div class="ntp">
+          <div class="ntp-word">Slow<b>Guardian</b></div>
+          <div class="ntp-omni">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <span>Search the web or enter an address — it loads right here</span>
+          </div>
+          <div class="ntp-tiles">
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="16" cy="12" r="1.4" fill="currentColor"/></svg></span><span>Games</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg></span><span>Apps</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#1a73e8;color:#fff">C</span><span>Classroom</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#0f9d58;color:#fff">D</span><span>Drive</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#ea4335;color:#fff">▶</span><span>YouTube</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#4285f4;color:#fff">W</span><span>Docs</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#d93025;color:#fff">M</span><span>Gmail</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#000;color:#fff">R</span><span>Reddit</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic" style="background:#191414;color:#1db954">♪</span><span>Spotify</span></a>
+            <a class="ntp-tile" href="#"><span class="ntp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span><span>Add shortcut</span></a>
+          </div>
+          <div class="ntp-recent">
+            <div class="ntp-rlabel">Recently visited</div>
+            <div class="ntp-cards">
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#ea4335,#ff7a45)"></div><div class="ntp-meta"><span class="cf" style="background:#ea4335"></span><span class="ct">YouTube — Home</span></div></a>
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#1a73e8,#4facfe)"></div><div class="ntp-meta"><span class="cf" style="background:#1a73e8"></span><span class="ct">Google Classroom</span></div></a>
+              <a class="ntp-card" href="#"><div class="thumb" style="background:linear-gradient(135deg,#5865f2,#8a63d2)"></div><div class="ntp-meta"><span class="cf" style="background:#5865f2"></span><span class="ct">Discord</span></div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-privacy">
+  <section id="privacy">
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Privacy</div>
+        <h2>Quiet on a shared screen.</h2>
+        <p>Designed for the real, solvable problem — a glance over your shoulder, someone scrolling your history. Honest about what it does, and what it doesn't.</p>
+      </div>
+      <div class="fgrid reveal">
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M3 8h18"/></svg></div>
+          <h3>Tab Disguise</h3>
+          <p>Make the tab look like something ordinary. Applied before the page paints, and re-applied if a site tries to change it back.</p>
+          <div class="tabprev"><span class="fav"></span><span class="tt" id="cloakPrev">Home — Google Classroom</span></div>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"/><path d="M12 2v10"/></svg></div>
+          <h3>Quick Exit</h3>
+          <p>One key swaps to a normal-looking site and leaves nothing in the back button — it replaces the page instead of navigating.</p>
+          <span class="note">Default · Google Classroom · rebindable</span>
+        </div>
+        <div class="feature glass">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>Clean by Default</h3>
+          <p>No trackers, no analytics, no referrers leaked. A one-tap “clear traces” wipes the history, cache, and local data this app created.</p>
+          <span class="note">Encrypted local settings · tight cookies</span>
+        </div>
+      </div>
+      <div class="callout glass">
+        <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <p><b>Straight talk.</b> These features defend against people looking at your screen and casual history checks. They don't defeat network filtering or device monitoring — no website can — and SlowGuardian won't pretend otherwise.</p>
+      </div>
+    </div>
+  </section>
+  </div><!-- /view-privacy -->
+
+  <div class="view" id="view-settings">
+  <section>
+    <div class="wrap">
+      <div class="sechead reveal">
+        <div class="ey">Make it yours</div>
+        <h2>Glass that doesn't cost you speed.</h2>
+        <p>One attribute on the root rethemes the whole app — no reload, no download. On older Chromebooks the blur gracefully steps down to solid glass, so nothing stutters.</p>
+      </div>
+      <div class="appear glass reveal">
+        <div class="grp">
+          <span class="lbl">Appearance</span>
+          <div class="segmented" id="themeSeg" style="background:var(--glass);">
+            <button data-theme="dark" class="on">Dark</button>
+            <button data-theme="light">Light</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Accent</span>
+          <div class="swatches" id="swatches">
+            <button class="sw on" data-a="blue" aria-label="Blue"></button>
+            <button class="sw" data-a="indigo" aria-label="Indigo"></button>
+            <button class="sw" data-a="teal" aria-label="Teal"></button>
+            <button class="sw" data-a="rose" aria-label="Rose"></button>
+          </div>
+        </div>
+        <button class="btn sm" id="cloakToggle">Preview tab disguise</button>
+      </div>
+
+      <div class="setgrid reveal">
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>Performance</h3>
+          <div class="setrow">
+            <div><div class="rt">Glass blur</div><div class="rd">Real backdrop-filter on capable devices</div></div>
+            <div class="toggle on" role="switch" aria-checked="true"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Reduce motion</div><div class="rd">Trim page transitions and reveals</div></div>
+            <div class="toggle" role="switch" aria-checked="false"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Low-power mode</div><div class="rd">Solid glass, lighter shadows — for 2016 Chromebooks</div></div>
+            <div class="toggle" role="switch" aria-checked="false"></div>
+          </div>
+        </div>
+
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Privacy &amp; exit</h3>
+          <div class="setrow">
+            <div><div class="rt">Tab disguise</div><div class="rd">Home — Google Classroom</div></div>
+            <div class="toggle on" role="switch" aria-checked="true"></div>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Quick-exit target</div><div class="rd">Esc Esc → Google Classroom · rebindable</div></div>
+            <button class="btn sm" style="background:var(--glass);color:var(--ink)">Change</button>
+          </div>
+          <div class="setdiv"></div>
+          <div class="setrow">
+            <div><div class="rt">Clear traces</div><div class="rd">Wipe history, cache &amp; local data this app made</div></div>
+            <button class="btn sm" style="background:var(--glass);color:var(--ink)">Clear</button>
+          </div>
+        </div>
+
+        <div class="setcard glass">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>About</h3>
+          <div class="setrow"><span class="rt">Version</span><span class="rd" style="margin:0">10.0.0 · LTS</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Engine</span><span class="rd" style="margin:0">Scramjet over Wisp</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Support window</span><span class="rd" style="margin:0">6 mo active + 6 mo security</span></div>
+          <div class="setdiv"></div>
+          <div class="setrow"><span class="rt">Status</span><span class="rd" style="margin:0;color:var(--ok,#34c759)">● All systems online</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div><!-- /view-settings -->
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>SlowGuardian 10</b> — design mockup · Liquid Glass, dark-first. Translucent material, specular edges, one accent. Real <span style="font-family:var(--mono)">backdrop-filter</span> on capable devices; solid-glass fallback keeps 2016–2019 Chromebooks smooth. Press <span style="font-family:var(--mono)">⌘K</span> to search · <span style="font-family:var(--mono)">Esc Esc</span> for quick exit.</p>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim">
+  <div class="cmd glass" role="dialog" aria-label="Command palette">
+    <div class="top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="cmdInput" placeholder="Search or type a command" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="list" id="cmdList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  root.dataset.theme = "dark"; /* dark-first */
+
+  function toast(html, ms) {
+    var t = document.getElementById("toast");
+    t.innerHTML = html; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove("show"); }, ms || 2200);
+  }
+
+  if (!reduced && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal:not(.in)").forEach(function (el) { io.observe(el); });
+  } else { document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); }); }
+
+  function setTheme(t) { root.dataset.theme = t; document.querySelectorAll("#themeSeg button").forEach(function (b) { b.classList.toggle("on", b.dataset.theme === t); }); }
+  document.getElementById("themeSeg").addEventListener("click", function (e) { var b = e.target.closest("[data-theme]"); if (b) setTheme(b.dataset.theme); });
+  document.getElementById("themeBtn").addEventListener("click", function () { setTheme(root.dataset.theme === "light" ? "dark" : "light"); });
+
+  document.getElementById("swatches").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-a]"); if (!b) return;
+    if (b.dataset.a === "blue") root.removeAttribute("data-accent"); else root.dataset.accent = b.dataset.a;
+    this.querySelectorAll(".sw").forEach(function (s) { s.classList.toggle("on", s === b); });
+  });
+
+  function initials(t) { var w = t.replace(/[.\-']/g, " ").split(/\s+/).filter(Boolean); return (w.length === 1 ? w[0].slice(0, 2) : w[0][0] + w[1][0]).toUpperCase(); }
+  var GAMES = [
+    ["Age of War","Strategy"],["Happy Wheels","Action"],["Moto X3M","Racing"],["Cookie Clicker","Idle"],
+    ["Agar.io","IO"],["Basketball Stars","Sports"],["Cat Ninja","Action"],["Duck Life","Arcade"],
+    ["Learn to Fly 2","Arcade"],["Jacksmith","Strategy"],["Kirka.io","IO"],["Papa's Cheeseria","Sim"],
+    ["Slope","Arcade"],["Madalin Cars","Racing"],["Yohoho.io","IO"],["Celeste","Action"],
+    ["Retro Bowl","Sports"],["1v1.LOL","Action"],["Tanuki Sunset","Racing"],["Bloxd.io","IO"]
+  ];
+  var APPS = [
+    ["Amazon","Media"],["Steam","Games"],["Discord","Social"],["Spotify","Media"],
+    ["YouTube","Media"],["Netflix","Media"],["Notion","Tools"],["Canva","Tools"],
+    ["Figma","Tools"],["Khan Academy","Learn"],["Google Drive","Tools"],["Twitch","Media"],
+    ["Reddit","Social"],["Now.gg","Games"],["GeForce NOW","Games"],["ChatGPT","AI"]
+  ];
+  var META = {}; GAMES.concat(APPS).forEach(function (g, i) { META[g[0]] = { cat: g[1], icon: g[2], hue: (i * 41 + 205) % 360 }; });
+  function tile(name) {
+    var m = META[name] || { cat: "", hue: 210 };
+    var a = document.createElement("a");
+    a.className = "tile"; a.href = "#"; a.dataset.name = name.toLowerCase(); a.tabIndex = 0;
+    var art = m.icon
+      ? '<div class="art" style="background:#0d1220"><img src="' + m.icon + '" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover"></div>'
+      : '<div class="art" style="background:linear-gradient(150deg,hsl(' + m.hue + ' 60% 52%),hsl(' + ((m.hue + 40) % 360) + ' 62% 40%))"></div>';
+    a.innerHTML = art + '<div class="label"><span class="tt">' + name + '</span><span class="cc">' + m.cat + '</span></div>';
+    a.addEventListener("click", function (e) { e.preventDefault(); toast("Opening <b>" + name + "</b>…"); });
+    return a;
+  }
+  var CATALOG = {
+    "Continue Playing": ["Slope", "Retro Bowl", "1v1.LOL", "Moto X3M", "Agar.io", "Cat Ninja"],
+    "Popular Now": ["Happy Wheels", "Cookie Clicker", "Basketball Stars", "Kirka.io", "Bloxd.io", "Celeste", "Slope"],
+    "Action & Platformers": ["Happy Wheels", "Cat Ninja", "Celeste", "1v1.LOL", "Learn to Fly 2"],
+    "IO & Multiplayer": ["Agar.io", "Kirka.io", "Yohoho.io", "Bloxd.io"],
+    "Racing": ["Moto X3M", "Madalin Cars", "Tanuki Sunset"],
+    "Arcade & Classics": ["Duck Life", "Cookie Clicker", "Age of War", "Jacksmith", "Papa's Cheeseria", "Slope"]
+  };
+  var APPS_CATALOG = {
+    "Popular": ["YouTube", "Discord", "Spotify", "Netflix", "Now.gg", "ChatGPT", "Reddit"],
+    "Media & Streaming": ["YouTube", "Netflix", "Spotify", "Twitch", "Amazon"],
+    "Tools": ["Notion", "Canva", "Figma", "Google Drive", "Khan Academy"],
+    "Cloud Gaming": ["Now.gg", "GeForce NOW", "Steam"],
+    "All Apps": ["Amazon", "Steam", "Discord", "Spotify", "YouTube", "Netflix", "Notion", "Canva", "Figma", "Khan Academy", "Google Drive", "Twitch", "Reddit", "Now.gg", "GeForce NOW", "ChatGPT"]
+  };
+  function renderRows(catalog, el) {
+    if (!el) return;
+    Object.keys(catalog).forEach(function (title) {
+      var row = document.createElement("div"); row.className = "shelf";
+      var head = document.createElement("div"); head.className = "rowhead";
+      head.innerHTML = "<h3>" + title + "</h3><span class=\"more\">Browse all ›</span>";
+      var strip = document.createElement("div"); strip.className = "strip";
+      catalog[title].forEach(function (n) { strip.appendChild(tile(n)); });
+      row.appendChild(head); row.appendChild(strip); el.appendChild(row);
+    });
+  }
+  var rowsEl = document.getElementById("rows");
+  renderRows(CATALOG, rowsEl);
+  renderRows(APPS_CATALOG, document.getElementById("rows-apps"));
+  /* Dense full-width grids of the entire catalog — every title, edge to edge. */
+  function fillGrid(list, gridId, countId) {
+    var el = document.getElementById(gridId);
+    if (!el) return;
+    list.forEach(function (g) { el.appendChild(tile(g[0])); });
+    var c = document.getElementById(countId);
+    if (c) c.textContent = list.length + " titles";
+  }
+  fillGrid(GAMES, "allgames", "allgames-count");
+  fillGrid(APPS, "allapps", "allapps-count");
+  var allGamesSec = document.getElementById("allgames-sec");
+  var pool = Object.keys(META);
+  function search(q) {
+    q = q.trim().toLowerCase();
+    var res = document.getElementById("results"), bb = document.getElementById("billboard");
+    if (!q) { rowsEl.style.display = ""; if (allGamesSec) allGamesSec.style.display = ""; res.style.display = "none"; if (bb) bb.style.display = ""; return; }
+    rowsEl.style.display = "none"; if (allGamesSec) allGamesSec.style.display = "none"; if (bb) bb.style.display = "none"; res.style.display = "grid"; res.innerHTML = "";
+    var hits = pool.filter(function (n) { return n.toLowerCase().indexOf(q) > -1; });
+    if (!hits.length) { res.innerHTML = '<p class="nomatch">No titles match “' + q + '”.</p>'; return; }
+    hits.forEach(function (n) { res.appendChild(tile(n)); });
+  }
+  var _ls = document.getElementById("libSearch"); if (_ls) _ls.addEventListener("input", function () { search(this.value); });
+  var bbPlay = document.getElementById("bbPlay"); if (bbPlay) bbPlay.addEventListener("click", function () { toast("Opening <b>Retro Bowl</b>…"); });
+
+  document.getElementById("omni").addEventListener("submit", function () { var v = document.getElementById("omniInput").value.trim(); toast(v ? "Opening <b>" + (v.length > 32 ? v.slice(0, 32) + "…" : v) + "</b>" : "Type a site or a search first"); if (v) showView("proxy"); });
+
+  var cloaked = false, real = "SlowGuardian";
+  function toggleCloak() { cloaked = !cloaked; document.title = cloaked ? "Home — Google Classroom" : real; toast(cloaked ? "Tab disguised as <b>Google Classroom</b>" : "Disguise off"); }
+  document.getElementById("cloakToggle").addEventListener("click", toggleCloak);
+
+  var CMDS = [["Open Games library","Nav"],["Open Apps","Nav"],["Appearance: Light","Theme"],["Appearance: Dark","Theme"],["Accent: Teal","Accent"],["Disguise this tab","Privacy"],["Quick exit","Privacy"],["Clear all traces","Privacy"]];
+  var scrim = document.getElementById("scrim"), ci = document.getElementById("cmdInput"), cl = document.getElementById("cmdList"), sel = 0;
+  function paint(q) {
+    q = (q || "").trim().toLowerCase();
+    var games = q ? pool.filter(function (n) { return n.toLowerCase().indexOf(q) > -1; }).slice(0, 6) : [];
+    var cmds = CMDS.filter(function (c) { return c[0].toLowerCase().indexOf(q) > -1; });
+    var html = "";
+    games.forEach(function (n) { html += '<div class="row" data-game="' + n + '"><span class="rk">' + n + '</span><span class="rd">Game</span></div>'; });
+    cmds.forEach(function (c) { html += '<div class="row" data-cmd="' + c[0] + '"><span class="rk">' + c[0] + '</span><span class="rd">' + c[1] + '</span></div>'; });
+    cl.innerHTML = html || '<div class="row"><span class="rk" style="color:var(--ink-3)">No matches</span></div>';
+    sel = 0; var f = cl.querySelector(".row[data-cmd],.row[data-game]"); if (f) f.classList.add("sel");
+  }
+  function open() { scrim.classList.add("open"); ci.value = ""; paint(""); ci.focus(); }
+  function close() { scrim.classList.remove("open"); }
+  function exec(r) { if (!r) return; if (r.dataset.game) { close(); toast("Opening <b>" + r.dataset.game + "</b>…"); } else if (r.dataset.cmd) { run(r.dataset.cmd); } }
+  function run(name) {
+    close();
+    if (name === "Appearance: Light") setTheme("light");
+    else if (name === "Appearance: Dark") setTheme("dark");
+    else if (name === "Accent: Teal") { root.dataset.accent = "teal"; document.querySelectorAll("#swatches .sw").forEach(function (s) { s.classList.toggle("on", s.dataset.a === "teal"); }); }
+    else if (name === "Disguise this tab") toggleCloak();
+    else if (name === "Quick exit") panic();
+    else if (name.indexOf("Apps") > -1) showView("apps");
+    else if (name.indexOf("library") > -1 || name.indexOf("Games") > -1) showView("games");
+    else toast("<b>" + name + "</b>");
+  }
+  document.getElementById("cmdBtn").addEventListener("click", open);
+  ci.addEventListener("input", function () { paint(this.value); });
+  cl.addEventListener("click", function (e) { exec(e.target.closest(".row")); });
+  scrim.addEventListener("click", function (e) { if (e.target === scrim) close(); });
+
+  // Dynamic Island: tap to morph open on touch; hover handles desktop; outside tap closes
+  var island = document.getElementById("island");
+  island.addEventListener("click", function (e) {
+    if (e.target.closest(".isl-link") || e.target.closest(".isl-btn")) return;
+    island.classList.toggle("open");
+  });
+  island.querySelectorAll(".isl-link").forEach(function (a) { a.addEventListener("click", function () { island.classList.remove("open"); }); });
+  document.addEventListener("click", function (e) { if (!island.contains(e.target)) island.classList.remove("open"); });
+
+  // ---- client-side router: the Dynamic Island nav switches pages ----
+  function showView(v) {
+    document.querySelectorAll(".view").forEach(function (el) { el.classList.toggle("active", el.id === "view-" + v); });
+    document.querySelectorAll(".isl-links a").forEach(function (a) { a.classList.toggle("on", a.dataset.view === v); });
+    window.scrollTo(0, 0);
+  }
+  window.SGshowView = showView;
+  document.querySelectorAll(".isl-links a[data-view]").forEach(function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); showView(a.dataset.view); island.classList.remove("open"); });
+  });
+  document.querySelector(".isl-brand").addEventListener("click", function (e) { e.preventDefault(); showView("home"); });
+  document.querySelectorAll(".qbtn[data-view]").forEach(function (b) { b.addEventListener("click", function () { showView(b.dataset.view); }); });
+  var homeLogo = document.getElementById("homeLogo"); if (homeLogo) homeLogo.addEventListener("click", function (e) { e.preventDefault(); showView("home"); });
+  var luckyBtn = document.getElementById("luckyBtn"); if (luckyBtn) luckyBtn.addEventListener("click", function () { var ns = Object.keys(META); var n = ns[Math.floor(Math.random() * ns.length)]; toast("Opening <b>" + n + "</b>…"); showView("proxy"); });
+
+  function panic() { toast("Quick exit — would <b>replace()</b> the tab with your decoy · no history left", 2600); }
+  var lastEsc = 0;
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); scrim.classList.contains("open") ? close() : open(); return; }
+    if (scrim.classList.contains("open")) {
+      var rows = Array.prototype.slice.call(cl.querySelectorAll(".row[data-cmd],.row[data-game]"));
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, rows.length - 1); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); rows.forEach(function (r, i) { r.classList.toggle("sel", i === sel); }); }
+      else if (e.key === "Enter") { e.preventDefault(); exec(rows[sel]); }
+      return;
+    }
+    if (e.key === "Escape") { var n = Date.now(); if (n - lastEsc < 500) panic(); lastEsc = n; }
+  });
+})();
+</script>

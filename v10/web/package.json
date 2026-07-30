@@ -1,0 +1,21 @@
+{
+  "name": "slowguardian-web",
+  "type": "module",
+  "version": "10.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "prebuild": "node scripts/sync-icons.mjs",
+    "postbuild": "node scripts/copy-proxy-assets.mjs"
+  },
+  "dependencies": {
+    "astro": "^5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}
