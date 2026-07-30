@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "prebuild": "node scripts/sync-icons.mjs"
+    "prebuild": "node scripts/sync-icons.mjs",
+    "postbuild": "node scripts/copy-proxy-assets.mjs"
   },
   "dependencies": {
     "astro": "^5"

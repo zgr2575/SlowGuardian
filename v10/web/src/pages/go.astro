@@ -28,8 +28,9 @@ import Base from "../layouts/Base.astro";
   description="Open any site through SlowGuardian's fast, private gateway."
 >
   <Fragment slot="head">
-    {/* Dock the nav pill top-left + icon-first on the proxy page only. Set
-        synchronously in <head> so the island never flashes centered first. */}
+    {/* Hide the floating nav pill on this page — /go is a full-screen browser
+        and the SlowGuardian logo lives in its toolbar instead. Set synchronously
+        in <head> so the pill never flashes in before the CSS applies. */}
     <script is:inline>document.documentElement.classList.add("sg-proxy");</script>
     {/* Load order matters — these define $scramjetLoadController + global BareMux,
         exactly as the verified Phase 1 index.html does. Served by Express. */}
@@ -50,6 +51,12 @@ import Base from "../layouts/Base.astro";
 
         <!-- ---------- toolbar / Dynamic-Island-consistent omnibox ---------- -->
         <div class="gg-toolbar">
+          {/* the logo lives with the browser controls and is the way back to
+              SlowGuardian — /go has no floating nav pill */}
+          <a class="gg-home" href="/" title="Back to SlowGuardian" aria-label="Back to SlowGuardian">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg>
+          </a>
+          <span class="gg-tbsep" aria-hidden="true"></span>
           <div class="gg-nav">
             <button class="gg-navbtn" id="ggBack" type="button" title="Back" aria-label="Back">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
@@ -86,7 +93,6 @@ import Base from "../layouts/Base.astro";
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
             <span class="lbl">Exit</span>
           </button>
-          <div class="gg-avatar" title="You" aria-hidden="true">S</div>
         </div>
 
         <div class="gg-progress" id="ggProgress" aria-hidden="true"></div>
@@ -120,6 +126,10 @@ import Base from "../layouts/Base.astro";
 
       <!-- ---------- immersive controls (shown only when launched from the library) ---------- -->
       <div class="gg-immbar" id="ggImmBar" aria-hidden="true">
+        <a class="gg-immbtn gg-immhome" href="/" title="Back to SlowGuardian" aria-label="Back to SlowGuardian">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path></svg>
+        </a>
+        <span class="gg-immsep" aria-hidden="true"></span>
         <button class="gg-immbtn" id="ggImmReload" type="button" title="Reload" aria-label="Reload">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"></path></svg>
         </button>
@@ -147,9 +157,10 @@ import Base from "../layouts/Base.astro";
     :root { --chr-strip: #171a1f; --chr-bar: #282a2e; --chr-omni: #131417; --chr-ntp: #1c1d21; --chr-hover: rgba(255,255,255,.09); }
     :root[data-theme="light"] { --chr-strip: #dee1e6; --chr-bar: #f1f3f4; --chr-omni: #e5e8eb; --chr-ntp: #ffffff; --chr-hover: rgba(0,0,0,.06); }
 
-    /* Fullscreen browser: fill the whole viewport edge-to-edge, no footer,
-       just a thin gap up top for the floating Dynamic Island. */
-    .gg-page { height: 100vh; display: flex; flex-direction: column; padding: 54px 0 0; }
+    /* Fullscreen browser: fill the whole viewport edge-to-edge. No top gap —
+       the floating nav pill is hidden on this page and the SlowGuardian logo
+       lives in the toolbar instead, so the browser owns the entire screen. */
+    .gg-page { height: 100dvh; display: flex; flex-direction: column; padding: 0; }
     .gg-wrap { max-width: none; margin: 0; width: 100%; padding: 0; position: relative; z-index: 1;
       flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
@@ -157,12 +168,12 @@ import Base from "../layouts/Base.astro";
       border: none; border-top: 1px solid var(--glass-brd); background: var(--chr-bar); box-shadow: none; }
 
     /* tab strip — Chrome-shaped tabs on a darker title bar */
-    .gg-tabstrip { display: flex; align-items: flex-end; gap: 1px; padding: 8px 8px 0; background: var(--chr-strip); }
-    .gg-tabs { display: flex; gap: 1px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .gg-tabstrip { display: flex; align-items: flex-end; justify-content: flex-start; gap: 1px; padding: 5px 6px 0; background: var(--chr-strip); }
+    .gg-tabs { display: flex; gap: 1px; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
     .gg-tabs::-webkit-scrollbar { display: none; }
     .gg-tab { display: inline-flex; align-items: center; gap: 9px; flex: 0 1 210px; min-width: 110px; max-width: 240px;
-      padding: 9px 10px 11px 13px; border-radius: 10px 10px 0 0; background: transparent; border: none;
-      color: var(--ink-2); cursor: default; transition: background .16s, color .16s; user-select: none; }
+      padding: 7px 9px 9px 12px; border-radius: 9px 9px 0 0; background: transparent; border: none;
+      color: var(--ink-2); cursor: pointer; transition: background .16s, color .16s; user-select: none; }
     .gg-tab:not(.on):hover { background: var(--chr-hover); }
     .gg-tab.on { background: var(--chr-bar); color: var(--ink); }
     .gg-tab .gg-fav { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; color: var(--ink-3); }
@@ -183,7 +194,7 @@ import Base from "../layouts/Base.astro";
     .gg-newtab svg { width: 15px; height: 15px; }
 
     /* toolbar — Chrome omnibox row */
-    .gg-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 9px; background: var(--chr-bar); }
+    .gg-toolbar { position: relative; display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: var(--chr-bar); }
     .gg-nav { display: flex; gap: 2px; flex-shrink: 0; }
     .gg-navbtn { width: 30px; height: 30px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
       background: transparent; border: none; color: var(--ink-2); transition: .18s; }
@@ -191,7 +202,7 @@ import Base from "../layouts/Base.astro";
     .gg-navbtn svg { width: 16px; height: 16px; }
 
     .gg-omni { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px; border-radius: var(--r-pill);
-      margin: 0 6px; padding: 8px 16px; background: var(--chr-omni); border: 1px solid transparent; transition: box-shadow .2s, border-color .2s; }
+      margin: 0 6px; padding: 5px 14px; background: var(--chr-omni); border: 1px solid transparent; transition: box-shadow .2s, border-color .2s; }
     .gg-omni:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
     .gg-scheme { display: grid; place-items: center; color: var(--ink-3); flex-shrink: 0; }
     .gg-scheme svg { width: 15px; height: 15px; display: block; }
@@ -205,23 +216,24 @@ import Base from "../layouts/Base.astro";
       background: linear-gradient(180deg, #ff8090, var(--err)); border: none; transition: .18s; }
     .gg-exit:hover { filter: brightness(1.06); }
     .gg-exit svg { width: 15px; height: 15px; }
-    .gg-menu, .gg-avatar { flex-shrink: 0; }
-    .gg-menu { width: 30px; height: 30px; margin-left: 2px; display: grid; place-items: center; cursor: pointer; border-radius: 50%;
-      background: transparent; border: none; color: var(--ink-2); transition: .18s; }
-    .gg-menu:hover { color: var(--ink); background: var(--chr-hover); }
-    .gg-menu svg { width: 17px; height: 17px; }
-    .gg-avatar { width: 26px; height: 26px; margin-left: 4px; border-radius: 50%; display: grid; place-items: center;
-      font-size: 12px; font-weight: 600; color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
+    /* SlowGuardian logo — sits with the browser controls and is the way back */
+    .gg-home { width: 30px; height: 30px; margin-right: 2px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+      color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 3px 10px var(--accent-tint); transition: filter .18s, transform .1s; }
+    .gg-home:hover { filter: brightness(1.09); }
+    .gg-tbsep { width: 1px; height: 20px; margin: 0 5px 0 3px; background: var(--glass-brd); flex-shrink: 0; }
+    .gg-home:active { transform: scale(0.95); }
+    .gg-home svg { width: 17px; height: 17px; }
 
     /* thin loading bar */
-    .gg-progress { height: 2px; width: 100%; position: relative; overflow: hidden; background: transparent; }
+    .gg-progress { position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; overflow: hidden; background: transparent; pointer-events: none; }
     .gg-progress::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 38%;
       background: linear-gradient(90deg, transparent, var(--accent-2), transparent); transform: translateX(-120%); }
     .gg-progress.on::before { animation: ggbar 1.05s ease-in-out infinite; }
     @keyframes ggbar { to { transform: translateX(320%); } }
 
     /* views — fill the shell */
-    .gg-views { position: relative; flex: 1; min-height: 320px; background: var(--chr-ntp); }
+    .gg-views { position: relative; flex: 1; min-height: 0; background: var(--chr-ntp); }
     .gg-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff; }
 
     /* new-tab page — Chrome NTP */
@@ -246,7 +258,11 @@ import Base from "../layouts/Base.astro";
     .gg-fineprint a { color: var(--accent-2); }
     .gg-fineprint a:hover { text-decoration: underline; }
 
-    .gg-status { flex: 0 0 auto; margin: 0; padding: 3px 12px; min-height: 0; font-size: 12px; color: var(--ink-3); font-family: var(--mono); background: var(--chr-strip); }
+    /* transient corner bubble, like a real browser's link/status hint — not a
+       permanent full-width band. :empty hides it, so idle states must set "". */
+    .gg-status { position: absolute; left: 0; bottom: 0; z-index: 3; margin: 0; padding: 4px 12px;
+      border-radius: 0 8px 0 0; font-size: 12px; color: var(--ink-2); font-family: var(--mono);
+      background: var(--chr-bar); box-shadow: 0 -1px 0 var(--glass-brd), 1px 0 0 var(--glass-brd); pointer-events: none; }
     .gg-status:empty { display: none; }
 
     /* ---- IMMERSIVE mode: launched from the library (?app=1). Strip the whole
@@ -263,7 +279,7 @@ import Base from "../layouts/Base.astro";
     .gg-page.gg-immersive .gg-immbar {
       position: fixed; top: 12px; right: 12px; z-index: 70; display: flex; align-items: center; gap: 4px;
       padding: 5px; border-radius: var(--r-pill); background: rgba(8,9,14,0.62); border: 1px solid var(--glass-brd);
-      box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); opacity: 0.45;
+      box-shadow: inset 0 1px 0 var(--hi), var(--sh-2); opacity: 0.82;
       -webkit-backdrop-filter: blur(var(--blur)) saturate(180%); backdrop-filter: blur(var(--blur)) saturate(180%);
       transition: opacity .2s; }
     .gg-page.gg-immersive .gg-immbar:hover,
@@ -272,6 +288,11 @@ import Base from "../layouts/Base.astro";
     .gg-immbtn { width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; flex-shrink: 0;
       background: transparent; border: none; color: var(--ink-2); transition: .16s; }
     .gg-immbtn:hover { color: var(--ink); background: var(--glass-2); }
+    /* logo first in the cluster, then a hairline, then the controls */
+    .gg-immhome { color: var(--on-accent); background: linear-gradient(160deg, var(--accent-2), var(--accent));
+      border-radius: 9px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35); }
+    .gg-immhome:hover { color: var(--on-accent); filter: brightness(1.09); background: linear-gradient(160deg, var(--accent-2), var(--accent)); }
+    .gg-immsep { width: 1px; height: 20px; margin: 0 3px; background: var(--glass-brd); flex-shrink: 0; }
     .gg-immbtn svg { width: 16px; height: 16px; }
     .gg-immpanic:hover { color: #fff; background: var(--err); }
     /* inline-flex, not the icon buttons' grid — grid stacks the icon above the label */
@@ -284,9 +305,13 @@ import Base from "../layouts/Base.astro";
     .gg-immclose .lbl { line-height: 1; }
 
     @media (max-width: 640px) {
-      .gg-page { padding-top: 50px; }
+      .gg-page { padding-top: 0; }
       .gg-exit .lbl { display: none; }
       .gg-exit { padding: 8px 11px; }
+      /* the address bar is the primary control — give it the room. Real mobile
+         browsers drop forward/popout/fullscreen too. */
+      #ggFwd, #ggPopout, #ggFull, .gg-tbsep { display: none; }
+      .gg-omni { margin: 0 4px; }
       .gg-ntp-tiles { grid-template-columns: repeat(4, 1fr); }
       .gg-immclose .lbl { display: none; }
       .gg-immclose { width: 32px; padding: 0; }
@@ -342,15 +367,28 @@ import Base from "../layouts/Base.astro";
           await navigator.serviceWorker.ready;
         };
         const setEpoxyTransport = async () => {
-          const wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+          /* Wisp endpoint. Defaults to this origin (the single-service Render
+             deploy). Set PUBLIC_WISP_URL at build time to point a STATIC deploy
+             (Vercel/Netlify — no WebSocket server of its own) at a remote wisp
+             backend; Vite constant-folds it and the fallback disappears.
+             Verified working split-origin: wisp-js does not check Origin, and
+             COEP does not gate WebSockets. */
+          let wispUrl =
+            (import.meta.env.PUBLIC_WISP_URL as string | undefined) ||
+            (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
+          /* an https page cannot open a ws:// socket — Chrome blocks it as mixed
+             content, which is the easiest way to misconfigure this. Upgrade. */
+          if (location.protocol === "https:" && wispUrl.startsWith("ws://")) {
+            wispUrl = "wss://" + wispUrl.slice("ws://".length);
+          }
           if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
             await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
           }
         };
         // Eagerly register + set transport so the SW is controlling before the
         // first navigation. Both calls are idempotent.
-        setStatus("starting proxy…");
-        ready = registerSW().then(setEpoxyTransport).then(() => setStatus("ready"));
+        setStatus("");
+        ready = registerSW().then(setEpoxyTransport).then(() => setStatus(""));
         ready.catch((err: any) => { setStatus("init error: " + ((err && err.message) || err)); toast("Proxy init error — " + ((err && err.message) || err)); });
       } else {
         setStatus("proxy engine not loaded (serve via the SlowGuardian server)");
@@ -448,7 +486,7 @@ import Base from "../layouts/Base.astro";
         syncDocTitle();
       }
 
-      function switchTab(id: number) { activeId = id; showActive(); const t = activeTab(); if (t && !t.el) setTimeout(() => urlInput.focus(), 0); }
+      function switchTab(id: number) { activeId = id; showActive(); }
 
       function newTab(url?: string): Tab {
         const tab: Tab = { id: ++seq, frame: null, el: null, url: "", title: "New tab", favicon: "", loading: false };
@@ -456,7 +494,7 @@ import Base from "../layouts/Base.astro";
         activeId = tab.id;
         showActive();
         if (url) openInTab(tab, url);
-        else { urlInput.value = ""; setTimeout(() => urlInput.focus(), 0); }
+        else { urlInput.value = ""; }
         return tab;
       }
 

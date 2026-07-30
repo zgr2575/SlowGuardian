@@ -93,17 +93,12 @@ a { color: inherit; text-decoration: none; }
 .isl-btn:hover { color: var(--ink); background: var(--glass-2); }
 .isl-btn svg { width: 16px; height: 16px; }
 
-/* ---------- Proxy-page variant: dock the pill top-LEFT, icons-only until
-   expanded. Scoped to .sg-proxy (set only by go.astro) so every other page
-   keeps the centered Dynamic Island above. ---------- */
-.sg-proxy .island { left: 14px; transform: none; gap: 0; padding: 0 6px; max-width: calc(100vw - 28px); }
-.sg-proxy .isl-brand { padding-left: 2px; }
-.sg-proxy .isl-word { max-width: 0; opacity: 0; overflow: hidden; transition: max-width .42s cubic-bezier(.5,1.3,.4,1), opacity .24s ease; }
-.sg-proxy .island:hover .isl-word, .sg-proxy .island:focus-within .isl-word, .sg-proxy .island.open .isl-word { max-width: 170px; opacity: 1; }
-.sg-proxy .isl-ambient { display: none; }
-/* the whole nav morphs open from the shield */
-.sg-proxy .isl-panel { gap: 4px; }
-.sg-proxy .island:hover .isl-panel, .sg-proxy .island:focus-within .isl-panel, .sg-proxy .island.open .isl-panel { max-width: 720px; }
+/* ---------- Proxy page: no floating pill at all ----------
+   /go is a full-screen browser, so a separate floating nav pill just sat on top
+   of the tab strip and competed with it. The SlowGuardian logo lives inside the
+   browser's own toolbar instead (.gg-home in go.astro), where it doubles as the
+   way back to the site. */
+.sg-proxy .island { display: none; }
 
 /* ---------- Hero ---------- */
 .hero { text-align: center; padding: 82px 0 var(--sp-6); }

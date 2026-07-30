@@ -95,10 +95,30 @@ as a non-root user, and has a `HEALTHCHECK` on `/readyz`.
 - `GET /readyz` → `200`/`503` with a per-asset check list — the proxy bundles
   **and** the built frontend must actually resolve (gate a load balancer here).
 
-Intended deploy is a **split**: the static frontend on **Vercel**, the
-persistent Wisp backend on **Render** (one Docker image is the canonical
-artifact). Re-confirm HTTPS proxying on the first real deploy — a dev sandbox
-with a TLS-intercepting egress will (correctly) fail epoxy's cert validation.
+Two supported shapes:
+
+**1. One service (Render, Docker, self-host).** `src/server.js` serves the
+frontend, the proxy bundles and `/wisp/` together. Nothing to configure.
+
+**2. Static frontend + remote Wisp** (Vercel/Netlify/Pages). A static host has
+no WebSocket server, so `/wisp/` stays on the Node service and the frontend
+points at it:
+
+- `npm run build:web` copies the Scramjet/bare-mux/epoxy bundles into
+  `web/dist/{scram,baremux,epoxy}/` (`web/scripts/copy-proxy-assets.mjs`), so the
+  static host serves the engine same-origin. `sw.js` is already at the dist root.
+- Set **`PUBLIC_WISP_URL`** at build time, e.g. `wss://<your-node-host>/wisp/`.
+  Unset, it falls back to this origin, so shape 1 is unaffected. It **must be
+  `wss://`** from an https page — `ws://` is mixed content and the browser blocks
+  it (the client upgrades the scheme defensively).
+- The host must send `Cross-Origin-Opener-Policy: same-origin` and
+  `Cross-Origin-Embedder-Policy: require-corp`; the repo-root `vercel.json` does.
+
+Verified end-to-end locally against a split origin: a static file server with its
+upgrade handler destroying every socket, driving a Wisp backend on another
+origin, proxied real pages. `wisp-js` does not check `Origin`, and WebSockets are
+exempt from COEP. Note a dev sandbox with a TLS-intercepting egress will
+(correctly) fail epoxy's cert validation on https targets.
 
 ## Testing
 
