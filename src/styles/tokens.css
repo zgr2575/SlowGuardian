@@ -1,0 +1,31 @@
+:root {
+  --accent: #9aa2ff;
+  --wallpaper: url("/wallpapers/alpine.webp");
+
+  --bg: #0a0a0b;
+  --s1: #151517;
+  --s2: #1c1c1f;
+  --s3: #2a2a2d;
+  --nav-solid: #0e0e10;
+  --line: rgba(255, 255, 255, 0.08);
+
+  --t1: #f5f5f7;
+  --t2: rgba(245, 245, 247, 0.62);
+  --t3: #8e8e93;
+
+  --r-sm: 8px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-fav: 19px;
+
+  --dur-fast: 160ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --nav-h: 60px;
+  --bar-h: 50px;
+  --gutter: 28px;
+
+  --font: "Instrument Sans Variable", -apple-system, system-ui, sans-serif;
+}

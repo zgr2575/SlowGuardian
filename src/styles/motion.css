@@ -1,0 +1,75 @@
+/* Hover/focus lift with a soft light sheen, used on artwork and cards. */
+.lift {
+  position: relative;
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.lift::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 40%);
+  transition: opacity var(--dur) var(--ease);
+}
+
+.lift:hover,
+.lift:focus-visible,
+:focus-visible > .lift,
+:hover > .lift {
+  transform: scale(1.04) translateY(-3px);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
+}
+
+.lift:hover::after,
+.lift:focus-visible::after,
+:focus-visible > .lift::after,
+:hover > .lift::after {
+  opacity: 1;
+}
+
+@keyframes sg-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes sg-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sg-load {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+.pop-in {
+  animation: sg-pop var(--dur-fast) var(--ease) both;
+  transform-origin: var(--pop-origin, top right);
+}
+
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *::before,
+:root[data-motion="reduced"] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}
