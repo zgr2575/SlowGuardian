@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/g", "destination": "/games", "permanent": true },
+    { "source": "/ap", "destination": "/apps", "permanent": true },
+    { "source": "/s", "destination": "/settings", "permanent": true },
+    { "source": "/p", "destination": "/browse", "permanent": true }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/|uv/|scram/|baremux/|baremod/|epoxy/|assets/|wallpapers/|catalog/|cloak/|sw\\.js|favicon|robots).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/(wallpapers|catalog|cloak)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    }
+  ]
+}
