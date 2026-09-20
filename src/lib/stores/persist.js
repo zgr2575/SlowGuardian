@@ -15,7 +15,8 @@ function read(key) {
 export function persisted(key, initial, { version, migrate } = {}) {
   let value = read(key);
   if (value === undefined) value = initial;
-  else if (version !== undefined && value?.v !== version) value = migrate ? migrate(value) : initial;
+  else if (version !== undefined && value?.v !== version)
+    value = migrate ? migrate(value) : initial;
 
   const store = writable(value);
   const api = {

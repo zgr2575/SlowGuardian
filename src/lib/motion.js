@@ -11,12 +11,16 @@ const systemReduced = readable(false, (set) => {
   return () => mq.removeEventListener("change", onChange);
 });
 
-export const reducedMotion = derived([systemReduced, settings], ([sys, s]) => sys || s.reduceMotion);
+export const reducedMotion = derived(
+  [systemReduced, settings],
+  ([sys, s]) => sys || s.reduceMotion,
+);
 
 let reduced = false;
 reducedMotion.subscribe((v) => {
   reduced = v;
-  if (typeof document !== "undefined") document.documentElement.dataset.motion = v ? "reduced" : "full";
+  if (typeof document !== "undefined")
+    document.documentElement.dataset.motion = v ? "reduced" : "full";
 });
 
 // Fade in with a small rise. Collapses to a plain fade when motion is reduced.
@@ -25,7 +29,10 @@ export function rise(node, { delay = 0, duration = 240, y = 8 } = {}) {
     delay,
     duration: reduced ? 120 : duration,
     easing: cubicOut,
-    css: (t) => (reduced ? `opacity:${t}` : `opacity:${t};transform:translateY(${(1 - t) * y}px)`),
+    css: (t) =>
+      reduced
+        ? `opacity:${t}`
+        : `opacity:${t};transform:translateY(${(1 - t) * y}px)`,
   };
 }
 

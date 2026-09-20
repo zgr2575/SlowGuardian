@@ -14,7 +14,11 @@ export const DEFAULT_SETTINGS = {
 
 export const settings = persisted("sg:settings", DEFAULT_SETTINGS, {
   version: 1,
-  migrate: (old) => ({ ...DEFAULT_SETTINGS, ...(old && typeof old === "object" ? old : {}), v: 1 }),
+  migrate: (old) => ({
+    ...DEFAULT_SETTINGS,
+    ...(old && typeof old === "object" ? old : {}),
+    v: 1,
+  }),
 });
 
 export function updateSettings(patch) {
