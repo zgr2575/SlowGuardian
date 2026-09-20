@@ -25,9 +25,42 @@ function loadScript(src) {
   });
 }
 
+// An older SlowGuardian (or anything else) may have created the "$scramjet" database at
+// version 1 with no object stores. Scramjet opens that same version, so its upgrade
+// never runs again and every write fails. Drop the broken database so it is rebuilt.
+async function repairScramjetDatabase() {
+  if (!globalThis.indexedDB?.databases) return;
+  try {
+    const exists = (await indexedDB.databases()).some(
+      (db) => db.name === "$scramjet",
+    );
+    if (!exists) return;
+
+    const healthy = await new Promise((resolve) => {
+      const request = indexedDB.open("$scramjet");
+      request.onsuccess = () => {
+        const ok = request.result.objectStoreNames.contains("config");
+        request.result.close();
+        resolve(ok);
+      };
+      request.onerror = () => resolve(true);
+      request.onblocked = () => resolve(true);
+    });
+    if (healthy) return;
+
+    await new Promise((resolve) => {
+      const remove = indexedDB.deleteDatabase("$scramjet");
+      remove.onsuccess = remove.onerror = remove.onblocked = resolve;
+    });
+  } catch {
+    // Storage is unavailable here; Scramjet will surface its own failure.
+  }
+}
+
 // Scramjet is only pulled in when a tab actually asks for it.
 export function getScramjet() {
   scramjetPromise ??= (async () => {
+    await repairScramjetDatabase();
     if (!globalThis.$scramjetLoadController)
       await loadScript("/scram/scramjet.all.js");
     const { ScramjetController } = globalThis.$scramjetLoadController();

@@ -2,6 +2,7 @@
   import { route } from "./lib/router.js";
   import { rise } from "./lib/motion.js";
   import Navbar from "./components/Navbar.svelte";
+  import TabLayer from "./components/TabLayer.svelte";
   import Home from "./routes/Home.svelte";
   import Games from "./routes/Games.svelte";
   import Apps from "./routes/Apps.svelte";
@@ -19,3 +20,6 @@
     <Page />
   </main>
 {/key}
+
+<!-- Lives outside the router so open tabs keep running on every page. -->
+<TabLayer />
