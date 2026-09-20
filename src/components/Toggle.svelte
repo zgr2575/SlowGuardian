@@ -2,20 +2,13 @@
   let { checked = false, label, hint = "", onchange } = $props();
 </script>
 
-<label class="row">
+<button class="row" role="switch" aria-checked={checked} onclick={() => onchange?.(!checked)}>
   <span class="text">
     <span>{label}</span>
     {#if hint}<small>{hint}</small>{/if}
   </span>
-  <input
-    type="checkbox"
-    role="switch"
-    class="sr-only"
-    {checked}
-    onchange={(e) => onchange?.(e.currentTarget.checked)}
-  />
   <span class="tg" class:on={checked} aria-hidden="true"></span>
-</label>
+</button>
 
 <style>
   .row {
@@ -24,12 +17,17 @@
     padding: 14px 18px;
     font-size: 14.5px;
     border-bottom: 1px solid #222225;
-    cursor: pointer;
     gap: 16px;
+    width: 100%;
+    text-align: left;
   }
 
   .row:last-child {
     border-bottom: 0;
+  }
+
+  .row:hover {
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .text small {
@@ -69,10 +67,5 @@
 
   .tg.on::after {
     transform: translateX(18px);
-  }
-
-  input:focus-visible + .tg {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
   }
 </style>

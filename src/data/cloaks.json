@@ -1,0 +1,74 @@
+[
+  {
+    "id": "google",
+    "label": "Google",
+    "title": "Google",
+    "icon": "/cloak/google.png"
+  },
+  {
+    "id": "drive",
+    "label": "Drive",
+    "title": "My Drive - Google Drive",
+    "icon": "/cloak/drive.png"
+  },
+  {
+    "id": "classroom",
+    "label": "Classroom",
+    "title": "Home",
+    "icon": "/cloak/classroom.png"
+  },
+  {
+    "id": "schoology",
+    "label": "Schoology",
+    "title": "Home | Schoology",
+    "icon": "/cloak/schoology.png"
+  },
+  {
+    "id": "gmail",
+    "label": "Gmail",
+    "title": "Gmail",
+    "icon": "/cloak/gmail.png"
+  },
+  {
+    "id": "clever",
+    "label": "Clever",
+    "title": "Clever | Portal",
+    "icon": "/cloak/clever.png"
+  },
+  {
+    "id": "khan",
+    "label": "Khan",
+    "title": "Dashboard | Khan Academy",
+    "icon": "/cloak/khan.png"
+  },
+  {
+    "id": "campus",
+    "label": "Campus",
+    "title": "Infinite Campus",
+    "icon": "/cloak/campus.png"
+  },
+  {
+    "id": "ixl",
+    "label": "IXL",
+    "title": "IXL | Dashboard",
+    "icon": "/cloak/ixl.png"
+  },
+  {
+    "id": "canvas",
+    "label": "Canvas",
+    "title": "Dashboard",
+    "icon": "/cloak/canvas.png"
+  },
+  {
+    "id": "linkit",
+    "label": "LinkIt",
+    "title": "Test Taker",
+    "icon": "/cloak/linkit.ico"
+  },
+  {
+    "id": "edpuzzle",
+    "label": "Edpuzzle",
+    "title": "Edpuzzle",
+    "icon": "/cloak/edpuzzle.png"
+  }
+]

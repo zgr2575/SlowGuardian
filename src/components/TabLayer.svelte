@@ -10,6 +10,8 @@
   import { tabs, updateTab } from "../lib/stores/tabs.js";
   import { domainOf } from "../lib/url.js";
   import { initProxy, proxiedUrl, decodeProxied } from "../lib/proxy/index.js";
+  import { addVisit } from "../lib/stores/history.js";
+  import { attachPanicKeyToFrame } from "../lib/panic.js";
 
   let elements = $state({});
   const loadedKeys = new Map();
@@ -89,6 +91,11 @@
     }
 
     updateTab(tab.id, patch);
+
+    // The panic key has to work while you are inside a site, and a visit only counts
+    // once the page actually rendered.
+    attachPanicKeyToFrame(frame);
+    if (decoded) addVisit({ url: patch.url, title: patch.title, favicon: patch.favicon ?? null });
   }
 
   function retry(tab) {

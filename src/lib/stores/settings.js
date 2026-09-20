@@ -10,6 +10,10 @@ export const DEFAULT_SETTINGS = {
   searchEngine: "google",
   showFavorites: true,
   rotateThemes: false,
+  saveHistory: true,
+  cloak: { preset: "none", title: "", icon: "" },
+  aboutBlank: { auto: false, decoy: "https://classroom.google.com/" },
+  panic: { keys: "Control+e", url: "https://classroom.google.com/" },
 };
 
 export const settings = persisted("sg:settings", DEFAULT_SETTINGS, {

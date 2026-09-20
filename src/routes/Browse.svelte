@@ -10,8 +10,9 @@
     Code,
     Ellipsis,
   } from "@lucide/svelte";
-  import { get } from "svelte/store";
   import { tabs, activeTab, updateTab, closeTab } from "../lib/stores/tabs.js";
+  import { favorites, isUrlFavorite, toggleUrlFavorite } from "../lib/stores/favorites.js";
+  import { history, removeVisit, clearHistory } from "../lib/stores/history.js";
   import { settings } from "../lib/stores/settings.js";
   import { domainOf, toTarget, SEARCH_ENGINES } from "../lib/url.js";
   import { openInput } from "../lib/open.js";
@@ -19,6 +20,7 @@
   import SearchField from "../components/SearchField.svelte";
   import EnginePopover from "../components/EnginePopover.svelte";
   import Popover from "../components/Popover.svelte";
+  import HistorySheet from "../components/HistorySheet.svelte";
 
   let tab = $derived($activeTab);
   let editing = $state(false);
@@ -28,6 +30,9 @@
   let engineOpen = $state(false);
   let moreBtn = $state(null);
   let moreOpen = $state(false);
+  let historyOpen = $state(false);
+
+  let bookmarked = $derived(tab ? isUrlFavorite($favorites, tab.url) : false);
 
   const frame = () => (tab ? $frames[tab.id] : null);
 
@@ -92,6 +97,12 @@
     }
   }
 
+  function openFromHistory(item) {
+    historyOpen = false;
+    if (!tab) return;
+    reloadTab({ url: item.url, title: item.title });
+  }
+
   async function copyLink() {
     if (tab?.url) await navigator.clipboard?.writeText(tab.url).catch(() => {});
     moreOpen = false;
@@ -143,8 +154,15 @@
       {#if tab.status === "loading"}<span class="load"></span>{/if}
     </div>
 
-    <button class="btn" aria-label="Bookmark" title="Bookmarks arrive in the next update" disabled>
-      <Star size={18} strokeWidth={1.75} />
+    <button
+      class="btn"
+      class:saved={bookmarked}
+      aria-label={bookmarked ? "Remove bookmark" : "Bookmark this site"}
+      aria-pressed={bookmarked}
+      title={bookmarked ? "Remove bookmark" : "Bookmark this site"}
+      onclick={() => toggleUrlFavorite({ url: tab.url, title: tab.title, favicon: tab.favicon })}
+    >
+      <Star size={18} strokeWidth={1.75} fill={bookmarked ? "currentColor" : "none"} />
     </button>
     <button class="btn" aria-label="Fullscreen" onclick={fullscreen}>
       <Maximize size={18} strokeWidth={1.75} />
@@ -169,6 +187,15 @@
   />
 
   <Popover open={moreOpen} anchor={moreBtn} onclose={() => (moreOpen = false)} width={220} label="Tab menu">
+    <button
+      class="menu"
+      onclick={() => {
+        historyOpen = true;
+        moreOpen = false;
+      }}
+    >
+      History
+    </button>
     <button class="menu" onclick={copyLink}>Copy link</button>
     <button
       class="menu"
@@ -180,6 +207,11 @@
       Close tab
     </button>
   </Popover>
+  <HistorySheet
+    open={historyOpen}
+    onclose={() => (historyOpen = false)}
+    onopen={openFromHistory}
+  />
 {:else}
   <div class="empty">
     <div class="inner">
@@ -226,6 +258,10 @@
   .btn:disabled {
     color: #4a4a4e;
     cursor: default;
+  }
+
+  .btn.saved {
+    color: var(--accent);
   }
 
   .addr {
