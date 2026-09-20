@@ -60,7 +60,17 @@ describe("tabs", () => {
 
   it("restored tabs come back idle so they load lazily", () => {
     const restored = restoreTabs({
-      list: [{ id: "x", url: "https://a.com", title: "A", favicon: null, engine: "uv", status: "ready", error: null }],
+      list: [
+        {
+          id: "x",
+          url: "https://a.com",
+          title: "A",
+          favicon: null,
+          engine: "uv",
+          status: "ready",
+          error: null,
+        },
+      ],
       activeId: "x",
     });
     expect(restored.list[0].status).toBe("idle");

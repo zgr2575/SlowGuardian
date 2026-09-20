@@ -3,6 +3,10 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/bare/[[...path]].js": { "maxDuration": 300 },
+    "api/wisp/[[...path]].js": { "maxDuration": 800 }
+  },
   "redirects": [
     { "source": "/g", "destination": "/games", "permanent": true },
     { "source": "/ap", "destination": "/apps", "permanent": true },

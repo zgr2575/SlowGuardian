@@ -27,9 +27,11 @@ describe("persisted", () => {
   });
 
   it("never throws when storage is blocked", () => {
-    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
-      throw new Error("blocked");
-    });
+    const spy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new Error("blocked");
+      });
     const s = persisted("sg:test", { a: 1 });
     expect(() => s.set({ a: 3 })).not.toThrow();
     expect(get(s)).toEqual({ a: 3 });
@@ -39,7 +41,11 @@ describe("persisted", () => {
 
   it("runs migrate on version mismatch", () => {
     localStorage.setItem("sg:test", JSON.stringify({ v: 0, old: true }));
-    const s = persisted("sg:test", { v: 1 }, { version: 1, migrate: (old) => ({ v: 1, migrated: old.old }) });
+    const s = persisted(
+      "sg:test",
+      { v: 1 },
+      { version: 1, migrate: (old) => ({ v: 1, migrated: old.old }) },
+    );
     expect(get(s)).toEqual({ v: 1, migrated: true });
   });
 

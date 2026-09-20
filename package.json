@@ -15,7 +15,7 @@
     "build": "npm run vendor && vite build",
     "start": "node server/index.js",
     "test": "vitest run",
-    "test:relays": "node --test tests/relays/",
+    "test:relays": "node --test --test-timeout=20000 \"tests/relays/*.test.js\"",
     "test:e2e": "npm run build && playwright test",
     "format": "prettier . --write"
   },

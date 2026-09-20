@@ -18,13 +18,16 @@ describe("themes", () => {
     }
   });
 
-  it("falls back to alpine for unknown ids", () => expect(themeById("nope").id).toBe("alpine"));
+  it("falls back to alpine for unknown ids", () =>
+    expect(themeById("nope").id).toBe("alpine"));
 
   it("applies accent and wallpaper as CSS variables", () => {
     const root = document.createElement("div");
     applyTheme(themeById("dunes"), root);
     expect(root.style.getPropertyValue("--accent")).toBe("#FF8A5B");
-    expect(root.style.getPropertyValue("--wallpaper")).toBe('url("/wallpapers/dunes.webp")');
+    expect(root.style.getPropertyValue("--wallpaper")).toBe(
+      'url("/wallpapers/dunes.webp")',
+    );
     expect(root.dataset.theme).toBe("dunes");
   });
 });

@@ -24,5 +24,10 @@ describe("resolve", () => {
     expect(r.redirected).toBe(true);
   });
 
-  it("unknown paths redirect home", () => expect(resolve("/nope")).toEqual({ name: "home", path: "/", redirected: true }));
+  it("unknown paths redirect home", () =>
+    expect(resolve("/nope")).toEqual({
+      name: "home",
+      path: "/",
+      redirected: true,
+    }));
 });
