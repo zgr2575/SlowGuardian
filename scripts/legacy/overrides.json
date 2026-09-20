@@ -20,6 +20,10 @@
   "games/ac-wild-world": null,
   "games/akinator": null,
   "games/aptoide": null,
+  "games/big-tower-tiny-square": {
+    "icon": "/catalog/icons/bigtowertinysquare.webp",
+    "note": "icon re-encoded as webp"
+  },
   "games/bloons-td-battles": null,
   "games/burrito-bison": null,
   "games/cat-ninja": null,
@@ -27,6 +31,10 @@
   "games/cluster-rush": null,
   "games/cookie-run-kingdom": null,
   "games/csgo-parkour": null,
+  "games/deadshot-io": {
+    "icon": "/catalog/icons/deadshot.webp",
+    "note": "icon re-encoded as webp"
+  },
   "games/deepest-sword": {
     "note": "host died; repointed to a verified mirror",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/deepest-sword/index.html"

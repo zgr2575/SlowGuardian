@@ -48,6 +48,7 @@ function build(raw, kind) {
       entry.url = override.url;
       delete entry.local;
     }
+    if (override?.icon) entry.icon = override.icon;
 
     byId.set(entry.id, entry);
   }

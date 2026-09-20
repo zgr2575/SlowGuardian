@@ -171,7 +171,7 @@
     "id": "big-tower-tiny-square",
     "name": "Big Tower Tiny Square",
     "url": "https://www.coolmathgames.com/0-big-tower-tiny-square/play",
-    "icon": "/catalog/icons/bigtowertinysquare.jpg",
+    "icon": "/catalog/icons/bigtowertinysquare.webp",
     "category": "arcade",
     "external": false
   },
@@ -347,7 +347,7 @@
     "id": "deadshot",
     "name": "Deadshot",
     "url": "https://deadshot.io",
-    "icon": "/catalog/icons/deadshot.png",
+    "icon": null,
     "category": "arcade",
     "external": false
   },
