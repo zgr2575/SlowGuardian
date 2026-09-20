@@ -1,5 +1,5 @@
 import http from "node:http";
-import { createRelays } from "../../server/relays.js";
+import { createRelays } from "../server/relays.js";
 
 const relays = createRelays();
 

@@ -11,3 +11,5 @@ public/scram/
 public/baremux/
 public/baremod/
 public/epoxy/
+.vercel
+.env*

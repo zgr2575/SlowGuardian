@@ -1,19 +1,48 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
+  "fluid": true,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/bare/[[...path]].js": { "maxDuration": 300 },
-    "api/wisp/[[...path]].js": { "maxDuration": 800 }
+    "api/bare.js": {
+      "maxDuration": 300
+    },
+    "api/wisp.js": {
+      "maxDuration": 300
+    }
   },
   "redirects": [
-    { "source": "/g", "destination": "/games", "permanent": true },
-    { "source": "/ap", "destination": "/apps", "permanent": true },
-    { "source": "/s", "destination": "/settings", "permanent": true },
-    { "source": "/p", "destination": "/browse", "permanent": true }
+    {
+      "source": "/g",
+      "destination": "/games",
+      "permanent": true
+    },
+    {
+      "source": "/ap",
+      "destination": "/apps",
+      "permanent": true
+    },
+    {
+      "source": "/s",
+      "destination": "/settings",
+      "permanent": true
+    },
+    {
+      "source": "/p",
+      "destination": "/browse",
+      "permanent": true
+    }
   ],
   "rewrites": [
+    {
+      "source": "/api/bare/(.*)",
+      "destination": "/api/bare"
+    },
+    {
+      "source": "/api/wisp/(.*)",
+      "destination": "/api/wisp"
+    },
     {
       "source": "/((?!api/|uv/|scram/|baremux/|baremod/|epoxy/|assets/|wallpapers/|catalog/|cloak/|sw\\.js|favicon|robots).*)",
       "destination": "/index.html"
@@ -23,13 +52,24 @@
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache" },
-        { "key": "Service-Worker-Allowed", "value": "/" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
       ]
     },
     {
       "source": "/(wallpapers|catalog|cloak)/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
     }
   ]
 }

@@ -20,7 +20,7 @@ export function createRelays({
   allowLoopback = process.env.NODE_ENV === "test",
 } = {}) {
   const bare = createBareServer(BARE_PATH, {
-    logErrors: false,
+    logErrors: process.env.SG_BARE_LOG === "1",
     blockLocal: !allowLoopback,
     legacySupport: false,
     // bare-server-node defaults to 10 keep-alive requests per IP per minute. A single
