@@ -12,10 +12,7 @@
     "note": "host died; repointed to a verified mirror",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1/index.html"
   },
-  "games/1v1-lol": {
-    "note": "host died; repointed to a verified mirror",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1v1lol/index.html"
-  },
+  "games/1v1-lol": null,
   "games/3-slices": null,
   "games/ac-wild-world": null,
   "games/akinator": null,
@@ -46,10 +43,7 @@
   "games/doom": null,
   "games/doom-1": null,
   "games/doom-2": null,
-  "games/drift-hunters": {
-    "note": "host died; repointed to a verified mirror",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/drift-hunters/index.html"
-  },
+  "games/drift-hunters": null,
   "games/eaglercraft-1-5-2-singleplayer": null,
   "games/feedvid": null,
   "games/fnaf-web": null,
@@ -119,10 +113,7 @@
   "games/saul-run": null,
   "games/smash-bros-64": null,
   "games/space-plan": null,
-  "games/stickman-hook": {
-    "note": "host died; repointed to a verified mirror",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/stickman-hook/index.html"
-  },
+  "games/stickman-hook": null,
   "games/stumble-guys-android": null,
   "games/super-mario-63": null,
   "games/super-mario-bros": null,

@@ -4,44 +4,44 @@
       {
         "id": "celeste-pico-8",
         "title": "Celeste",
-        "sub": "Platformer · PICO-8 · 1 player",
+        "sub": "Platformer \u00b7 PICO-8 \u00b7 1 player",
         "desc": "Climb the mountain in eight-way dashes. Short, brutal, and very hard to put down."
       },
       {
         "id": "pizza-tower",
         "title": "Pizza Tower",
-        "sub": "Arcade · 1 player",
+        "sub": "Arcade \u00b7 1 player",
         "desc": "A loud, hand-drawn sprint through a tower, played by a chef having the worst day of his life."
       },
       {
         "id": "thelast-royale",
         "title": "Thelast Royale",
-        "sub": "Multiplayer · Battle royale",
+        "sub": "Multiplayer \u00b7 Battle royale",
         "desc": "Drop in, grab what you can, and outlast everyone else on the island."
       },
       {
         "id": "jetpack-joyride",
         "title": "Jetpack Joyride",
-        "sub": "Arcade · Endless runner",
+        "sub": "Arcade \u00b7 Endless runner",
         "desc": "Grab a machine-gun jetpack, dodge the zappers, and see how far you get."
       },
       {
         "id": "fireboy-and-watergirl-in-the-forest-temple",
         "title": "Fireboy and Watergirl",
-        "sub": "Multiplayer · Co-op puzzles",
+        "sub": "Multiplayer \u00b7 Co-op puzzles",
         "desc": "Two players, one keyboard. Fire and water have to solve the temple together."
       }
     ],
     "top": [
       "retro-bowl",
-      "1v1-lol",
       "slope",
-      "drift-hunters",
       "happy-wheels",
       "shell-shockers",
       "krunker",
       "smash-karts",
-      "moto-x3m"
+      "moto-x3m",
+      "jetpack-joyride",
+      "cookie-clicker"
     ]
   },
   "apps": {
@@ -49,19 +49,19 @@
       {
         "id": "geforce-now",
         "title": "GeForce NOW",
-        "sub": "Cloud gaming · Runs in the browser",
+        "sub": "Cloud gaming \u00b7 Runs in the browser",
         "desc": "Stream PC games you already own straight into a tab."
       },
       {
         "id": "youtube",
         "title": "YouTube",
-        "sub": "Video · The whole site",
+        "sub": "Video \u00b7 The whole site",
         "desc": "Back in the catalog: v8 had it marked broken, this build routes it through the proxy."
       },
       {
         "id": "scratch",
         "title": "Scratch",
-        "sub": "Tools · Make things",
+        "sub": "Tools \u00b7 Make things",
         "desc": "Build and play projects right in the browser."
       }
     ],

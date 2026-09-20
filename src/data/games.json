@@ -8,14 +8,6 @@
     "external": false
   },
   {
-    "id": "1v1-lol",
-    "name": "1v1.LOL",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1v1lol/index.html",
-    "icon": "/catalog/icons/1v1-lol.webp",
-    "category": "multiplayer",
-    "external": false
-  },
-  {
     "id": "3d-dino-game",
     "name": "3D Dino Game",
     "url": "https://lagged.com/api/play2/t-rex-3d2/",
@@ -428,14 +420,6 @@
     "name": "Drift Boss",
     "url": "https://watchdocumentaries.com/wp-content/uploads/games/drift-boss/",
     "icon": "/catalog/icons/db.webp",
-    "category": "racing",
-    "external": false
-  },
-  {
-    "id": "drift-hunters",
-    "name": "Drift Hunters",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/drift-hunters/index.html",
-    "icon": "/catalog/icons/drift-hunters.webp",
     "category": "racing",
     "external": false
   },
@@ -1468,14 +1452,6 @@
     "name": "Stickman Archero Fight",
     "url": "https://html5.gamedistribution.com/rvvASMiM/3f4c166817ad4fd4b5b05d9adba22fcd/index.html",
     "icon": "/catalog/icons/stickman-archero-fight.webp",
-    "category": "platformer",
-    "external": false
-  },
-  {
-    "id": "stickman-hook",
-    "name": "Stickman Hook",
-    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/stickman-hook/index.html",
-    "icon": "/catalog/icons/stickmanhook.webp",
     "category": "platformer",
     "external": false
   },
