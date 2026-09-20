@@ -8,6 +8,7 @@ import App from "./App.svelte";
 import { settings, updateSettings } from "./lib/stores/settings.js";
 import { THEMES, themeById, applyTheme } from "./lib/stores/themes.js";
 import { applyCloak, openInAboutBlank } from "./lib/cloak.js";
+import { applyCustomWallpaper } from "./lib/wallpaper.js";
 import { startPanicKey } from "./lib/panic.js";
 import "./lib/motion.js";
 
@@ -19,7 +20,11 @@ if (current.rotateThemes) {
   updateSettings({ theme: THEMES[(index + 1) % THEMES.length].id });
 }
 
-settings.subscribe((s) => applyTheme(themeById(s.theme)));
+settings.subscribe((s) => {
+  applyTheme(themeById(s.theme));
+  // A visitor's own wallpaper wins over the theme's, so re-apply it after the theme.
+  if (s.customWallpaper) applyCustomWallpaper(true);
+});
 applyCloak(current.cloak);
 startPanicKey();
 

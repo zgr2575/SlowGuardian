@@ -15,7 +15,7 @@
   import { history, removeVisit, clearHistory } from "../lib/stores/history.js";
   import { settings } from "../lib/stores/settings.js";
   import { domainOf, toTarget, SEARCH_ENGINES } from "../lib/url.js";
-  import { openInput } from "../lib/open.js";
+  import { openInput, openSuggestion } from "../lib/open.js";
   import { frames } from "../components/TabLayer.svelte";
   import SearchField from "../components/SearchField.svelte";
   import EnginePopover from "../components/EnginePopover.svelte";
@@ -217,7 +217,7 @@
     <div class="inner">
       <h1 class="title">No tabs open</h1>
       <p class="sub">Search for a site, or open something from Games and Apps.</p>
-      <div class="field"><SearchField variant="solid" autofocus onsubmit={openInput} /></div>
+      <div class="field"><SearchField variant="solid" autofocus onsubmit={openInput} onpick={openSuggestion} /></div>
     </div>
   </div>
 {/if}

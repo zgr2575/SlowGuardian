@@ -7,6 +7,7 @@
   import { mylist } from "../lib/stores/mylist.js";
   import { tabs } from "../lib/stores/tabs.js";
   import { CLOAKS, applyCloak, openInAboutBlank } from "../lib/cloak.js";
+  import { saveWallpaper, clearWallpaper, applyCustomWallpaper } from "../lib/wallpaper.js";
   import { comboFromEvent, describeCombo } from "../lib/panic.js";
   import { SEARCH_ENGINES } from "../lib/url.js";
   import Chips from "../components/Chips.svelte";
@@ -24,6 +25,27 @@
   ];
 
   let section = $state("appearance");
+  let wallpaperInput = $state(null);
+  let wallpaperError = $state(null);
+
+  async function pickWallpaper(event) {
+    const file = event.currentTarget.files?.[0];
+    event.currentTarget.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return (wallpaperError = "That file is not an image.");
+    if (file.size > 12 * 1024 * 1024) return (wallpaperError = "Images need to be under 12 MB.");
+
+    wallpaperError = null;
+    await saveWallpaper(file);
+    updateSettings({ customWallpaper: true });
+    if (!(await applyCustomWallpaper(true))) wallpaperError = "This browser wouldn't store the image.";
+  }
+
+  async function dropWallpaper() {
+    await clearWallpaper();
+    updateSettings({ customWallpaper: false });
+    await applyCustomWallpaper(false);
+  }
   let recording = $state(false);
   let blankError = $state(null);
 
@@ -101,6 +123,25 @@
         checked={$settings.showFavorites}
         onchange={(v) => updateSettings({ showFavorites: v })}
       />
+      <div class="row">
+        <span class="text">
+          Use my own wallpaper
+          <small>{wallpaperError ?? "Stays in this browser. It replaces the theme's picture, not its colour."}</small>
+        </span>
+        <input
+          bind:this={wallpaperInput}
+          type="file"
+          accept="image/*"
+          class="sr-only"
+          aria-label="Choose a wallpaper image"
+          onchange={pickWallpaper}
+        />
+        {#if $settings.customWallpaper}
+          <button class="pill-btn" onclick={dropWallpaper}>Remove</button>
+        {:else}
+          <button class="pill-btn" onclick={() => wallpaperInput?.click()}>Choose…</button>
+        {/if}
+      </div>
     </div>
   {:else if section === "privacy"}
     <h2 class="label">Tab disguise</h2>
@@ -229,6 +270,16 @@
       {/if}
     </div>
   {:else if section === "search"}
+    <h2 class="label">Suggestions</h2>
+    <div class="group">
+      <Toggle
+        label="Suggest as I type"
+        hint="Asks the search engine for completions through the proxy, never directly"
+        checked={$settings.searchSuggestions}
+        onchange={(v) => updateSettings({ searchSuggestions: v })}
+      />
+    </div>
+
     <h2 class="label">Search engine</h2>
     <p class="note">Used by the Home search box and the browser address bar.</p>
     <div class="group">

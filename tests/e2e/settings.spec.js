@@ -108,7 +108,7 @@ test("bookmarking a site adds it to Home", async ({ page }) => {
     .getByRole("link", { name: "Home", exact: true })
     .click();
   await expect(
-    page.locator(".favs").getByRole("button", { name: /SG Fixture/ }),
+    page.locator(".favs .fav").filter({ hasText: "SG Fixture" }),
   ).toBeVisible();
 });
 

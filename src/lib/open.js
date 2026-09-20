@@ -20,6 +20,14 @@ export function openInput(value) {
   );
 }
 
+// A suggestion picked from under the search box.
+export function openSuggestion(item) {
+  if (!item) return;
+  if (item.type === "game" || item.type === "app") return openEntry(item.value);
+  if (item.type === "search") return openInput(item.value);
+  return openTarget(item.value);
+}
+
 // Catalog entries marked `external` refuse to be framed, so they get their own window.
 export async function openEntry(entry) {
   if (!entry?.url) return;

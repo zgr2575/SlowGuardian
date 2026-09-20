@@ -1,11 +1,11 @@
 <script>
-  import { Pencil } from "@lucide/svelte";
+  import { Pencil, Plus, X } from "@lucide/svelte";
   import { fade } from "svelte/transition";
   import { settings, updateSettings } from "../lib/stores/settings.js";
   import { THEMES, themeById } from "../lib/stores/themes.js";
   import { reducedMotion } from "../lib/motion.js";
-  import { favoriteEntries } from "../lib/stores/favorites.js";
-  import { openInput, openEntry } from "../lib/open.js";
+  import { favoriteEntries, removeFavorite, toggleUrlFavorite } from "../lib/stores/favorites.js";
+  import { openInput, openEntry, openSuggestion } from "../lib/open.js";
   import SearchField from "../components/SearchField.svelte";
   import Popover from "../components/Popover.svelte";
   import ThemeCard from "../components/ThemeCard.svelte";
@@ -30,6 +30,20 @@
 
   let customizeBtn = $state(null);
   let customizing = $state(false);
+
+  let addBtn = $state(null);
+  let adding = $state(false);
+  let newUrl = $state("");
+  let newName = $state("");
+
+  function addFavorite() {
+    const url = newUrl.trim();
+    if (!url) return;
+    toggleUrlFavorite({ url: url.startsWith("http") ? url : `https://${url}`, title: newName.trim() });
+    newUrl = "";
+    newName = "";
+    adding = false;
+  }
 </script>
 
 <div class="home">
@@ -46,22 +60,34 @@
     <h1 class="wordmark"><span>Slow</span>Guardian</h1>
 
     <div class="field">
-      <SearchField autofocus onsubmit={openInput} />
+      <SearchField autofocus onsubmit={openInput} onpick={openSuggestion} />
     </div>
     <p class="hint">Try <b>retro bowl</b>, <b>lofi</b>, or paste a link</p>
 
     {#if $settings.showFavorites}
       <div class="favs">
-        {#each $favoriteEntries as fav (fav.kind + fav.id)}
-          <button class="fav" onclick={() => openEntry(fav.entry)}>
-            {#if fav.entry.icon}
-              <span class="icon lift" style:background-image="url({fav.entry.icon})"></span>
-            {:else}
-              <span class="icon plate lift">{fav.entry.name.slice(0, 1)}</span>
-            {/if}
-            {fav.entry.name}
-          </button>
+        {#each $favoriteEntries as fav (fav.kind + (fav.id ?? fav.url))}
+          <div class="fav-cell">
+            <button class="fav" onclick={() => openEntry(fav.entry)}>
+              {#if fav.entry.icon}
+                <span class="icon lift" style:background-image="url({fav.entry.icon})"></span>
+              {:else}
+                <span class="icon plate lift">{fav.entry.name.slice(0, 1)}</span>
+              {/if}
+              {fav.entry.name}
+            </button>
+            <button class="drop" aria-label="Remove {fav.entry.name}" onclick={() => removeFavorite(fav)}>
+              <X size={13} strokeWidth={2.4} />
+            </button>
+          </div>
         {/each}
+
+        <div class="fav-cell">
+          <button class="fav" bind:this={addBtn} onclick={() => (adding = !adding)}>
+            <span class="icon add lift"><Plus size={26} strokeWidth={1.75} /></span>
+            Add
+          </button>
+        </div>
       </div>
     {/if}
   </div>
@@ -75,6 +101,20 @@
     <Pencil size={16} strokeWidth={1.75} />
     Customize
   </button>
+
+  <Popover open={adding} anchor={addBtn} onclose={() => (adding = false)} width={300} label="Add a favorite">
+    <form
+      class="add-form"
+      onsubmit={(e) => {
+        e.preventDefault();
+        addFavorite();
+      }}
+    >
+      <input bind:value={newUrl} placeholder="example.com" aria-label="Site address" autocomplete="off" />
+      <input bind:value={newName} placeholder="Name (optional)" aria-label="Name" autocomplete="off" />
+      <button class="btn-primary" type="submit">Add</button>
+    </form>
+  </Popover>
 
   <Popover
     open={customizing}
@@ -163,6 +203,68 @@
     margin-top: 46px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  .fav-cell {
+    position: relative;
+  }
+
+  .drop {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(10, 10, 11, 0.85);
+    color: var(--t1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+  }
+
+  .fav-cell:hover .drop,
+  .drop:focus-visible {
+    opacity: 1;
+  }
+
+  .icon.add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(22, 22, 24, 0.55);
+    backdrop-filter: blur(16px);
+    color: rgba(245, 245, 247, 0.8);
+  }
+
+  .add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px;
+  }
+
+  .add-form input {
+    height: 34px;
+    border-radius: var(--r-sm);
+    border: 0;
+    outline: 0;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0 12px;
+    font-size: 14px;
+    color: var(--t1);
+  }
+
+  .add-form input:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .add-form .btn-primary {
+    height: 36px;
+    justify-content: center;
+    font-size: 14px;
   }
 
   .fav {

@@ -63,11 +63,15 @@ test("switches this site to Scramjet", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: /Scramjet · bare/ }),
   ).toBeVisible();
+  // Wait for the frame to actually move onto Scramjet: the old page stays rendered
+  // until it does, so asserting on text alone could pass without the switch happening.
+  await expect
+    .poll(() => frameUrl(page), { timeout: 40_000 })
+    .toContain("/scram/service/");
   await expect(page.frameLocator("iframe").locator("#h")).toHaveText(
     "Fixture page",
     { timeout: 40_000 },
   );
-  expect(await frameUrl(page)).toContain("/scram/service/");
 });
 
 test("switches the relay to wisp", async ({ page }) => {

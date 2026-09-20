@@ -8,6 +8,8 @@ export const DEFAULT_SETTINGS = {
   relay: "bare",
   siteEngines: {},
   searchEngine: "google",
+  searchSuggestions: true,
+  customWallpaper: false,
   showFavorites: true,
   rotateThemes: false,
   saveHistory: true,
