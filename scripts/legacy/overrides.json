@@ -9,7 +9,7 @@
   "apps/movie-web": null,
   "apps/youtube-invidious": null,
   "games/1": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1/index.html"
   },
   "games/1v1-lol": null,
@@ -33,11 +33,11 @@
     "note": "icon re-encoded as webp"
   },
   "games/deepest-sword": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/deepest-sword/index.html"
   },
   "games/doodle-jump": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/doodle-jump/index.html"
   },
   "games/doom": null,
@@ -50,19 +50,19 @@
   "games/fortnite-android": null,
   "games/gladihoppers": null,
   "games/happy-wheels": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/happywheels/index.html"
   },
   "games/idle-breakout": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/idle-breakout/index.html"
   },
   "games/interactive-buddy": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/interactivebuddy/index.html"
   },
   "games/jetpack-joyride": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/jetpack-joyride/index.html"
   },
   "games/justfall-lol": null,
@@ -95,11 +95,11 @@
   "games/red-ball-4-vol-3": null,
   "games/request-a-game": null,
   "games/retro-bowl": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "only working source; the mirror throttles our relay's shared IP, so some data files can 404 in production",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/retro-bowl/index.html"
   },
   "games/riddle-school-2": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/riddleschool2/index.html"
   },
   "games/roblox-nowgg-me-working": null,
@@ -107,7 +107,7 @@
   "games/rocket-pult": null,
   "games/rooftop-snipers-2": null,
   "games/sandboxels": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/sandboxels/index.html"
   },
   "games/saul-run": null,
@@ -122,7 +122,7 @@
   "games/toca-kitchen-2": null,
   "games/toca-life-world": null,
   "games/vex-7": {
-    "note": "host died; repointed to a verified mirror",
+    "note": "host died; repointed to a mirror (statically serves text/plain, so githack it is)",
     "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/vex7/index.html"
   }
 }
