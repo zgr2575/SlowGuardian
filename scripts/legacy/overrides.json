@@ -1,0 +1,129 @@
+{
+  "apps/aptoide": null,
+  "apps/character-ai": null,
+  "apps/chatgpt-clone": null,
+  "apps/firefox-web-browser": null,
+  "apps/flix-hq": null,
+  "apps/google-gemini": null,
+  "apps/hd-today": null,
+  "apps/movie-web": null,
+  "apps/youtube-invidious": null,
+  "games/1": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1/index.html"
+  },
+  "games/1v1-lol": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1v1lol/index.html"
+  },
+  "games/3-slices": null,
+  "games/ac-wild-world": null,
+  "games/akinator": null,
+  "games/aptoide": null,
+  "games/bloons-td-battles": null,
+  "games/burrito-bison": null,
+  "games/cat-ninja": null,
+  "games/character-ai": null,
+  "games/cluster-rush": null,
+  "games/cookie-run-kingdom": null,
+  "games/csgo-parkour": null,
+  "games/deepest-sword": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/deepest-sword/index.html"
+  },
+  "games/doodle-jump": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/doodle-jump/index.html"
+  },
+  "games/doom": null,
+  "games/doom-1": null,
+  "games/doom-2": null,
+  "games/drift-hunters": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/drift-hunters/index.html"
+  },
+  "games/eaglercraft-1-5-2-singleplayer": null,
+  "games/feedvid": null,
+  "games/fnaf-web": null,
+  "games/fortnite-android": null,
+  "games/gladihoppers": null,
+  "games/happy-wheels": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/happywheels/index.html"
+  },
+  "games/idle-breakout": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/idle-breakout/index.html"
+  },
+  "games/interactive-buddy": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/interactivebuddy/index.html"
+  },
+  "games/jetpack-joyride": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/jetpack-joyride/index.html"
+  },
+  "games/justfall-lol": null,
+  "games/kirby-mirror-gba": null,
+  "games/learn-to-fly-3": null,
+  "games/mario-kart-64": null,
+  "games/minecraft-1-5-2-eaglercraft": null,
+  "games/minecraft-1-8-eaglercraft": null,
+  "games/monkey-mart": null,
+  "games/mx3m-pool-party": null,
+  "games/mx3m-winter": null,
+  "games/ng-space-company": null,
+  "games/now-gg-nowgg-nl": null,
+  "games/papa-louie-1": null,
+  "games/papa-louie-2": null,
+  "games/papa-louie-3": null,
+  "games/papas-bakeria": null,
+  "games/papas-cupcakeria": null,
+  "games/papas-pizzeria": null,
+  "games/papas-scooperia": null,
+  "games/papas-sushiria": null,
+  "games/parappa-the-rapper": null,
+  "games/pixel-shooter": null,
+  "games/pm-light-platinum": null,
+  "games/pokemon-heart-gold": null,
+  "games/red-ball-1": null,
+  "games/red-ball-2": null,
+  "games/red-ball-4": null,
+  "games/red-ball-4-vol-2": null,
+  "games/red-ball-4-vol-3": null,
+  "games/request-a-game": null,
+  "games/retro-bowl": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/retro-bowl/index.html"
+  },
+  "games/riddle-school-2": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/riddleschool2/index.html"
+  },
+  "games/roblox-nowgg-me-working": null,
+  "games/roblox-nowgg-nl": null,
+  "games/rocket-pult": null,
+  "games/rooftop-snipers-2": null,
+  "games/sandboxels": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/sandboxels/index.html"
+  },
+  "games/saul-run": null,
+  "games/smash-bros-64": null,
+  "games/space-plan": null,
+  "games/stickman-hook": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/stickman-hook/index.html"
+  },
+  "games/stumble-guys-android": null,
+  "games/super-mario-63": null,
+  "games/super-mario-bros": null,
+  "games/the-simpsons": null,
+  "games/toca-hair-salon-4": null,
+  "games/toca-kitchen-2": null,
+  "games/toca-life-world": null,
+  "games/vex-7": {
+    "note": "host died; repointed to a verified mirror",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/vex7/index.html"
+  }
+}

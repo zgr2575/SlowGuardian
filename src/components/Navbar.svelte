@@ -1,5 +1,5 @@
 <script>
-  import { Plus, Settings } from "@lucide/svelte";
+  import { Plus, Search, Settings } from "@lucide/svelte";
   import { route, link, navigate } from "../lib/router.js";
   import { tabs, activateTab, closeTab } from "../lib/stores/tabs.js";
   import TabChip from "./TabChip.svelte";
@@ -57,6 +57,16 @@
   </div>
 
   <div class="nr">
+    {#if $route.name === "games" || $route.name === "apps"}
+      <button
+        class="ib"
+        aria-label="Search {$route.name}"
+        title="Search {$route.name}"
+        onclick={() => window.dispatchEvent(new CustomEvent("sg:catalog-search"))}
+      >
+        <Search size={18} strokeWidth={1.75} />
+      </button>
+    {/if}
     <a class="ib" class:on={$route.name === "settings"} href="/settings" use:link aria-label="Settings" title="Settings">
       <Settings size={18} strokeWidth={1.75} />
     </a>

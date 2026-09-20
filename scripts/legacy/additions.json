@@ -1,0 +1,41 @@
+{
+  "games": [],
+  "apps": [
+    {
+      "name": "YouTube",
+      "link": "https://www.youtube.com",
+      "image": "/assets/media/icons/youtube.webp",
+      "categories": ["stream"]
+    },
+    {
+      "name": "Spotify",
+      "link": "https://open.spotify.com",
+      "image": "/assets/media/icons/spotify.webp",
+      "categories": ["media"]
+    },
+    {
+      "name": "Instagram",
+      "link": "https://www.instagram.com",
+      "image": "/assets/media/icons/instagram.webp",
+      "categories": ["social"]
+    },
+    {
+      "name": "Snapchat",
+      "link": "https://web.snapchat.com",
+      "image": "/assets/media/icons/snapchat.webp",
+      "categories": ["social"]
+    },
+    {
+      "name": "Google Gemini",
+      "link": "https://gemini.google.com/app",
+      "image": "/assets/media/icons/gemini.png",
+      "categories": ["AI"]
+    },
+    {
+      "name": "ChatGPT",
+      "link": "https://chatgpt.com",
+      "image": "/assets/media/icons/chatgpt.webp",
+      "categories": ["AI"]
+    }
+  ]
+}

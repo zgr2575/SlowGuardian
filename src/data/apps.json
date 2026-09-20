@@ -1,0 +1,378 @@
+[
+  {
+    "id": "amazon",
+    "name": "Amazon",
+    "url": "https://amazon.com/",
+    "icon": "/catalog/icons/amazon.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "amazon-luna",
+    "name": "Amazon Luna",
+    "url": "https://luna.amazon.com/",
+    "icon": "/catalog/icons/amazon-luna.webp",
+    "category": "games",
+    "external": true
+  },
+  {
+    "id": "android",
+    "name": "Android",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.uncube.launcher3&partner=interstellar",
+    "icon": "/catalog/icons/android.webp",
+    "category": "emulators",
+    "external": false
+  },
+  {
+    "id": "buzzfeed-quizzes",
+    "name": "BuzzFeed Quizzes",
+    "url": "https://buzzfeed.com/quizzes",
+    "icon": "/catalog/icons/buzzfeed.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "url": "https://chatgpt.com",
+    "icon": "/catalog/icons/chatgpt.webp",
+    "category": "ai",
+    "external": false
+  },
+  {
+    "id": "chess-com",
+    "name": "Chess.com",
+    "url": "https://chess.com",
+    "icon": "/catalog/icons/chess.webp",
+    "category": "games",
+    "external": false
+  },
+  {
+    "id": "cool-math-games",
+    "name": "Cool Math Games",
+    "url": "https://coolmathgames.com",
+    "icon": "/catalog/icons/coolmath.webp",
+    "category": "games",
+    "external": false
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "url": "https://canary.discord.com",
+    "icon": "/catalog/icons/discord.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "discord-login",
+    "name": "Discord - Login",
+    "url": "https://canary.discord.com/login",
+    "icon": "/catalog/icons/discord.webp",
+    "category": "social",
+    "external": true
+  },
+  {
+    "id": "duckduckgo",
+    "name": "DuckDuckGo",
+    "url": "https://start.duckduckgo.com/",
+    "icon": "/catalog/icons/duckduckgo.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "espn",
+    "name": "ESPN",
+    "url": "https://www.espn.com/watch/",
+    "icon": "/catalog/icons/espn.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "fifa-rosters",
+    "name": "Fifa Rosters",
+    "url": "https://fifarosters.com/",
+    "icon": "/catalog/icons/fifa.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "geforce-now",
+    "name": "Geforce NOW",
+    "url": "https://play.geforcenow.com",
+    "icon": "/catalog/icons/geforce-now.webp",
+    "category": "video",
+    "external": false
+  },
+  {
+    "id": "github",
+    "name": "Github",
+    "url": "https://github.com",
+    "icon": "/catalog/icons/github.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "google",
+    "name": "Google",
+    "url": "https://google.com",
+    "icon": "/catalog/icons/google.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "google-gemini",
+    "name": "Google Gemini",
+    "url": "https://gemini.google.com/app",
+    "icon": "/catalog/icons/gemini.png",
+    "category": "ai",
+    "external": false
+  },
+  {
+    "id": "google-mail-gmail",
+    "name": "Google Mail (Gmail)",
+    "url": "https://mail.google.com/",
+    "icon": null,
+    "category": "mail",
+    "external": true
+  },
+  {
+    "id": "guilded",
+    "name": "Guilded",
+    "url": "https://guilded.gg",
+    "icon": null,
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "hbo-max",
+    "name": "HBO MAX",
+    "url": "https://www.hbomax.com/",
+    "icon": "/catalog/icons/hbo.webp",
+    "category": "video",
+    "external": false
+  },
+  {
+    "id": "instagram",
+    "name": "Instagram",
+    "url": "https://www.instagram.com",
+    "icon": "/catalog/icons/instagram.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "messenger",
+    "name": "Messenger",
+    "url": "https://messenger.com/",
+    "icon": "/catalog/icons/messenger.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "newgrounds",
+    "name": "Newgrounds",
+    "url": "https://www.newgrounds.com",
+    "icon": null,
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "now-gg",
+    "name": "Now.GG",
+    "url": "https://now.gg",
+    "icon": "/catalog/icons/now-gg.webp",
+    "category": "emulators",
+    "external": false
+  },
+  {
+    "id": "now-gg-nowgg-me-working",
+    "name": "Now.GG (NowGG.me) [Working]",
+    "url": "https://nowgg.me",
+    "icon": "/catalog/icons/shuttle.webp",
+    "category": "emulators",
+    "external": false
+  },
+  {
+    "id": "outlook",
+    "name": "Outlook",
+    "url": "https://outlook.live.com/",
+    "icon": null,
+    "category": "mail",
+    "external": false
+  },
+  {
+    "id": "paramount-plus",
+    "name": "Paramount Plus",
+    "url": "https://paramountplus.com",
+    "icon": "/catalog/icons/paramount.webp",
+    "category": "video",
+    "external": false
+  },
+  {
+    "id": "pinterest",
+    "name": "Pinterest",
+    "url": "https://pinterest.com",
+    "icon": "/catalog/icons/pinterest.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "pixlr",
+    "name": "Pixlr",
+    "url": "https://pixlr.com/",
+    "icon": "/catalog/icons/pix.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "poki",
+    "name": "Poki",
+    "url": "https://poki.com",
+    "icon": "/catalog/icons/poki.webp",
+    "category": "games",
+    "external": false
+  },
+  {
+    "id": "scratch",
+    "name": "Scratch",
+    "url": "https://scratch.mit.edu",
+    "icon": "/catalog/icons/scratch.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "snapchat",
+    "name": "Snapchat",
+    "url": "https://web.snapchat.com",
+    "icon": "/catalog/icons/snapchat.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "soundcloud",
+    "name": "Soundcloud",
+    "url": "https://soundcloud.com",
+    "icon": "/catalog/icons/soundcloud.webp",
+    "category": "music",
+    "external": false
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "url": "https://open.spotify.com",
+    "icon": "/catalog/icons/spotify.webp",
+    "category": "music",
+    "external": false
+  },
+  {
+    "id": "steam",
+    "name": "Steam",
+    "url": "https://steampowered.com/",
+    "icon": null,
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "url": "https://web.telegram.org/",
+    "icon": "/catalog/icons/telegram.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "temu",
+    "name": "Temu",
+    "url": "https://temu.com",
+    "icon": "/catalog/icons/temu.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "tiktok",
+    "name": "Tiktok",
+    "url": "https://tiktok.com",
+    "icon": "/catalog/icons/tiktok.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "tumblr",
+    "name": "Tumblr",
+    "url": "https://tumblr.com/",
+    "icon": "/catalog/icons/tumblr.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "twitch",
+    "name": "Twitch",
+    "url": "https://twitch.tv",
+    "icon": "/catalog/icons/twitch.webp",
+    "category": "video",
+    "external": false
+  },
+  {
+    "id": "twitter",
+    "name": "Twitter",
+    "url": "https://twitter.com",
+    "icon": "/catalog/icons/twitter.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "url": "https://vercel.com",
+    "icon": null,
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "vs-code",
+    "name": "VS Code",
+    "url": "https://vscode.dev",
+    "icon": "/catalog/icons/vscode.webp",
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "w3schools",
+    "name": "W3Schools",
+    "url": "https://www.w3schools.com",
+    "icon": null,
+    "category": "tools",
+    "external": false
+  },
+  {
+    "id": "wattpad",
+    "name": "Wattpad",
+    "url": "https://wattpad.com/",
+    "icon": "/catalog/icons/wattpad.webp",
+    "category": "social",
+    "external": false
+  },
+  {
+    "id": "whatsapp",
+    "name": "Whatsapp",
+    "url": "https://web.whatsapp.com/",
+    "icon": "/catalog/icons/whatsapp.webp",
+    "category": "messaging",
+    "external": false
+  },
+  {
+    "id": "y8-games",
+    "name": "Y8 Games",
+    "url": "https://y8.com/",
+    "icon": "/catalog/icons/y8.webp",
+    "category": "games",
+    "external": false
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "url": "https://www.youtube.com",
+    "icon": "/catalog/icons/youtube.webp",
+    "category": "video",
+    "external": false
+  }
+]

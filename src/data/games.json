@@ -1,0 +1,1770 @@
+[
+  {
+    "id": "1",
+    "name": "1",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1/index.html",
+    "icon": "/catalog/icons/1.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "1v1-lol",
+    "name": "1v1.LOL",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/1v1lol/index.html",
+    "icon": "/catalog/icons/1v1-lol.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "3d-dino-game",
+    "name": "3D Dino Game",
+    "url": "https://lagged.com/api/play2/t-rex-3d2/",
+    "icon": "/catalog/icons/trex-run-3D.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "60-sec-burger-run",
+    "name": "60 Sec. Burger Run",
+    "url": "https://www.coolmathgames.com/0-60-second-burger-run/play",
+    "icon": "/catalog/icons/60-second-burger-run.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "8-ball-pool",
+    "name": "8 Ball Pool",
+    "url": "https://8ball-pool.io",
+    "icon": "/catalog/icons/8ball.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "a-dark-room",
+    "name": "A Dark Room",
+    "url": "https://adarkroom.doublespeakgames.com",
+    "icon": "/catalog/icons/ADR.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "ace-attorney",
+    "name": "Ace Attorney",
+    "url": "https://f.kbhgames.com/r/gba/?r=ace-attorney",
+    "icon": "/catalog/icons/aa.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "addicting-games",
+    "name": "Addicting Games",
+    "url": "https://www.addictinggames.com/",
+    "icon": "/catalog/icons/addictinggames.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "adventure-capitalist",
+    "name": "Adventure Capitalist",
+    "url": "https://than1089.github.io/adventure-capitalist/",
+    "icon": "/catalog/icons/adventure-capitalist.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "agar-io",
+    "name": "Agar.io",
+    "url": "https://agar.io",
+    "icon": "/catalog/icons/agario.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "age-of-war",
+    "name": "Age of War",
+    "url": "https://age-of-war.game-files.crazygames.com/ruffle/ageofwar.html",
+    "icon": "/catalog/icons/ageofwar.jpg",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "amazon-luna",
+    "name": "Amazon Luna",
+    "url": "https://luna.amazon.com/",
+    "icon": "/catalog/icons/amazon-luna.webp",
+    "category": "arcade",
+    "external": true
+  },
+  {
+    "id": "among-us-scratch",
+    "name": "Among Us (Scratch)",
+    "url": "https://turbowarp.org/523967150/fullscreen",
+    "icon": "/catalog/icons/scratch-among-us.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "android",
+    "name": "Android",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.uncube.launcher3&partner=interstellar",
+    "icon": "/catalog/icons/android.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "apex-legends",
+    "name": "Apex Legends",
+    "url": "https://play.geforcenow.com/games?game-id=cb2b1b5f-54ba-45fd-9839-96bbfe1376cd&lang=en_US&asset-id=01_c6efce00-e91e-402a-8b72-f4971f89c528",
+    "icon": "/catalog/icons/apex.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "arras-io",
+    "name": "Arras.io",
+    "url": "https://arras.io/",
+    "icon": "/catalog/icons/arrasio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "bandit-rip",
+    "name": "Bandit.RIP",
+    "url": "https://bandit.rip/",
+    "icon": "/catalog/icons/banditrip.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "basket-random",
+    "name": "Basket Random",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/bf1268dccb5d43e7970bb3edaa54afc8/index.html",
+    "icon": "/catalog/icons/br.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "basketball-bros",
+    "name": "Basketball Bros",
+    "url": "https://www.basketbros.io/",
+    "icon": "/catalog/icons/basket-bros.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "basketball-legends",
+    "name": "Basketball Legends",
+    "url": "https://www.basketballlegends.fun/gamedata/basketball-legends-2020",
+    "icon": "/catalog/icons/basketball-legends.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "basketball-stars",
+    "name": "Basketball Stars",
+    "url": "https://html5.gamedistribution.com/69d78d071f704fa183d75b4114ae40ec/",
+    "icon": "/catalog/icons/basketball-stars.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "big-tower-tiny-square",
+    "name": "Big Tower Tiny Square",
+    "url": "https://www.coolmathgames.com/0-big-tower-tiny-square/play",
+    "icon": "/catalog/icons/bigtowertinysquare.jpg",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "bitlife",
+    "name": "Bitlife",
+    "url": "https://xlegends.github.io/bitlife/",
+    "icon": "/catalog/icons/bitlife.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "bloons-td-battles-2",
+    "name": "Bloons TD Battles 2",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.ninjakiwi.bloonstdbattles2&partner=interstellar",
+    "icon": "/catalog/icons/bloonstd2.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "bloxd-io",
+    "name": "bloxd.io",
+    "url": "https://bloxd.io",
+    "icon": "/catalog/icons/bloxd-io.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "bomb-party",
+    "name": "Bomb Party",
+    "url": "https://jklm.fun",
+    "icon": "/catalog/icons/BP.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "brain-test",
+    "name": "Brain Test",
+    "url": "https://0322484b-7a58-4454-9667-f805afffded5.poki-gdn.com/2e6b68d3-0f43-4b84-9c14-ab59f94e566c/index.html?country=US&ccpaApplies=0&url_referrer=https%3A%2F%2Fpoki.com%2F&tag=pg-v3.132.1&site_id=3&iso_lang=en&poki_url=https%3A%2F%2Fpoki.com%2Fen%2Fg%2Fbrain-test-tricky-puzzles&gdhoist=yes&nonPersonalized=n&familyFriendly=n&categories=7%2C16%2C37%2C72%2C96%2C400%2C832%2C843%2C1140%2C1150%2C1159&special_condition=landing&game_id=0322484b-7a58-4454-9667-f805afffded5&game_version_id=2e6b68d3-0f43-4b84-9c14-ab59f94e566c",
+    "icon": "/catalog/icons/braintest.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "brain-test-2",
+    "name": "Brain Test 2",
+    "url": "https://games.poki.com/458768/df221093-aae9-4c0d-b458-efb16ae8e3ab",
+    "icon": "/catalog/icons/braintest.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "brain-test-3",
+    "name": "Brain Test 3",
+    "url": "https://games.poki.com/458768/1f3ae540-a95f-4f20-a000-29512612e341",
+    "icon": "/catalog/icons/braintest3.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "btd-4",
+    "name": "BTD 4",
+    "url": "https://en.gameslol.net/data/bloons-td-4/index.html",
+    "icon": "/catalog/icons/btd4.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "buildnow-gg",
+    "name": "BuildNow.GG",
+    "url": "https://games.crazygames.com/en_US/buildnow-gg/index.html",
+    "icon": "/catalog/icons/build-now.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "bullet-force-multiplayer",
+    "name": "Bullet Force Multiplayer",
+    "url": "https://www.crazygames.com/game/bullet-force-multiplayer",
+    "icon": "/catalog/icons/BFM.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "candy-box",
+    "name": "Candy Box",
+    "url": "https://candybox2.net",
+    "icon": "/catalog/icons/candybox.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "candy-jump",
+    "name": "Candy Jump",
+    "url": "https://candyjump.games235.com/",
+    "icon": "/catalog/icons/candyjump.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "celeste-pico-8",
+    "name": "Celeste PICO-8",
+    "url": "https://exok.com/minigames/celeste.html",
+    "icon": "/catalog/icons/celeste.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "chess-com",
+    "name": "Chess.com",
+    "url": "https://chess.com",
+    "icon": "/catalog/icons/chess.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "clicker-heros",
+    "name": "Clicker Heros",
+    "url": "https://www.clickerheroes.com/play.html",
+    "icon": "/catalog/icons/clickerheros.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "cookie-clicker",
+    "name": "Cookie Clicker",
+    "url": "https://orteil.dashnet.org/cookieclicker/",
+    "icon": "/catalog/icons/cookieclicker.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "counter-strike-1-6",
+    "name": "Counter Strike 1.6",
+    "url": "https://play-cs.com/en/servers",
+    "icon": "/catalog/icons/cs16.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "crazy-games",
+    "name": "Crazy Games",
+    "url": "https://www.crazygames.com/",
+    "icon": "/catalog/icons/crazy.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "crossy-road",
+    "name": "Crossy Road",
+    "url": "https://5dd2e1e3-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/169dc11d-e718-4b36-9e60-d5ed5bc07a31/index.html",
+    "icon": "/catalog/icons/cr.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "cryzen",
+    "name": "Cryzen",
+    "url": "https://cryzen.io",
+    "icon": "/catalog/icons/cryzen.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "cubes-2048",
+    "name": "Cubes 2048",
+    "url": "https://www.crazygames.com/game/cubes-2048-io",
+    "icon": "/catalog/icons/C2048.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "deadshot",
+    "name": "Deadshot",
+    "url": "https://deadshot.io",
+    "icon": "/catalog/icons/deadshot.png",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "deal-or-no-deal",
+    "name": "Deal or No Deal",
+    "url": "https://f.kbhgames.com/RS/game.php?r=//f.kbhgames.com/2018/swf/dondeal2.swf&w=640&h=480&warnsupport=true",
+    "icon": "/catalog/icons/deal-or-no-deal.jfif",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "deeeep-io",
+    "name": "Deeeep.io",
+    "url": "https://beta.deeeep.io",
+    "icon": "/catalog/icons/deeeepio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "deepest-sword",
+    "name": "Deepest Sword",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/deepest-sword/index.html",
+    "icon": "/catalog/icons/deepest-sword.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "diep-io",
+    "name": "Diep.io",
+    "url": "https://diep.io/",
+    "icon": "/catalog/icons/diep.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "digdig-io",
+    "name": "digdig.io",
+    "url": "https://digdig.io/",
+    "icon": "/catalog/icons/digdigio.jfif",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "doge-miner-1",
+    "name": "Doge Miner 1",
+    "url": "https://dogeminer.se/",
+    "icon": "/catalog/icons/doge-miner-1.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "donitz-itch-io",
+    "name": "Donitz - itch.io",
+    "url": "https://donitz.itch.io/",
+    "icon": "/catalog/icons/itch.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "doodle-jump",
+    "name": "Doodle Jump",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/doodle-jump/index.html",
+    "icon": "/catalog/icons/doodlejump.jfif",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "dreader",
+    "name": "Dreader",
+    "url": "https://donitz.itch.io/dreader",
+    "icon": "/catalog/icons/dreader.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "drift-boss",
+    "name": "Drift Boss",
+    "url": "https://watchdocumentaries.com/wp-content/uploads/games/drift-boss/",
+    "icon": "/catalog/icons/db.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "drift-hunters",
+    "name": "Drift Hunters",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/drift-hunters/index.html",
+    "icon": "/catalog/icons/drift-hunters.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "drive-mad",
+    "name": "Drive Mad",
+    "url": "https://raw.githack.com/3kh0/3kh0-assets/main/drive-mad/index.html",
+    "icon": "/catalog/icons/dm.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "duck-life-1",
+    "name": "Duck Life 1",
+    "url": "https://www.hoodamath.com/mobile/games/duck-life/game.html",
+    "icon": "/catalog/icons/ducklife.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "duck-life-2",
+    "name": "Duck Life 2",
+    "url": "https://www.hoodamath.com/mobile/games/duck-life-2-world-champion/game.html",
+    "icon": "/catalog/icons/ducklife.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "duck-life-3",
+    "name": "Duck Life 3",
+    "url": "https://www.hoodamath.com/mobile/games/duck-life-3-evolution/game.html",
+    "icon": "/catalog/icons/ducklife.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "duck-life-4",
+    "name": "Duck Life 4",
+    "url": "https://www.hoodamath.com/mobile/games/duck-life-4/game.html",
+    "icon": "/catalog/icons/ducklife.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "dynast-io",
+    "name": "Dynast.io",
+    "url": "https://dynast.io",
+    "icon": "/catalog/icons/dynast-io.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "ea-sports-fc-mobile-24-soccer",
+    "name": "EA SPORTS FC™ MOBILE 24 SOCCER",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.fifamobile&partner=interstellar",
+    "icon": "/catalog/icons/easports-fcmobile24.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "ea-sports-ufc-mobile-2",
+    "name": "EA SPORTS™ UFC® Mobile 2",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.easportsufc2&partner=interstellar",
+    "icon": "/catalog/icons/easports-ufc.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "earn-to-die-2012-part-2",
+    "name": "Earn to Die 2012 Part 2",
+    "url": "https://games-online.io/game/EarnToDie/index.html",
+    "icon": "/catalog/icons/earntodie2012part2.jfif",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "ev-io",
+    "name": "ev.io",
+    "url": "https://ev.io",
+    "icon": "/catalog/icons/evio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "evades",
+    "name": "Evades",
+    "url": "https://evades.io",
+    "icon": "/catalog/icons/evadesio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fallout-2",
+    "name": "Fallout 2",
+    "url": "https://jonasz-o.itch.io/fallout2remake3d",
+    "icon": "/catalog/icons/fallout2.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fancy-pants-adventure",
+    "name": "Fancy Pants Adventure",
+    "url": "https://games.crazygames.com/en_US/fancy-pants-adventure-world/index.html?v=1.273",
+    "icon": "/catalog/icons/fancypantsadventures.jpg",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fancy-pants-adventure-2",
+    "name": "Fancy Pants Adventure 2",
+    "url": "https://games.crazygames.com/en_US/fancy-pants-adventure-world/index.html?v=1.273",
+    "icon": "/catalog/icons/fancypantsadventures2.jpg",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fireboy-and-watergirl-2-in-the-light-temple",
+    "name": "Fireboy And Watergirl 2 In The Light Temple",
+    "url": "https://www.coolmathgames.com/sites/default/files/public_games/40210/",
+    "icon": "/catalog/icons/fireboyandwatergirllighttemple.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fireboy-and-watergirl-4-in-the-crystal-temple",
+    "name": "Fireboy And Watergirl 4 In The Crystal Temple",
+    "url": "https://www.coolmathgames.com/sites/default/files/public_games/40212/",
+    "icon": "/catalog/icons/fireboyandwatergirlcrystaltemple.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fireboy-and-watergirl-5-elements",
+    "name": "Fireboy And Watergirl 5: Elements",
+    "url": "https://www.coolmathgames.com/sites/default/files/public_games/40218",
+    "icon": "/catalog/icons/fireboyandwatergirlelements.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fireboy-and-watergirl-6-fairy-tales",
+    "name": "Fireboy And Watergirl 6: Fairy Tales",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/be3cff113c4e4f069b7614851825ffe9/index.html",
+    "icon": "/catalog/icons/fireboyandwatergirlfairytales.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fireboy-and-watergirl-in-the-forest-temple",
+    "name": "Fireboy And Watergirl In The Forest Temple",
+    "url": "https://www.coolmathgames.com/sites/default/files/public_games/40034/",
+    "icon": "/catalog/icons/fireboyandwatergirlfairytales.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "florr-io",
+    "name": "florr.io",
+    "url": "https://florr.io",
+    "icon": "/catalog/icons/florr.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "fnaf-2",
+    "name": "FNAF 2",
+    "url": "https://sussygamedeveloper.github.io/FNAF2/",
+    "icon": "/catalog/icons/FNAF2.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fnaf-2-scratch",
+    "name": "FNAF 2 (Scratch)",
+    "url": "https://scratch.mit.edu/projects/469219637/embed/",
+    "icon": "/catalog/icons/FNAF2.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fnaf-3",
+    "name": "FNAF 3",
+    "url": "https://sussygamedeveloper.github.io/fnaf3/",
+    "icon": "/catalog/icons/FNAF3.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fnf-lofi-mod",
+    "name": "FNF - Lofi Mod",
+    "url": "https://fnf.kdata1.com/lofi-funkin/2/",
+    "icon": "/catalog/icons/lofi.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fnf-vs-snorlax",
+    "name": "FNF VS. Snorlax",
+    "url": "https://fnf.kdata1.com/snorlax/1/",
+    "icon": "/catalog/icons/snorlax.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "fortnite-pc",
+    "name": "Fortnite (PC)",
+    "url": "https://play.geforcenow.com/mall/#/deeplink?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a",
+    "icon": "/catalog/icons/fortnite.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "free-fire",
+    "name": "Free Fire",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.dts.freefireth&partner=interstellar",
+    "icon": "/catalog/icons/freefire.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "friday-night-funkin",
+    "name": "Friday Night Funkin'",
+    "url": "https://w8.snokido.com/games/html5/friday-night-funkin/0281/index.html",
+    "icon": "/catalog/icons/fnf.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "g-switch",
+    "name": "G-Switch",
+    "url": "https://5dd24442-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/4f2c69b4-3edc-4cd7-a078-efd3d1ea9fb5/index.html",
+    "icon": "/catalog/icons/gswitch.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "g-switch-2",
+    "name": "G-Switch 2",
+    "url": "https://5dd27095-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/e0e70ee4-fdd4-4de8-931d-fde7d1cb408b/index.html",
+    "icon": "/catalog/icons/gswitch2.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "g-switch-3",
+    "name": "G-Switch 3",
+    "url": "https://5dd2b395-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/120fdec6-7eeb-470f-a43c-9bcdace0dacb/index.html",
+    "icon": "/catalog/icons/gswitch3.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "gba-emulator",
+    "name": "GBA Emulator",
+    "url": "https://ds.44670.org/gba/",
+    "icon": "/catalog/icons/gba.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "gba-games",
+    "name": "GBA Games",
+    "url": "https://real-sgs.vercel.app/Tools/GBA-Emulator",
+    "icon": "/catalog/icons/gba.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "gba-games-2",
+    "name": "GBA Games 2",
+    "url": "https://cattn.github.io/gba/",
+    "icon": "/catalog/icons/gba.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "geforce-now",
+    "name": "Geforce NOW",
+    "url": "https://play.geforcenow.com",
+    "icon": "/catalog/icons/geforce-now.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "genshin-impact",
+    "name": "Genshin Impact",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.miHoYo.GenshinImpact&partner=interstellar",
+    "icon": "/catalog/icons/genshinimpact.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "getaway-s",
+    "name": "Getaway S.",
+    "url": "https://www.twoplayergames.org/embed/getaway-shootout",
+    "icon": "/catalog/icons/getaway.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "golden-eye-007",
+    "name": "Golden Eye 007",
+    "url": "https://f.kbhgames.com/r/n64/game.php?file=007-golden-eye.zip",
+    "icon": "/catalog/icons/golden-eye-007.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "google-baseball",
+    "name": "Google Baseball",
+    "url": "https://www.google.com/logos/2019/july4th19/r6/july4th19.html",
+    "icon": "/catalog/icons/googlebaseball.jfif",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "google-feud",
+    "name": "Google Feud",
+    "url": "https://googlefeud.com/",
+    "icon": "/catalog/icons/googlefeud.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "gunspin",
+    "name": "Gunspin",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/917cce8c44c44638a8cdc2a1794b65c8/index.html",
+    "icon": "/catalog/icons/gunspin.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "half-life",
+    "name": "Half-Life",
+    "url": "https://x8bitrain.github.io/webXash/",
+    "icon": "/catalog/icons/half-life.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "happy-wheels",
+    "name": "Happy Wheels",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/happywheels/index.html",
+    "icon": "/catalog/icons/happywheels.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "haunted-school-1",
+    "name": "Haunted School 1",
+    "url": "https://games.crazygames.com/en_US/haunted-school---horror-game/index.html",
+    "icon": "/catalog/icons/na.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "helix-jump",
+    "name": "Helix Jump",
+    "url": "https://helix-jump.game-files.crazygames.com/helix-jump/1/index.html",
+    "icon": "/catalog/icons/helixjump.jfif",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "hexarena",
+    "name": "HexArena",
+    "url": "https://hexarena.io/",
+    "icon": "/catalog/icons/helixteus.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "hole-io",
+    "name": "Hole.IO",
+    "url": "https://hole-io.com/",
+    "icon": "/catalog/icons/hole.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "hordes",
+    "name": "Hordes",
+    "url": "https://hordes.io",
+    "icon": "/catalog/icons/hordes.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "idle-breakout",
+    "name": "Idle Breakout",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/idle-breakout/index.html",
+    "icon": "/catalog/icons/idle.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "interactive-buddy",
+    "name": "Interactive Buddy",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/interactivebuddy/index.html",
+    "icon": "/catalog/icons/interactive-buddy.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "isleward",
+    "name": "Isleward",
+    "url": "https://play.isleward.com",
+    "icon": "/catalog/icons/isleward.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "itch-io",
+    "name": "Itch.io",
+    "url": "https://itch.io",
+    "icon": "/catalog/icons/itch.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "jacksmith",
+    "name": "Jacksmith",
+    "url": "https://www.coolmathgames.com/0-jacksmith/play",
+    "icon": "/catalog/icons/jacksmith.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "jelly-mario",
+    "name": "Jelly Mario",
+    "url": "https://jellymar.io",
+    "icon": "/catalog/icons/jellymario.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "jetpack-joyride",
+    "name": "Jetpack Joyride",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/jetpack-joyride/index.html",
+    "icon": "/catalog/icons/jetpackjoyride.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "johnny-upgrade",
+    "name": "Johnny Upgrade",
+    "url": "https://lagged.com/api/play2/johnny-upgrade3/",
+    "icon": "/catalog/icons/johnnyupgrade.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "kiomet",
+    "name": "Kiomet",
+    "url": "https://kiomet.com",
+    "icon": "/catalog/icons/kiomet.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "kirka",
+    "name": "Kirka",
+    "url": "https://kirka.io",
+    "icon": "/catalog/icons/kirka.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "krunker",
+    "name": "Krunker",
+    "url": "https://krunker.io",
+    "icon": "/catalog/icons/krunker.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "learn-to-fly-idle",
+    "name": "Learn To Fly Idle",
+    "url": "https://www.gameslol.net/data/waflash/index.php?g=635",
+    "icon": "/catalog/icons/ltf_idle.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "lordz-io",
+    "name": "Lordz.io",
+    "url": "https://lordz.io/",
+    "icon": "/catalog/icons/lordz.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "lostgamer",
+    "name": "Lostgamer",
+    "url": "https://lostgamer.io",
+    "icon": "/catalog/icons/lostgamerio.jpg",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "madalin-stunt-cars-2",
+    "name": "Madalin Stunt Cars 2",
+    "url": "https://games.crazygames.com/en_US/madalin-stunt-cars-2/index.html",
+    "icon": "/catalog/icons/madalinstuntcars2.jfif",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "madalin-stunt-cars-3",
+    "name": "Madalin Stunt Cars 3",
+    "url": "https://games.crazygames.com/en_US/madalin-stunt-cars-3/index.html",
+    "icon": "/catalog/icons/madalinstuntcars3.jfif",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "madalin-stunt-cars-multiplayer",
+    "name": "Madalin Stunt Cars Multiplayer",
+    "url": "https://games.crazygames.com/en_US/madalin-cars-multiplayer/index.html",
+    "icon": "/catalog/icons/madalinmultiplayer.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "madden-nfl-24",
+    "name": "Madden NFL 24",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.ea.gp.maddennfl21mobile&partner=interstellar",
+    "icon": "/catalog/icons/maddennfl24.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "marbles-garden",
+    "name": "Marbles Garden",
+    "url": "https://www.coolmathgames.com/0-marbles-garden/play",
+    "icon": "/catalog/icons/marblesgarden.jpg",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "masked-io",
+    "name": "Masked IO",
+    "url": "https://unblocked-games.s3.amazonaws.com/games/masked-io/index.html",
+    "icon": "/catalog/icons/masked-forces.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "melon-playground",
+    "name": "Melon Playground",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.studio27.MelonPlayground&partner=interstellar",
+    "icon": "/catalog/icons/melonplayground.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "merge-fruit",
+    "name": "Merge Fruit",
+    "url": "https://html5.gamedistribution.com/2dee9d404697435aa76111eb4015e1d5/",
+    "icon": "/catalog/icons/mergefruit.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "minecraft-classic",
+    "name": "Minecraft Classic",
+    "url": "https://classic.minecraft.net",
+    "icon": "/catalog/icons/mc.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "mk48-io",
+    "name": "mk48.io",
+    "url": "https://mk48.io/",
+    "icon": "/catalog/icons/mk48io.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "mobs-inc",
+    "name": "Mobs Inc",
+    "url": "https://overboy.itch.io/mobs-inc",
+    "icon": "/catalog/icons/mobsinc.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "moomoo-io",
+    "name": "MooMoo.io",
+    "url": "https://moomoo.io",
+    "icon": "/catalog/icons/moo.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "mope-io",
+    "name": "mope.io",
+    "url": "https://thelast.io",
+    "icon": "/catalog/icons/mope-io.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "mortal-kombat-4",
+    "name": "Mortal Kombat 4",
+    "url": "https://f.kbhgames.com/r/n64/game.php?file=Mortal-Kombat-4-U.zip",
+    "icon": "/catalog/icons/na.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "moto-x3m",
+    "name": "Moto X3M",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/5b0abd4c0faa4f5eb190a9a16d5a1b4c/index.html",
+    "icon": "/catalog/icons/mx3m.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "mr-mine",
+    "name": "Mr.Mine",
+    "url": "https://www.coolmathgames.com/0-mr-mine/play",
+    "icon": "/catalog/icons/mrmine.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "mx3m-spooky-land",
+    "name": "MX3M: Spooky Land",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/b8a342904608470a9f3382337aca3558/index.html",
+    "icon": "/catalog/icons/mx3m-spooky.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "n-gon",
+    "name": "N-Gon",
+    "url": "https://landgreen.github.io/sidescroller/",
+    "icon": "/catalog/icons/NGON.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "narrow-one",
+    "name": "Narrow One",
+    "url": "https://narrow.one",
+    "icon": "/catalog/icons/narrowone.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "neal-fun",
+    "name": "Neal.Fun",
+    "url": "https://neal.fun",
+    "icon": "/catalog/icons/nealfun.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "ngu-idle",
+    "name": "NGU Idle",
+    "url": "https://cache.armorgames.com/files/games/ngu-idle-18444/index.html?v=1559319416",
+    "icon": "/catalog/icons/nguidle.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "ninja-cat-exploit",
+    "name": "Ninja Cat Exploit",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/903ba9346b9d437e9c7e81d672cead44/index.html",
+    "icon": "/catalog/icons/ninja-cat.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "nintendo-64-emulator",
+    "name": "Nintendo 64 Emulator",
+    "url": "https://www.neilb.net/n64wasm/",
+    "icon": "/catalog/icons/N64.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "nintendo-ds-emulator",
+    "name": "Nintendo DS Emulator",
+    "url": "https://ds.44670.org/",
+    "icon": "/catalog/icons/ds.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "now-gg",
+    "name": "Now.GG",
+    "url": "https://now.gg",
+    "icon": "/catalog/icons/now-gg.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "now-gg-nowgg-me-working",
+    "name": "Now.GG (NowGG.me) [Working]",
+    "url": "https://nowgg.me",
+    "icon": "/catalog/icons/shuttle.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "online-racing-game",
+    "name": "Online Racing Game!",
+    "url": "https://jchabin.github.io/cars/",
+    "icon": "/catalog/icons/OR.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "online-soccer-m",
+    "name": "Online Soccer M.",
+    "url": "https://www.onlinesoccermanager.com/",
+    "icon": "/catalog/icons/osm.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "ovo",
+    "name": "OvO",
+    "url": "https://www.hoodamath.com/mobile/games/ovo/game.html?nocheckorient=1",
+    "icon": "/catalog/icons/ovologo.png",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "papas-burgeria",
+    "name": "Papa's Burgeria",
+    "url": "https://www.coolmathgames.com/0-papas-burgeria/play",
+    "icon": "/catalog/icons/papasburgeria.webp",
+    "category": "simulation",
+    "external": false
+  },
+  {
+    "id": "papas-cheeseria",
+    "name": "Papa's Cheeseria",
+    "url": "https://www.coolmathgames.com/0-papas-cheeseria/play",
+    "icon": "/catalog/icons/papascheeseria.webp",
+    "category": "simulation",
+    "external": false
+  },
+  {
+    "id": "papas-freezeria",
+    "name": "Papa's Freezeria",
+    "url": "https://www.coolmathgames.com/0-papas-freezeria/play",
+    "icon": "/catalog/icons/papasfreezeria.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "papas-pancakeria",
+    "name": "Papa's Pancakeria",
+    "url": "https://www.coolmathgames.com/0-papas-pancakeria/play",
+    "icon": "/catalog/icons/papaspancakeria.webp",
+    "category": "simulation",
+    "external": false
+  },
+  {
+    "id": "papas-wingeria",
+    "name": "Papa's Wingeria",
+    "url": "https://www.coolmathgames.com/0-papas-wingeria/play",
+    "icon": "/catalog/icons/papaswingeria.webp",
+    "category": "simulation",
+    "external": false
+  },
+  {
+    "id": "paper-mario-64",
+    "name": "Paper Mario 64",
+    "url": "https://f.kbhgames.com/r/n64/game.php?file=Paper%20Mario%20(USA).zip",
+    "icon": "/catalog/icons/paper-mario-64.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "paper-io",
+    "name": "Paper.io",
+    "url": "https://paper-io.com/",
+    "icon": "/catalog/icons/paperio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "parkour-block-3d",
+    "name": "Parkour Block 3D",
+    "url": "https://html5.gamedistribution.com/1461d40bb77f48e6be72489959a1ac04/",
+    "icon": "/catalog/icons/parkourblock3d.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "pizza-tower",
+    "name": "Pizza Tower",
+    "url": "https://gamaverse.com/c/f/g/pizza-tower-1678640389/index.html",
+    "icon": "/catalog/icons/pizza-tower.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "playstation-2-emulator",
+    "name": "Playstation 2 Emulator",
+    "url": "https://playjs.purei.org/",
+    "icon": "/catalog/icons/PS2.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "pokemon-showdown",
+    "name": "Pokemon Showdown",
+    "url": "https://play.pokemonshowdown.com",
+    "icon": "/catalog/icons/showdown.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "powerline-io",
+    "name": "Powerline.IO",
+    "url": "https://powerline.io",
+    "icon": "/catalog/icons/powerline.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "precision-client",
+    "name": "Precision Client",
+    "url": "https://raw.githack.com/3kh0/3kh0-assets/main/precision-client/index.html",
+    "icon": "/catalog/icons/precision.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "rainbow-obby",
+    "name": "Rainbow Obby",
+    "url": "https://785a4295-96c4-43e5-b237-fb07fc3ef44d.poki-gdn.com/f1d39f75-7a25-41de-86cf-ba00804737b5/index.html",
+    "icon": "/catalog/icons/rainbowobby.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "rainbow-six-siege",
+    "name": "Rainbow Six Siege",
+    "url": "https://play.geforcenow.com/games?game-id=1dd07d47-6601-42f7-80e9-e4d8db08ea1b&lang=en_US&asset-id=01_44417-48c3d8e642e2",
+    "icon": "/catalog/icons/r6.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "rainbow-tower",
+    "name": "Rainbow Tower",
+    "url": "https://www.mathplayground.com/mobile_rainbow_tower/index.html",
+    "icon": "/catalog/icons/rainbowtower.jfif",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "retro-arch",
+    "name": "Retro Arch",
+    "url": "https://binbashbanana.github.io/webretro/",
+    "icon": "/catalog/icons/retroarch.webp",
+    "category": "classic",
+    "external": false
+  },
+  {
+    "id": "retro-bowl",
+    "name": "Retro Bowl",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/retro-bowl/index.html",
+    "icon": "/catalog/icons/retro.webp",
+    "category": "sports",
+    "external": false
+  },
+  {
+    "id": "riddle-school-1",
+    "name": "Riddle School 1",
+    "url": "https://uploads.ungrounded.net/ruffle_wrapper/ruffleembed.html?v=1.0.67&browsermode=default&props=%7B%22ruffle%22%3A%22%2Fruffle_wrapper%2Flib%2Fruffle.js%3F1695474658%22%2C%22public_path%22%3A%22%2Fruffle_wrapper%2Flib%2F%22%2C%22swf%22%3A%22https%3A%2F%2Fuploads.ungrounded.net%2F314000%2F314680_Riddle_School.swf%3F1148577264%22%2C%22vars%22%3A%7B%22NewgroundsAPI_PublisherID%22%3A1%2C%22NewgroundsAPI_SandboxID%22%3A%2265103f0745c96%22%2C%22NewgroundsAPI_SessionID%22%3A%22%22%2C%22NewgroundsAPI_UserName%22%3A%22%26lt%3Bdeleted%26gt%3B%22%2C%22NewgroundsAPI_UserID%22%3A0%2C%22ng_username%22%3A%22%26lt%3Bdeleted%26gt%3B%22%7D%2C%22width%22%3A550%2C%22height%22%3A400%2C%22icon%22%3A%22https%3A%2F%2Fpicon.ngfiles.com%2F314000%2Fflash_314680_card.webp%3Ff1607914286%22%2C%22warnOnUnsupportedContent%22%3Afalse%7D",
+    "icon": "/catalog/icons/riddleschool1.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "riddle-school-2",
+    "name": "Riddle School 2",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/riddleschool2/index.html",
+    "icon": "/catalog/icons/rs1.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "roblox-now-gg",
+    "name": "Roblox (Now.GG)",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.roblox.client&partner=interstellar",
+    "icon": "/catalog/icons/roblox.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "rocket-bot-royale",
+    "name": "Rocket Bot Royale",
+    "url": "https://rocketbotroyale2.winterpixel.io/",
+    "icon": "/catalog/icons/rocketbotroyale.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "rooftop-snipers",
+    "name": "Rooftop Snipers",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/c3a70ae98547407a92ebedca8b79fdfa/index.html",
+    "icon": "/catalog/icons/rooftop.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "run-3",
+    "name": "Run 3",
+    "url": "https://www.coolmathgames.com/0-run-3/play",
+    "icon": "/catalog/icons/run3.webp",
+    "category": "classic",
+    "external": false
+  },
+  {
+    "id": "sand-spiel",
+    "name": "Sand Spiel",
+    "url": "https://sandspiel.club/",
+    "icon": "/catalog/icons/sand.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "sandboxels",
+    "name": "Sandboxels",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/sandboxels/index.html",
+    "icon": "/catalog/icons/sandboxels.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "sandtrix",
+    "name": "Sandtrix",
+    "url": "https://files.crazygames.com/sandtrix/16/index.html",
+    "icon": "/catalog/icons/sandtrix.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "shapez-io",
+    "name": "Shapez.IO",
+    "url": "https://shapez.io",
+    "icon": "/catalog/icons/shapezio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "shell-shockers",
+    "name": "Shell Shockers",
+    "url": "https://shellshock.io/",
+    "icon": "/catalog/icons/shell-shockers.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "skribbl",
+    "name": "skribbl",
+    "url": "https://skribbl.io/",
+    "icon": "/catalog/icons/skribblio.jfif",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "slither-io",
+    "name": "Slither Io",
+    "url": "https://slither.io/",
+    "icon": "/catalog/icons/slither.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "slope",
+    "name": "Slope",
+    "url": "https://watchdocumentaries.com/wp-content/uploads/games/slope/",
+    "icon": "/catalog/icons/slope.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "smash-karts",
+    "name": "Smash Karts",
+    "url": "https://smashkarts.io/",
+    "icon": "/catalog/icons/smashkarts.webp",
+    "category": "racing",
+    "external": false
+  },
+  {
+    "id": "snow-rider-3d",
+    "name": "Snow Rider 3D",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/3b79a8537ebc414fb4f9672a9b8c68c8/index.html?gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL3Nub3dyaWRlcjNkLmNvbS8iLCJwYXJlbnREb21haW4iOiJzbm93cmlkZXIzZC5jb20iLCJ0b3BEb21haW4iOiJzbm93cmlkZXIzZC5jb20iLCJoYXNJbXByZXNzaW9uIjpmYWxzZSwibG9hZGVyRW5hYmxlZCI6dHJ1ZSwiaG9zdCI6Imh0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tIiwidmVyc2lvbiI6IjEuNS4xNiJ9",
+    "icon": "/catalog/icons/snowrider3d.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "snowball-io",
+    "name": "Snowball.io",
+    "url": "https://games.crazygames.com/en_US/snowball-io/index.html",
+    "icon": "/catalog/icons/snowball.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "solar-smash",
+    "name": "Solar Smash",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.paradyme.solarsmash&partner=interstellar",
+    "icon": "/catalog/icons/solarsmash.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "starblast",
+    "name": "Starblast",
+    "url": "https://starblast.io",
+    "icon": "/catalog/icons/starblastio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "stickman-archero-fight",
+    "name": "Stickman Archero Fight",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/3f4c166817ad4fd4b5b05d9adba22fcd/index.html",
+    "icon": "/catalog/icons/stickman-archero-fight.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "stickman-hook",
+    "name": "Stickman Hook",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/stickman-hook/index.html",
+    "icon": "/catalog/icons/stickmanhook.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "stomped-io",
+    "name": "Stomped.io",
+    "url": "https://stomped.io",
+    "icon": "/catalog/icons/stompedio.jfif",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "stumble-guys",
+    "name": "Stumble Guys",
+    "url": "https://www.stumbleguys.com/play",
+    "icon": "/catalog/icons/stumble-guys.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "stumble-guys-clone",
+    "name": "Stumble Guys Clone",
+    "url": "https://stumble-guys.io/stumble-guys.embed",
+    "icon": "/catalog/icons/stumble-guys.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "subway-surfers-san-francisco",
+    "name": "Subway Surfers: San Francisco",
+    "url": "https://raw.githack.com/3kh0/3kh0-assets/main/subway-surfers/index.html",
+    "icon": "/catalog/icons/SF.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "sugar-sugar-html5",
+    "name": "Sugar Sugar HTML5",
+    "url": "https://www.coolmathgames.com/0-sugar-sugar/play",
+    "icon": "/catalog/icons/sugarsugar.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "super-mario-64",
+    "name": "Super Mario 64",
+    "url": "https://f.kbhgames.com/r/n64/game.php?file=32112_super-mario-64-usa.zip",
+    "icon": "/catalog/icons/sm64.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "super-smash-flash",
+    "name": "Super Smash Flash",
+    "url": "https://f.kbhgames.com/RS/game.php?r=//f.kbhgames.com/2018/swf/smashflash.swf&w=1521&h=753",
+    "icon": "/catalog/icons/ssf1.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "supply-chain-idle",
+    "name": "Supply Chain Idle",
+    "url": "https://chat.kongregate.com/gamez/0027/1653/live/index.html?kongregate_game_version=1554392772",
+    "icon": "/catalog/icons/na.webp",
+    "category": "idle",
+    "external": false
+  },
+  {
+    "id": "survivor-io",
+    "name": "Survivor.io",
+    "url": "https://html5.gamedistribution.com/rvvASMiM/f1c451e586c04b4c8cba01b0c50d9090/index.html",
+    "icon": "/catalog/icons/SVI.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "taming-io",
+    "name": "Taming.io",
+    "url": "https://taming.io/",
+    "icon": "/catalog/icons/tamingio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "tanuki-sunset",
+    "name": "Tanuki Sunset",
+    "url": "https://watchdocumentaries.com/wp-content/uploads/games/tanuki-sunset",
+    "icon": "/catalog/icons/tanuki.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "temple-run-2",
+    "name": "Temple Run 2",
+    "url": "https://watchdocumentaries.com/wp-content/uploads/games/temple-run-2/",
+    "icon": "/catalog/icons/temple-run-2.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "territorial-io",
+    "name": "Territorial.io",
+    "url": "https://territorial.io",
+    "icon": "/catalog/icons/territorialio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "tetr-io",
+    "name": "Tetr.io",
+    "url": "https://tetr.io/",
+    "icon": "/catalog/icons/tetrio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "the-impossible-quiz",
+    "name": "The Impossible Quiz",
+    "url": "https://the-impossible-quiz.game-files.crazygames.com/ruffle/theimpossiblequiz.html",
+    "icon": "/catalog/icons/theimpossiblequiz.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "thelast-royale",
+    "name": "Thelast Royale",
+    "url": "https://thelast.io",
+    "icon": "/catalog/icons/thelast-io.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "there-is-no-game",
+    "name": "There Is No Game",
+    "url": "https://5dd2d607-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/38959ae1-110b-49ab-86ae-df425fd7862a/index.html",
+    "icon": "/catalog/icons/thereisnogame.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "thisissand",
+    "name": "Thisissand",
+    "url": "https://thisissand.com/",
+    "icon": "/catalog/icons/thisissand.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "time-shooter-2",
+    "name": "Time Shooter 2",
+    "url": "https://html5.gamedistribution.com/62a72f2da7cb4b609579a47653546e6a/",
+    "icon": "/catalog/icons/timeshooter2.webp",
+    "category": "shooter",
+    "external": false
+  },
+  {
+    "id": "tiny-fishing",
+    "name": "Tiny Fishing",
+    "url": "https://www.dob5.com/d/file/games/tiny-fishing/",
+    "icon": "/catalog/icons/tinyfishing.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "tribals-io",
+    "name": "Tribals.io",
+    "url": "https://tribals.io/",
+    "icon": "/catalog/icons/tribalsio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "tunnel-rush",
+    "name": "Tunnel Rush",
+    "url": "https://5dd2e8e4-015f-11ea-ad56-9cb6d0d995f7.poki-gdn.com/5627efae-e960-407d-82a5-3da708eb4e68/index.html",
+    "icon": "/catalog/icons/tunnelrush.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "tunnel-rush-2",
+    "name": "Tunnel Rush 2",
+    "url": "https://a7e6d137-c3c1-46e6-a3db-04c2d33c98a8.poki-gdn.com/71e6bddd-9b0e-4621-a11a-9503086f69d5/index.html",
+    "icon": "/catalog/icons/tunnelrush2.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "twisted-cooking-mama",
+    "name": "Twisted Cooking Mama",
+    "url": "https://twisted-cooking-mama.game-files.crazygames.com/ruffle/twisted-cooking-mama/1/twistedcookingmama.html?v=1.273",
+    "icon": "/catalog/icons/twistedcookingmama.jpg",
+    "category": "simulation",
+    "external": false
+  },
+  {
+    "id": "twitch-tetris",
+    "name": "Twitch Tetris",
+    "url": "https://www.rossipotti.de/ausgabe28/tetris/controls.html",
+    "icon": "/catalog/icons/na.webp",
+    "category": "puzzle",
+    "external": false
+  },
+  {
+    "id": "tyran-io",
+    "name": "Tyran.io",
+    "url": "https://tyran.io",
+    "icon": "/catalog/icons/tyranio.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "venge",
+    "name": "Venge",
+    "url": "https://venge.io",
+    "icon": "/catalog/icons/venge.webp",
+    "category": "arcade",
+    "external": false
+  },
+  {
+    "id": "vex-5",
+    "name": "Vex 5",
+    "url": "https://raw.githack.com/3kh0/3kh0-assets/main/vex5/index.html",
+    "icon": "/catalog/icons/vex5.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "vex-7",
+    "name": "Vex 7",
+    "url": "https://glcdn.githack.com/3kh0/3kh0-assets/-/raw/main/vex7/index.html",
+    "icon": "/catalog/icons/vex7.webp",
+    "category": "platformer",
+    "external": false
+  },
+  {
+    "id": "voxiom-io",
+    "name": "Voxiom.io",
+    "url": "https://voxiom.io/",
+    "icon": "/catalog/icons/voxiom.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "web-retro",
+    "name": "Web Retro",
+    "url": "https://binbashbanana.github.io/webretro/",
+    "icon": "/catalog/icons/webretro.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "wings",
+    "name": "Wings!",
+    "url": "https://wings.io/",
+    "icon": "/catalog/icons/wingsio.jfif",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "worldbox",
+    "name": "WorldBox",
+    "url": "https://now.gg/iframe/snippet?app_pkg=com.mkarpenko.worldbox&partner=interstellar",
+    "icon": "/catalog/icons/worldbox.webp",
+    "category": "emulator",
+    "external": false
+  },
+  {
+    "id": "yohoho-io",
+    "name": "YoHoHo.io",
+    "url": "https://yohoho.io/",
+    "icon": "/catalog/icons/yohoho.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "zombs-royale",
+    "name": "Zombs Royale",
+    "url": "https://zombsroyale.io",
+    "icon": "/catalog/icons/zombs-royale.webp",
+    "category": "multiplayer",
+    "external": false
+  },
+  {
+    "id": "zombs-io",
+    "name": "Zombs.io",
+    "url": "https://zombs.io/",
+    "icon": "/catalog/icons/zombs-io.webp",
+    "category": "multiplayer",
+    "external": false
+  }
+]

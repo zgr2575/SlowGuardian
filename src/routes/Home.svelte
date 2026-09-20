@@ -4,8 +4,8 @@
   import { settings, updateSettings } from "../lib/stores/settings.js";
   import { THEMES, themeById } from "../lib/stores/themes.js";
   import { reducedMotion } from "../lib/motion.js";
-  import { FAVORITES } from "../lib/sample.js";
-  import { openInput, openTarget } from "../lib/open.js";
+  import { favoriteEntries } from "../lib/stores/favorites.js";
+  import { openInput, openEntry } from "../lib/open.js";
   import SearchField from "../components/SearchField.svelte";
   import Popover from "../components/Popover.svelte";
   import ThemeCard from "../components/ThemeCard.svelte";
@@ -52,10 +52,14 @@
 
     {#if $settings.showFavorites}
       <div class="favs">
-        {#each FAVORITES as fav (fav.title)}
-          <button class="fav" onclick={() => openTarget(fav.url)}>
-            <span class="icon lift" style:background-image="url({fav.icon})"></span>
-            {fav.title}
+        {#each $favoriteEntries as fav (fav.kind + fav.id)}
+          <button class="fav" onclick={() => openEntry(fav.entry)}>
+            {#if fav.entry.icon}
+              <span class="icon lift" style:background-image="url({fav.entry.icon})"></span>
+            {:else}
+              <span class="icon plate lift">{fav.entry.name.slice(0, 1)}</span>
+            {/if}
+            {fav.entry.name}
           </button>
         {/each}
       </div>
@@ -167,6 +171,16 @@
     color: rgba(245, 245, 247, 0.88);
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
     text-align: center;
+  }
+
+  .fav .plate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 650;
+    color: var(--bg);
+    background: var(--accent);
   }
 
   .fav .icon {
